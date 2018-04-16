@@ -26,7 +26,7 @@ def parseenvironmentvariables(prependingpath):
         namematch = re.match(r"^KCCONF_([A-Z]+)_([A-Z0-9_]+)$", name)
         if namematch != None:
             filename = namematch.group(1).lower() + ".cfg"
-            if not configs.has_key(prependingpath + filename):
+            if prependingpath + filename not in configs:
                 configs[prependingpath + filename] = dict()
             confkey = namematch.group(2).lower()
             configs[prependingpath + filename][confkey] = value
