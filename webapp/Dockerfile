@@ -20,8 +20,6 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     apache2 \
     libapache2-mod-php7.0 \
-    z-push-backend-kopano \
-    z-push-config-apache \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
 # trigger rebuild from here on new version - dont use cache my dear docker
@@ -30,6 +28,8 @@ ARG WEBAPP_VERSION
 # install kopano web app and refresh ca-certificates
 RUN echo ${WEBAPP_VERSION} > /kopano/buildversion && \
     apt-get update && apt-get install -y --no-install-recommends \
+    z-push-backend-kopano \
+    z-push-config-apache \
     ca-certificates \
     kopano-webapp \
     kopano-webapp-plugin-contactfax \
