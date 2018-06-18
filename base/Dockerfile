@@ -1,48 +1,56 @@
 FROM debian:stretch
 
 LABEL maintainer=az@zok.xyz \
-      version="1.1"
+      version="1.2"
 
 RUN mkdir -p /kopano/repo && mkdir -p /kopano/data
 WORKDIR /kopano/repo
 
 ENV DEBIAN_FRONTEND noninteractive
 
-ARG KOPANO_REPOSITORY=http://localhost:8081/kopanoarchive/
+# install basics
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+        curl \
+        gpg \
+        ca-certificates \
+        moreutils \
+        locales \
+        apt-transport-https \
+        python3 && \
+    rm -rf /var/cache/apt /var/lib/apt/lists
 
-# # get kopano packages
-# RUN curl -L `lynx -listonly -nonumbers -dump ${KOPANO_REPOSITORY}core:/ | grep ${DISTRIBUTION}-${ARCH}.tar.gz | grep --regexp=${CORE_VERSION_FILTER}` | tar xzf - --strip-components 1
-# RUN curl -L `lynx -listonly -nonumbers -dump ${KOPANO_REPOSITORY}webapp:/ | grep ${DISTRIBUTION}-all.tar.gz | grep --regexp=${WEBAPP_VERSION_FILTER}` | tar xzf - --strip-components 1
-
-# # create and add repositories
-# RUN apt-ftparchive packages . | gzip -9c > Packages.gz && echo "deb [trusted=yes] file:/kopano/repo ./" > /etc/apt/sources.list.d/kopano.list; \
-#     echo "deb http://repo.z-hub.io/z-push:/final/${DISTRIBUTION}/ /" > /etc/apt/sources.list.d/zpush.list; \
-#     apt-key add /kopano/repo/z-push-GPG.key
-
-# trigger rebuild from here on new version - dont use cache my dear docker
-ARG CORE_VERSION
-
-# install base components
-RUN echo ${CORE_VERSION} > /kopano/buildversion && \
-    echo "deb [trusted=yes] ${KOPANO_REPOSITORY} ./" > /etc/apt/sources.list.d/kopano.list && \
-    apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    gpg \
-    kopano-common \
-    python3-kopano \
-    ca-certificates \
-    moreutils \
-    && rm -rf /var/cache/apt /var/lib/apt/lists
-
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+RUN curl -s -S -L -o /usr/local/bin/confix https://raw.githubusercontent.com/budhash/confix/master/confix && \
+    chmod +x /usr/local/bin/confix && \
+    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8 && \
-    sed -e 's,^KOPANO_LOCALE="C",KOPANO_LOCALE="de_DE.UTF-8",' -i /etc/default/kopano && \
-    sed -e 's,^KOPANO_USERSCRIPT_LOCALE="C",KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8",' -i /etc/default/kopano && \
-    curl -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 && \
+    curl -s -S -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 && \
     chmod a+x /usr/local/bin/dumb-init
 
+# If you have active Kopano subscription you can provide your own details via build args.
+# If you want to use community version, use images from hub.docker.com or built your own
+# kopano package host via kopano_version_watch project in order to use nightly builds.
+ARG KOPANO_CORE_VERSION=newest
+ARG KOPANO_REPOSITORY_BRANCH=master
+ARG KOPANO_USER=serial
+ARG KOPANO_SERIAL
+ARG KOPANO_REPOSITORY_URL="https://${KOPANO_USER}:${KOPANO_SERIAL}@download.kopano.io/supported/core:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
+ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
+
+# install kopano components
+RUN set -x && \
+    echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list && \
+    curl -s -S -o - "${KOPANO_REPOSITORY_URL}/Release.key" | apt-key add - && \
+    apt-get update && \
+    apt-get install --no-install-recommends -y \
+        kopano-server-packages="${KOPANO_CORE_VERSION}" && \
+    rm -rf /var/cache/apt /var/lib/apt/lists
+
+ENV KOPANO_LOCALE="de_DE.UTF-8"
+ENV KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8"
 ENV LANG en_US.UTF-8 
 
 ADD kcconf.py /kopano/kcconf.py
