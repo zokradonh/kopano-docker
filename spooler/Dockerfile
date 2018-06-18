@@ -6,7 +6,8 @@ LABEL maintainer=az@zok.xyz \
 
 # install kopano
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    kopano-spooler python3-mapi \
+    kopano-spooler \
+    python2-mapi \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
 ADD configure.py /kopano/configure.py
