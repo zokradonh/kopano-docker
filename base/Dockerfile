@@ -46,8 +46,12 @@ RUN set -x && \
     curl -s -S -o - "${KOPANO_REPOSITORY_URL}/Release.key" | apt-key add - && \
     apt-get update && \
     apt-get install --no-install-recommends -y \
-        kopano-server-packages="${KOPANO_CORE_VERSION}" && \
-    rm -rf /var/cache/apt /var/lib/apt/lists
+        kopano-server-packages="${KOPANO_CORE_VERSION}" \
+        php7.0-cli && \
+    rm -rf /var/cache/apt /var/lib/apt/lists && \
+    cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ && \
+    cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ && \
+    gzip -d -f /etc/kopano/*.gz
 
 ENV KOPANO_LOCALE="de_DE.UTF-8"
 ENV KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8"
