@@ -1,9 +1,9 @@
 FROM debian:stretch
 
 LABEL maintainer=az@zok.xyz \
-      version="1.2"
+      version="2.0"
 
-RUN mkdir -p /kopano/repo && mkdir -p /kopano/data
+RUN mkdir -p /kopano/repo /kopano/data
 WORKDIR /kopano/repo
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -29,21 +29,20 @@ RUN curl -s -S -L -o /usr/local/bin/confix https://raw.githubusercontent.com/bud
     curl -s -S -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 && \
     chmod a+x /usr/local/bin/dumb-init
 
-# If you have active Kopano subscription you can provide your own details via build args.
-# If you want to use community version, use images from hub.docker.com or built your own
-# kopano package host via kopano_version_watch project in order to use nightly builds.
+# If you have active Kopano subscription you can change KOPANO_CORE_REPOSITORY_URL to
+# https://serial:<YOURSERIAL>@download.kopano.io/supported/core:/final/Debian_9.0
+# and replace <YOURSERIAL> with your serial. You can also use pre-final or any other repository branch.
+# If you want to use community version please use images from hub.docker.com
 ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_REPOSITORY_BRANCH=master
-ARG KOPANO_USER=serial
-ARG KOPANO_SERIAL
-ARG KOPANO_REPOSITORY_URL="https://${KOPANO_USER}:${KOPANO_SERIAL}@download.kopano.io/supported/core:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
+ARG KOPANO_CORE_REPOSITORY_URL="http://buildproxy/supported/core:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 
 # install kopano components
 RUN set -x && \
     echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list && \
-    curl -s -S -o - "${KOPANO_REPOSITORY_URL}/Release.key" | apt-key add - && \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list && \
+    curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add - && \
     apt-get update && \
     apt-get install --no-install-recommends -y \
         kopano-server-packages="${KOPANO_CORE_VERSION}" \
@@ -55,8 +54,13 @@ RUN set -x && \
 
 ENV KOPANO_LOCALE="de_DE.UTF-8"
 ENV KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8"
-ENV LANG en_US.UTF-8 
+ENV LANG=en_US.UTF-8 
 
-ADD kcconf.py /kopano/kcconf.py
+ENV SERVICE_TO_START=server
+
+COPY kcconf.py defaultconfigs/ start-service.sh /kopano/
+RUN chmod a+x /kopano/start-service.sh
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+
+CMD [ "/kopano/start-service.sh" ]

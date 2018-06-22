@@ -10,7 +10,12 @@ kcconf.configkopano({
         'attachment_path': "/kopano/data/attachments/",
         'user_plugin': "ldap",
         'server_listen': "",
-        'server_listen_tls': "*:237",
+        'server_listen_tls': "*:237"
+    },
+    r"/etc/kopano/ldap.cfg":
+    {
+        'kccomment': ["!include /usr/share/kopano/ldap.openldap.cfg"],
+        'kcuncomment': ["!include /usr/share/kopano/ldap.active-directory.cfg"]
     }
 })
 
