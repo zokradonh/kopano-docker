@@ -23,8 +23,6 @@ echo "Activate z-push log rerouting"
 tail --pid=$$ -F --lines=0 -q /var/log/z-push/z-push.log &
 tail --pid=$$ -F --lines=0 -q /var/log/z-push/z-push-error.log &
 
-
-
 echo "Starting Apache"
 rm -f /run/apache2/apache2.pid
 set +u

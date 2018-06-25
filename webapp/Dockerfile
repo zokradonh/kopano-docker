@@ -1,33 +1,50 @@
 FROM debian:stretch
 
 LABEL maintainer=az@zok.xyz \
-      version="1.1"
+      version="2.0"
 
-RUN mkdir -p /kopano/repo && mkdir -p /kopano/data
+RUN mkdir -p /kopano/repo /kopano/data
 WORKDIR /kopano/repo
-
-ADD z-push-GPG.key /kopano/repo
 
 ENV DEBIAN_FRONTEND noninteractive
 
-ARG KOPANO_REPOSITORY=http://localhost:8081/kopanoarchive/
-
+# install basics
 RUN apt-get update && \
-    apt-get install -y curl crudini gpg && \
-    echo "deb [trusted=yes] ${KOPANO_REPOSITORY} ./" > /etc/apt/sources.list.d/kopano.list; \
-    echo "deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /" > /etc/apt/sources.list.d/zpush.list; \
-    apt-key add /kopano/repo/z-push-GPG.key && \
-    apt-get install -y --no-install-recommends \
-    apache2 \
-    libapache2-mod-php7.0 \
-    && rm -rf /var/cache/apt /var/lib/apt/lists
+    apt-get install --no-install-recommends -y \
+        curl \
+        gpg \
+        ca-certificates \
+        moreutils \
+        locales \
+        apt-transport-https \
+        python3 && \
+    rm -rf /var/cache/apt /var/lib/apt/lists
 
-# trigger rebuild from here on new version - dont use cache my dear docker
-ARG WEBAPP_VERSION
+# If you have active Kopano subscription you can change KOPANO_WEBAPP_REPOSITORY_URL to
+# https://serial:<YOURSERIAL>@download.kopano.io/supported/webapp:/final/Debian_9.0
+# and replace <YOURSERIAL> with your serial. You can also use pre-final or any other repository branch.
+# docker build --build-arg KOPANO_WEBAPP_REPOSITORY_URL=https://serial:<YOURSERIAL>@download.kopano.io/supported/webapp:/final/Debian_9.0 https://github.com/ZokRadonh/KopanoDocker.git#:webapp
+# Do the same with KOPANO_CORE_REPOSITORY as webapp needs some packages from core.
+# If you want to use community version please use images from hub.docker.com
+# Changing KOPANO_WEBAPP_VERSION does not really change the resulting image.
+ARG KOPANO_WEBAPP_VERSION=newest
+ARG KOPANO_REPOSITORY_BRANCH=master
+ARG KOPANO_WEBAPP_REPOSITORY_URL="http://buildproxy/supported/webapp:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
+ARG KOPANO_CORE_REPOSITORY_URL="http://buildproxy/supported/core:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
+ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 
 # install kopano web app and refresh ca-certificates
-RUN echo ${WEBAPP_VERSION} > /kopano/buildversion && \
+RUN echo ${KOPANO_WEBAPP_VERSION} > /kopano/buildversion && \
+    echo "deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /" > /etc/apt/sources.list.d/zpush.list && \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-webapp.list && \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list && \
+    curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add - && \
+    curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add - && \
+    curl -s -S -o - "http://repo.z-hub.io/z-push:/final/Debian_9.0/Release.key" | apt-key add - && \
     apt-get update && apt-get install -y --no-install-recommends \
+    apache2 \
+    libapache2-mod-php7.0 \
+    crudini \
     z-push-backend-kopano \
     z-push-config-apache \
     ca-certificates \
@@ -54,14 +71,14 @@ RUN echo ${WEBAPP_VERSION} > /kopano/buildversion && \
 #    kopano-webapp-plugin-zdeveloper \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
-ADD apache2-kopano.conf /etc/apache2/sites-available/kopano.conf
+COPY apache2-kopano.conf /etc/apache2/sites-available/kopano.conf
 
     # configure basics
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8 && \
-    curl -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 && \
+    curl -s -S -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 && \
     chmod a+x /usr/local/bin/dumb-init && \
     # configure apache
     rm /etc/apache2/sites-enabled/* && \
@@ -84,7 +101,7 @@ VOLUME /var/lib/z-push/
 
 EXPOSE 80/tcp
 
-ADD start.sh /kopano/start.sh
+COPY start.sh /kopano/start.sh
 
 RUN chmod a+x /kopano/start.sh
 
