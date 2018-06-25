@@ -2,13 +2,12 @@ E-Mail attachment directory is by default in `/kopano/data/attachments/` so bind
 
 You can reconfigure by setting environment variable `KCCONF_SERVER_ATTACHMENT_PATH`.
 
-You can change all server.cfg settings you like prefixed with "`KCCONF_SERVER_`"
-So specify "`KCCONF_SERVER_MYSQL_HOST`" for "mysql\_host" setting in "server.cfg".
-Or specify "`KCCONF_LDAP_LDAP_SEARCH_BASE`" to set "ldap\_search_base" in "ldap.cfg".
+You can change all server.cfg settings you like prefixed with `KCCONF_SERVER_`
+So specify `KCCONF_SERVER_MYSQL_HOST` for `mysql_host` setting in `server.cfg`.
+Or specify `KCCONF_LDAP_LDAP_SEARCH_BASE` to set `ldap_search_base` in `ldap.cfg`.
 
-This image activates ActiveDirectory mode (Not OpenLDAP).
-So you need an ActiveDirectory already running to use this.
-You may try to override default settings with "`KCCONF_*`" options but using OpenLDAP instead of ActiveDirectory will fail due to !include command in ldap.cfg. This docker image does not support any method to edit this file. Create your own Dockerfile to enable OpenLDAP.
+You may override default settings with `KCCONF_*` options or comment specific options in/out with `KCCOMMENT_filenameWithoutExtension_anystring=searchline`  
+e.g. `KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg`
 
 For coredumps on crashes kopano-server requires the fs.suid_dumpable sysctl to contain the value 2, not 0.
 

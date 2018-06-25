@@ -43,7 +43,7 @@ if [ $isproxyup -eq 0 ]
 then
     echo "Build proxy container not runnning - now building..."
     docker build -t kopano_buildproxy ${buildcontext_base}repoproxy
-    echo "Start building proxy..."
+    echo "Start buildproxy helper..."
     docker run --rm -ti -d -e KOPANO_SERIAL=$serial --network buildkopano_bnet --network-alias buildproxy kopano_buildproxy
 fi
 

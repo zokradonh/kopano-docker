@@ -1,5 +1,7 @@
 # KopanoDocker
-Inofficial kopano docker images for all kopano services.
+Unofficial kopano docker images for all kopano services.
+Use kopano_core image for server/spooler/dagent/search/monitor/ical/gateway services.
+Use kopano_webapp for web service.
 
 Example
 =======
@@ -11,7 +13,7 @@ version: '3'
 services:
 
   kserver:
-    image: zokradonh/kopano_server:${CORE_VERSION}
+    image: zokradonh/kopano_core:${CORE_VERSION}
     hostname: kserver
     container_name: kopano_server
     links:
@@ -38,6 +40,8 @@ services:
       - KCCONF_LDAP_LDAP_BIND_USER=cn=SOME_STANDARD_USER,OU=MyUsers,DC=domain,DC=tld #change here
       - KCCONF_LDAP_LDAP_BIND_PASSWD=PASSWORD_OF_STANDARD_USER  #change here
       - KCCONF_LDAP_LDAP_SEARCH_BASE=OU=MyUsers,dc=domain,dc=tld  #change here
+      - KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg #delete if you want openldap
+      - KCUNCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.active-directory.cfg #delete if you want openldap
     networks:
       - kopanonet
     volumes:
@@ -45,7 +49,7 @@ services:
       - sslcerts:/kopano/ssl
 
   kdagent:
-    image: zokradonh/kopano_dagent:${CORE_VERSION}
+    image: zokradonh/kopano_core:${CORE_VERSION}
     container_name: kopano_dagent
     links:
       - kserver
@@ -60,7 +64,7 @@ services:
       - kopanonet
 
   kgateway:
-    image: zokradonh/kopano_gateway:${CORE_VERSION}
+    image: zokradonh/kopano_core:${CORE_VERSION}
     container_name: kopano_gateway
     links:
       - kserver
@@ -75,7 +79,7 @@ services:
       - kopanonet
 
   kical:
-    image: zokradonh/kopano_ical:${CORE_VERSION}
+    image: zokradonh/kopano_core:${CORE_VERSION}
     container_name: kopano_ical
     links:
       - kserver
@@ -86,7 +90,7 @@ services:
       - kopanonet
 
   kmonitor:
-    image: zokradonh/kopano_monitor:${CORE_VERSION}
+    image: zokradonh/kopano_core:${CORE_VERSION}
     container_name: kopano_monitor
     links:
       - kserver
@@ -100,7 +104,7 @@ services:
       - kopanonet
 
   ksearch:
-    image: zokradonh/kopano_search:${CORE_VERSION}
+    image: zokradonh/kopano_core:${CORE_VERSION}
     container_name: kopano_search
     links:
       - kserver
@@ -115,7 +119,7 @@ services:
       - kopanonet
 
   kspooler:
-    image: zokradonh/kopano_spooler:${CORE_VERSION}
+    image: zokradonh/kopano_core:${CORE_VERSION}
     container_name: kopano_spooler
     links:
       - kserver
@@ -244,14 +248,12 @@ networks:
 Requires haproxy network for http reverse proxy.
 Change all lines which are commented especially those with #change here
 
-Requires Active Directory as user backend.
-
 This is just a quick example docker-compose.yml made in some minutes to provide a better start.
 
 Requires `.env` file next to docker-compose.yml with content like this
 ```
-CORE_VERSION=core-8.6.80.45
-WEBAPP_VERSION=webapp-3.4.8.1296
+CORE_VERSION=8.6.80.1055-0plus156.1
+WEBAPP_VERSION=3.4.17.1565plus895.1
 ```
 
 Requires `ldap-groups.cf` in ./mtaconfig directory next to docker-compose.yml
