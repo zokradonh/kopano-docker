@@ -21,6 +21,7 @@ services:
     depends_on:
       - "kssl"
     environment:
+      - SERVICE_TO_START=server
       - TZ=Europe/Berlin
       - KCCONF_SERVER_COREDUMP_ENABLED=no
       - KCCONF_SERVER_LOG_LEVEL=4
@@ -56,6 +57,7 @@ services:
     volumes:
       - sslcerts:/kopano/ssl
     environment:
+      - SERVICE_TO_START=dagent
       - TZ=Europe/Berlin
       - KCCONF_DAGENT_LOG_LEVEL=6
       - KCCONF_DAGENT_SERVER_SOCKET=https://kserver:237/
@@ -71,6 +73,7 @@ services:
     volumes:
       - ./gatewaycerts/:/kopano/certs/
     environment:
+      - SERVICE_TO_START=gateway
       - TZ=Europe/Berlin
       - KCCONF_GATEWAY_SERVER_SOCKET=http://kserver:236/
       - KCCONF_GATEWAY_SSL_PRIVATE_KEY_FILE=/kopano/certs/yourcert.key # change here
@@ -84,6 +87,7 @@ services:
     links:
       - kserver
     environment:
+      - SERVICE_TO_START=ical
       - TZ=Europe/Berlin
       - KCCONF_ICAL_SERVER_SOCKET=http://kserver:236/
     networks:
@@ -97,6 +101,7 @@ services:
     volumes:
       - sslcerts:/kopano/ssl
     environment:
+      - SERVICE_TO_START=monitor
       - TZ=Europe/Berlin
       - KCCONF_MONITOR_SERVER_SOCKET=https://kserver:237/
       - KCCONF_MONITOR_SSLKEY_FILE=/kopano/ssl/kmonitor.pem
@@ -111,6 +116,7 @@ services:
     volumes:
       - sslcerts:/kopano/ssl
     environment:
+      - SERVICE_TO_START=search
       - TZ=Europe/Berlin
       - KCCONF_SEARCH_SERVER_BIND_NAME=http://ksearch:238
       - KCCONF_SEARCH_SERVER_SOCKET=https://kserver:237/
@@ -126,6 +132,7 @@ services:
     volumes:
       - sslcerts:/kopano/ssl
     environment:
+      - SERVICE_TO_START=spooler
       - TZ=Europe/Berlin
       - KCCONF_SPOOLER_SERVER_SOCKET=https://kserver:237/
       - KCCONF_SPOOLER_LOG_LEVEL=4
