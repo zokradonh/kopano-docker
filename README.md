@@ -36,7 +36,7 @@ services:
       - KCCONF_SERVER_PROXY_HEADER=* # delete line if webapp is not behind reverse proxy
       - KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS=hostmaster@domain.tld  #change here
       - KCCONF_SERVER_DISABLED_FEATURES=pop3
-      - KCCONF_SERVER_SEARCH_SOCKET=http://ksearch:238/
+      - KCCONF_SERVER_SEARCH_SOCKET=http://ksearch:2380/
       - KCCONF_LDAP_LDAP_URI=ldaps://ldapserver:ldapport  #change here
       - KCCONF_LDAP_LDAP_BIND_USER=cn=SOME_STANDARD_USER,OU=MyUsers,DC=domain,DC=tld #change here
       - KCCONF_LDAP_LDAP_BIND_PASSWD=PASSWORD_OF_STANDARD_USER  #change here
@@ -118,7 +118,7 @@ services:
     environment:
       - SERVICE_TO_START=search
       - TZ=Europe/Berlin
-      - KCCONF_SEARCH_SERVER_BIND_NAME=http://ksearch:238
+      - KCCONF_SEARCH_SERVER_BIND_NAME=http://ksearch:2380
       - KCCONF_SEARCH_SERVER_SOCKET=https://kserver:237/
       - KCCONF_SEARCH_SSLKEY_FILE=/kopano/ssl/ksearch.pem
     networks:
