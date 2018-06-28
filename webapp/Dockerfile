@@ -23,57 +23,69 @@ RUN apt-get update && \
 # If you have active Kopano subscription you can change KOPANO_WEBAPP_REPOSITORY_URL to
 # https://serial:<YOURSERIAL>@download.kopano.io/supported/webapp:/final/Debian_9.0
 # and replace <YOURSERIAL> with your serial. You can also use pre-final or any other repository branch.
-# docker build --build-arg KOPANO_WEBAPP_REPOSITORY_URL=https://serial:<YOURSERIAL>@download.kopano.io/supported/webapp:/final/Debian_9.0 https://github.com/ZokRadonh/KopanoDocker.git#:webapp
+# docker build --build-arg KOPANO_WEBAPP_REPOSITORY_URL=https://serial:<YOURSERIAL>@download.kopano.io/supported/webapp:/final/Debian_9.0 https://github.com/zokradonh/kopano-docker.git#:webapp
 # Do the same with KOPANO_CORE_REPOSITORY as webapp needs some packages from core.
-# If you want to use community version please use images from hub.docker.com
+# If you want to use community version please use images from hub.docker.com.
 # Changing KOPANO_WEBAPP_VERSION does not really change the resulting image.
 ARG KOPANO_WEBAPP_VERSION=newest
 ARG KOPANO_REPOSITORY_BRANCH=master
 ARG KOPANO_WEBAPP_REPOSITORY_URL="http://buildproxy/supported/webapp:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
 ARG KOPANO_CORE_REPOSITORY_URL="http://buildproxy/supported/core:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
+ARG NO_RELEASE_KEY_DOWNLOAD=0
 
 # install kopano web app and refresh ca-certificates
 RUN echo ${KOPANO_WEBAPP_VERSION} > /kopano/buildversion && \
     echo "deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /" > /etc/apt/sources.list.d/zpush.list && \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-webapp.list && \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list && \
-    curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add - && \
-    curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add - && \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list; \
+    (exit ${NO_RELEASE_KEY_DOWNLOAD}) && curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add -; \
+    (exit ${NO_RELEASE_KEY_DOWNLOAD}) && curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
     curl -s -S -o - "http://repo.z-hub.io/z-push:/final/Debian_9.0/Release.key" | apt-key add - && \
     apt-get update && apt-get install -y --no-install-recommends \
-    apache2 \
-    libapache2-mod-php7.0 \
-    crudini \
-    z-push-backend-kopano \
-    z-push-config-apache \
-    ca-certificates \
-    kopano-webapp \
-    kopano-webapp-plugin-contactfax \
-    kopano-webapp-plugin-desktopnotifications \
-    kopano-webapp-plugin-filepreviewer \
-    kopano-webapp-plugin-folderwidgets \
-#    kopano-webapp-plugin-gmaps \
-    kopano-webapp-plugin-pimfolder \
-    kopano-webapp-plugin-quickitems \
-#    kopano-webapp-plugin-spell-de-at \
-#    kopano-webapp-plugin-spell-de-ch \
-    kopano-webapp-plugin-spell-de-de \
-    kopano-webapp-plugin-spell-en-gb \
-    kopano-webapp-plugin-spell-en \
-#    kopano-webapp-plugin-spell-es \
-#    kopano-webapp-plugin-spell-fr \
-#    kopano-webapp-plugin-spell-nl \
-#    kopano-webapp-plugin-spell-pl-pl \
-    kopano-webapp-plugin-spell \
-#    kopano-webapp-plugin-titlecounter \
-#    kopano-webapp-plugin-webappmanual \
-#    kopano-webapp-plugin-zdeveloper \
+        apache2 \
+        libapache2-mod-php7.0 \
+        crudini \
+        z-push-backend-kopano \
+        z-push-config-apache \
+        ca-certificates \
+        kopano-webapp \
+        kopano-webapp-plugin-contactfax \
+        kopano-webapp-plugin-desktopnotifications \
+        kopano-webapp-plugin-filepreviewer \
+        kopano-webapp-plugin-folderwidgets \
+        kopano-webapp-plugin-gmaps \
+        kopano-webapp-plugin-intranet \
+        kopano-webapp-plugin-mattermost \
+        kopano-webapp-plugin-pimfolder \
+        kopano-webapp-plugin-quickitems \
+        kopano-webapp-plugin-spell-de-at \
+        kopano-webapp-plugin-spell-de-at \
+        kopano-webapp-plugin-spell-de-ch \
+        kopano-webapp-plugin-spell-de-de \
+        kopano-webapp-plugin-spell-de-de \
+        kopano-webapp-plugin-spell-en-gb \
+        kopano-webapp-plugin-spell-en \
+        kopano-webapp-plugin-spell-en \
+        kopano-webapp-plugin-spell-es \
+        kopano-webapp-plugin-spell-es \
+        kopano-webapp-plugin-spell-fr \
+        kopano-webapp-plugin-spell-it \
+        kopano-webapp-plugin-spell-nl \
+        kopano-webapp-plugin-spell-nl \
+        kopano-webapp-plugin-spell-pl-pl \
+        kopano-webapp-plugin-spell \
+        kopano-webapp-plugin-spell \
+        kopano-webapp-plugin-titlecounter \
+        kopano-webapp-plugin-webappmanual \
+        kopano-webapp-plugin-zdeveloper \
+        threema4deskapp \
+        whatsapp4deskapp \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
 COPY apache2-kopano.conf /etc/apache2/sites-available/kopano.conf
 
-    # configure basics
+# configure basics
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \

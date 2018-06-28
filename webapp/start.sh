@@ -28,4 +28,3 @@ rm -f /run/apache2/apache2.pid
 set +u
 source /etc/apache2/envvars
 exec /usr/sbin/apache2 -DFOREGROUND
-#exec /bin/bash -c "source /etc/apache2/envvars && /usr/sbin/apache2 -DFOREGROUND"

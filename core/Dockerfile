@@ -37,12 +37,13 @@ ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_REPOSITORY_BRANCH=master
 ARG KOPANO_CORE_REPOSITORY_URL="http://buildproxy/supported/core:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
+ARG NO_RELEASE_KEY_DOWNLOAD=0
 
 # install kopano components
 RUN set -x && \
     echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list && \
-    curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add - && \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list; \
+    (exit ${NO_RELEASE_KEY_DOWNLOAD}) && curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
     apt-get update && \
     apt-get install --no-install-recommends -y \
         kopano-server-packages="${KOPANO_CORE_VERSION}" \
