@@ -41,17 +41,21 @@ def parseenvironmentvariables(prependingpath):
         commentmatch = re.match(r"^KCCOMMENT_([A-Z]+)_([A-Z0-9_]+)$", name)
         if commentmatch != None:
             filename = commentmatch.group(1).lower() + ".cfg"
+            if prependingpath + filename not in configs:
+                configs[prependingpath + filename] = dict()
             try: 
                 configs[prependingpath + filename]["kccomment"].append(value)
-            except IndexError:
+            except KeyError:
                 configs[prependingpath + filename]["kccomment"] = []
                 configs[prependingpath + filename]["kccomment"].append(value)
         uncommentmatch = re.match(r"^KCUNCOMMENT_([A-Z]+)_([A-Z0-9_]+)$", name)
         if uncommentmatch != None:
             filename = uncommentmatch.group(1).lower() + ".cfg"
+            if prependingpath + filename not in configs:
+                configs[prependingpath + filename] = dict()
             try: 
-                configs[prependingpath + filename]["kunccomment"].append(value)
-            except IndexError:
-                configs[prependingpath + filename]["kunccomment"] = []
-                configs[prependingpath + filename]["kunccomment"].append(value)
+                configs[prependingpath + filename]["kcuncomment"].append(value)
+            except KeyError:
+                configs[prependingpath + filename]["kcuncomment"] = []
+                configs[prependingpath + filename]["kcuncomment"].append(value)
     return configs
