@@ -1,4 +1,4 @@
-"""This module provides functions for easy editing of kopano config files \
+"""This module provides functions for easy editing of kopano config files
 via environment variables"""
 
 import re
@@ -6,31 +6,45 @@ import os
 import os.path
 
 def configkopano(configs):
+    """ Changes configuration files according to configs typically returned from parseenvironmentvariables(..)"""
     for filename, config in configs.items():
         if not os.path.exists(filename):
             return
+        # read configuration file
         with open(filename) as f:
             contents = f.read()
         f.close()
 
         for key, newvalue in config.items():
             if key == "kccomment":
+                # comment lines
                 for line in newvalue:
                     contents = re.sub(r"^\s*" + re.escape(line), r"#{}".format(line), contents, 0, re.MULTILINE)
             elif key == "kcuncomment":
+                # uncomment lines
                 for line in newvalue:
                     contents = re.sub(r"^\s*#\s*" + re.escape(line) , line, contents, 0, re.MULTILINE)
             else:
-                contents = re.sub(r"^\s*#?\s*{}\s*=.*".format(key), r"{} = {}".format(key, newvalue), contents, 0, re.MULTILINE)
+                # find config line
+                if re.search(r"^\s*#?\s*{}\s*=.*".format(key), contents, re.MULTILINE) == None:
+                    # add configuration as new line
+                    contents += "\n{} = {}".format(key, newvalue)
+                else:
+                    # change existing line
+                    contents = re.sub(r"^\s*#?\s*{}\s*=.*".format(key), r"{} = {}".format(key, newvalue), contents, 0, re.MULTILINE)
 
+        # save new configuration
         with open(filename, "w") as f:
             f.write(contents)
         f.close()
 
 def parseenvironmentvariables(prependingpath):
+    """ Parse all environment variables starting with KCCONF_, KCCOMMENT_ and KCUNCOMMENT_ and 
+    return as multi dimensional dict """
     configs = dict()
 
     for name, value in os.environ.items():
+        # parse change/add configuration commands
         namematch = re.match(r"^KCCONF_([A-Z]+)_([A-Z0-9_]+)$", name)
         if namematch != None:
             filename = namematch.group(1).lower() + ".cfg"
@@ -38,6 +52,7 @@ def parseenvironmentvariables(prependingpath):
                 configs[prependingpath + filename] = dict()
             confkey = namematch.group(2).lower()
             configs[prependingpath + filename][confkey] = value
+        # parse comment configuration commands
         commentmatch = re.match(r"^KCCOMMENT_([A-Z]+)_([A-Z0-9_]+)$", name)
         if commentmatch != None:
             filename = commentmatch.group(1).lower() + ".cfg"
@@ -48,6 +63,7 @@ def parseenvironmentvariables(prependingpath):
             except KeyError:
                 configs[prependingpath + filename]["kccomment"] = []
                 configs[prependingpath + filename]["kccomment"].append(value)
+        # parse uncomment configuration commands
         uncommentmatch = re.match(r"^KCUNCOMMENT_([A-Z]+)_([A-Z0-9_]+)$", name)
         if uncommentmatch != None:
             filename = uncommentmatch.group(1).lower() + ".cfg"
