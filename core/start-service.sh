@@ -19,6 +19,14 @@ chown -R kopano:kopano /kopano/data /run /tmp
 echo "Clean old pid files and sockets" | ts
 rm -f /var/run/kopano/*
 
+# allow helper commands given by "docker-compose run"
+if [ $# -gt 0 ]
+then
+    exec "$@"
+    exit
+fi
+
+# start regular service
 case "$SERVICE_TO_START" in
     server)
         exec /usr/sbin/kopano-server -F

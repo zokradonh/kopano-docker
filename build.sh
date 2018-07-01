@@ -8,18 +8,21 @@ networkname="buildproxy_net"
 customBuildArgs=()
 serial=""
 component=""
+proxyContainerId=""
+nocache=""
 
 function _usage()
 {
-    echo "Usage: build.sh -c core|webapp [-s serial] [-b master|final|pre-final] [-p buildcontext] [-n networkname] [[-a buildarg] ...]"
+    echo "Usage: build.sh -c core|webapp [-s serial] [-b master|final|pre-final] [-p buildcontext] [-n networkname] [[-a buildarg] ...] [-i]"
     echo "Example: build.sh -c core -s ABC123456789DEF -b final"
-    echo "If no branch is specified, 'master' will be built by default."
-    echo "If no buildcontext is specified, it will be built from git repository. Normally, you do not need to specify this."
-    echo "If no networkname is specified, it will create and use a network named 'buildproxy_net'."
-    echo "You can specify custom build args via e.g. -a KOPANO_CORE_REPOSITORY_URL=http://thisismy/url -a KOPANO_WEBAPP_REPOSITORY_URL=http://thisismy/url."
+    echo "-i   Do not use cache on docker build."
+    echo "-b   If no branch is specified, 'master' will be built by default."
+    echo "-p   If no buildcontext is specified, it will be built from git repository. Normally, you do not need to specify this."
+    echo "-n   If no networkname is specified, it will create and use a network named 'buildproxy_net'."
+    echo "-a   You can specify custom build args via e.g. -a KOPANO_CORE_REPOSITORY_URL=http://thisismy/url -a KOPANO_WEBAPP_REPOSITORY_URL=http://thisismy/url."
 }
 
-while getopts ":s:c:b:p:n:a:" opt; do
+while getopts ":s:c:b:p:n:a:i" opt; do
     case $opt in
         s)
             serial=$OPTARG
@@ -38,6 +41,9 @@ while getopts ":s:c:b:p:n:a:" opt; do
         ;;
         a)
             customBuildArgs[${#customBuildArgs[*]}]=$OPTARG
+        ;;
+        i)
+            nocache="--no-cache"
         ;;
         \?)
             _usage
@@ -118,6 +124,7 @@ docker build \
     --build-arg KOPANO_${component^^}_VERSION=$currentVersion \
     $customBuildString \
     $tagLatest \
+    $nocache \
     -t zokradonh/kopano_$component:$currentVersionDocker \
     -t zokradonh/kopano_$component:latest-$branch \
     --network $networkname \
