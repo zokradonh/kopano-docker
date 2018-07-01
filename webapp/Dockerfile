@@ -48,6 +48,7 @@ RUN echo ${KOPANO_WEBAPP_VERSION} > /kopano/buildversion && \
         crudini \
         z-push-backend-kopano \
         z-push-config-apache \
+        z-push-ipc-sharedmemory \
         ca-certificates \
         kopano-webapp \
         kopano-webapp-plugin-contactfax \
@@ -79,7 +80,7 @@ RUN echo ${KOPANO_WEBAPP_VERSION} > /kopano/buildversion && \
         kopano-webapp-plugin-titlecounter \
         kopano-webapp-plugin-webappmanual \
         kopano-webapp-plugin-zdeveloper \
-        threema4deskapp \
+        #threema4deskapp \
         whatsapp4deskapp \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
