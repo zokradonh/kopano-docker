@@ -13,13 +13,16 @@ sed -e "s#define(\"DEFAULT_SERVER\",\s*\".*\"#define(\"DEFAULT_SERVER\", \"https
 echo "Configure z-push"
 sed -e "s#define([\"']MAPI_SERVER[\"'],\s*[\"']default:[\"'])#define('MAPI_SERVER', 'https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano')#" \
         -i /etc/z-push/kopano.conf.php
-sed -e "s#define([\"']USE_X_FORWARDED_FOR_HEADER[\"'],\s*false)#define('USE_X_FORWARDED_FOR_HEADER', true)#" \
+sed -e "s#define([\"']USE_CUSTOM_REMOTE_IP_HEADER[\"'],\s*false)#define('USE_CUSTOM_REMOTE_IP_HEADER', true)#" \
         -i /etc/z-push/z-push.conf.php
 
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions /tmp/webapp
 
 echo "Activate z-push log rerouting"
+touch /var/log/z-push/z-push.log
+touch /var/log/z-push/z-push-error.log
+chown www-data:www-data /var/log/z-push/z-push.log /var/log/z-push/z-push-error.log
 tail --pid=$$ -F --lines=0 -q /var/log/z-push/z-push.log &
 tail --pid=$$ -F --lines=0 -q /var/log/z-push/z-push-error.log &
 
