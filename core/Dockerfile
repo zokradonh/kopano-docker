@@ -17,7 +17,7 @@ RUN apt-get update && \
         moreutils \
         locales \
         apt-transport-https \
-        python3 && \
+        python3-minimal && \
     rm -rf /var/cache/apt /var/lib/apt/lists
 
 RUN curl -s -S -L -o /usr/local/bin/confix https://raw.githubusercontent.com/budhash/confix/master/confix && \
@@ -38,6 +38,7 @@ ARG KOPANO_REPOSITORY_BRANCH=master
 ARG KOPANO_CORE_REPOSITORY_URL="http://buildproxy/supported/core:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG NO_RELEASE_KEY_DOWNLOAD=0
+ARG ADDITIONAL_KOPANO_PACKAGES
 
 # install kopano components
 RUN set -x && \
@@ -47,6 +48,7 @@ RUN set -x && \
     apt-get update && \
     apt-get install --no-install-recommends -y \
         kopano-server-packages="${KOPANO_CORE_VERSION}" \
+        ${ADDITIONAL_KOPANO_PACKAGES} \
         php7.0-cli && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
     cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ && \

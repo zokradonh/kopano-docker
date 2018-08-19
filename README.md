@@ -1,4 +1,4 @@
-# KopanoDocker
+# Kopano Docker Image
 Unofficial kopano docker images for all kopano services.
 Use kopano_core image for server/spooler/dagent/search/monitor/ical/gateway services.
 Use kopano_webapp for web service.
