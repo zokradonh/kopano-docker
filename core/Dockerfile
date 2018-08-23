@@ -6,7 +6,7 @@ LABEL maintainer=az@zok.xyz \
 RUN mkdir -p /kopano/repo /kopano/data
 WORKDIR /kopano/repo
 
-ENV DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 
 # install basics
 RUN apt-get update && \
@@ -17,34 +17,39 @@ RUN apt-get update && \
         moreutils \
         locales \
         apt-transport-https \
+        apt-utils jq \
         python3-minimal && \
     rm -rf /var/cache/apt /var/lib/apt/lists
 
-RUN curl -s -S -L -o /usr/local/bin/confix https://raw.githubusercontent.com/budhash/confix/master/confix && \
-    chmod +x /usr/local/bin/confix && \
-    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8 && \
     curl -s -S -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 && \
     chmod a+x /usr/local/bin/dumb-init
 
-# If you have active Kopano subscription you can change KOPANO_CORE_REPOSITORY_URL to
-# https://serial:<YOURSERIAL>@download.kopano.io/supported/core:/final/Debian_9.0
-# and replace <YOURSERIAL> with your serial. You can also use pre-final or any other repository branch.
-# If you want to use community version please use images from hub.docker.com
 ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_REPOSITORY_BRANCH=master
-ARG KOPANO_CORE_REPOSITORY_URL="http://buildproxy/supported/core:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
+ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
-ARG NO_RELEASE_KEY_DOWNLOAD=0
+ARG DOWNLOAD_COMMUNITY_PACKAGES=1
+ARG RELEASE_KEY_DOWNLOAD=0
 ARG ADDITIONAL_KOPANO_PACKAGES
 
-# install kopano components
-RUN set -x && \
+# community build
+COPY download_community.sh /kopano/download_community.sh
+
+RUN \
+    # community download 
+    [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ] && \
+    chmod a+x /kopano/download_community.sh && \
+    /kopano/download_community.sh core && \
+    gzip -f9 Packages; \
+    # install
+    set -x && \
     echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list; \
-    (exit ${NO_RELEASE_KEY_DOWNLOAD}) && curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
+    [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ] && curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
     apt-get update && \
     apt-get install --no-install-recommends -y \
         kopano-server-packages="${KOPANO_CORE_VERSION}" \

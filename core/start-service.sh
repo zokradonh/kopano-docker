@@ -13,8 +13,9 @@ mkdir -p /kopano/data/attachments /tmp/$SERVICE_TO_START /var/run/kopano
 echo "Configure core service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/$SERVICE_TO_START.py
 
-echo "Set config ownership" | ts
-chown -R kopano:kopano /kopano/data /run /tmp
+echo "Set ownership" | ts
+chown -R kopano:kopano /run /tmp
+chown kopano:kopano /kopano/data/ /kopano/data/attachments
 
 echo "Clean old pid files and sockets" | ts
 rm -f /var/run/kopano/*
