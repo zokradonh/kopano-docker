@@ -18,15 +18,14 @@ RUN apt-get update && \
         locales \
         apt-transport-https \
         apt-utils jq \
+        dumb-init \
         python3-minimal && \
     rm -rf /var/cache/apt /var/lib/apt/lists
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8 && \
-    curl -s -S -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 && \
-    chmod a+x /usr/local/bin/dumb-init
+    update-locale LANG=en_US.UTF-8
 
 ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_REPOSITORY_BRANCH=master
@@ -69,6 +68,6 @@ ENV SERVICE_TO_START=server
 COPY kcconf.py defaultconfigs/ start-service.sh /kopano/
 RUN chmod a+x /kopano/start-service.sh
 
-ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 CMD [ "/kopano/start-service.sh" ]

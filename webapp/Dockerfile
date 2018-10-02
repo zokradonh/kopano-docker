@@ -17,6 +17,7 @@ RUN apt-get update && \
         moreutils \
         locales \
         apt-transport-https \
+        dumb-init \
         python3 && \
     rm -rf /var/cache/apt /var/lib/apt/lists
 
@@ -91,8 +92,6 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8 && \
-    curl -s -S -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 && \
-    chmod a+x /usr/local/bin/dumb-init && \
     # configure apache
     rm /etc/apache2/sites-enabled/* && \
     sed -e 's,^ErrorLog.*,ErrorLog "|/bin/cat",' -i /etc/apache2/apache2.conf && \
@@ -120,5 +119,5 @@ RUN chmod a+x /kopano/start.sh
 
 ENV LANG en_US.UTF-8 
 
-ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD [ "/kopano/start.sh" ]
