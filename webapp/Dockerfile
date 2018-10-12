@@ -12,15 +12,17 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
-        curl \
-        gpg \
-        ca-certificates \
-        moreutils \
-        locales \
         apt-transport-https \
-        apt-utils jq \
+        apt-utils \
+        ca-certificates \
+        curl \
         dumb-init \
-        python3 && \
+        gpg \
+        jq \
+        locales \
+        moreutils \
+        python3 \
+        && \
     rm -rf /var/cache/apt /var/lib/apt/lists
 
 # If you have active Kopano subscription you can change KOPANO_WEBAPP_REPOSITORY_URL to
@@ -43,12 +45,10 @@ COPY download_community.sh /kopano/download_community.sh
 
 # install kopano web app and refresh ca-certificates
 RUN \
-    # community download 
+    # community download
     [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ] && \
-    chmod a+x /kopano/download_community.sh && \
     /kopano/download_community.sh core && \
     /kopano/download_community.sh webapp && \
-    gzip -f9 Packages; \
     # install
     set -x && \
     echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
@@ -133,7 +133,7 @@ COPY start.sh /kopano/start.sh
 
 RUN chmod a+x /kopano/start.sh
 
-ENV LANG en_US.UTF-8 
+ENV LANG en_US.UTF-8
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD [ "/kopano/start.sh" ]
