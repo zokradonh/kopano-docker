@@ -48,7 +48,7 @@ RUN \
     # community download
     [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ] && \
     /kopano/download_community.sh core && \
-    /kopano/download_community.sh webapp && \
+    /kopano/download_community.sh webapp; \
     # install
     set -x && \
     echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
