@@ -10,6 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # install basics
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
         curl \
         gpg \
@@ -29,19 +30,30 @@ RUN apt-get update && \
 # If you want to use community version please use images from hub.docker.com.
 # Changing KOPANO_WEBAPP_VERSION does not really change the resulting image.
 ARG KOPANO_WEBAPP_VERSION=newest
-ARG KOPANO_REPOSITORY_BRANCH=master
-ARG KOPANO_WEBAPP_REPOSITORY_URL="http://buildproxy/supported/webapp:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
-ARG KOPANO_CORE_REPOSITORY_URL="http://buildproxy/supported/core:/${KOPANO_REPOSITORY_BRANCH}/Debian_9.0"
+ARG KOPANO_WEBAPP_REPOSITORY_URL="file:/kopano/repo"
+ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
-ARG NO_RELEASE_KEY_DOWNLOAD=0
+ARG DOWNLOAD_COMMUNITY_PACKAGES=1
+ARG RELEASE_KEY_DOWNLOAD=0
+ARG ADDITIONAL_KOPANO_PACKAGES
 
 # install kopano web app and refresh ca-certificates
-RUN echo ${KOPANO_WEBAPP_VERSION} > /kopano/buildversion && \
-    echo "deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /" > /etc/apt/sources.list.d/zpush.list && \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-webapp.list && \
+RUN \
+    # community download 
+    [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ] && \
+    chmod a+x /kopano/download_community.sh && \
+    /kopano/download_community.sh core && \
+    /kopano/download_community.sh webapp && \
+    gzip -f9 Packages; \
+    # install
+    set -x && \
+    echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
+    echo ${KOPANO_WEBAPP_VERSION} >> /kopano/buildversion && \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list; \
-    (exit ${NO_RELEASE_KEY_DOWNLOAD}) && curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add -; \
-    (exit ${NO_RELEASE_KEY_DOWNLOAD}) && curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
+    [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 0 ] && echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-webapp.list; \
+    [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ] && curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
+    [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ] && curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add -; \
+    echo "deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /" > /etc/apt/sources.list.d/zpush.list && \
     curl -s -S -o - "http://repo.z-hub.io/z-push:/final/Debian_9.0/Release.key" | apt-key add - && \
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
@@ -81,7 +93,7 @@ RUN echo ${KOPANO_WEBAPP_VERSION} > /kopano/buildversion && \
         kopano-webapp-plugin-titlecounter \
         kopano-webapp-plugin-webappmanual \
         kopano-webapp-plugin-zdeveloper \
-        #threema4deskapp \
+        ${ADDITIONAL_KOPANO_PACKAGES} \
         whatsapp4deskapp \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 

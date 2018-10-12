@@ -22,15 +22,3 @@ See: https://documentation.kopano.io/kopanocore_administrator_manual/configure_k
 Example:
 
 `docker-compose exec kserver kopano-cli --list-users` (This may last very long without any console output.)
-
-
-Building supported Kopano
-=====
-If you have an active Kopano subscription you need specify the following build time arguments:
-- KOPANO_CORE_REPOSITORY_URL to `https://serial:<YOURSERIAL>@download.kopano.io/supported/core:/final/Debian_9.0`
-- RELEASE_KEY_DOWNLOAD to 1
-- DOWNLOAD_COMMUNITY_PACKAGES to 0
-
-Example:
-
-`docker build --build-arg KOPANO_CORE_REPOSITORY_URL=https://serial:ABC123456789@download.kopano.io/supported/core:/final/Debian_9.0 --build-arg RELEASE_KEY_DOWNLOAD=1 --build-arg DOWNLOAD_COMMUNITY_PACKAGES=0 https://github.com/zokradonh/kopano-docker.git#:core`

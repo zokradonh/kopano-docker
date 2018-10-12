@@ -10,6 +10,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # install basics
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
         curl \
         gpg \
@@ -28,7 +29,6 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     update-locale LANG=en_US.UTF-8
 
 ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_REPOSITORY_BRANCH=master
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
@@ -51,7 +51,7 @@ RUN \
     [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ] && curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
     apt-get update && \
     apt-get install --no-install-recommends -y \
-        kopano-server-packages="${KOPANO_CORE_VERSION}" \
+        kopano-server-packages \
         ${ADDITIONAL_KOPANO_PACKAGES} \
         php7.0-cli && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \

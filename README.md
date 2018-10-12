@@ -3,11 +3,50 @@ Unofficial kopano docker images for all kopano services.
 Use kopano_core image for server/spooler/dagent/search/monitor/ical/gateway services.
 Use kopano_webapp for web service.
 
+Building
+=======
+You may use `build.sh` script but you can also invoke `docker build` directly to build community or supported kopano components.
+Currently there are the following components implemented by this project:
+- core (server/spooler/dagent/search/monitor/ical/gateway services)
+- webapp (apache server for kopano webapp and z-push)
+
+### Building community Kopano
+Example:
+
+`docker build https://github.com/zokradonh/kopano-docker.git#:core`
+
+Or use the build.sh script:
+
+`build.sh -c core`
+
+### Building supported Kopano
+If you have an active Kopano subscription you need specify the following build time arguments:
+- KOPANO_CORE_REPOSITORY_URL to `https://serial:<YOURSERIAL>@download.kopano.io/supported/core:/final/Debian_9.0`
+- RELEASE_KEY_DOWNLOAD to 1
+- DOWNLOAD_COMMUNITY_PACKAGES to 0
+
+Example:
+
+`docker build --build-arg KOPANO_CORE_REPOSITORY_URL=https://serial:ABC123456789@download.kopano.io/supported/core:/final/Debian_9.0 --build-arg RELEASE_KEY_DOWNLOAD=1 --build-arg DOWNLOAD_COMMUNITY_PACKAGES=0 https://github.com/zokradonh/kopano-docker.git#:core`
+
+Or use the build.sh script:
+
+`build.sh -c core -s ABC123456789 -b final`
+
+Replace `ABC123456789` with your serial.
+
+---
+***WARNING***
+
+The built image now includes your serial. Do not push this image to any public registry like `hub.docker.com`.
+
+---
+
 Example
 =======
 
 docker-compose.yml
-```
+```YAML
 version: '3'
 
 services:
@@ -258,13 +297,13 @@ Change all lines which are commented especially those with #change here
 This is just a quick example docker-compose.yml made in some minutes to provide a better start.
 
 Requires `.env` file next to docker-compose.yml with content like this
-```
+```INI
 CORE_VERSION=8.6.80.1055-0plus156.1
 WEBAPP_VERSION=3.4.17.1565plus895.1
 ```
 
 Requires `ldap-groups.cf` in ./mtaconfig directory next to docker-compose.yml
-```
+```INI
 bind                     = yes
 bind_dn                  = cn=admin,dc=domain,dc=com
 bind_pw                  = admin
