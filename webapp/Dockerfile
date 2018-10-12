@@ -12,15 +12,17 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
-        curl \
-        gpg \
-        ca-certificates \
-        moreutils \
-        locales \
         apt-transport-https \
-        apt-utils jq \
+        apt-utils \
+        ca-certificates \
+        curl \
         dumb-init \
-        python3 && \
+        gpg \
+        jq \
+        locales \
+        moreutils \
+        python3 \
+        && \
     rm -rf /var/cache/apt /var/lib/apt/lists
 
 # If you have active Kopano subscription you can change KOPANO_WEBAPP_REPOSITORY_URL to
