@@ -18,6 +18,7 @@ RUN apt-get update && \
         moreutils \
         locales \
         apt-transport-https \
+        apt-utils jq \
         dumb-init \
         python3 && \
     rm -rf /var/cache/apt /var/lib/apt/lists
@@ -36,6 +37,9 @@ ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG RELEASE_KEY_DOWNLOAD=0
 ARG ADDITIONAL_KOPANO_PACKAGES
+
+# community build
+COPY download_community.sh /kopano/download_community.sh
 
 # install kopano web app and refresh ca-certificates
 RUN \
