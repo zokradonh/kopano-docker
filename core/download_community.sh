@@ -8,7 +8,12 @@ function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 # query community server by h5ai API
 filename=$(curl -s -S -L -d "action=get&items%5Bhref%5D=%2Fcommunity%2F$component%3A%2F&items%5Bwhat%5D=1" -H \
                 "Accept: application/json" https://download.kopano.io/community/ | jq '.items[].href' | \
-                grep Debian_9.0-amd64 | sed 's#"##g' | sed "s#/community/$component:/##")
+                grep 'Debian_9.0-all\|Debian_9.0-amd64' | sed 's#"##g' | sed "s#/community/$component:/##")
+
+if [ -z "${filename// }" ]; then
+	echo "unknown component"
+	exit 1
+fi
 
 filename=$(urldecode "$filename")
 
