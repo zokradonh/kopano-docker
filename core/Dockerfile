@@ -39,11 +39,9 @@ ARG ADDITIONAL_KOPANO_PACKAGES
 COPY download_community.sh /kopano/download_community.sh
 
 RUN \
-    # community download 
+    # community download
     [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ] && \
-    chmod a+x /kopano/download_community.sh && \
     /kopano/download_community.sh core && \
-    gzip -f9 Packages; \
     # install
     set -x && \
     echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
@@ -61,7 +59,7 @@ RUN \
 
 ENV KOPANO_LOCALE="de_DE.UTF-8"
 ENV KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8"
-ENV LANG=en_US.UTF-8 
+ENV LANG=en_US.UTF-8
 
 ENV SERVICE_TO_START=server
 
