@@ -43,12 +43,10 @@ COPY download_community.sh /kopano/download_community.sh
 
 # install kopano web app and refresh ca-certificates
 RUN \
-    # community download 
+    # community download
     [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ] && \
-    chmod a+x /kopano/download_community.sh && \
     /kopano/download_community.sh core && \
     /kopano/download_community.sh webapp && \
-    gzip -f9 Packages; \
     # install
     set -x && \
     echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
@@ -133,7 +131,7 @@ COPY start.sh /kopano/start.sh
 
 RUN chmod a+x /kopano/start.sh
 
-ENV LANG en_US.UTF-8 
+ENV LANG en_US.UTF-8
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD [ "/kopano/start.sh" ]
