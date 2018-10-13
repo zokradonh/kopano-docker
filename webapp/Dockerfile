@@ -42,7 +42,6 @@ SHELL [ "/bin/bash", "-c"]
 
 # install kopano web app and refresh ca-certificates
 RUN \
-<<<<<<< HEAD
     # community download and package as apt source repository
     . /kopano/helper/common.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
@@ -62,20 +61,6 @@ RUN \
         curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add -; \
     fi; \
     # prepare z-push installation
-=======
-    # community download
-    [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ] && \
-    /kopano/download_community.sh core && \
-    /kopano/download_community.sh webapp; \
-    # install
-    set -x && \
-    echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
-    echo ${KOPANO_WEBAPP_VERSION} >> /kopano/buildversion && \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list; \
-    [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 0 ] && echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-webapp.list; \
-    [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ] && curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
-    [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ] && curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add -; \
->>>>>>> e6766f261f54d575dbef21af400319f27583d5c0
     echo "deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /" > /etc/apt/sources.list.d/zpush.list && \
     curl -s -S -o - "http://repo.z-hub.io/z-push:/final/Debian_9.0/Release.key" | apt-key add - && \
     # install

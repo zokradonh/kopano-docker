@@ -43,7 +43,6 @@ COPY --from=common /common.sh /kopano/helper/
 SHELL [ "/bin/bash", "-c"]
 
 RUN \
-<<<<<<< HEAD
     # community download and package as apt source repository
     . /kopano/helper/common.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
@@ -58,11 +57,6 @@ RUN \
     if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
         curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
     fi; \
-=======
-    # community download
-    [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ] && \
-    /kopano/download_community.sh core; \
->>>>>>> e6766f261f54d575dbef21af400319f27583d5c0
     # install
     apt-get update && \
     set -x && \
