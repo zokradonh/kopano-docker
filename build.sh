@@ -93,8 +93,7 @@ then
     echo "Start building supported kopano $component image version ($currentVersion)..."
     set -x
     # build it
-    if docker build \
-                 --pull \
+    if docker build --pull \
                  --build-arg "KOPANO_${component^^}_REPOSITORY_URL=https://serial:$serial@download.kopano.io/supported/$component:/$branch/Debian_9.0" \
                  --build-arg RELEASE_KEY_DOWNLOAD=1 \
                  --build-arg "DOWNLOAD_COMMUNITY_PACKAGES=0" \

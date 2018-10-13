@@ -50,7 +50,7 @@ RUN \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # save kopano version if supported kopano
-    if [ -z /kopano/buildversion ]; then \
+    if [ ! -f /kopano/buildversion ]; then \
         echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
     fi; \
     # install apt key if supported kopano
