@@ -1,12 +1,14 @@
+FROM zokradonh/kopano_common AS common
+
 FROM debian:stretch
 
 LABEL maintainer=az@zok.xyz \
       version="2.0"
 
-RUN mkdir -p /kopano/repo /kopano/data
+RUN mkdir -p /kopano/repo /kopano/data /kopano/helper
 WORKDIR /kopano/repo
 
-ENV DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 
 # install basics
 RUN apt-get update && \
@@ -25,40 +27,44 @@ RUN apt-get update && \
         && \
     rm -rf /var/cache/apt /var/lib/apt/lists
 
-# If you have active Kopano subscription you can change KOPANO_WEBAPP_REPOSITORY_URL to
-# https://serial:<YOURSERIAL>@download.kopano.io/supported/webapp:/final/Debian_9.0
-# and replace <YOURSERIAL> with your serial. You can also use pre-final or any other repository branch.
-# docker build --build-arg KOPANO_WEBAPP_REPOSITORY_URL=https://serial:<YOURSERIAL>@download.kopano.io/supported/webapp:/final/Debian_9.0 https://github.com/zokradonh/kopano-docker.git#:webapp
-# Do the same with KOPANO_CORE_REPOSITORY as webapp needs some packages from core.
-# If you want to use community version please use images from hub.docker.com.
-# Changing KOPANO_WEBAPP_VERSION does not really change the resulting image.
 ARG KOPANO_WEBAPP_VERSION=newest
-ARG KOPANO_WEBAPP_REPOSITORY_URL="file:/kopano/repo"
-ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo"
+ARG KOPANO_WEBAPP_REPOSITORY_URL="file:/kopano/repo/webapp"
+ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG RELEASE_KEY_DOWNLOAD=0
-ARG ADDITIONAL_KOPANO_PACKAGES
+ARG ADDITIONAL_KOPANO_PACKAGES=""
 
-# community build
-COPY download_community.sh /kopano/download_community.sh
+# get common utilities
+COPY --from=common /common.sh /kopano/helper/
+
+SHELL [ "/bin/bash", "-c"]
 
 # install kopano web app and refresh ca-certificates
 RUN \
-    # community download
-    [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ] && \
-    /kopano/download_community.sh core && \
-    /kopano/download_community.sh webapp && \
-    # install
-    set -x && \
-    echo ${KOPANO_CORE_VERSION} > /kopano/buildversion && \
-    echo ${KOPANO_WEBAPP_VERSION} >> /kopano/buildversion && \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-core.list; \
-    [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 0 ] && echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano-webapp.list; \
-    [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ] && curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
-    [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ] && curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add -; \
+    # community download and package as apt source repository
+    . /kopano/helper/common.sh && \
+    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
+        dl_and_package_community "core"; \
+        dl_and_package_community "webapp"; \
+    fi; \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
+    # save kopano version if supported kopano
+    if [ -z /kopano/buildversion ]; then \
+        echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
+        echo "webapp-${KOPANO_WEBAPP_VERSION}" >> /kopano/buildversion; \
+    fi; \
+    # install apt keys if supported kopano
+    if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
+        curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
+        curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add -; \
+    fi; \
+    # prepare z-push installation
     echo "deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /" > /etc/apt/sources.list.d/zpush.list && \
     curl -s -S -o - "http://repo.z-hub.io/z-push:/final/Debian_9.0/Release.key" | apt-key add - && \
+    # install
+    set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
         libapache2-mod-php7.0 \
@@ -130,8 +136,6 @@ VOLUME /var/lib/z-push/
 EXPOSE 80/tcp
 
 COPY start.sh /kopano/start.sh
-
-RUN chmod a+x /kopano/start.sh
 
 ENV LANG en_US.UTF-8
 

@@ -9,7 +9,7 @@ serial=""
 component=""
 nocache=""
 
-function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
+. ./common/common.sh
 
 function _usage()
 {
@@ -23,7 +23,7 @@ function _usage()
     echo "-a   You can specify custom build args via e.g. -a ADDITIONAL_KOPANO_PACKAGES=kopano-migration-imap"
 }
 
-while getopts ":s:c:b:p:n:a:i" opt; do
+while getopts ":s:c:b:p:a:i" opt; do
     case $opt in
         s)
             serial=$OPTARG
@@ -81,11 +81,8 @@ then
 
     # start build of supported kopano
     # get current version to brand and tag the image correctly
-    currentVersion=$(curl -s -S -L https://serial:$serial@download.kopano.io/supported/$component:/$branch/Debian_9.0/Packages.gz |\
+    currentVersion=$(curl -s -S -L "https://serial:$serial@download.kopano.io/supported/$component:/$branch/Debian_9.0/Packages.gz" |\
                         gzip -d | grep -A 8 "^Package: $mainpackage$" | awk '/Version/ { print $2 }')
-
-    currentVersionDocker=$(echo $currentVersion | sed 's/+/plus/')
-
 
     # webapp also needs core repository
     if [ "$component" == "webapp" ]
@@ -94,49 +91,48 @@ then
     fi
 
     echo "Start building supported kopano $component image version ($currentVersion)..."
-
+    set -x
     # build it
-    docker build --build-arg KOPANO_${component^^}_REPOSITORY_URL=https://serial:$serial@download.kopano.io/supported/$component:/$branch/Debian_9.0 \
+    if docker build \
+                 --pull \
+                 --build-arg "KOPANO_${component^^}_REPOSITORY_URL=https://serial:$serial@download.kopano.io/supported/$component:/$branch/Debian_9.0" \
                  --build-arg RELEASE_KEY_DOWNLOAD=1 \
-                 --build-arg DOWNLOAD_COMMUNITY_PACKAGES=0 \
-                 --build-arg KOPANO_${component^^}_VERSION=$currentVersion \
-                 -t zokradonh/kopano_$component:$currentVersionDocker \
-                 -t zokradonh/kopano_$component:latest-$branch \
+                 --build-arg "DOWNLOAD_COMMUNITY_PACKAGES=0" \
+                 --build-arg "KOPANO_${component^^}_VERSION=$currentVersion" \
+                 -t "zokradonh/kopano_$component:${currentVersion//+/plus}" \
+                 -t "zokradonh/kopano_$component:latest-$branch" \
                  $nocache \
                  $customBuildString \
-                 ${buildcontext_base}${component}
-    if [ $? -eq 0 ]
+                 "${buildcontext_base}${component}"
     then 
+        set +x
         echo "Please note that this image does include your serial. If you publish this image then your serial is exposed to public."
     fi
 else
     # start build of community kopano
 
-    hash jq > /dev/null
-    if [ $? -ne 0 ]
+    
+    if ! hash jq
     then
         echo "Please install jq in order to run this build script."
         exit 1
     fi
 
     # query community server by h5ai API
-    filename=$(curl -s -S -L -d "action=get&items%5Bhref%5D=%2Fcommunity%2F$component%3A%2F&items%5Bwhat%5D=1" -H \
-                    "Accept: application/json" https://download.kopano.io/community/ | jq '.items[].href' | \
-                    grep Debian_9.0-a | sed 's#"##g' | sed "s#/community/$component:/##")
+    filename=$(h5ai_query "$component")
 
-    filename=$(urldecode $filename)
-
-    currentVersion=$(echo $filename | sed -r 's#[a-z]+-([0-9_.+]+)-.*#\1#')
-    currentVersionDocker=$(echo $currentVersion | sed 's/+/plus/')
+    currentVersion=$(version_from_filename "$filename")
 
     echo "Start building community kopano $component image version ($currentVersion)..."
-
+    set -x
     # build it
-    docker build -t zokradonh/kopano_$component:$currentVersionDocker \
-                 -t zokradonh/kopano_$component:latest-$branch \
-                 -t zokradonh/kopano_$component:latest \
-                 --build-arg KOPANO_${component^^}_VERSION=$currentVersion \
+    docker build --pull \
+                 -t "zokradonh/kopano_$component:${currentVersion//+/plus}" \
+                 -t "zokradonh/kopano_$component:latest-$branch" \
+                 -t "zokradonh/kopano_$component:latest" \
+                 --build-arg "KOPANO_${component^^}_VERSION=$currentVersion" \
                  $nocache \
                  $customBuildString \
-                 ${buildcontext_base}${component}
+                 "${buildcontext_base}${component}"
+    set +x
 fi
