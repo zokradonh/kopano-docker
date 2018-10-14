@@ -1,50 +1,17 @@
-FROM zokradonh/kopano_common AS common
+FROM zokradonh/kopano_base
 
-FROM debian:stretch
-
-LABEL maintainer=az@zok.xyz \
-      version="2.0"
-
-RUN mkdir -p /kopano/repo /kopano/data /kopano/helper
-WORKDIR /kopano/repo
-
-ARG DEBIAN_FRONTEND=noninteractive
-
-# install basics
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install --no-install-recommends -y \
-        curl \
-        gpg \
-        ca-certificates \
-        moreutils \
-        locales \
-        apt-transport-https \
-        apt-utils jq \
-        dumb-init \
-        python3-minimal && \
-    rm -rf /var/cache/apt /var/lib/apt/lists
-
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8
-
-ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
-ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
-ARG DOWNLOAD_COMMUNITY_PACKAGES=1
-ARG RELEASE_KEY_DOWNLOAD=0
 ARG ADDITIONAL_KOPANO_PACKAGES=""
+ARG DOWNLOAD_COMMUNITY_PACKAGES=1
+ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
+ARG KOPANO_CORE_VERSION=newest
+ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
+ARG RELEASE_KEY_DOWNLOAD=0
 
-# get common utilities
-COPY --from=common /common.sh /kopano/helper/
-
-SHELL [ "/bin/bash", "-c"]
-
+# install Kopano WebApp and refresh ca-certificates
 RUN \
     # community download and package as apt source repository
-    . /kopano/helper/common.sh && \
+    # TODO: source or execute repo script?
+    . /kopano/helper/create-kopano-repo.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
         dl_and_package_community "core"; \
     fi; \
