@@ -2,7 +2,6 @@ docker_repo := zokradonh
 docker_login := `cat ~/.docker-account-user`
 docker_pwd := `cat ~/.docker-account-pwd`
 
-# TODO get actual version from container, below fails since it runs through dumb-init
 base_version = $(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion)
 core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=_)')
 webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)')
