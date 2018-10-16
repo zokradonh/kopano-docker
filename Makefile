@@ -52,7 +52,7 @@ publish: git-commit repo-login publish-base publish-core publish-webapp
 publish-container: component ?= base
 publish-container:
 	@echo 'publish latest to $(docker_repo)/kopano_$(component)'
-	docker push $(docker_repo)/kopano_$(component):$($(component)_version}
+	docker push $(docker_repo)/kopano_$(component):${$(component)_version}
 	docker push $(docker_repo)/kopano_$(component):latest
 
 publish-base: build-base tag-base
