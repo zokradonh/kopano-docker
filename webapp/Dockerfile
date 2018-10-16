@@ -1,49 +1,17 @@
-FROM zokradonh/kopano_common AS common
+FROM zokradonh/kopano_base
 
-FROM debian:stretch
-
-LABEL maintainer=az@zok.xyz \
-      version="2.0"
-
-RUN mkdir -p /kopano/repo /kopano/data /kopano/helper
-WORKDIR /kopano/repo
-
-ARG DEBIAN_FRONTEND=noninteractive
-
-# install basics
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install --no-install-recommends -y \
-        apt-transport-https \
-        apt-utils \
-        ca-certificates \
-        curl \
-        dumb-init \
-        gpg \
-        jq \
-        locales \
-        moreutils \
-        python3 \
-        && \
-    rm -rf /var/cache/apt /var/lib/apt/lists
-
-ARG KOPANO_WEBAPP_VERSION=newest
-ARG KOPANO_WEBAPP_REPOSITORY_URL="file:/kopano/repo/webapp"
+ARG ADDITIONAL_KOPANO_PACKAGES=""
+ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
-ARG DOWNLOAD_COMMUNITY_PACKAGES=1
+ARG KOPANO_WEBAPP_REPOSITORY_URL="file:/kopano/repo/webapp"
+ARG KOPANO_WEBAPP_VERSION=newest
 ARG RELEASE_KEY_DOWNLOAD=0
-ARG ADDITIONAL_KOPANO_PACKAGES=""
 
-# get common utilities
-COPY --from=common /common.sh /kopano/helper/
-
-SHELL [ "/bin/bash", "-c"]
-
-# install kopano web app and refresh ca-certificates
+# install Kopano WebApp and refresh ca-certificates
 RUN \
     # community download and package as apt source repository
-    . /kopano/helper/common.sh && \
+    . /kopano/helper/create-kopano-repo.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
         dl_and_package_community "core"; \
         dl_and_package_community "webapp"; \
@@ -60,6 +28,7 @@ RUN \
         curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
         curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add -; \
     fi; \
+    # TODO separate out z-push?
     # prepare z-push installation
     echo "deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /" > /etc/apt/sources.list.d/zpush.list && \
     curl -s -S -o - "http://repo.z-hub.io/z-push:/final/Debian_9.0/Release.key" | apt-key add - && \
