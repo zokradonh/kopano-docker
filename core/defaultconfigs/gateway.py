@@ -8,9 +8,9 @@ kcconf.configkopano({
         'log_file': "-",
         'log_level': "4",
         'tmp_path': "/tmp/gateway/",
-        'pop3_enable': "no",
-        'imap_enable': "no",
-        'imaps_enable': "yes"
+        'pop3_listen': "",
+        'imap_listen': "",
+        'imaps_listen': "*:993"
     }
 })
 
