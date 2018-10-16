@@ -2,3 +2,4 @@
 **/.vscode
 *.yml
 docker-compose.yml
+certs/*

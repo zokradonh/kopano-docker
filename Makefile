@@ -8,35 +8,35 @@ webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopan
 
 build-all: build-base build-core build-webapp
 
+build: component ?= base
+build:
+	docker build -t $(docker_repo)/kopano_$(component) $(component)/
+
 build-base:
-	docker build -t $(docker_repo)/kopano_base base/
+	component=base make build
+
+build-core:
+	component=core make build
+
+build-webapp:
+	component=webapp make build
+
+tag: component ?= base
+tag:
+	@echo 'create tag $($(component)_version)'
+	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
+	@echo 'create tag latest'
+	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):latest
+	git tag $(component)/${$(component)_version} || true
 
 tag-base:
-	@echo 'create tag $(base_version)'
-	docker tag $(docker_repo)/kopano_base $(docker_repo)/kopano_base:${base_version}
-	@echo 'create tag latest'
-	docker tag $(docker_repo)/kopano_base $(docker_repo)/kopano_base:latest
-	git tag base/${base_version} || true
-
-build-core: build-base
-	docker build -t $(docker_repo)/kopano_core  core/
+	component=base make tag
 
 tag-core:
-	@echo 'create tag $(core_version)'
-	docker tag $(docker_repo)/kopano_core $(docker_repo)/kopano_core:${core_version}
-	@echo 'create tag latest'
-	docker tag $(docker_repo)/kopano_core $(docker_repo)/kopano_core:latest
-	git tag core/${core_version} || true
-
-build-webapp: build-base
-	docker build -t $(docker_repo)/kopano_webapp  webapp/
+	component=core make tag
 
 tag-webapp:
-	@echo 'create tag $(webapp_version)'
-	docker tag $(docker_repo)/kopano_webapp $(docker_repo)/kopano_webapp:${webapp_version}
-	@echo 'create tag latest'
-	docker tag $(docker_repo)/kopano_webapp $(docker_repo)/kopano_webapp:latest
-	git tag webapp/${webapp_version} || true
+	component=webapp make tag
 
 git-commit:
 	git add -A && git commit -m "ci: commit changes before tagging"
