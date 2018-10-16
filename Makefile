@@ -1,4 +1,4 @@
-docker_repo := zokradonh
+docker_repo := kopano
 docker_login := `cat ~/.docker-account-user`
 docker_pwd := `cat ~/.docker-account-pwd`
 
@@ -49,17 +49,17 @@ publish: git-commit repo-login publish-base publish-core publish-webapp
 	git push
 	git push origin --tags
 
+publish-container: component ?= base
+publish-container:
+	@echo 'publish latest to $(docker_repo)/kopano_$(component)'
+	docker push $(docker_repo)/kopano_$(component):$($(component)_version}
+	docker push $(docker_repo)/kopano_$(component):latest
+
 publish-base: build-base tag-base
-	@echo 'publish latest to $(docker_repo)/kopano_base'
-	docker push $(docker_repo)/kopano_base:${base_version}
-	docker push $(docker_repo)/kopano_base:latest
+	component=base make publish-container
 
 publish-core: build-core tag-core
-	@echo 'publish latest to $(docker_repo)/kopano_core'
-	docker push $(docker_repo)/kopano_core:${core_version}
-	docker push $(docker_repo)/kopano_core:latest
+	component=core make publish-container
 
 publish-webapp: build-webapp tag-webapp
-	@echo 'publish latest to $(docker_repo)/kopano_webapp'
-	docker push $(docker_repo)/kopano_webapp:${webapp_version}
-	docker push $(docker_repo)/kopano_webapp:latest
+	component=webapp make publish-container
