@@ -10,7 +10,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # install basics
 # TODO require python3 or python3-minimal?
-# TODO is dumb-init actually used?
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \

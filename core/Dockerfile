@@ -10,7 +10,6 @@ ARG RELEASE_KEY_DOWNLOAD=0
 # install Kopano WebApp and refresh ca-certificates
 RUN \
     # community download and package as apt source repository
-    # TODO: source or execute repo script?
     . /kopano/helper/create-kopano-repo.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
         dl_and_package_community "core"; \
