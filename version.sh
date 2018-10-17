@@ -8,6 +8,26 @@ source base/create-kopano-repo.sh
 
 component=${1:-core}
 
+if [ -e ./env ]; then
+	source ./env
+fi
+KOPANO_CORE_REPOSITORY_URL=${KOPANO_CORE_REPOSITORY_URL:-""}
+KOPANO_WEBAPP_REPOSITORY_URL=${KOPANO_WEBAPP_REPOSITORY_URL:-""}
+
+if [[ $KOPANO_CORE_REPOSITORY_URL == http* ]] || [[ $KOPANO_WEBAPP_REPOSITORY_URL == http* ]]; then
+	case $component in
+	core)
+		version=$(curl -s -S -L $KOPANO_CORE_REPOSITORY_URL/Packages | grep -A2 "Package: kopano-server-packages")
+		echo "${version##* }"
+		;;
+	webapp)
+		version=$(curl -s -S -L $KOPANO_WEBAPP_REPOSITORY_URL/Packages | grep -m1 -A1 "Package: kopano-webapp")
+		echo "${version##* }"
+		;;
+	esac
+	exit
+fi
+
 # query community server by h5ai API
 filename=$(h5ai_query "$component")
 

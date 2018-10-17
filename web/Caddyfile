@@ -1,0 +1,11 @@
+webapp.kopano.demo {
+
+	tls self_signed
+
+	redir / /webapp
+
+	proxy /webapp kwebapp:80 {
+		transparent
+		websocket
+	}
+}

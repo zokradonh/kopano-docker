@@ -9,7 +9,7 @@ kcconf.configkopano({
         'log_level': "3",
         'attachment_path': "/kopano/data/attachments/",
         'user_plugin': "ldap",
-        'server_listen': "",
+        'server_listen': "*:236",
         'server_listen_tls': "*:237"
     }
 })

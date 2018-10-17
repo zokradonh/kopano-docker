@@ -2,4 +2,6 @@
 **/.vscode
 *.yml
 docker-compose.yml
-certs/*
+data/*
+Makefile-env
+.env
