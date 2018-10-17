@@ -2,4 +2,5 @@
 **/.vscode
 *.yml
 docker-compose.yml
-certs/*
+ssl/*
+data/*
