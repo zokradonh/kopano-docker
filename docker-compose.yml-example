@@ -235,8 +235,64 @@ volumes:
   tmpmailstate:
 
 networks:
-  web: # this requires an external docker container that is a http reverse proxy (e.g. haproxy)
+  web:
     external:
-      name: haproxy_webrproxynet
+      driver: default
   kopanonet:
     driver: bridge
+
+
+
+version: "3"
+
+services:
+  rainloop:
+    image: hardware/rainloop
+    links:
+      - mail
+    volumes:
+      - ./data/rainloop:/rainloop/data
+
+  mail:
+    image: tvial/docker-mailserver:latest
+    restart: always
+    hostname: mail
+    domainname: fancydomain.tld
+    container_name: mail
+    ports:
+      - "25:25"
+      - "143:143"
+      - "587:587"
+      - "993:993"
+      - "4190:4190"
+    volumes:
+      - ./data/mail/data:/var/mail
+      - ./data/mail/state:/var/mail-state
+      - ./mail/config:/tmp/docker-mailserver/
+      - ./data/entry/acme/acme-v01.api.letsencrypt.org/sites/mail.fancydomain.tld:/tmp/ssl:ro
+    environment:
+      - ENABLE_SPAMASSASSIN=1
+      - ENABLE_CLAMAV=1
+      - ENABLE_FAIL2BAN=1
+      - ENABLE_POSTGREY=1
+      - ONE_DIR=1
+      - DMS_DEBUG=0
+      - ENABLE_MANAGESIEVE=1
+      - SSL_TYPE=manual
+      - SSL_CERT_PATH=/tmp/ssl/mail.fancydomain.tld.crt
+      - SSL_KEY_PATH=/tmp/ssl/mail.fancydomain.tld.key
+    cap_add:
+      - NET_ADMIN
+
+  entry:
+    image: abiosoft/caddy:0.10.4
+    restart: always
+    privileged: true
+    links:
+      - rainloop
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./entry/Caddyfile:/etc/Caddyfile
+      - ./data/entry:/root/.caddy
