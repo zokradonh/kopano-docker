@@ -3,14 +3,19 @@ docker_login := `cat ~/.docker-account-user`
 docker_pwd := `cat ~/.docker-account-pwd`
 
 base_version = $(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion)
+base_download_version = $(shell ./version.sh core)
 core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=_)')
+core_download_version = $(shell ./version.sh core)
 webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)')
+webapp_download_version = $(shell ./version.sh webapp)
+
+COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
 build-all: build-base build-core build-webapp
 
 build: component ?= base
 build:
-	docker build -t $(docker_repo)/kopano_$(component) $(component)/
+	docker build --build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} -t $(docker_repo)/kopano_$(component) $(component)/
 
 build-base:
 	component=base make build
