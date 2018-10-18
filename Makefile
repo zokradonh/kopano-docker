@@ -32,6 +32,7 @@ tag:
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
 	@echo 'create tag latest'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):latest
+	git commit -m 'ci: committing changes for $(component)' -- $(component)
 	git tag $(component)/${$(component)_version} || true
 
 tag-base:
@@ -43,14 +44,11 @@ tag-core:
 tag-webapp:
 	component=webapp make tag
 
-git-commit:
-	git add -A && git commit -m "ci: commit changes before tagging"
-
 # Docker publish
 repo-login:
 	docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: git-commit repo-login publish-base publish-core publish-webapp
+publish: repo-login publish-base publish-core publish-webapp
 	git push
 	git push origin --tags
 
