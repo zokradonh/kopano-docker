@@ -32,7 +32,7 @@ tag:
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
 	@echo 'create tag latest'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):latest
-	git commit -m 'ci: committing changes for $(component)' -- $(component)
+	git commit -m 'ci: committing changes for $(component)' -- $(component) || true
 	git tag $(component)/${$(component)_version} || true
 
 tag-base:
