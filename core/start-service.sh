@@ -17,8 +17,8 @@ echo "Set ownership" | ts
 chown -R kopano:kopano /run /tmp
 chown kopano:kopano /kopano/data/ /kopano/data/attachments
 
-echo "Clean old pid files and sockets" | ts
-rm -f /var/run/kopano/*
+#echo "Clean old pid files and sockets" | ts
+#rm -f /var/run/kopano/*
 
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]
@@ -30,6 +30,11 @@ fi
 # start regular service
 case "$SERVICE_TO_START" in
     server)
+	# TODO the until loop needs to be extended for the other services and certificates
+	until [[ -f $KCCONF_SERVER_SERVER_SSL_KEY_FILE && -f $KCCONF_SERVER_SERVER_SSL_CA_FILE ]]; do
+		echo "waiting for $KCCONF_SERVER_SERVER_SSL_KEY_FILE & $KCCONF_SERVER_SERVER_SSL_CA_FILE"| ts
+		sleep 5
+	done
         exec /usr/sbin/kopano-server -F
         ;;
     dagent)
