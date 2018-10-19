@@ -35,6 +35,7 @@ case "$SERVICE_TO_START" in
 		echo "waiting for $KCCONF_SERVER_SERVER_SSL_KEY_FILE & $KCCONF_SERVER_SERVER_SSL_CA_FILE"| ts
 		sleep 5
 	done
+	dockerize -wait tcp://db:3306
         exec /usr/sbin/kopano-server -F
         ;;
     dagent)
