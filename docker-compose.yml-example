@@ -27,14 +27,14 @@ services:
       - ./data/mail/data:/var/mail
       - ./data/mail/state:/var/mail-state
       - ./mail/config:/tmp/docker-mailserver/
-      - ./data/web/acme-v01.api.letsencrypt.org/sites/mail.kopano.demo:/tmp/ssl:ro
+      #- ./data/web/acme-v01.api.letsencrypt.org/sites/mail.kopano.demo:/tmp/ssl:ro
     environment:
       - TZ=Europe/Berlin
       - ENABLE_SPAMASSASSIN=1
       - ENABLE_CLAMAV=1
       - ENABLE_FAIL2BAN=1
       - ENABLE_POSTGREY=1
-      - ONE_DIR=1
+      - ONE_DIR=0
       - DMS_DEBUG=0
       - SSL_TYPE=manual
       - SSL_CERT_PATH=/tmp/ssl/mail.kopano.demo.crt
@@ -102,7 +102,7 @@ services:
     image: zokradonh/kopano_ssl
     container_name: kopano_ssl
     volumes:
-      - ./ssl/:/kopano/ssl
+      - ./data/ssl/:/kopano/ssl
 
   kserver:
     image: zokradonh/kopano_core:latest
@@ -128,7 +128,6 @@ services:
       - KCCONF_SERVER_PROXY_HEADER=* # delete line if webapp is not behind reverse proxy
       - KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS=hostmaster@domain.tld  #change here
       - KCCONF_SERVER_DISABLED_FEATURES=pop3
-      - KCCONF_SERVER_SEARCH_SOCKET=http://ksearch:2380/
       - KCCONF_LDAP_LDAP_URI=ldaps://ldapserver:ldapport  #change here
       - KCCONF_LDAP_LDAP_BIND_USER=cn=SOME_STANDARD_USER,OU=MyUsers,DC=domain,DC=tld #change here
       - KCCONF_LDAP_LDAP_BIND_PASSWD=PASSWORD_OF_STANDARD_USER  #change here
@@ -139,7 +138,7 @@ services:
       - kopanonet
     volumes:
       - ./data/kopano/:/kopano/data
-      - ./ssl/:/kopano/ssl
+      - ./data/ssl/:/kopano/ssl
 
 networks:
   web:
