@@ -11,7 +11,7 @@ webapp_download_version = $(shell ./version.sh webapp)
 
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-base build-core build-webapp
+build-all: build-ssl build-base build-core build-webapp
 
 build: component ?= base
 build:
@@ -25,6 +25,9 @@ build-core:
 
 build-webapp:
 	component=webapp make build
+
+build-ssl:
+	docker build -t $(docker_repo)/kopano_ssl ssl/
 
 tag: component ?= base
 tag:
@@ -48,7 +51,7 @@ tag-webapp:
 repo-login:
 	docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-base publish-core publish-webapp
+publish: repo-login publish-ssl publish-base publish-core publish-webapp
 	git push
 	git push origin --tags
 
@@ -66,3 +69,6 @@ publish-core: build-core tag-core
 
 publish-webapp: build-webapp tag-webapp
 	component=webapp make publish-container
+
+publish-ssl: build-ssl
+	docker push $(docker_repo)/kopano_ssl:latest
