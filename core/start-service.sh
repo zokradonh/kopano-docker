@@ -30,12 +30,12 @@ fi
 # start regular service
 case "$SERVICE_TO_START" in
     server)
-	# TODO the until loop needs to be extended for the other services and certificates
-	until [[ -f $KCCONF_SERVER_SERVER_SSL_KEY_FILE && -f $KCCONF_SERVER_SERVER_SSL_CA_FILE ]]; do
-		echo "waiting for $KCCONF_SERVER_SERVER_SSL_KEY_FILE & $KCCONF_SERVER_SERVER_SSL_CA_FILE"| ts
-		sleep 5
-	done
-	dockerize -wait tcp://db:3306
+	# TODO needs to be extended for the other services and certificates
+	dockerize \
+		-wait file://$KCCONF_SERVER_SERVER_SSL_CA_FILE \
+		-wait file://$KCCONF_SERVER_SERVER_SSL_KEY_FILE \
+		-wait tcp://db:3306 \
+		-timeout 360s
         exec /usr/sbin/kopano-server -F
         ;;
     dagent)
