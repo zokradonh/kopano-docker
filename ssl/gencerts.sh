@@ -1,7 +1,7 @@
 #!/bin/sh
+# https://github.com/google/easypki
 
 echo "Creating CA and Server certificates..."
-
 easypki create --filename internalca --organizational-unit primary --expire 3650 --ca "Internal Kopano System"
 
 mkdir -p /kopano/ssl/clients/
