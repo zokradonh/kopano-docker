@@ -1,6 +1,8 @@
 #!/bin/sh
 # https://github.com/google/easypki
 
+# TODO integrate this directly into start.sh?
+
 echo "Creating CA and Server certificates..."
 easypki create --filename internalca --organizational-unit primary --expire 3650 --ca "Internal Kopano System"
 
