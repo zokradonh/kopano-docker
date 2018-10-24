@@ -9,7 +9,7 @@ serial=""
 component=""
 nocache=""
 
-. ./common/common.sh
+. ./base/create-kopano-repo.sh
 
 function _usage()
 {
