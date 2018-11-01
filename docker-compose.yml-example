@@ -99,6 +99,7 @@ services:
       - ./data/socket/:/run/kopano
     environment:
       - TZ=Europe/Berlin
+      #- ADDITIONAL_KOPANO_PACKAGES=kopano-webapp-plugin-mattermost
     networks:
       - web
       - kopanonet
@@ -140,6 +141,7 @@ services:
       - KCCONF_LDAP_LDAP_SEARCH_BASE=OU=MyUsers,dc=domain,dc=tld  #change here
       - KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg #delete if you want openldap
       - KCUNCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.active-directory.cfg #delete if you want openldap
+      #- ADDITIONAL_KOPANO_PACKAGES=kopano-migration-imap
     networks:
       - kopanonet
     volumes:

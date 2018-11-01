@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
+
 set -eu # unset variables are errors & non-zero return values exit the whole script
 
 if [ ! -e /kopano/$SERVICE_TO_START.py ]
@@ -7,6 +9,13 @@ then
     echo "Invalid service specified: $SERVICE_TO_START" | ts
     exit 1
 fi
+
+[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && apt update
+[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && for installpkg in "$ADDITIONAL_KOPANO_PACKAGES"; do
+	if [ $(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+		apt --assume-yes install $installpkg;
+	fi
+done
 
 mkdir -p /kopano/data/attachments /tmp/$SERVICE_TO_START /var/run/kopano
 
