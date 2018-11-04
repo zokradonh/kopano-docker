@@ -15,12 +15,19 @@ services:
       - ./web/Caddyfile:/etc/Caddyfile
       - ./data/web:/root/.caddy
 
+  ldap:
+    build: ldap/
+    environment:
+      - LDAP_DOMAIN="localhost.localdomain"
+
   mail:
     image: tvial/docker-mailserver:latest
     restart: always
     hostname: mail
     domainname: kopano.demo # change here
     container_name: mail
+    links:
+      - ldap
     ports:
       - "25:25"
     volumes:
@@ -34,11 +41,11 @@ services:
       - ENABLE_CLAMAV=1
       - ENABLE_FAIL2BAN=1
       - ENABLE_POSTGREY=1
-      - ONE_DIR=0
+      - ONE_DIR=1
       - DMS_DEBUG=0
       - SSL_TYPE=manual
-      - SSL_CERT_PATH=/tmp/ssl/mail.kopano.demo.crt
-      - SSL_KEY_PATH=/tmp/ssl/mail.kopano.demo.key
+      #- SSL_CERT_PATH=/tmp/ssl/mail.kopano.demo.crt
+      #- SSL_KEY_PATH=/tmp/ssl/mail.kopano.demo.key
       - ENABLE_LDAP=1
       - LDAP_SERVER_HOST=ldaps://ldapserver:ldapport #change here
       - LDAP_SEARCH_BASE=OU=MyUsers,DC=domain,DC=tld #change here
@@ -99,7 +106,6 @@ services:
       - ./data/socket/:/run/kopano
     environment:
       - TZ=Europe/Berlin
-      #- ADDITIONAL_KOPANO_PACKAGES=kopano-webapp-plugin-mattermost
     networks:
       - web
       - kopanonet

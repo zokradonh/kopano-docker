@@ -39,13 +39,13 @@ fi
 # start regular service
 case "$SERVICE_TO_START" in
     server)
-	# TODO needs to be extended for the other services and certificates
-	dockerize \
+	# TODO use dockerize to start other services as well
+	exec dockerize \
 		-wait file://$KCCONF_SERVER_SERVER_SSL_CA_FILE \
 		-wait file://$KCCONF_SERVER_SERVER_SSL_KEY_FILE \
 		-wait tcp://db:3306 \
-		-timeout 360s
-        exec /usr/sbin/kopano-server -F
+		-timeout 360s \
+		/usr/sbin/kopano-server -F
         ;;
     dagent)
         exec /usr/sbin/kopano-dagent -l
