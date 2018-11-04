@@ -3,6 +3,7 @@ version: "3"
 services:
   web:
     image: abiosoft/caddy:0.10.4
+    container_name: web
     restart: always
     privileged: true
     links:
@@ -17,15 +18,48 @@ services:
 
   ldap:
     build: ldap/
+    #image: osixia/openldap:1.2.2
+    container_name: ldap
+    ports:
+      - 389:389
     environment:
-      - LDAP_DOMAIN="localhost.localdomain"
+      - LDAP_ORGANISATION="Kopano Demo"
+      - LDAP_DOMAIN=kopano.demo
+      - LDAP_BASE_DN=dc=kopano,dc=demo
+      - LDAP_ADMIN_PASSWORD=kopano123
+      - LDAP_READONLY_USER=true
+      - LDAP_READONLY_USER_PASSWORD=kopano123
+    command: --loglevel debug --copy-service
+    volumes:
+      #- ./ldap/bootstrap:/container/service/slapd/assets/config/bootstrap/ldif/custom
+      - ./data/ldap/var/lib/ldap:/var/lib/ldap
+      - ./data/ldap/etc/ldap/slapd.d:/etc/ldap/slapd.d
+    networks:
+      - kopanonet
+
+
+  ldap-admin:
+    image: osixia/phpldapadmin:0.7.2
+    container_name: ldap-admin
+    depends_on:
+      - ldap
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=ldap
+      - PHPLDAPADMIN_HTTPS=false
+    command: -l debug
+    links:
+      - ldap
+    ports:
+      - "8081:80"
 
   mail:
-    image: tvial/docker-mailserver:latest
+    image: tvial/docker-mailserver:release-v6.1.0
     restart: always
     hostname: mail
     domainname: kopano.demo # change here
     container_name: mail
+    depends_on:
+      - ldap
     links:
       - ldap
     ports:
@@ -47,22 +81,22 @@ services:
       #- SSL_CERT_PATH=/tmp/ssl/mail.kopano.demo.crt
       #- SSL_KEY_PATH=/tmp/ssl/mail.kopano.demo.key
       - ENABLE_LDAP=1
-      - LDAP_SERVER_HOST=ldaps://ldapserver:ldapport #change here
-      - LDAP_SEARCH_BASE=OU=MyUsers,DC=domain,DC=tld #change here
-      - LDAP_BIND_DN=cn=SOME_STANDARD_USER,OU=MyUsers,DC=domain,DC=tld #change here
-      - LDAP_BIND_PW=PASSWORD_OF_SOME_STANDARD_USER #change here
+      - LDAP_SERVER_HOST=ldaps://ldap:636
+      - LDAP_SEARCH_BASE=OU=users,DC=kopano,DC=demo
+      - LDAP_BIND_DN=cn=readonly,DC=kopano,DC=demo
+      - LDAP_BIND_PW=kopano123
       - LDAP_QUERY_FILTER_USER=(&(objectClass=user)(|(mail=%s)(otherMailbox=%s)))
       - LDAP_QUERY_FILTER_GROUP=(&(objectclass=group)(mail=%s))
       - LDAP_QUERY_FILTER_ALIAS=(&(objectClass=user)(otherMailbox=%s))
       - LDAP_QUERY_FILTER_DOMAIN=(&(|(mail=*@%s)(otherMailbox=*@%s)(mailGroupMember=*@%s))(kopanoAccount=1)(|(objectClass=user)(objectclass=group)))
       - ENABLE_SASLAUTHD=1
-      - SASLAUTHD_LDAP_SERVER=ldaps://ldapserver:ldapport #change here
-      - SASLAUTHD_LDAP_BIND_DN=cn=SOME_STANDARD_USER,OU=MyUsers,DC=domain,DC=tld #change here
-      - SASLAUTHD_LDAP_PASSWORD=PASSWORD_OF_SOME_STANDARD_USER  #change here
-      - SASLAUTHD_LDAP_SEARCH_BASE=OU=MyUsers,DC=domain,DC=tld  #change here
+      - SASLAUTHD_LDAP_SERVER=ldaps://ldap:363
+      - SASLAUTHD_LDAP_BIND_DN=cn=cn=readonly,DC=kopano,DC=demo
+      - SASLAUTHD_LDAP_PASSWORD=kopano123
+      - SASLAUTHD_LDAP_SEARCH_BASE=OU=users,DC=kopano,DC=demo
       - SASLAUTHD_LDAP_FILTER=(&(sAMAccountName=%U)(objectClass=person))
       - SASLAUTHD_MECHANISMS=ldap
-      - POSTMASTER_ADDRESS=postmaster@domain.tld #change here
+      - POSTMASTER_ADDRESS=postmaster@kopano.demo
       - SMTP_ONLY=1
       - PERMIT_DOCKER=network
       - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
@@ -82,10 +116,10 @@ services:
     volumes:
       - ./data/mysql/:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=YOUR_MYSQL_ROOT_PASSWORD  #change here
-      - MYSQL_PASSWORD=YOUR_PASSWORD #change here
+      - MYSQL_ROOT_PASSWORD=kopano123
+      - MYSQL_USER=kopanodbuser
+      - MYSQL_PASSWORD=kopanodbpw
       - MYSQL_DATABASE=kopano
-      - MYSQL_USER=kopano
     healthcheck:
       test: ["CMD-SHELL", 'mysql --database=$$MYSQL_DATABASE --password=$$MYSQL_ROOT_PASSWORD --execute="SELECT count(table_name) > 0 FROM information_schema.tables;" --skip-column-names -B']
       interval: 30s
@@ -122,8 +156,10 @@ services:
     container_name: kopano_server
     links:
       - db
+      - ldap
     depends_on:
       - db
+      - ldap
       - kssl
     environment:
       - SERVICE_TO_START=server
@@ -133,20 +169,20 @@ services:
       - KCCONF_SERVER_MYSQL_HOST=db
       - KCCONF_SERVER_MYSQL_PORT=3306
       - KCCONF_SERVER_MYSQL_DATABASE=kopano
-      - KCCONF_SERVER_MYSQL_USER=root
-      - KCCONF_SERVER_MYSQL_PASSWORD=YOUR_MYSQL_ROOT_PASSWORD  #change here
+      - KCCONF_SERVER_MYSQL_USER=kopanodbuser
+      - KCCONF_SERVER_MYSQL_PASSWORD=kopanodbpw
       - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kserver.pem
       - KCCONF_SERVER_SERVER_SSL_CA_FILE=/kopano/ssl/ca.pem
       - KCCONF_SERVER_SSLKEYS_PATH=/kopano/ssl/clients
       - KCCONF_SERVER_PROXY_HEADER=* # delete line if webapp is not behind reverse proxy
       - KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS=hostmaster@domain.tld  #change here
       - KCCONF_SERVER_DISABLED_FEATURES=pop3
-      - KCCONF_LDAP_LDAP_URI=ldaps://ldapserver:ldapport  #change here
-      - KCCONF_LDAP_LDAP_BIND_USER=cn=SOME_STANDARD_USER,OU=MyUsers,DC=domain,DC=tld #change here
-      - KCCONF_LDAP_LDAP_BIND_PASSWD=PASSWORD_OF_STANDARD_USER  #change here
-      - KCCONF_LDAP_LDAP_SEARCH_BASE=OU=MyUsers,dc=domain,dc=tld  #change here
-      - KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg #delete if you want openldap
-      - KCUNCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.active-directory.cfg #delete if you want openldap
+      - KCCONF_LDAP_LDAP_URI=ldap://ldap:389
+      - KCCONF_LDAP_LDAP_BIND_USER=cn=readonly,DC=kopano,DC=demo
+      - KCCONF_LDAP_LDAP_BIND_PASSWD=kopano123
+      - KCCONF_LDAP_LDAP_SEARCH_BASE=OU=users,dc=kopano,dc=demo
+      - KCUNCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg #delete if you want openldap
+      - KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.active-directory.cfg #delete if you want openldap
       #- ADDITIONAL_KOPANO_PACKAGES=kopano-migration-imap
     networks:
       - kopanonet
