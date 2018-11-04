@@ -1,3 +1,17 @@
+New instructions:
+
+- explain Makefile
+- `make docker_repo=kopano build-all` to upload to a custom docker hub account
+
+## Getting started with docker-compose
+
+Thie repository contains an example docker-compose.yml file that spins up a Kopano demo environment incl. pre filled ldap tree. Run `docker-compose build` to create the ldap image locally. After running `docker-compose up` you can login through phpldapadmin at http://localhost:8081/ with the the user `cn=admin,dc=kopano,dc=demo` with the password `kopano123`.
+
+
+
+
+
+
 # Kopano Docker Image
 Unofficial kopano docker images for all kopano services.
 Use kopano_core image for server/spooler/dagent/search/monitor/ical/gateway services.

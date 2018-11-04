@@ -26409,34 +26409,6 @@ physicalDeliveryOfficeName: Kopenhagen
 kopanoQuotaOverride: 1
 kopanoQuotaHard: 1200000000
 
-# 1234, users, kopano.demo
-dn: uid=1234,ou=users,dc=kopano,dc=demo
-cn: 1234
-givenName: 1234
-homeDirectory: /home/user23
-kopanoAccount: 1
-kopanoAliases: 1234@kopano.demo
-kopanoAliases: 1.2.3.4@kopano.demo
-l: Opeinde
-labeledURI: http://boudewijns.org/
-loginShell: /bin/bash
-mail: 1234@kopano.demo
-mobile: +31(0)928 062774
-objectClass: posixAccount
-objectClass: top
-objectClass: inetOrgPerson
-objectClass: kopano-user
-postalCode: 5557CV
-secretary: uid=1234,ou=users,dc=kopano,dc=demo
-street: 'Justinsteeg 9'
-telephoneNumber: +31485-902791
-title: Programmer, systems
-uid: 1234
-sn: 1234
-userPassword:: MTIzNA==
-gidNumber: 30
-uidNumber: 30
-
 # distributionlist, groups, kopano.demo
 dn: cn=distributionlist,ou=groups,dc=kopano,dc=demo
 cn: distributionlist
