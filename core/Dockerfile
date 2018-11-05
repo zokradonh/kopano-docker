@@ -47,3 +47,6 @@ COPY kcconf.py defaultconfigs/ start-service.sh /kopano/
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 CMD [ "/kopano/start-service.sh" ]
+
+HEALTHCHECK --interval=30s --timeout=60s \
+	CMD /kopano/healthcheck.sh
