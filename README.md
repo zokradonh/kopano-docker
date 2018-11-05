@@ -1,3 +1,5 @@
+# (unofficial) Kopano Docker Images
+
 New instructions:
 
 - explain Makefile
@@ -7,7 +9,19 @@ New instructions:
 
 Thie repository contains an example docker-compose.yml file that spins up a Kopano demo environment incl. pre filled ldap tree. Run `docker-compose build` to create the ldap image locally. After running `docker-compose up` you can login through phpldapadmin at http://localhost:8081/ with the the user `cn=admin,dc=kopano,dc=demo` with the password `kopano123`.
 
+git clone https://github.com/fbartels/kopano-docker.git
+cd kopano-docker
+git checkout compose
+make build-all
+docker-compose build
+docker-compose up -d
+docker-compose exec kserver kopano-cli --list-users
+docker-compose logs -f kserver
 
+
+docker-compose down
+sudo rm -rf data/
+docker-compose up -d
 
 
 
