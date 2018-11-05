@@ -1,10 +1,10 @@
 #!/bin/bash
 
+set -e
+
 case "$SERVICE_TO_START" in
 server)
-	dockerize \
-	-wait tcp://localhost:237 \
-	([ -f /kopano/data/.user-sync ] || kopano-cli --sync; touch /kopano/data/.user-sync)
+	kopano-cli --list-users
 	exit 0
 	;;
 esac
