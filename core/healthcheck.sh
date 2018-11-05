@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 case "$SERVICE_TO_START" in
 server)

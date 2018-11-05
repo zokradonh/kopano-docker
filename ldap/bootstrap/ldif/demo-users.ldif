@@ -35,7 +35,6 @@ title: Arts development officer
 l: Krommenie
 postalCode: 1713 QP
 secretary: uid=user3,ou=users,dc=kopano,dc=demo
-kopanoSendAsPrivilege: user3
 kopanoSendAsPrivilege: 3
 jpegPhoto:: iVBORw0KGgoAAAANSUhEUgAABLAAAAMgCAIAAAC8ggxVAAAAGXRFWHRTb2Z0d2FyZQ
  BBZG9iZSBJbWFnZVJlYWR5ccllPAAAAxJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2t
@@ -25122,8 +25121,6 @@ postalCode: 78572
 manager: uid=user3,ou=users,dc=kopano,dc=demo
 secretary: uid=user2,ou=users,dc=kopano,dc=demo
 kopanoEnabledFeatures: imap
-kopanoSendAsPrivilege: cn=sales,ou=groups,dc=kopano,dc=demo
-kopanoSendAsPrivilege: uid=sharedbox,ou=resources,dc=kopano,dc=demo
 jpegPhoto:: /9j/4QlQaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW
  49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng
  9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjYtYzEzOCA3OS4xNTk4
