@@ -14,7 +14,7 @@ KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
 RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 
-include env
+-include env
 export
 
 # convert lowercase componentname to uppercase
