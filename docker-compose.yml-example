@@ -173,6 +173,7 @@ services:
       - KCCONF_SERVER_MYSQL_PASSWORD=kopanodbpw
       - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kserver.pem
       - KCCONF_SERVER_SERVER_SSL_CA_FILE=/kopano/ssl/ca.pem
+      - KCCONF_SERVER_SERVER_NAME=Kopano
       - KCCONF_SERVER_SSLKEYS_PATH=/kopano/ssl/clients
       - KCCONF_SERVER_PROXY_HEADER=* # delete line if webapp is not behind reverse proxy
       - KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS=hostmaster@domain.tld  #change here
