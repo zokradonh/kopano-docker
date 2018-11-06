@@ -9,13 +9,28 @@ core_download_version = $(shell ./version.sh core)
 webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)')
 webapp_download_version = $(shell ./version.sh webapp)
 
+KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
+KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
+RELEASE_KEY_DOWNLOAD := 0
+DOWNLOAD_COMMUNITY_PACKAGES := 1
+
+include env
+export
+
+# convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
 build-all: build-ssl build-base build-core build-webapp
 
 build: component ?= base
 build:
-	docker build --build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} -t $(docker_repo)/kopano_$(component) $(component)/
+	docker build \
+		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
+		--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
+		--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
+		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
+		-t $(docker_repo)/kopano_$(component) $(component)/
 
 build-base:
 	component=base make build

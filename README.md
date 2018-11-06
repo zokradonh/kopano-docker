@@ -3,7 +3,8 @@
 New instructions:
 
 - explain Makefile
-- `make docker_repo=kopano build-all` to upload to a custom docker hub account
+- `make docker_repo=kopano publish` to upload to a custom docker hub account
+
 
 ## Getting started with docker-compose
 
