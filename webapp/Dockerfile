@@ -5,6 +5,7 @@ ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG KOPANO_WEBAPP_REPOSITORY_URL="file:/kopano/repo/webapp"
+ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_WEBAPP_VERSION=newest
 ARG RELEASE_KEY_DOWNLOAD=0
 
@@ -18,11 +19,9 @@ RUN \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
-    # save kopano version if supported kopano
-    if [ ! -f /kopano/buildversion ]; then \
-        echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
-        echo "webapp-${KOPANO_WEBAPP_VERSION}" >> /kopano/buildversion; \
-    fi; \
+    # save kopano version
+    echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
+    echo "webapp-${KOPANO_WEBAPP_VERSION}" >> /kopano/buildversion; \
     # install apt keys if supported kopano
     if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
         curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
