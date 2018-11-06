@@ -4,7 +4,7 @@ docker_pwd := `cat ~/.docker-account-pwd`
 
 base_version = $(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion)
 base_download_version = $(shell ./version.sh core)
-core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=_)')
+core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=\+)')
 core_download_version = $(shell ./version.sh core)
 webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)')
 webapp_download_version = $(shell ./version.sh webapp)
@@ -25,6 +25,7 @@ build-all: build-ssl build-base build-core build-webapp
 build: component ?= base
 build:
 	docker build \
+		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
 		--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
