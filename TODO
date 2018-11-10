@@ -1,6 +1,3 @@
-- How to execute `kopano-cli --list-users` and `kopano-storeadm -h default: -P` after kopano-server has been started?
-  - `--list-users` should be run in regular intervals
-  - `kopano-storeadm` just needs to be run after startup, multiple executions do not harm
 - ssl config for ical and gateway
 - ldap indices
 - Won't fix: Kopano 8.6.x dagent won't start because of an incompatible configuration. A fix for this should be only present in a dedicated branch
