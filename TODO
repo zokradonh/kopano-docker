@@ -1,2 +1,1 @@
-- ldap indices
 - Won't fix: Kopano 8.6.x dagent won't start because of an incompatible configuration. A fix for this should be only present in a dedicated branch
