@@ -13,8 +13,11 @@ if [ -e ./env ]; then
 fi
 KOPANO_CORE_REPOSITORY_URL=${KOPANO_CORE_REPOSITORY_URL:-""}
 KOPANO_WEBAPP_REPOSITORY_URL=${KOPANO_WEBAPP_REPOSITORY_URL:-""}
+KOPANO_ZPUSH_REPOSITORY_URL=${KOPANO_ZPUSH_REPOSITORY_URL:-""}
 
-if [[ $KOPANO_CORE_REPOSITORY_URL == http* ]] || [[ $KOPANO_WEBAPP_REPOSITORY_URL == http* ]]; then
+if [[ $KOPANO_CORE_REPOSITORY_URL == http* ]] || \
+	[[ $KOPANO_WEBAPP_REPOSITORY_URL == http* ]] || \
+	[[ $KOPANO_ZPUSH_REPOSITORY_URL == http* ]]; then
 	case $component in
 	core)
 		version=$(curl -s -S -L $KOPANO_CORE_REPOSITORY_URL/Packages | grep -A2 "Package: kopano-server-packages")
@@ -22,6 +25,10 @@ if [[ $KOPANO_CORE_REPOSITORY_URL == http* ]] || [[ $KOPANO_WEBAPP_REPOSITORY_UR
 		;;
 	webapp)
 		version=$(curl -s -S -L $KOPANO_WEBAPP_REPOSITORY_URL/Packages | grep -m1 -A1 "Package: kopano-webapp")
+		echo "${version##* }"
+		;;
+	z-push)
+		version=$(curl -s -S -L $KOPANO_ZPUSH_REPOSITORY_URL/Packages | grep -m2 -A2 "Package: z-push-kopano")
 		echo "${version##* }"
 		;;
 	esac
