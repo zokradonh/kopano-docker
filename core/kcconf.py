@@ -39,7 +39,7 @@ def configkopano(configs):
         f.close()
 
 def parseenvironmentvariables(prependingpath):
-    """ Parse all environment variables starting with KCCONF_, KCCOMMENT_ and KCUNCOMMENT_ and 
+    """ Parse all environment variables starting with KCCONF_, KCCOMMENT_ and KCUNCOMMENT_ and
     return as multi dimensional dict """
     configs = dict()
 
@@ -58,7 +58,7 @@ def parseenvironmentvariables(prependingpath):
             filename = commentmatch.group(1).lower() + ".cfg"
             if prependingpath + filename not in configs:
                 configs[prependingpath + filename] = dict()
-            try: 
+            try:
                 configs[prependingpath + filename]["kccomment"].append(value)
             except KeyError:
                 configs[prependingpath + filename]["kccomment"] = []
@@ -69,7 +69,7 @@ def parseenvironmentvariables(prependingpath):
             filename = uncommentmatch.group(1).lower() + ".cfg"
             if prependingpath + filename not in configs:
                 configs[prependingpath + filename] = dict()
-            try: 
+            try:
                 configs[prependingpath + filename]["kcuncomment"].append(value)
             except KeyError:
                 configs[prependingpath + filename]["kcuncomment"] = []

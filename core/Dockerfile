@@ -1,4 +1,5 @@
-FROM zokradonh/kopano_base
+ARG docker_repo=zokradonh
+FROM ${docker_repo}/kopano_base
 
 ARG ADDITIONAL_KOPANO_PACKAGES=""
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
@@ -15,10 +16,8 @@ RUN \
         dl_and_package_community "core"; \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    # save kopano version if supported kopano
-    if [ ! -f /kopano/buildversion ]; then \
-        echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
-    fi; \
+    # save kopano version
+    echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
     # install apt key if supported kopano
     if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
         curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
@@ -47,3 +46,6 @@ COPY kcconf.py defaultconfigs/ start-service.sh /kopano/
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 CMD [ "/kopano/start-service.sh" ]
+
+HEALTHCHECK --interval=30s --timeout=60s \
+	CMD /kopano/healthcheck.sh

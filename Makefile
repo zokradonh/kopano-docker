@@ -4,18 +4,35 @@ docker_pwd := `cat ~/.docker-account-pwd`
 
 base_version = $(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion)
 base_download_version = $(shell ./version.sh core)
-core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=_)')
+core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=\+)')
 core_download_version = $(shell ./version.sh core)
 webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)')
 webapp_download_version = $(shell ./version.sh webapp)
 
+KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
+KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
+RELEASE_KEY_DOWNLOAD := 0
+DOWNLOAD_COMMUNITY_PACKAGES := 1
+
+-include .env
+export
+
+# convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-base build-core build-webapp
+build-all: build-ssl build-base build-core build-webapp
 
 build: component ?= base
 build:
-	docker build --build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} -t $(docker_repo)/kopano_$(component) $(component)/
+	docker build \
+		--build-arg docker_repo=${docker_repo} \
+		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
+		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
+		--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
+		--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
+		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
+		-t $(docker_repo)/kopano_$(component) $(component)/
 
 build-base:
 	component=base make build
@@ -26,12 +43,16 @@ build-core:
 build-webapp:
 	component=webapp make build
 
+build-ssl:
+	docker build -t $(docker_repo)/kopano_ssl ssl/
+
 tag: component ?= base
 tag:
 	@echo 'create tag $($(component)_version)'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
 	@echo 'create tag latest'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):latest
+	git commit -m 'ci: committing changes for $(component)' -- $(component) || true
 	git tag $(component)/${$(component)_version} || true
 
 tag-base:
@@ -43,14 +64,11 @@ tag-core:
 tag-webapp:
 	component=webapp make tag
 
-git-commit:
-	git add -A && git commit -m "ci: commit changes before tagging"
-
 # Docker publish
 repo-login:
 	docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: git-commit repo-login publish-base publish-core publish-webapp
+publish: repo-login publish-ssl publish-base publish-core publish-webapp
 	git push
 	git push origin --tags
 
@@ -68,3 +86,12 @@ publish-core: build-core tag-core
 
 publish-webapp: build-webapp tag-webapp
 	component=webapp make publish-container
+
+publish-ssl: build-ssl
+	docker push $(docker_repo)/kopano_ssl:latest
+
+test:
+	sudo rm -rf data/
+	make build-all
+	docker-compose build
+	docker-compose up

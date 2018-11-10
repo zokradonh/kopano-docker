@@ -1,9 +1,12 @@
 #!/bin/sh
+# https://github.com/google/easypki
+
+# TODO integrate this directly into start.sh?
 
 echo "Creating CA and Server certificates..."
+easypki create --filename internalca --organizational-unit primary --expire 3650 --ca "Internal Kopano System"
 
-easypki create --filename internalca --organizational-unit primary --expire 3650 --ca "Internal Kopano System" 
-
+mkdir -p /kopano/ssl/clients/
 cp /kopano/easypki/internalca/certs/internalca.crt /kopano/ssl/ca.pem
 
 for s in kserver kdagent kmonitor ksearch kspooler kwebapp
