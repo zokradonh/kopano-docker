@@ -26,21 +26,13 @@ RUN \
     # install apt keys if supported kopano
     if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
         curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
-        curl -s -S -o - "${KOPANO_WEBAPP_REPOSITORY_URL}/Release.key" | apt-key add -; \
     fi; \
-    # TODO separate out z-push?
-    # prepare z-push installation
-    echo "deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /" > /etc/apt/sources.list.d/zpush.list && \
-    curl -s -S -o - "http://repo.z-hub.io/z-push:/final/Debian_9.0/Release.key" | apt-key add - && \
     # install
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
         libapache2-mod-php7.0 \
         crudini \
-        z-push-backend-kopano \
-        z-push-config-apache \
-        z-push-ipc-sharedmemory \
         ca-certificates \
         kopano-webapp \
         kopano-webapp-plugin-contactfax \
@@ -96,11 +88,6 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     crudini --set /etc/php/7.0/apache2/php.ini PHP post_max_size 500M && \
     crudini --set /etc/php/7.0/apache2/php.ini PHP max_input_vars 1800 && \
     crudini --set /etc/php/7.0/apache2/php.ini Session session.save_path /run/sessions && \
-    # configure z-push
-    mkdir -p /var/lib/z-push /var/log/z-push && \
-    chown www-data:www-data /var/lib/z-push /var/log/z-push
-
-VOLUME /var/lib/z-push/
 
 EXPOSE 80/tcp
 
