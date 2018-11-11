@@ -4,10 +4,10 @@ FROM ${docker_repo}/kopano_base
 ARG ADDITIONAL_KOPANO_PACKAGES=""
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
+ARG KOPANO_ZPUSH_REPOSITORY_URL="http://repo.z-hub.io/z-push:/final/Debian_9.0/"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
-ARG KOPANO_WEBAPP_REPOSITORY_URL="file:/kopano/repo/webapp"
 ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_WEBAPP_VERSION=newest
+ARG KOPANO_ZPUSH_VERSION=newest
 ARG RELEASE_KEY_DOWNLOAD=0
 
 # install Kopano WebApp and refresh ca-certificates
@@ -16,56 +16,24 @@ RUN \
     . /kopano/helper/create-kopano-repo.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
         dl_and_package_community "core"; \
-        dl_and_package_community "webapp"; \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
     # save kopano version
     echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
-    echo "webapp-${KOPANO_WEBAPP_VERSION}" >> /kopano/buildversion; \
-    # install apt keys if supported kopano
-    if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
-        curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
-    fi; \
+    echo "zpush-${KOPANO_ZPUSH_VERSION}" >> /kopano/buildversion; \
+    # prepare z-push installation
+    echo "deb ${KOPANO_ZPUSH_REPOSITORY_URL} /" > /etc/apt/sources.list.d/zpush.list && \
+    curl -s -S -o - "${KOPANO_ZPUSH_REPOSITORY_URL}/Release.key" | apt-key add - && \
     # install
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
         libapache2-mod-php7.0 \
         crudini \
+        z-push-kopano \
+        z-push-config-apache \
         ca-certificates \
-        kopano-webapp \
-        kopano-webapp-plugin-contactfax \
-        kopano-webapp-plugin-desktopnotifications \
-        kopano-webapp-plugin-filepreviewer \
-        kopano-webapp-plugin-folderwidgets \
-        kopano-webapp-plugin-gmaps \
-        kopano-webapp-plugin-intranet \
-        kopano-webapp-plugin-mattermost \
-        kopano-webapp-plugin-pimfolder \
-        kopano-webapp-plugin-quickitems \
-        kopano-webapp-plugin-spell-de-at \
-        kopano-webapp-plugin-spell-de-at \
-        kopano-webapp-plugin-spell-de-ch \
-        kopano-webapp-plugin-spell-de-de \
-        kopano-webapp-plugin-spell-de-de \
-        kopano-webapp-plugin-spell-en-gb \
-        kopano-webapp-plugin-spell-en \
-        kopano-webapp-plugin-spell-en \
-        kopano-webapp-plugin-spell-es \
-        kopano-webapp-plugin-spell-es \
-        kopano-webapp-plugin-spell-fr \
-        kopano-webapp-plugin-spell-it \
-        kopano-webapp-plugin-spell-nl \
-        kopano-webapp-plugin-spell-nl \
-        kopano-webapp-plugin-spell-pl-pl \
-        kopano-webapp-plugin-spell \
-        kopano-webapp-plugin-spell \
-        kopano-webapp-plugin-titlecounter \
-        kopano-webapp-plugin-webappmanual \
-        kopano-webapp-plugin-zdeveloper \
         ${ADDITIONAL_KOPANO_PACKAGES} \
-        whatsapp4deskapp \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
 COPY apache2-kopano.conf /etc/apache2/sites-available/kopano.conf
@@ -88,6 +56,11 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     crudini --set /etc/php/7.0/apache2/php.ini PHP post_max_size 500M && \
     crudini --set /etc/php/7.0/apache2/php.ini PHP max_input_vars 1800 && \
     crudini --set /etc/php/7.0/apache2/php.ini Session session.save_path /run/sessions && \
+    # configure z-push
+    mkdir -p /var/lib/z-push /var/log/z-push && \
+    chown www-data:www-data /var/lib/z-push /var/log/z-push
+
+VOLUME /var/lib/z-push/
 
 EXPOSE 80/tcp
 

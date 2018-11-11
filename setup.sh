@@ -20,7 +20,7 @@ if [ ! -e ./.env ]; then
 	LDAP_ORGANISATION=${new_value:-$value_default}
 
 	value_default="kopano.demo"
-	read -p "Name of the Domain for LDAP [$value_default]: " new_value
+	read -p "Domain to be used (for LDAP and reverse proxy) [$value_default]: " new_value
 	LDAP_DOMAIN=${new_value:-$value_default}
 
 	value_default="dc=kopano,dc=demo"
@@ -116,6 +116,7 @@ TZ=$TZ
 
 # Defines how Kopano can be accessed from the outside world
 WEBAPP_HOST=webapp.$LDAP_DOMAIN
+ZPUSH_HOST=zpush.$LDAP_DOMAIN
 LDAP_HOST=ldap.$LDAP_DOMAIN
 HTTP=80
 HTTPS=443
@@ -126,6 +127,7 @@ docker_repo=zokradonh
 # modify below to build a different version, than the kopano nightly release
 #KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/
 #KOPANO_WEBAPP_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/webapp:/final/Debian_9.0/
+#KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_9.0/
 #RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
 

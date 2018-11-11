@@ -198,6 +198,25 @@ services:
       - web
       - kopanonet
 
+  kzpush:
+    image: ${docker_repo:?err}/kopano_zpush:${WEBAPP_VERSION}
+    hostname: kzpush
+    container_name: kopano_zpush
+    links:
+      - kserver
+    volumes:
+      - ./data/z-push-states/:/var/lib/z-push/
+      - ./data/ssl/:/kopano/ssl
+      - ./data/socket/:/run/kopano
+    environment:
+      - TZ=${TZ}
+      - CADDY_HOST=${ZPUSH_HOST}
+      - CADDY_PROXY_PARAMS=transparent
+      - CADDY_TLS_SELFSIGNED
+    networks:
+      - web
+      - kopanonet
+
   kdagent:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_dagent
