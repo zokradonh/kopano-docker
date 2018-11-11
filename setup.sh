@@ -20,7 +20,7 @@ if [ ! -e ./.env ]; then
 	LDAP_ORGANISATION=${new_value:-$value_default}
 
 	value_default="kopano.demo"
-	read -p "Name of the Domain for LDAP [$value_default]: " new_value
+	read -p "Domain to be used (for LDAP and reverse proxy) [$value_default]: " new_value
 	LDAP_DOMAIN=${new_value:-$value_default}
 
 	value_default="dc=kopano,dc=demo"
@@ -116,6 +116,7 @@ TZ=$TZ
 
 # Defines how Kopano can be accessed from the outside world
 WEBAPP_HOST=webapp.$LDAP_DOMAIN
+ZPUSH_HOST=zpush.$LDAP_DOMAIN
 LDAP_HOST=ldap.$LDAP_DOMAIN
 HTTP=80
 HTTPS=443
