@@ -1,6 +1,8 @@
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_base
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 ARG ADDITIONAL_KOPANO_PACKAGES=""
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
