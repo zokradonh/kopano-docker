@@ -36,6 +36,8 @@ fi
 # start regular service
 case "$SERVICE_TO_START" in
 server)
+	/kopano/services/kopano-public-store.sh &
+	/kopano/services/kopano-users.sh &
 	exec dockerize \
 		-wait file://$KCCONF_SERVER_SERVER_SSL_CA_FILE \
 		-wait file://$KCCONF_SERVER_SERVER_SSL_KEY_FILE \
