@@ -30,7 +30,7 @@ RUN \
     apt-get install --no-install-recommends -y \
         kopano-server-packages \
         ${ADDITIONAL_KOPANO_PACKAGES} \
-        php7.0-cli && \
+        && \
     set +x && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
     cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ && \
