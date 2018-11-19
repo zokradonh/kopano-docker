@@ -3,7 +3,7 @@ FROM debian:stretch
 LABEL maintainer=az@zok.xyz \
       version="2.0"
 
-RUN mkdir -p /kopano/repo /kopano/data /kopano/helper
+RUN mkdir -p /kopano/repo /kopano/data /kopano/helper /kopano/path
 WORKDIR /kopano/repo
 
 ARG DEBIAN_FRONTEND=noninteractive

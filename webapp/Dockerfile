@@ -97,5 +97,7 @@ COPY start.sh /kopano/start.sh
 
 ENV LANG en_US.UTF-8
 
+WORKDIR /kopano/path
+
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD [ "/kopano/start.sh" ]

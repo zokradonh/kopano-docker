@@ -46,6 +46,8 @@ ENV SERVICE_TO_START=server
 COPY kcconf.py defaultconfigs/ start-service.sh /kopano/
 COPY services /kopano/services
 
+WORKDIR /kopano/path
+
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 CMD [ "/kopano/start-service.sh" ]
