@@ -43,4 +43,6 @@ echo "Starting Apache"
 rm -f /run/apache2/apache2.pid
 set +u
 source /etc/apache2/envvars
+# cleaning up env variables
+unset "${!KCCONF_@}"
 exec /usr/sbin/apache2 -DFOREGROUND

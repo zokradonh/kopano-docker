@@ -38,49 +38,63 @@ case "$SERVICE_TO_START" in
 server)
 	/kopano/services/kopano-public-store.sh &
 	/kopano/services/kopano-users.sh &
-	exec dockerize \
+	dockerize \
 		-wait file://$KCCONF_SERVER_SERVER_SSL_CA_FILE \
 		-wait file://$KCCONF_SERVER_SERVER_SSL_KEY_FILE \
 		-wait tcp://db:3306 \
-		-timeout 360s \
-		/usr/sbin/kopano-server -F
+		-timeout 360s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	exec /usr/sbin/kopano-server -F
 	;;
 dagent)
-	exec dockerize \
+	dockerize \
 		-wait file://var/run/kopano/server.sock \
-		-timeout 360s \
-		/usr/sbin/kopano-dagent -l
+		-timeout 360s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	exec /usr/sbin/kopano-dagent -l
 	;;
 gateway)
-	exec dockerize \
+	dockerize \
 		-wait tcp://kserver:236 \
-		-timeout 360s \
-		/usr/sbin/kopano-gateway -F
+		-timeout 360s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	exec /usr/sbin/kopano-gateway -F
 	;;
 ical)
-	exec dockerize \
+	dockerize \
 		-wait tcp://kserver:236 \
-		-timeout 360s \
-		/usr/sbin/kopano-ical -F
+		-timeout 360s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	exec /usr/sbin/kopano-ical -F
 	;;
 monitor)
-	exec dockerize \
+	dockerize \
 		-wait file://var/run/kopano/server.sock \
-		-timeout 360s \
-		/usr/sbin/kopano-monitor -F
+		-timeout 360s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	exec /usr/sbin/kopano-monitor -F
 	;;
 search)
-	exec dockerize \
+	dockerize \
 		-wait file://var/run/kopano/server.sock \
-		-timeout 360s \
-		/usr/bin/python /usr/sbin/kopano-search -F
+		-timeout 360s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	exec /usr/bin/python /usr/sbin/kopano-search -F
 	;;
 spooler)
-	exec dockerize \
+	dockerize \
 		-wait file://var/run/kopano/server.sock \
 		-wait tcp://mail:25 \
-		-timeout 1080s \
-		/usr/sbin/kopano-spooler -F
+		-timeout 1080s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	exec /usr/sbin/kopano-spooler -F
 	;;
 *)
 	echo "Failed to start: Unknown service name: '$SERVICE_TO_START'" | ts
