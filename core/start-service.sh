@@ -85,7 +85,7 @@ search)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/bin/python /usr/sbin/kopano-search -F
+	exec /usr/bin/python3 /usr/sbin/kopano-search -F
 	;;
 spooler)
 	dockerize \
