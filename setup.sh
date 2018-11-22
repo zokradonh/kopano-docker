@@ -50,6 +50,9 @@ if [ ! -e ./.env ]; then
 	read -p "Which tag do you want to use for Z-Push? [$value_default]: " new_value
 	ZPUSH_VERSION=${new_value:-$value_default}
 
+	read -p "Which tag do you want to use for Kopano Konnect? [$value_default]: " new_value
+	KONNECT_VERSION=${new_value:-$value_default}
+
 	value_default="Kopano Demo"
 	read -p "Name of the Organisation for LDAP [$value_default]: " new_value
 	LDAP_ORGANISATION=${new_value:-$value_default}
@@ -190,7 +193,11 @@ if [ ! -e ./.env ]; then
 # for possible configuration values and their impact
 CORE_VERSION=$CORE_VERSION
 WEBAPP_VERSION=$WEBAPP_VERSION
+<<<<<<< HEAD
 ZPUSH_VERSION=$ZPUSH_VERSION
+=======
+Konnect_VERSION=$KONNECT_VERSION
+>>>>>>> add konnect to compose file
 
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
 LDAP_DOMAIN=$FQDN
@@ -230,8 +237,9 @@ EMAIL=$EMAIL
 HTTP=80
 HTTPS=443
 
-# Docker Repository to push to
+# Docker Repository to push to/pull from
 docker_repo=zokradonh
+COMPOSE_PROJECT_NAME=kopano
 
 # Modify below to build a different version, than the kopano nightly release
 #KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/

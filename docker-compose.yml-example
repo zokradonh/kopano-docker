@@ -138,7 +138,7 @@ services:
       - kopanossl/:/kopano/ssl
 
   kopano_server:
-    image: ${docker_repo}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     hostname: kopano_server
     container_name: kopano_server
     links:
@@ -155,7 +155,7 @@ services:
       - SERVICE_TO_START=server
       - TZ=${TZ}
       - KCCONF_SERVER_COREDUMP_ENABLED=no
-      - KCCONF_SERVER_LOG_LEVEL=4
+      - KCCONF_SERVER_LOG_LEVEL=3
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
       - KCCONF_SERVER_MYSQL_PORT=3306
       - KCCONF_SERVER_MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -309,6 +309,15 @@ services:
       - TZ=${TZ}
     networks:
       - kopano-net
+
+  kopano_konnect:
+    image: kopano/konnectd:${KONNECT_SERVER:-latest}
+    container_name: kopano_konnect
+    links:
+     - web
+    networks:
+     - kopanonet
+
 volumes:
   web:
   ldap:
