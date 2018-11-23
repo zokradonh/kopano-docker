@@ -17,6 +17,8 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 
 **Note:** For the reverse proxy to work you need to make sure that the given domain resolves to the reverse proxy.
 
+**Note:** There have been reports about the ldap demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image. 
+
 The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
 
 ### Need to adjust any values after the initial run of `setup.sh`?
@@ -56,12 +58,12 @@ The built image includes your subscription key! Do not push this image to any pu
 ### Some more commands for those unfamilar with docker-compose
 
 - Start ``docker-compose-yml`` file in the background: `docker-compose up -d`
-- Get a status overview of the running containers`: `docker-compose ps`
+- Get a status overview of the running containers: `docker-compose ps`
 - Stop compose running in the background: `docker-compose stop`
 - Destroy local containers and network interfaces: `docker-compose down`
 - Run commands in a running container: `docker-compose exec kserver kopano-cli --list-users`
 - Get logs of a container running in the background: `docker-compose logs -f kserver`
-
+- Get a shell in a new container to e.g. run `kopano-backup ` or `kopano-migration-pst` (would still need to be installed first): `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_core bash`
 
 ## Third party docker images
 
