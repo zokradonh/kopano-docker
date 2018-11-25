@@ -21075,7 +21075,7 @@ memberUid: user4
 memberUid: user5
 memberUid: user6
 mail: sales@kopano.demo
-kopanoSendAsPrivilege: uid=user1,ou=users,dc=kopano,dc=demo
+kopanoSendAsPrivilege: 1
 
 # IT, groups, kopano.demo
 dn: cn=IT,ou=groups,dc=kopano,dc=demo
@@ -26446,7 +26446,7 @@ objectClass: top
 objectClass: kopano-group
 description: Dutch Users
 kopanoAliases: Dutch-OesOers
-kopanoSendAsPrivilege: user3
+kopanoSendAsPrivilege: 3
 mail: dutch-users@kopano.com
 
 # meetingroom, resources, kopano.demo
@@ -26536,7 +26536,7 @@ description: Groep1
 mail: groep1@kopano.com
 gidNumber: 16161
 kopanoAliases: Groepuno
-kopanoSendAsPrivilege: user3
+kopanoSendAsPrivilege: 3
 memberUid: user1
 memberUid: user2
 memberUid: user3
