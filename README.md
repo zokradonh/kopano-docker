@@ -63,7 +63,8 @@ The built image includes your subscription key! Do not push this image to any pu
 - Destroy local containers and network interfaces: `docker-compose down`
 - Run commands in a running container: `docker-compose exec kserver kopano-cli --list-users`
 - Get logs of a container running in the background: `docker-compose logs -f kserver`
-- Get a shell in a new container to e.g. run `kopano-backup ` or `kopano-migration-pst` (would still need to be installed first): `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_core bash`
+- Run a `kopano-backup`: `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_core kopano-backup`
+- Get a shell in a new container to for example run `kopano-migration-pst` (would still need to be installed first): `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_core bash`
 
 ## Third party docker images
 
