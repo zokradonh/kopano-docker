@@ -16,7 +16,7 @@ services:
       - "${HTTPS}:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/web:/root/.caddy
+      - web:/root/.caddy
     networks:
       - web
 
@@ -35,8 +35,8 @@ services:
       - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_USER_PASSWORD}
     command: "--loglevel debug --copy-service"
     volumes:
-      - ./data/ldap/var/lib/ldap:/var/lib/ldap
-      - ./data/ldap/etc/ldap/slapd.d:/etc/ldap/slapd.d
+      - ldap:/var/lib/ldap
+      - slapd:/etc/ldap/slapd.d
     networks:
       - kopanonet
 
@@ -72,9 +72,9 @@ services:
     ports:
       - "25:25"
     volumes:
-      - ./data/mail/data:/var/mail
-      - ./data/mail/state:/var/mail-state
-      - ./data/mtaconfig:/tmp/docker-mailserver/
+      - maildata:/var/mail
+      - mailstate:/var/mail-state
+      - mtaconfig:/tmp/docker-mailserver/
     environment:
       - TZ=${TZ}
       - ENABLE_SPAMASSASSIN=1
@@ -117,7 +117,7 @@ services:
     restart: always
     container_name: kopano_db
     volumes:
-      - ./data/mysql/:/var/lib/mysql
+      - mysql/:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_USER=${MYSQL_USER}
@@ -135,7 +135,7 @@ services:
     image: ${docker_repo:?err}/kopano_ssl
     container_name: kopano_ssl
     volumes:
-      - ./data/ssl/:/kopano/ssl
+      - kopanossl/:/kopano/ssl
 
   kserver:
     image: ${docker_repo}/kopano_core:${CORE_VERSION}
@@ -175,9 +175,9 @@ services:
     networks:
       - kopanonet
     volumes:
-      - ./data/kopano/:/kopano/data
-      - ./data/ssl/:/kopano/ssl
-      - ./data/socket/:/run/kopano
+      - kopanodata/:/kopano/data
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
 
   kwebapp:
     image: ${docker_repo:?err}/kopano_webapp:${WEBAPP_VERSION}
@@ -186,9 +186,8 @@ services:
     links:
       - kserver
     volumes:
-      - ./data/z-push-states/:/var/lib/z-push/
-      - ./data/ssl/:/kopano/ssl
-      - ./data/socket/:/run/kopano
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     environment:
       - TZ=${TZ}
       - CADDY_HOST=${WEBAPP_HOST}
@@ -205,9 +204,9 @@ services:
     links:
       - kserver
     volumes:
-      - ./data/z-push-states/:/var/lib/z-push/
-      - ./data/ssl/:/kopano/ssl
-      - ./data/socket/:/run/kopano
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
+      - zpushstates/:/var/lib/z-push/
     environment:
       - TZ=${TZ}
       - CADDY_HOST=${ZPUSH_HOST}
@@ -223,8 +222,8 @@ services:
     links:
       - kserver
     volumes:
-      - ./data/ssl/:/kopano/ssl
-      - ./data/socket/:/run/kopano
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=dagent
       - TZ=${TZ}
@@ -241,8 +240,8 @@ services:
     links:
       - kserver
     volumes:
-      - ./data/ssl/:/kopano/ssl
-      - ./data/socket/:/run/kopano
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=spooler
       - TZ=${TZ}
@@ -258,8 +257,8 @@ services:
     links:
       - kserver
     volumes:
-      - ./data/ssl/:/kopano/ssl
-      - ./data/socket/:/run/kopano
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=gateway
       - TZ=${TZ}
@@ -275,8 +274,8 @@ services:
     links:
       - kserver
     volumes:
-      - ./data/ssl/:/kopano/ssl
-      - ./data/socket/:/run/kopano
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=ical
       - TZ=${TZ}
@@ -290,8 +289,8 @@ services:
     links:
       - kserver
     volumes:
-      - ./data/ssl/:/kopano/ssl
-      - ./data/socket/:/run/kopano
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=monitor
       - TZ=${TZ}
@@ -304,13 +303,25 @@ services:
     links:
       - kserver
     volumes:
-      - ./data/ssl/:/kopano/ssl
-      - ./data/socket/:/run/kopano
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=search
       - TZ=${TZ}
     networks:
       - kopanonet
+volumes:
+  web:
+  ldap:
+  slapd:
+  maildata:
+  mailstate:
+  mtaconfig:
+  mysql:
+  kopanodata:
+  kopanossl:
+  kopanosocket:
+  zpushstates:
 
 networks:
   web:
