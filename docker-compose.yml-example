@@ -21,7 +21,7 @@ services:
       - web
 
   ldap:
-    build: ldap/
+    build: ldap-demo/
     #image: osixia/openldap:1.2.2
     container_name: ldap
     ports:
