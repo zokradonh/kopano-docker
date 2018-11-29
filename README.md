@@ -55,6 +55,14 @@ If you are running a private Docker Registry then you may also change `docker_re
 
 The built image includes your subscription key! Do not push this image to any public registry like e.g. https://hub.docker.com!
 
+### I want to use these Docker images outside of an evaluation environment. What do I need to adjust to make this possible?
+
+To get a quick impression of Kopano this git repository bundles a locally build ldap image with some example users. When using the docker-compose.yml in a production environment make sure to:
+
+- either remove `ldap-demo/bootstrap/ldif/demo-users.ldif` from the locally built ldap image or complelty remove the local ldap from the compose file
+- adapt ldap queries in .env to match you actual ldap server and users
+- all additional configuration of the Kopano components should be specified in the compose file and **not within the running container**
+
 ### Some more commands for those unfamilar with docker-compose
 
 - Start ``docker-compose-yml`` file in the background: `docker-compose up -d`
