@@ -57,7 +57,7 @@ dagent)
 	;;
 gateway)
 	dockerize \
-		-wait tcp://kserver:236 \
+		-wait tcp://kopano_server:236 \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -65,7 +65,7 @@ gateway)
 	;;
 ical)
 	dockerize \
-		-wait tcp://kserver:236 \
+		-wait tcp://kopano_server:236 \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
