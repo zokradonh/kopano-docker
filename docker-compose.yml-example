@@ -8,8 +8,8 @@ services:
     restart: always
     privileged: true
     links:
-      - kwebapp
-      #- kzpush
+      - kopano_webapp
+      - kopano_zpush
     ports:
       - "2015:2015"
       - "${HTTP}:80"
@@ -39,7 +39,6 @@ services:
       - slapd:/etc/ldap/slapd.d
     networks:
       - kopanonet
-
 
   ldap-admin:
     image: osixia/phpldapadmin:0.7.2
@@ -131,15 +130,15 @@ services:
     networks:
       - kopanonet
   
-  kssl:
+  kopano_ssl:
     image: ${docker_repo:?err}/kopano_ssl
     container_name: kopano_ssl
     volumes:
       - kopanossl/:/kopano/ssl
 
-  kserver:
+  kopano_server:
     image: ${docker_repo}/kopano_core:${CORE_VERSION}
-    hostname: kserver
+    hostname: kopano_server
     container_name: kopano_server
     links:
       - db
@@ -147,7 +146,7 @@ services:
     depends_on:
       - db
       - ldap
-      - kssl
+      - kopano_ssl
     environment:
       - SERVICE_TO_START=server
       - TZ=${TZ}
@@ -179,12 +178,12 @@ services:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
 
-  kwebapp:
+  kopano_webapp:
     image: ${docker_repo:?err}/kopano_webapp:${WEBAPP_VERSION}
-    hostname: kwebapp
+    hostname: kopano_webapp
     container_name: kopano_webapp
     links:
-      - kserver
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -197,12 +196,12 @@ services:
       - web
       - kopanonet
 
-  kzpush:
+  kopano_zpush:
     image: ${docker_repo:?err}/kopano_zpush:${WEBAPP_VERSION}
-    hostname: kzpush
+    hostname: kopano_zpush
     container_name: kopano_zpush
     links:
-      - kserver
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -216,11 +215,11 @@ services:
       - web
       - kopanonet
 
-  kdagent:
+  kopano_dagent:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_dagent
     links:
-      - kserver
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -232,13 +231,13 @@ services:
     networks:
       - kopanonet
 
-  kspooler:
+  kopano_spooler:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_spooler
     hostname: spooler
     domainname: ${LDAP_DOMAIN}
     links:
-      - kserver
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -251,11 +250,11 @@ services:
     networks:
       - kopanonet
 
-  kgateway:
+  kopano_gateway:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_gateway
     links:
-      - kserver
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -268,11 +267,11 @@ services:
     networks:
       - kopanonet
 
-  kical:
+  kopano_ical:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_ical
     links:
-      - kserver
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -283,11 +282,11 @@ services:
     networks:
       - kopanonet
 
-  kmonitor:
+  kopano_monitor:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_monitor
     links:
-      - kserver
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -297,11 +296,11 @@ services:
     networks:
       - kopanonet
 
-  ksearch:
+  kopano_search:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_search
     links:
-      - kserver
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
