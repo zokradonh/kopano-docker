@@ -1,0 +1,30 @@
+*, http://, https:// {
+    gzip
+
+    tls self_signed
+
+    redir {
+        if {scheme} is http
+        / https://{host}{uri}
+    }
+
+    redir 302 {
+        if {path} is /
+        / /webapp/
+    }
+
+    proxy /webapp/ kopano_webapp:80 {
+        transparent
+    }
+    redir /webapp /webapp/
+
+    proxy /Microsoft-Server-ActiveSync kopano_zpush:80 {
+        transparent
+    }
+
+    proxy /ldap-admin/ ldap-admin:80 {
+        without /ldap-admin
+        transparent
+    }
+    redir /ldap-admin /ldap-admin/
+}

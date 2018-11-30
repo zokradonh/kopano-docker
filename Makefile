@@ -53,6 +53,9 @@ build-zpush:
 build-ssl:
 	docker build -t $(docker_repo)/kopano_ssl ssl/
 
+build-kweb:
+	docker build --no-cache -t $(docker_repo)/kopano_web kweb/
+
 tag: component ?= base
 tag:
 	@echo 'create tag $($(component)_version)'
@@ -102,6 +105,9 @@ publish-zpush: build-zpush tag-zpush
 
 publish-ssl: build-ssl
 	docker push $(docker_repo)/kopano_ssl:latest
+
+publish-kweb: build-kweb
+	docker push $(docker_repo)/kopano_web:latest
 
 test:
 	sudo rm -rf data/

@@ -20,8 +20,12 @@ if [ ! -e ./.env ]; then
 	LDAP_ORGANISATION=${new_value:-$value_default}
 
 	value_default="kopano.demo"
-	read -p "Domain to be used (for LDAP and reverse proxy) [$value_default]: " new_value
-	LDAP_DOMAIN=${new_value:-$value_default}
+	read -p "FQDN to be used (for reverse proxy) [$value_default]: " new_value
+	FQDN=${new_value:-$value_default}
+
+	value_default="test@example.com"
+	read -p "Email address to use for Lets Encrypt [$value_default]: " new_value
+	EMAIL=${new_value:-$value_default}
 
 	value_default="dc=kopano,dc=demo"
 	read -p "Name of the BASE DN for LDAP [$value_default]: " new_value
@@ -83,7 +87,7 @@ CORE_VERSION=$CORE_VERSION
 WEBAPP_VERSION=$WEBAPP_VERSION
 
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
-LDAP_DOMAIN=$LDAP_DOMAIN
+LDAP_DOMAIN=$FQDN
 LDAP_BASE_DN=$LDAP_BASE_DN
 LDAP_SERVER=$LDAP_SERVER
 LDAP_ADMIN_PASSWORD=$LDAP_ADMIN_PASSWORD
@@ -115,9 +119,8 @@ POSTMASTER_ADDRESS=$POSTMASTER_ADDRESS
 TZ=$TZ
 
 # Defines how Kopano can be accessed from the outside world
-WEBAPP_HOST=webapp.$LDAP_DOMAIN
-ZPUSH_HOST=zpush.$LDAP_DOMAIN
-LDAP_HOST=ldap.$LDAP_DOMAIN
+FQDN=$FQDN
+EMAIL=$EMAIL
 HTTP=80
 HTTPS=443
 
