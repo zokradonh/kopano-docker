@@ -12,7 +12,10 @@ services:
       - "2015:2015"
       - "${HTTP}:8080"
       - "${HTTPS}:8443"
-    command: caddy -conf /etc/kweb.cfg -agree -host ${FQDN}
+    environment:
+      - EMAIL=${EMAIL}
+      - FQDN=${FQDN}
+    command: wrapper.sh
     volumes:
       - web:/.kweb
     networks:
