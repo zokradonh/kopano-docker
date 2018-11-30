@@ -54,7 +54,7 @@ build-ssl:
 	docker build -t $(docker_repo)/kopano_ssl ssl/
 
 build-kweb:
-	docker build --no-cache -t $(docker_repo)/kopano_web kweb/
+	docker build -t $(docker_repo)/kopano_web kweb/
 
 tag: component ?= base
 tag:
