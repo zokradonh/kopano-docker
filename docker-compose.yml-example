@@ -2,7 +2,6 @@ version: "3"
 
 services:
   web:
-    build: kweb/
     image: ${docker_repo:?err}/kopano_web
     container_name: web
     restart: always
@@ -20,8 +19,8 @@ services:
       - web
 
   ldap:
-    build: ldap-demo/
-    #image: osixia/openldap:1.2.2
+    #build: ldap-demo/
+    image: ${docker_repo:?err}/kopano_ldap_demo
     container_name: ldap
     ports:
       - 389:389
