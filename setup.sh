@@ -23,8 +23,8 @@ if [ ! -e ./.env ]; then
 	read -p "FQDN to be used (for reverse proxy) [$value_default]: " new_value
 	FQDN=${new_value:-$value_default}
 
-	value_default="test@example.com"
-	read -p "Email address to use for Lets Encrypt [$value_default]: " new_value
+	value_default="self_signed"
+	read -p "Email address to use for Lets Encrypt. Use 'self_signed' as your email to create self signed certificates [$value_default]: " new_value
 	EMAIL=${new_value:-$value_default}
 
 	value_default="dc=kopano,dc=demo"

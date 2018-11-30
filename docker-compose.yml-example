@@ -10,9 +10,9 @@ services:
       - kopano_zpush
     ports:
       - "2015:2015"
-      - "${HTTP}:80"
-      - "${HTTPS}:443"
-    command: caddy -conf /etc/kweb.cfg -agree -email ${EMAIL} -host ${FQDN}
+      - "${HTTP}:8080"
+      - "${HTTPS}:8443"
+    command: caddy -conf /etc/kweb.cfg -agree -host ${FQDN}
     volumes:
       - web:/.kweb
     networks:

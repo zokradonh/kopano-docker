@@ -56,6 +56,9 @@ build-ssl:
 build-kweb:
 	docker build -t $(docker_repo)/kopano_web kweb/
 
+build-ldap-demo:
+	docker build -t $(docker_repo)/kopano_ldap_demo ldap-demo/
+
 tag: component ?= base
 tag:
 	@echo 'create tag $($(component)_version)'
