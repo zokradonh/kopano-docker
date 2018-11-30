@@ -57,7 +57,7 @@ The built image includes your subscription key! Do not push this image to any pu
 While using kweb is recommended, this is of course possible.
 
 - The `kopano_webapp` image is accessible on port 80 and serves the WebApp both on `/` and `/webapp`.
-- The `kopano_zpush` image is accessible on port 80 and servers Z-Push on `/Microsoft-Server-ActiveSync` (additional urls may be needed in the future see #39).
+- The `kopano_zpush` image is accessible on port 80 and serves Z-Push on `/Microsoft-Server-ActiveSync` (additional urls may be needed in the future see #39).
 
 ### I want to use these Docker images outside of an evaluation environment. What do I need to adjust to make this possible?
 
