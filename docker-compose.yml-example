@@ -13,7 +13,7 @@ services:
       - "2015:2015"
       - "${HTTP}:80"
       - "${HTTPS}:443"
-    command: caddy -conf /etc/Caddyfile -agree -email ${EMAIL} -host ${FQDN}
+    command: caddy -conf /etc/kweb.cfg -agree -email ${EMAIL} -host ${FQDN}
     volumes:
       - web:/.kweb
     networks:
