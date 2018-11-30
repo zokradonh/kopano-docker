@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/sh
+
+set -e
 
 if [ ! -e ./docker-compose.yml ]; then
 	echo "copying example compose file"
@@ -141,4 +143,4 @@ else
 fi
 
 # build the local docker containers. This has the benefit that it will warn about empty variables
-docker-compose build
+#docker-compose build
