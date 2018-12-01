@@ -82,7 +82,7 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -e 's,^ErrorLog.*,ErrorLog "|/bin/cat",' -i /etc/apache2/apache2.conf && \
     sed -e "s,MaxSpareServers[^:].*,MaxSpareServers 5," -i /etc/apache2/mods-available/mpm_prefork.conf && \
     a2disconf other-vhosts-access-log && \
-    a2ensite kopano && \
+    a2ensite kopano kopano-webapp && \
     echo "Listen 80" > /etc/apache2/ports.conf && \
     # configure mod_php
     a2enmod rewrite && \

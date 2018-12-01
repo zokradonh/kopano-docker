@@ -10,7 +10,7 @@ ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG RELEASE_KEY_DOWNLOAD=0
 
-# install Kopano WebApp and refresh ca-certificates
+# install Kopano Core and refresh ca-certificates
 RUN \
     # community download and package as apt source repository
     . /kopano/helper/create-kopano-repo.sh && \

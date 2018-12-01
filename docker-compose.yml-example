@@ -2,27 +2,28 @@ version: "3"
 
 services:
   web:
-    build: caddy/
-    #image: abiosoft/caddy:0.10.4
+    image: ${docker_repo:?err}/kopano_web
     container_name: web
     restart: always
-    privileged: true
     links:
       - kopano_webapp
       - kopano_zpush
     ports:
       - "2015:2015"
-      - "${HTTP}:80"
-      - "${HTTPS}:443"
+      - "${HTTP}:8080"
+      - "${HTTPS}:8443"
+    environment:
+      - EMAIL=${EMAIL}
+      - FQDN=${FQDN}
+    command: wrapper.sh
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - web:/root/.caddy
+      - web:/.kweb
     networks:
       - web
 
   ldap:
-    build: ldap-demo/
-    #image: osixia/openldap:1.2.2
+    #build: ldap-demo/
+    image: ${docker_repo:?err}/kopano_ldap_demo
     container_name: ldap
     ports:
       - 389:389
@@ -48,10 +49,6 @@ services:
     environment:
       - PHPLDAPADMIN_LDAP_HOSTS=ldap
       - PHPLDAPADMIN_HTTPS=false
-      - CADDY_HOST=${LDAP_HOST}
-      - CADDY_PORT=80
-      - CADDY_PROXY_PARAMS=transparent
-      - CADDY_TLS_SELFSIGNED
     command: -l debug
     links:
       - ldap
@@ -189,9 +186,6 @@ services:
       - kopanosocket/:/run/kopano
     environment:
       - TZ=${TZ}
-      - CADDY_HOST=${WEBAPP_HOST}
-      - CADDY_PROXY_PARAMS=transparent
-      - CADDY_TLS_SELFSIGNED
     networks:
       - web
       - kopanonet
@@ -208,9 +202,6 @@ services:
       - zpushstates/:/var/lib/z-push/
     environment:
       - TZ=${TZ}
-      - CADDY_HOST=${ZPUSH_HOST}
-      - CADDY_PROXY_PARAMS=transparent
-      - CADDY_TLS_SELFSIGNED
     networks:
       - web
       - kopanonet

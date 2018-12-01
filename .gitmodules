@@ -1,3 +1,0 @@
-[submodule "caddy"]
-	path = caddy
-	url = https://github.com/fbartels/caddy-gen.git

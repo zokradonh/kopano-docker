@@ -6,16 +6,13 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 
 - make sure that you are running a recent enought version of Docker and [Docker Compose](https://docs.docker.com/compose/install/)
 - clone this repository to your local disk
-- run `git submodule update --init --recursive` from within the checkout to also clone submodules
 - run `setup.sh`
   - this script will ask you a few questions about your environment.
   - If you are just interested in the demo environment you can accept the default values by pressing `Enter` on each question
-  - afterwards it builds a local image for the demo LDAP and the reverse proxy
+  - afterwards it builds a local image for the demo LDAP
 - now run `docker-compose up` and you will see how the remaining Docker images are pulled and then everything is started
-- after startup has succeeded you can access the Kopano WebApp by going to `https://webapp.kopano.demo` (if you have given a differing LDAP Domain name then it will be `https://webapp.your.domain`).
-- you can also access phpLDAPadmin by going to `https://ldap.kopano.demo`
-
-**Note:** For the reverse proxy to work you need to make sure that the given domain resolves to the reverse proxy.
+- after startup has succeeded you can access the Kopano WebApp by going to `https://kopano.demo/webapp`
+- you can also access phpLDAPadmin by going to `https://kopano.demo/ldap-admin`
 
 **Note:** There have been reports about the ldap demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image. 
 
@@ -23,7 +20,7 @@ The `docker-compose.yml` file by default pulls Docker containers from https://hu
 
 ### Need to adjust any values after the initial run of `setup.sh`?
 
-If you want to modify some of the values from the `setup.sh` run you can simply edit `.env` in your favourite editor. Repeated runs of `setup.sh` will neither modify `docker-compose.yml` nor `.env`. In that file you will also find some given defaults like ldap query filters and the local ports for the Caddy reverse proxy.
+If you want to modify some of the values from the `setup.sh` run you can simply edit `.env` in your favourite editor. Repeated runs of `setup.sh` will neither modify `docker-compose.yml` nor `.env`. In that file you will also find some given defaults like ldap query filters and the local ports for the reverse proxy.
 
 ### How to use a newer version than the one available from the Docker Hub?
 
@@ -54,6 +51,13 @@ If you are running a private Docker Registry then you may also change `docker_re
 ***WARNING***
 
 The built image includes your subscription key! Do not push this image to any public registry like e.g. https://hub.docker.com!
+
+### What if I want to use a different front facing proxy than the one in docker-compose? Or just some part of the compose file?
+
+While using kweb is recommended, this is of course possible.
+
+- The `kopano_webapp` image is accessible on port 80 and serves the WebApp both on `/` and `/webapp`.
+- The `kopano_zpush` image is accessible on port 80 and serves Z-Push on `/Microsoft-Server-ActiveSync` (additional urls may be needed in the future see #39).
 
 ### I want to use these Docker images outside of an evaluation environment. What do I need to adjust to make this possible?
 
