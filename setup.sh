@@ -2,6 +2,10 @@
 
 set -e
 
+fqdn_to_dn() {
+    printf 'dc=%s' "$1" | sed -r 's/\./,dc=/g'
+}
+
 if [ ! -e ./docker-compose.yml ]; then
 	echo "copying example compose file"
 	cp docker-compose.yml-example docker-compose.yml
@@ -24,14 +28,11 @@ if [ ! -e ./.env ]; then
 	value_default="kopano.demo"
 	read -p "FQDN to be used (for reverse proxy) [$value_default]: " new_value
 	FQDN=${new_value:-$value_default}
+	LDAP_BASE_DN=$(fqdn_to_dn $FQDN)
 
 	value_default="self_signed"
 	read -p "Email address to use for Lets Encrypt. Use 'self_signed' as your email to create self signed certificates [$value_default]: " new_value
 	EMAIL=${new_value:-$value_default}
-
-	value_default="dc=kopano,dc=demo"
-	read -p "Name of the BASE DN for LDAP [$value_default]: " new_value
-	LDAP_BASE_DN=${new_value:-$value_default}
 
 	value_default="kopano123"
 	read -p "Password of the admin user (in bundled LDAP) [$value_default]: " new_value
@@ -41,11 +42,11 @@ if [ ! -e ./.env ]; then
 	read -p "LDAP server to be used (defaults to the bundled OpenLDAP) [$value_default]: " new_value
 	LDAP_SERVER=${new_value:-$value_default}
 
-	value_default="DC=kopano,DC=demo"
+	value_default="$LDAP_BASE_DN"
 	read -p "LDAP search base [$value_default]: " new_value
 	LDAP_SEARCH_BASE=${new_value:-$value_default}
 
-	value_default="CN=readonly,DC=kopano,DC=demo"
+	value_default="CN=readonly,$LDAP_BASE_DN"
 	read -p "LDAP bind user (needs only read permissions) [$value_default]: " new_value
 	LDAP_BIND_DN=${new_value:-$value_default}
 
@@ -57,7 +58,7 @@ if [ ! -e ./.env ]; then
 	read -p "Timezone to be used [$value_default]: " new_value
 	TZ=${new_value:-$value_default}
 
-	value_default="postmaster@kopano.demo"
+	value_default="postmaster@$FQDN"
 	read -p "E-Mail Address displayed for the 'postmaster' [$value_default]: " new_value
 	POSTMASTER_ADDRESS=${new_value:-$value_default}
 
