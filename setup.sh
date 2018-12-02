@@ -3,7 +3,11 @@
 set -e
 
 fqdn_to_dn() {
-    printf 'dc=%s' "$1" | sed -r 's/\./,dc=/g'
+	printf 'dc=%s' "$1" | sed -r 's/\./,dc=/g'
+}
+
+random_string() {
+	hexdump -n 16 -v -e '/1 "%02X"' /dev/urandom
 }
 
 if [ ! -e ./docker-compose.yml ]; then
@@ -38,25 +42,32 @@ if [ ! -e ./.env ]; then
 	read -p "Name of the BASE DN for LDAP [$value_default]: " new_value
 	LDAP_BASE_DN=${new_value:-$value_default}
 
-	value_default="kopano123"
-	read -p "Password of the admin user (in bundled LDAP) [$value_default]: " new_value
-	LDAP_ADMIN_PASSWORD=${new_value:-$value_default}
-
 	value_default="ldap://ldap:389"
 	read -p "LDAP server to be used (defaults to the bundled OpenLDAP) [$value_default]: " new_value
 	LDAP_SERVER=${new_value:-$value_default}
 
-	value_default="$LDAP_BASE_DN"
-	read -p "LDAP search base [$value_default]: " new_value
-	LDAP_SEARCH_BASE=${new_value:-$value_default}
+	if [ "$LDAP_SERVER" != "$value_default" ]; then
+		value_default="kopano123"
+		read -p "Password of the admin user [$value_default]: " new_value
+		LDAP_ADMIN_PASSWORD=${new_value:-$value_default}
 
-	value_default="CN=readonly,$LDAP_BASE_DN"
-	read -p "LDAP bind user (needs only read permissions) [$value_default]: " new_value
-	LDAP_BIND_DN=${new_value:-$value_default}
+		value_default="$LDAP_BASE_DN"
+		read -p "LDAP search base [$value_default]: " new_value
+		LDAP_SEARCH_BASE=${new_value:-$value_default}
 
-	value_default="kopano123"
-	read -p "LDAP server to be used (default bundled openldap) [$value_default]: " new_value
-	LDAP_BIND_PW=${new_value:-$value_default}
+		value_default="CN=readonly,$LDAP_BASE_DN"
+		read -p "LDAP bind user (needs only read permissions) [$value_default]: " new_value
+		LDAP_BIND_DN=${new_value:-$value_default}
+
+		value_default="kopano123"
+		read -p "LDAP bind password to be used [$value_default]: " new_value
+		LDAP_BIND_PW=${new_value:-$value_default}
+	else
+		LDAP_ADMIN_PASSWORD=$(random_string)
+		LDAP_SEARCH_BASE="$LDAP_BIND_DN"
+		LDAP_BIND_DN="CN=readonly,$LDAP_BASE_DN"
+		LDAP_BIND_PW=$(random_string)
+	fi
 
 	if [ -f /etc/timezone ]; then
 		value_default=$(cat /etc/timezone)
@@ -79,22 +90,28 @@ if [ ! -e ./.env ]; then
 	read -p "Name/Address of Database server (defaults to the bundled one) [$value_default]: " new_value
 	MYSQL_HOST=${new_value:-$value_default}
 
-	value_default="kopano123"
-	read -p "Password for the MySQL root user [$value_default]: " new_value
-	MYSQL_ROOT_PASSWORD=${new_value:-$value_default}
+	if [ "$MYSQL_HOST" != "$value_default" ]; then
+		value_default="kopano123"
+		read -p "Password for the MySQL root user [$value_default]: " new_value
+		MYSQL_ROOT_PASSWORD=${new_value:-$value_default}
 
-	value_default="kopanoDbUser"
-	read -p "Username to connect to the database [$value_default]: " new_value
-	MYSQL_USER=${new_value:-$value_default}
+		value_default="kopanoDbUser"
+		read -p "Username to connect to the database [$value_default]: " new_value
+		MYSQL_USER=${new_value:-$value_default}
 
-	value_default="kopanoDbPw"
-	read -p "Password to connect to the database [$value_default]: " new_value
-	MYSQL_PASSWORD=${new_value:-$value_default}
+		value_default="kopanoDbPw"
+		read -p "Password to connect to the database [$value_default]: " new_value
+		MYSQL_PASSWORD=${new_value:-$value_default}
 
-	value_default="kopano"
-	read -p "Datebase to use for Kopano [$value_default]: " new_value
-	MYSQL_DATABASE=${new_value:-$value_default}
-
+		value_default="kopano"
+		read -p "Datebase to use for Kopano [$value_default]: " new_value
+		MYSQL_DATABASE=${new_value:-$value_default}
+	else
+		MYSQL_USER="kopano"
+		MYSQL_DATABASE="kopano"
+		MYSQL_ROOT_PASSWORD=$(random_string)
+		MYSQL_PASSWORD=$(random_string)
+    fi
 
         cat <<-EOF >"./.env"
 # please consult https://github.com/zokradonh/kopano-docker
