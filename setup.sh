@@ -58,7 +58,16 @@ if [ ! -e ./.env ]; then
 	read -p "LDAP server to be used (default bundled openldap) [$value_default]: " new_value
 	LDAP_BIND_PW=${new_value:-$value_default}
 
-	value_default="Europe/Berlin"
+	if [ -f /etc/timezone ]; then
+		value_default=$(cat /etc/timezone)
+	elif [ -f /etc/localtime ]; then
+		value_default=$(readlink /etc/localtime|sed -n 's|^.*zoneinfo/||p')
+	fi
+
+	if [ -z "${value_default}" ]; then
+		value_default="Europe/Berlin".
+	fi
+
 	read -p "Timezone to be used [$value_default]: " new_value
 	TZ=${new_value:-$value_default}
 
