@@ -34,6 +34,10 @@ if [ ! -e ./.env ]; then
 	read -p "Email address to use for Lets Encrypt. Use 'self_signed' as your email to create self signed certificates [$value_default]: " new_value
 	EMAIL=${new_value:-$value_default}
 
+    value_default="$LDAP_BASE_DN"
+	read -p "Name of the BASE DN for LDAP [$value_default]: " new_value
+	LDAP_BASE_DN=${new_value:-$value_default}
+
 	value_default="kopano123"
 	read -p "Password of the admin user (in bundled LDAP) [$value_default]: " new_value
 	LDAP_ADMIN_PASSWORD=${new_value:-$value_default}
