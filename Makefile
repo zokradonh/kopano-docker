@@ -113,8 +113,7 @@ publish-kweb: build-kweb
 	docker push $(docker_repo)/kopano_web:latest
 
 test:
-	docker-compose down || true
-	docker volume ls | grep "kopano-docker_" | awk '{print $2}' | xargs docker volume rm || true
+	docker-compose down -v || true
 	make build-all
 	docker-compose build
 	docker-compose up
