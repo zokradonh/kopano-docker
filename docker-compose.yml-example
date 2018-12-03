@@ -313,8 +313,12 @@ services:
   kopano_konnect:
     image: kopano/konnectd:${KONNECT_SERVER:-latest}
     container_name: kopano_konnect
+    command: serve --iss=https://${FQDN} kc
     links:
      - web
+    volumes:
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     networks:
      - kopanonet
 
