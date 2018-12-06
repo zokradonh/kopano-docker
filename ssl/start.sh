@@ -17,14 +17,14 @@ if [ ! -f /kopano/ssl/ca.pem ]; then
 fi
 
 # Konnect - create encryption key if not already present
-encckey="/kopano/ssl/konnectd-encryption.key"
-if [ ! -f $encckey ]; then
+enckey="/kopano/ssl/konnectd-encryption.key"
+if [ ! -f $enckey ]; then
 	echo "creating new encryption key"
-	openssl rand -out /etc/kopano/konnectd-encryption.key 32
+	openssl rand -out $enckey 32
 fi
 
 # Konnec - create token signing key if not already present
-singkey="/kopano/ssl/konnectd-tokens-signing-key.pem"
+signkey="/kopano/ssl/konnectd-tokens-signing-key.pem"
 if [ ! -f $signkey ]; then
 	echo "creating new token signing key"
 	openssl genpkey -algorithm RSA -out $signkey -pkeyopt rsa_keygen_bits:4096
