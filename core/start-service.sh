@@ -72,6 +72,14 @@ ical)
 	unset "${!KCCONF_@}"
 	exec /usr/sbin/kopano-ical -F
 	;;
+kapi)
+	dockerize \
+		-wait file://var/run/kopano/server.sock \
+		-timeout 360s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	exec bash
+	;;
 monitor)
 	dockerize \
 		-wait file://var/run/kopano/server.sock \
