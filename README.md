@@ -9,7 +9,6 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 - run `setup.sh`
   - this script will ask you a few questions about your environment.
   - If you are just interested in the demo environment you can accept the default values by pressing `Enter` on each question
-  - afterwards it builds a local image for the demo LDAP
 - now run `docker-compose up` and you will see how the remaining Docker images are pulled and then everything is started
 - after startup has succeeded you can access the Kopano WebApp by going to `https://kopano.demo/webapp`
 - you can also access phpLDAPadmin by going to `https://kopano.demo/ldap-admin`
