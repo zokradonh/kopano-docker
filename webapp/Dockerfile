@@ -11,6 +11,7 @@ ARG KOPANO_WEBAPP_REPOSITORY_URL="file:/kopano/repo/webapp"
 ARG KOPANO_SMIME_REPOSITORY_URL="file:/kopano/repo/smime"
 ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_WEBAPP_VERSION=newest
+ARG KOPANO_SMIME_VERSION=newest
 ARG RELEASE_KEY_DOWNLOAD=0
 
 # install Kopano WebApp and refresh ca-certificates
@@ -28,6 +29,7 @@ RUN \
     # save kopano version
     echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
     echo "webapp-${KOPANO_WEBAPP_VERSION}" >> /kopano/buildversion; \
+    echo "smime-${KOPANO_SMIME_VERSION}" >> /kopano/buildversion; \
     # install apt keys if supported kopano
     if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
         curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
