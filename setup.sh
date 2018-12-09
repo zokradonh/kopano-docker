@@ -38,7 +38,7 @@ if [ ! -e ./.env ]; then
 	LDAP_ADMIN_PASSWORD=${new_value:-$value_default}
 
 	value_default="ldap://ldap:389"
-	read -p "LDAP server to be used (default to bundled openldap) [$value_default]: " new_value
+	read -p "LDAP server to be used (defaults to the bundled OpenLDAP) [$value_default]: " new_value
 	LDAP_SERVER=${new_value:-$value_default}
 
 	value_default="DC=kopano,DC=demo"
