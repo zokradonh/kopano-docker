@@ -25,7 +25,7 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-kweb build-ldap-demo
+build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-kweb build-konnect build-ldap-demo
 
 build: component ?= base
 build:
