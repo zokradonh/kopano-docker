@@ -150,8 +150,7 @@ if [ ! -e ./.env ]; then
     KOPANO_SPELL_PLUGIN=""
     KOPANO_SPELL_LANG_PLUGIN=""
     for i in ${!LANG_OPTIONS[@]}; do
-        KOPANO_SPELL_PLUGIN="kopano-webapp-plugin-spell"
-        [[ "${lang_choices[i]}" ]] && { KOPANO_SPELL_LANG_PLUGIN="${KOPANO_SPELL_LANG_PLUGIN} kopano-webapp-plugin-spell-${LANG_OPTIONS[i]}"; }
+        [[ "${lang_choices[i]}" ]] && { KOPANO_SPELL_LANG_PLUGIN="${KOPANO_SPELL_LANG_PLUGIN} kopano-webapp-plugin-spell-${LANG_OPTIONS[i]}"; KOPANO_SPELL_PLUGIN="kopano-webapp-plugin-spell"; }
     done
 
     ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${KOPANO_SPELL_PLUGIN}${KOPANO_SPELL_LANG_PLUGIN}"
@@ -171,6 +170,14 @@ if [ ! -e ./.env ]; then
     done
 
     ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}${KOPANO_WEBAPP_PLUGIN}"
+
+    value_default="no"
+	read -p "Integrate WhatsApp into DeskApp yes/no [$value_default]: " new_value
+	WHATSAPPDESKAPP_BOOLEAN=${new_value:-$value_default}
+
+    if [ "${WHATSAPPDESKAPP_BOOLEAN}" == "yes" ]; then
+	    ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} whatsapp4deskapp"
+	fi
 
     echo ${PRINT_SETUP_SUCCESS}
 
