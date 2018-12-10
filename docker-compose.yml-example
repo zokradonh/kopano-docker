@@ -186,6 +186,7 @@ services:
       - kopanosocket/:/run/kopano
     environment:
       - TZ=${TZ}
+      - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
     networks:
       - web
       - kopanonet
