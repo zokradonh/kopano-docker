@@ -16,7 +16,7 @@ if [ ! -e ./docker-compose.yml ]; then
 fi
 
 if [ ! -e ./.env ]; then
-    PRINT_SETUP_SUCCESS=""
+	PRINT_SETUP_SUCCESS=""
 
 	echo "Creating an .env file for you"
 	value_default=latest
@@ -49,14 +49,14 @@ if [ ! -e ./.env ]; then
 	LDAP_SERVER=${new_value:-$value_default}
 
 	if [ "$LDAP_SERVER" != "$value_default" ]; then
-	    # We don't need an admin password in case we don't use the bundled LDAP server
-	    LDAP_ADMIN_PASSWORD=""
+		# We don't need an admin password in case we don't use the bundled LDAP server
+		LDAP_ADMIN_PASSWORD=""
 
 		value_default="$LDAP_BASE_DN"
 		read -p "LDAP search base [$value_default]: " new_value
 		LDAP_SEARCH_BASE=${new_value:-$value_default}
 
-		value_default="CN=readonly,$LDAP_BASE_DN"
+		value_default="cn=readonly,$LDAP_BASE_DN"
 		read -p "LDAP bind user (needs read permissions) [$value_default]: " new_value
 		LDAP_BIND_DN=${new_value:-$value_default}
 
@@ -68,7 +68,7 @@ if [ ! -e ./.env ]; then
 	else
 		LDAP_ADMIN_PASSWORD=$(random_string)
 		LDAP_SEARCH_BASE="$LDAP_BASE_DN"
-		LDAP_BIND_DN="CN=readonly,$LDAP_BASE_DN"
+		LDAP_BIND_DN="cn=readonly,$LDAP_BASE_DN"
 		LDAP_BIND_PW=$(random_string)
 	fi
 
@@ -178,6 +178,3 @@ else
 	echo "config already exists, doing nothing"
 	echo "if you want to change the configuration, please edit .env directly"
 fi
-
-# build the local docker containers. This has the benefit that it will warn about empty variables
-#docker-compose build
