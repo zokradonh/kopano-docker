@@ -2,12 +2,22 @@
 
 set -e
 
+fqdn_to_dn() {
+	printf 'dc=%s' "$1" | sed -r 's/\./,dc=/g'
+}
+
+random_string() {
+	hexdump -n 16 -v -e '/1 "%02X"' /dev/urandom
+}
+
 if [ ! -e ./docker-compose.yml ]; then
 	echo "copying example compose file"
 	cp docker-compose.yml-example docker-compose.yml
 fi
 
 if [ ! -e ./.env ]; then
+    PRINT_SETUP_SUCCESS=""
+
 	echo "Creating an .env file for you"
 	value_default=latest
 	read -p "Which tag do you want to use for Kopano Core components? [$value_default]: " new_value
@@ -29,35 +39,53 @@ if [ ! -e ./.env ]; then
 	read -p "Email address to use for Lets Encrypt. Use 'self_signed' as your email to create self signed certificates [$value_default]: " new_value
 	EMAIL=${new_value:-$value_default}
 
-	value_default="dc=kopano,dc=demo"
+	LDAP_BASE_DN=$(fqdn_to_dn $FQDN)
+	value_default="$LDAP_BASE_DN"
 	read -p "Name of the BASE DN for LDAP [$value_default]: " new_value
 	LDAP_BASE_DN=${new_value:-$value_default}
-
-	value_default="kopano123"
-	read -p "Password of the admin user (in bundled LDAP) [$value_default]: " new_value
-	LDAP_ADMIN_PASSWORD=${new_value:-$value_default}
 
 	value_default="ldap://ldap:389"
 	read -p "LDAP server to be used (defaults to the bundled OpenLDAP) [$value_default]: " new_value
 	LDAP_SERVER=${new_value:-$value_default}
 
-	value_default="DC=kopano,DC=demo"
-	read -p "LDAP search base [$value_default]: " new_value
-	LDAP_SEARCH_BASE=${new_value:-$value_default}
+	if [ "$LDAP_SERVER" != "$value_default" ]; then
+	    # We don't need an admin password in case we don't use the bundled LDAP server
+	    LDAP_ADMIN_PASSWORD=""
 
-	value_default="CN=readonly,DC=kopano,DC=demo"
-	read -p "LDAP bind user (needs only read permissions) [$value_default]: " new_value
-	LDAP_BIND_DN=${new_value:-$value_default}
+		value_default="$LDAP_BASE_DN"
+		read -p "LDAP search base [$value_default]: " new_value
+		LDAP_SEARCH_BASE=${new_value:-$value_default}
 
-	value_default="kopano123"
-	read -p "LDAP server to be used (default bundled openldap) [$value_default]: " new_value
-	LDAP_BIND_PW=${new_value:-$value_default}
+		value_default="CN=readonly,$LDAP_BASE_DN"
+		read -p "LDAP bind user (needs read permissions) [$value_default]: " new_value
+		LDAP_BIND_DN=${new_value:-$value_default}
 
-	value_default="Europe/Berlin"
+		value_default="kopano123"
+		read -p "LDAP bind password to be used [$value_default]: " new_value
+		LDAP_BIND_PW=${new_value:-$value_default}
+
+		PRINT_SETUP_SUCCESS="$PRINT_SETUP_SUCCESS \n!! You have specified the LDAP server '${LDAP_SERVER}', don't forget to remove the bundled ldap and ldap-admin services in docker-compose.yml\n"
+	else
+		LDAP_ADMIN_PASSWORD=$(random_string)
+		LDAP_SEARCH_BASE="$LDAP_BASE_DN"
+		LDAP_BIND_DN="CN=readonly,$LDAP_BASE_DN"
+		LDAP_BIND_PW=$(random_string)
+	fi
+
+	if [ -f /etc/timezone ]; then
+		value_default=$(cat /etc/timezone)
+	elif [ -f /etc/localtime ]; then
+		value_default=$(readlink /etc/localtime|sed -n 's|^.*zoneinfo/||p')
+	fi
+
+	if [ -z "${value_default}" ]; then
+		value_default="Europe/Berlin".
+	fi
+
 	read -p "Timezone to be used [$value_default]: " new_value
 	TZ=${new_value:-$value_default}
 
-	value_default="postmaster@kopano.demo"
+	value_default="postmaster@$FQDN"
 	read -p "E-Mail Address displayed for the 'postmaster' [$value_default]: " new_value
 	POSTMASTER_ADDRESS=${new_value:-$value_default}
 
@@ -65,22 +93,31 @@ if [ ! -e ./.env ]; then
 	read -p "Name/Address of Database server (defaults to the bundled one) [$value_default]: " new_value
 	MYSQL_HOST=${new_value:-$value_default}
 
-	value_default="kopano123"
-	read -p "Password for the MySQL root user [$value_default]: " new_value
-	MYSQL_ROOT_PASSWORD=${new_value:-$value_default}
+	if [ "$MYSQL_HOST" != "$value_default" ]; then
+		# We don't need an admin password in case we don't use the bundled DB server
+		MYSQL_ROOT_PASSWORD=""
 
-	value_default="kopanoDbUser"
-	read -p "Username to connect to the database [$value_default]: " new_value
-	MYSQL_USER=${new_value:-$value_default}
+		value_default="kopanoDbUser"
+		read -p "Username to connect to the database [$value_default]: " new_value
+		MYSQL_USER=${new_value:-$value_default}
 
-	value_default="kopanoDbPw"
-	read -p "Password to connect to the database [$value_default]: " new_value
-	MYSQL_PASSWORD=${new_value:-$value_default}
+		value_default="kopanoDbPw"
+		read -p "Password to connect to the database [$value_default]: " new_value
+		MYSQL_PASSWORD=${new_value:-$value_default}
 
-	value_default="kopano"
-	read -p "Datebase to use for Kopano [$value_default]: " new_value
-	MYSQL_DATABASE=${new_value:-$value_default}
+		value_default="kopano"
+		read -p "Database to use for Kopano [$value_default]: " new_value
+		MYSQL_DATABASE=${new_value:-$value_default}
 
+		PRINT_SETUP_SUCCESS="$PRINT_SETUP_SUCCESS \n!! You have specified the DB server '${MYSQL_HOST}', don't forget to remove the bundled db service in docker-compose.yml\n"
+	else
+		MYSQL_USER="kopano"
+		MYSQL_DATABASE="kopano"
+		MYSQL_ROOT_PASSWORD=$(random_string)
+		MYSQL_PASSWORD=$(random_string)
+    fi
+
+    echo ${PRINT_SETUP_SUCCESS}
 
         cat <<-EOF >"./.env"
 # please consult https://github.com/zokradonh/kopano-docker
