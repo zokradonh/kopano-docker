@@ -3,10 +3,8 @@ changetype: modify
 add: olcDbIndex
 olcDbIndex: cn eq
 olcDbIndex: gidNumber eq
-olcDbIndex: mail eq
 olcDbIndex: memberUid eq
 olcDbIndex: ou eq
-olcDbIndex: uid eq
 olcDbIndex: uidNumber eq
 olcDbIndex: uniqueMember eq
 olcDbIndex: kopanoAccount eq

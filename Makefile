@@ -23,7 +23,7 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-ssl build-base build-core build-webapp build-zpush
+build-all: build-ssl build-base build-core build-webapp build-zpush build-kweb build-ldap-demo
 
 build: component ?= base
 build:
@@ -116,4 +116,4 @@ test:
 	docker-compose down -v || true
 	make build-all
 	docker-compose build
-	docker-compose up
+	docker-compose up -d
