@@ -134,7 +134,7 @@ if [ ! -e ./.env ]; then
 		MYSQL_DATABASE="kopano"
 		MYSQL_ROOT_PASSWORD=$(random_string)
 		MYSQL_PASSWORD=$(random_string)
-    fi
+	fi
 
 	ADDITIONAL_KOPANO_WEBAPP_PLUGINS=""
 
@@ -179,9 +179,9 @@ if [ ! -e ./.env ]; then
 		ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} whatsapp4deskapp"
 	fi
 
-    echo ${PRINT_SETUP_SUCCESS}
+	echo ${PRINT_SETUP_SUCCESS}
 
-        cat <<-EOF >"./.env"
+		cat <<-EOF >"./.env"
 # please consult https://github.com/zokradonh/kopano-docker
 # for possible configuration values and their impact
 CORE_VERSION=$CORE_VERSION
