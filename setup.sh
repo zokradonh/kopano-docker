@@ -16,22 +16,22 @@ if [ ! -e ./docker-compose.yml ]; then
 fi
 
 LANG_OPTIONS=("de-at" "de-ch" "de-de" "en" "en-gb" "es" "fr" "it" "nl" "pl-pl")
-PLUGIN_OPTIONS=("contactfax" "desktopnotifications" "filepreviewer" "folderwidgets" "gmaps" "intranet" "mattermost" "pimfolder" "quickitems" "titlecounter" "webappmanual" "zdeveloper" "smime" "mdm" "files" "filesbackend-smb" "filesbackend-owncloud")
+PLUGIN_OPTIONS=("contactfax" "desktopnotifications" "filepreviewer" "files" "filesbackend-smb" "filesbackend-owncloud" "folderwidgets" "gmaps" "intranet" "mattermost" "mdm" "pimfolder" "quickitems" "smime" "titlecounter" "webappmanual" "zdeveloper")
 
 lang_menu() {
-    echo "Avaliable options:"
-    for i in ${!LANG_OPTIONS[@]}; do
-        printf "%3d%s) %s\n" $((i+1)) "${lang_choices[i]:- }" "${LANG_OPTIONS[i]}"
-    done
-    [[ "$msg" ]] && echo "$msg"; :
+	echo "Avaliable options:"
+	for i in ${!LANG_OPTIONS[@]}; do
+		printf "%3d%s) %s\n" $((i+1)) "${lang_choices[i]:- }" "${LANG_OPTIONS[i]}"
+	done
+	[[ "$msg" ]] && echo "$msg"; :
 }
 
 plugin_menu() {
-    echo "Avaliable options:"
-    for i in ${!PLUGIN_OPTIONS[@]}; do
-        printf "%3d%s) %s\n" $((i+1)) "${plugin_choices[i]:- }" "${PLUGIN_OPTIONS[i]}"
-    done
-    [[ "$msg" ]] && echo "$msg"; :
+	echo "Avaliable options:"
+	for i in ${!PLUGIN_OPTIONS[@]}; do
+		printf "%3d%s) %s\n" $((i+1)) "${plugin_choices[i]:- }" "${PLUGIN_OPTIONS[i]}"
+	done
+	[[ "$msg" ]] && echo "$msg"; :
 }
 
 if [ ! -e ./.env ]; then
@@ -138,45 +138,45 @@ if [ ! -e ./.env ]; then
 
 	ADDITIONAL_KOPANO_WEBAPP_PLUGINS=""
 
-    prompt="Check language spell support (again to uncheck, ENTER when done): "
-    while lang_menu && read -rp "$prompt" num && [[ "$num" ]]; do
-        [[ "$num" != *[![:digit:]]* ]] &&
-        (( num > 0 && num <= ${#LANG_OPTIONS[@]} )) ||
-        { msg="Invalid option: $num"; continue; }
-        ((num--)); msg="${LANG_OPTIONS[num]} was ${choices[num]:+un}checked"
-        [[ "${choices[num]}" ]] && lang_choices[num]="" || lang_choices[num]="+"
-    done
+	prompt="Check language spell support (again to uncheck, ENTER when done): "
+	while lang_menu && read -rp "$prompt" num && [[ "$num" ]]; do
+		[[ "$num" != *[![:digit:]]* ]] &&
+		(( num > 0 && num <= ${#LANG_OPTIONS[@]} )) ||
+		{ msg="Invalid option: $num"; continue; }
+		((num--)); msg="${LANG_OPTIONS[num]} was ${choices[num]:+un}checked"
+		[[ "${choices[num]}" ]] && lang_choices[num]="" || lang_choices[num]="+"
+	done
 
-    KOPANO_SPELL_PLUGIN=""
-    KOPANO_SPELL_LANG_PLUGIN=""
-    for i in ${!LANG_OPTIONS[@]}; do
-        [[ "${lang_choices[i]}" ]] && { KOPANO_SPELL_LANG_PLUGIN="${KOPANO_SPELL_LANG_PLUGIN} kopano-webapp-plugin-spell-${LANG_OPTIONS[i]}"; KOPANO_SPELL_PLUGIN="kopano-webapp-plugin-spell"; }
-    done
+	KOPANO_SPELL_PLUGIN=""
+	KOPANO_SPELL_LANG_PLUGIN=""
+	for i in ${!LANG_OPTIONS[@]}; do
+		[[ "${lang_choices[i]}" ]] && { KOPANO_SPELL_LANG_PLUGIN="${KOPANO_SPELL_LANG_PLUGIN} kopano-webapp-plugin-spell-${LANG_OPTIONS[i]}"; KOPANO_SPELL_PLUGIN="kopano-webapp-plugin-spell"; }
+	done
 
-    ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${KOPANO_SPELL_PLUGIN}${KOPANO_SPELL_LANG_PLUGIN}"
+	ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${KOPANO_SPELL_PLUGIN}${KOPANO_SPELL_LANG_PLUGIN}"
 
-    prompt="Check for additional plugins (again to uncheck, ENTER when done): "
-    while plugin_menu && read -rp "$prompt" num && [[ "$num" ]]; do
-        [[ "$num" != *[![:digit:]]* ]] &&
-        (( num > 0 && num <= ${#PLUGIN_OPTIONS[@]} )) ||
-        { msg="Invalid option: $num"; continue; }
-        ((num--)); msg="${PLUGIN_OPTIONS[num]} was ${plugin_choices[num]:+un}checked"
-        [[ "${plugin_choices[num]}" ]] && plugin_choices[num]="" || plugin_choices[num]="+"
-    done
+	prompt="Check for additional plugins (again to uncheck, ENTER when done): "
+	while plugin_menu && read -rp "$prompt" num && [[ "$num" ]]; do
+		[[ "$num" != *[![:digit:]]* ]] &&
+		(( num > 0 && num <= ${#PLUGIN_OPTIONS[@]} )) ||
+		{ msg="Invalid option: $num"; continue; }
+		((num--)); msg="${PLUGIN_OPTIONS[num]} was ${plugin_choices[num]:+un}checked"
+		[[ "${plugin_choices[num]}" ]] && plugin_choices[num]="" || plugin_choices[num]="+"
+	done
 
-    KOPANO_WEBAPP_PLUGIN=""
-    for i in ${!PLUGIN_OPTIONS[@]}; do
-        [[ "${plugin_choices[i]}" ]] && { KOPANO_WEBAPP_PLUGIN="${KOPANO_WEBAPP_PLUGIN} kopano-webapp-plugin-${PLUGIN_OPTIONS[i]}"; }
-    done
+	KOPANO_WEBAPP_PLUGIN=""
+	for i in ${!PLUGIN_OPTIONS[@]}; do
+		[[ "${plugin_choices[i]}" ]] && { KOPANO_WEBAPP_PLUGIN="${KOPANO_WEBAPP_PLUGIN} kopano-webapp-plugin-${PLUGIN_OPTIONS[i]}"; }
+	done
 
-    ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}${KOPANO_WEBAPP_PLUGIN}"
+	ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}${KOPANO_WEBAPP_PLUGIN}"
 
-    value_default="no"
+	value_default="no"
 	read -p "Integrate WhatsApp into DeskApp yes/no [$value_default]: " new_value
 	WHATSAPPDESKAPP_BOOLEAN=${new_value:-$value_default}
 
-    if [ "${WHATSAPPDESKAPP_BOOLEAN}" == "yes" ]; then
-	    ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} whatsapp4deskapp"
+	if [ "${WHATSAPPDESKAPP_BOOLEAN}" == "yes" ]; then
+		ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} whatsapp4deskapp"
 	fi
 
     echo ${PRINT_SETUP_SUCCESS}
