@@ -191,7 +191,7 @@ services:
       - kopanonet
 
   kopano_zpush:
-    image: ${docker_repo:?err}/kopano_zpush:${WEBAPP_VERSION}
+    image: ${docker_repo:?err}/kopano_zpush:${ZPUSH_VERSION}
     hostname: kopano_zpush
     container_name: kopano_zpush
     links:
