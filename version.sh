@@ -38,6 +38,9 @@ zpush)
 		exit
 	fi
 	;;
+kdav)
+	git ls-remote --tags https://stash.kopano.io/scm/kc/kdav.git | awk -F/ '{ print $3 }' | tail -1 | sed 's/^.//'
+	exit
 esac
 
 # query community server by h5ai API
