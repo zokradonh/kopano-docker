@@ -1,6 +1,6 @@
 # (unofficial) Kopano Docker Images
 
-This repository contains an easy to replicate recipe to spin up a [Kopano](https://kopano.com/) demo enviroment, which can (through modification of `.env` and possibly `docker-compose.yml`) also be used for production environments.
+This repository contains an easy to replicate recipe to spin up a [Kopano](https://kopano.com/) demo environment, which can (through modification of `.env` and possibly `docker-compose.yml`) also be used for production environments.
 
 ## How to get started?
 
