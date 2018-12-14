@@ -109,6 +109,10 @@ if [ ! -e ./.env ]; then
 	read -p "Which tag do you want to use for Kopano Meet? [$value_default]: " new_value
 	MEET_VERSION=${new_value:-$value_default}
 
+	value_default=latest
+	read -p "Which tag do you want to use for Kopano kDAV? [$value_default]: " new_value
+	KDAV_VERSION=${new_value:-$value_default}
+
 	value_default="Kopano Demo"
 	read -p "Name of the Organisation for LDAP [$value_default]: " new_value
 	LDAP_ORGANISATION=${new_value:-$value_default}

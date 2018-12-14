@@ -76,6 +76,9 @@ build-meet:
 build-playground:
 	component=playground make build-simple
 
+build-kdav:
+	component=kdav make build
+
 build-ssl:
 	component=ssl make build-simple
 

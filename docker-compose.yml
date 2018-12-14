@@ -307,6 +307,22 @@ services:
       - kopano-net
       - web-net
 
+  kopano_kdav:
+    image: ${docker_repo:?err}/kopano_kdav:${KDAV_VERSION}
+    hostname: kopano_kdav
+    container_name: kopano_kdav
+    links:
+      - kopano_server
+    volumes:
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
+      - kdavstates/:/var/lib/kopano/kdav
+    environment:
+      - TZ=${TZ}
+    networks:
+      - web
+      - kopanonet
+
   kopano_dagent:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: kopano_dagent
@@ -467,6 +483,7 @@ volumes:
   kopanossl:
   kopanosocket:
   zpushstates:
+  kdavstates:
 
 networks:
   web-net:
