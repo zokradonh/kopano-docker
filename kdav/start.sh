@@ -26,7 +26,7 @@ else
 fi
 
 # change root uri to /kdav
-sed -e "s#define('DAV_ROOT_URI', '/');#define('DAV_ROOT_URI', '/kdav');#" -i /usr/share/kdav/config.php
+sed -e "s#define('DAV_ROOT_URI', '/');#define('DAV_ROOT_URI', '/kdav/');#" -i /usr/share/kdav/config.php
 
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
