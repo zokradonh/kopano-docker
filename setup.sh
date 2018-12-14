@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -14,6 +14,25 @@ if [ ! -e ./docker-compose.yml ]; then
 	echo "copying example compose file"
 	cp docker-compose.yml-example docker-compose.yml
 fi
+
+LANG_OPTIONS=("de-at" "de-ch" "de-de" "en" "en-gb" "es" "fr" "it" "nl" "pl-pl")
+PLUGIN_OPTIONS=("contactfax" "desktopnotifications" "filepreviewer" "files" "filesbackend-smb" "filesbackend-owncloud" "folderwidgets" "gmaps" "intranet" "mattermost" "mdm" "pimfolder" "quickitems" "smime" "titlecounter" "webappmanual" "zdeveloper")
+
+lang_menu() {
+	echo "Avaliable options:"
+	for i in ${!LANG_OPTIONS[@]}; do
+		printf "%3d%s) %s\n" $((i+1)) "${lang_choices[i]:- }" "${LANG_OPTIONS[i]}"
+	done
+	[[ "$msg" ]] && echo "$msg"; :
+}
+
+plugin_menu() {
+	echo "Avaliable options:"
+	for i in ${!PLUGIN_OPTIONS[@]}; do
+		printf "%3d%s) %s\n" $((i+1)) "${plugin_choices[i]:- }" "${PLUGIN_OPTIONS[i]}"
+	done
+	[[ "$msg" ]] && echo "$msg"; :
+}
 
 if [ ! -e ./.env ]; then
 	PRINT_SETUP_SUCCESS=""
@@ -119,11 +138,54 @@ if [ ! -e ./.env ]; then
 		MYSQL_DATABASE="kopano"
 		MYSQL_ROOT_PASSWORD=$(random_string)
 		MYSQL_PASSWORD=$(random_string)
-    fi
+	fi
 
-    echo ${PRINT_SETUP_SUCCESS}
+	ADDITIONAL_KOPANO_WEBAPP_PLUGINS=""
 
-        cat <<-EOF >"./.env"
+	prompt="Check language spell support (again to uncheck, ENTER when done): "
+	while lang_menu && read -rp "$prompt" num && [[ "$num" ]]; do
+		[[ "$num" != *[![:digit:]]* ]] &&
+		(( num > 0 && num <= ${#LANG_OPTIONS[@]} )) ||
+		{ msg="Invalid option: $num"; continue; }
+		((num--)); msg="${LANG_OPTIONS[num]} was ${choices[num]:+un}checked"
+		[[ "${choices[num]}" ]] && lang_choices[num]="" || lang_choices[num]="+"
+	done
+
+	KOPANO_SPELL_PLUGIN=""
+	KOPANO_SPELL_LANG_PLUGIN=""
+	for i in ${!LANG_OPTIONS[@]}; do
+		[[ "${lang_choices[i]}" ]] && { KOPANO_SPELL_LANG_PLUGIN="${KOPANO_SPELL_LANG_PLUGIN} kopano-webapp-plugin-spell-${LANG_OPTIONS[i]}"; KOPANO_SPELL_PLUGIN="kopano-webapp-plugin-spell"; }
+	done
+
+	ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${KOPANO_SPELL_PLUGIN}${KOPANO_SPELL_LANG_PLUGIN}"
+
+	prompt="Check for additional plugins (again to uncheck, ENTER when done): "
+	while plugin_menu && read -rp "$prompt" num && [[ "$num" ]]; do
+		[[ "$num" != *[![:digit:]]* ]] &&
+		(( num > 0 && num <= ${#PLUGIN_OPTIONS[@]} )) ||
+		{ msg="Invalid option: $num"; continue; }
+		((num--)); msg="${PLUGIN_OPTIONS[num]} was ${plugin_choices[num]:+un}checked"
+		[[ "${plugin_choices[num]}" ]] && plugin_choices[num]="" || plugin_choices[num]="+"
+	done
+
+	KOPANO_WEBAPP_PLUGIN=""
+	for i in ${!PLUGIN_OPTIONS[@]}; do
+		[[ "${plugin_choices[i]}" ]] && { KOPANO_WEBAPP_PLUGIN="${KOPANO_WEBAPP_PLUGIN} kopano-webapp-plugin-${PLUGIN_OPTIONS[i]}"; }
+	done
+
+	ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}${KOPANO_WEBAPP_PLUGIN}"
+
+	value_default="no"
+	read -p "Integrate WhatsApp into DeskApp yes/no [$value_default]: " new_value
+	WHATSAPPDESKAPP_BOOLEAN=${new_value:-$value_default}
+
+	if [ "${WHATSAPPDESKAPP_BOOLEAN}" == "yes" ]; then
+		ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} whatsapp4deskapp"
+	fi
+
+	echo ${PRINT_SETUP_SUCCESS}
+
+		cat <<-EOF >"./.env"
 # please consult https://github.com/zokradonh/kopano-docker
 # for possible configuration values and their impact
 CORE_VERSION=$CORE_VERSION
@@ -171,9 +233,14 @@ HTTPS=443
 # Docker Repository to push to
 docker_repo=zokradonh
 
+ADDITIONAL_KOPANO_WEBAPP_PLUGINS=$ADDITIONAL_KOPANO_WEBAPP_PLUGINS
+
 # modify below to build a different version, than the kopano nightly release
 #KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/
 #KOPANO_WEBAPP_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/webapp:/final/Debian_9.0/
+#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/files:/final/Debian_9.0/
+#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/mdm:/final/Debian_9.0/
+#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/smime:/final/Debian_9.0/
 #KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_9.0/
 #RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
