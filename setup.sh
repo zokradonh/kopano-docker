@@ -206,7 +206,7 @@ LDAP_SEARCH_BASE=$LDAP_SEARCH_BASE
 LDAP_QUERY_FILTER_USER=(&(kopanoAccount=1)(mail=%s))
 LDAP_QUERY_FILTER_GROUP=(&(objectclass=kopano-group)(mail=%s))
 LDAP_QUERY_FILTER_ALIAS=(&(kopanoAccount=1)(kopanoAliases=%s))
-LDAP_QUERY_FILTER_DOMAIN=(&(|(mail=*@%s)(kopanoAliases=%s=*@%s)))
+LDAP_QUERY_FILTER_DOMAIN=(&(|(mail=*@%s)(kopanoAliases=*@%s)))
 SASLAUTHD_LDAP_FILTER=(&(kopanoAccount=1)(uid=%s))
 
 # switch the value of these two variables to use the activedirectory configuration
