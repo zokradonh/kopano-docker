@@ -119,3 +119,9 @@ test:
 	make build-all
 	docker-compose build
 	docker-compose up -d
+	docker-compose ps
+
+test-quick:
+	docker-compose stop || true
+	docker-compose up -d
+	docker-compose ps

@@ -253,9 +253,8 @@ services:
     environment:
       - SERVICE_TO_START=gateway
       - TZ=${TZ}
-      - KCCONF_GATEWAY_SERVER_SOCKET=http://kserver:236/
-      - KCCONF_GATEWAY_SSL_PRIVATE_KEY_FILE=/kopano/certs/yourcert.key # change here
-      - KCCONF_GATEWAY_SSL_CERTIFICATE_FILE=/kopano/certs/yourcert.pem # change here
+      - KCCONF_GATEWAY_SERVER_SOCKET=http://kopano_server:236/
+      - KCCONF_GATEWAY_LOG_LEVEL=6
     networks:
       - kopanonet
 
@@ -270,7 +269,7 @@ services:
     environment:
       - SERVICE_TO_START=ical
       - TZ=${TZ}
-      - KCCONF_ICAL_SERVER_SOCKET=http://kserver:236/
+      - KCCONF_ICAL_SERVER_SOCKET=http://kopano_server:236/
     networks:
       - kopanonet
 

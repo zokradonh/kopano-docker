@@ -6,11 +6,8 @@ kcconf.configkopano({
     r"/etc/kopano/gateway.cfg":
     {
         'log_file': "-",
-        'log_level': "4",
-        'tmp_path': "/tmp/gateway/",
-        'pop3_listen': "",
-        'imap_listen': "",
-        'imaps_listen': "*:993"
+        'log_level': "3",
+        'tmp_path': "/tmp/gateway/"
     }
 })
 
