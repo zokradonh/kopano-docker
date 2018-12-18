@@ -100,7 +100,7 @@ services:
       - SMTP_ONLY=1
       - PERMIT_DOCKER=host
       - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
-      - POSTFIX_DAGENT=lmtp:kdagent:2003
+      - POSTFIX_DAGENT=lmtp:kopano_dagent:2003
       - REPORT_RECIPIENT=1
     networks:
       - kopanonet
