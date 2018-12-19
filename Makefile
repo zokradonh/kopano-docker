@@ -5,6 +5,7 @@ docker_pwd := `cat ~/.docker-account-pwd`
 base_version = $(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion)
 base_download_version := $(shell ./version.sh core)
 core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=\+)')
+utils_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=\+)')
 core_download_version := $(shell ./version.sh core)
 webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)')
 webapp_download_version := $(shell ./version.sh webapp)
@@ -79,6 +80,9 @@ tag-base:
 tag-core:
 	component=core make tag
 
+tag-utils:
+	component=utils make tag
+
 tag-webapp:
 	component=webapp make tag
 
@@ -104,6 +108,9 @@ publish-base: build-base tag-base
 
 publish-core: build-core tag-core
 	component=core make publish-container
+
+publish-utils: build-core build-utils tag-utils
+	component=utils make publish-container
 
 publish-webapp: build-webapp tag-webapp
 	component=webapp make publish-container
