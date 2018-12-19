@@ -4,10 +4,10 @@ docker_pwd := `cat ~/.docker-account-pwd`
 
 base_version = $(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion)
 base_download_version := $(shell ./version.sh core)
-core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=\+)')
-utils_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | grep -o -P '(?<=-).*(?=\+)')
+core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | cut -d- -f2)
+utils_version = $(shell docker run --rm $(docker_repo)/kopano_utils cat /kopano/buildversion | cut -d- -f2)
 core_download_version := $(shell ./version.sh core)
-webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)')
+webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | grep webapp | cut -d- -f2 | cut -d+ -f1)
 webapp_download_version := $(shell ./version.sh webapp)
 zpush_version = $(shell docker run --rm $(docker_repo)/kopano_zpush cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)')
 zpush_download_version := $(shell ./version.sh zpush)
