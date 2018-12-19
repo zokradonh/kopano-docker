@@ -17,6 +17,12 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 
 The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
 
+## Is this project also interesting for me when I already have a (non-Docker) Kopano environment?
+
+Yes, indeed. You could for example use this to easily try out newer Kopano WebApp or Z-Push releases, without touching your production environment. Through the `zokradonh/kopano_core` image you could even try out newer version of e.g. `kopano-gateway` without jumping into a dependecy mess in your production environment.
+
+And last but not least this project also offers a `zokradonh/kopano_utils` image to easily run tools such as `kopano-backup`, `kopano-migration-pst`, `kopano-migration-imap` and all the other utilities that are bundles with Kopano. See [below](#some-more-commands-for-those-unfamilar-with-docker-compose) to see how to run `zokradonh/kopano_utils`.
+
 ### Need to adjust any values after the initial run of `setup.sh`?
 
 If you want to modify some of the values from the `setup.sh` run you can simply edit `.env` in your favourite editor. Repeated runs of `setup.sh` will neither modify `docker-compose.yml` nor `.env`. In that file you will also find some given defaults like ldap query filters and the local ports for the reverse proxy.
@@ -72,10 +78,11 @@ To get a quick impression of Kopano this git repository bundles a locally build 
 - Get a status overview of the running containers: `docker-compose ps`
 - Stop compose running in the background: `docker-compose stop`
 - Destroy local containers and network interfaces: `docker-compose down`
-- Run commands in a running container: `docker-compose exec kserver kopano-cli --list-users`
-- Get logs of a container running in the background: `docker-compose logs -f kserver`
-- Run a `kopano-backup`: `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_core kopano-backup`
-- Get a shell in a new container to for example run `kopano-migration-pst` (would still need to be installed first): `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_core bash`
+- Destroy volumes as well (will completely reset the containers, **deletes all data**): `docker-compose down -v`
+- Run commands in a running container: `docker-compose exec kopano_server kopano-cli --list-users`
+- Get logs of a container running in the background: `docker-compose logs -f kopano_server`
+- Run a `kopano-backup`: `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils kopano-backup`
+- Get a shell in a new container to for example run `kopano-migration-pst`: `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils` (to directly run kopano-migration-pst just append it to the command)
 
 ## Third party docker images
 
