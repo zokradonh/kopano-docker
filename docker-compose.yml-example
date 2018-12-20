@@ -295,6 +295,7 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - kopanodata/:/kopano/data
     environment:
       - SERVICE_TO_START=search
       - TZ=${TZ}
