@@ -6,7 +6,8 @@ kcconf.configkopano({
     r"/etc/kopano/search.cfg":
     {
         'log_file': "-",
-        'log_level': "4"
+        'log_level': "4",
+        'index_path': "/kopano/data/search/"
     }
 })
 
