@@ -1,6 +1,7 @@
 .vscode/settings.json
 **/.vscode
 *.yml
+!.travis.yml
 docker-compose.yml
 data/*
 Makefile-env
