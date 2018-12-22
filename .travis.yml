@@ -6,3 +6,8 @@ services:
 
 script:
 - make build-all
+
+deploy:
+  script: make publish
+  on:
+    branch: master
