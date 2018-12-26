@@ -1,6 +1,7 @@
 .vscode/settings.json
 **/.vscode
 *.yml
+*.yml-*
 !.travis.yml
 docker-compose.yml
 data/*
