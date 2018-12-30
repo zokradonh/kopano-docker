@@ -1,6 +1,9 @@
 docker_repo := zokradonh
-docker_login := `cat ~/.docker-account-user`
-docker_pwd := `cat ~/.docker-account-pwd`
+# if not run in travis, get docker_login and _pwd from file
+ifndef TRAVIS
+	docker_login := `cat ~/.docker-account-user`
+	docker_pwd := `cat ~/.docker-account-pwd`
+endif
 
 base_download_version := $(shell ./version.sh core)
 core_download_version := $(shell ./version.sh core)
