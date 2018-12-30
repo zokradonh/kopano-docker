@@ -22,7 +22,6 @@ services:
       - web
 
   ldap:
-    #build: ldap-demo/
     image: ${docker_repo:?err}/kopano_ldap_demo
     container_name: ldap
     ports:
@@ -104,6 +103,9 @@ services:
       - REPORT_RECIPIENT=1
     networks:
       - kopanonet
+    #dns: 1.1.1.1 # using Google DNS can lead to lookup errors uncomment this option and 
+    # set to the ip of a trusted dns service (Cloudflare is given as an example). 
+    # See https://github.com/zokradonh/kopano-docker/issues/52 for more information.
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
