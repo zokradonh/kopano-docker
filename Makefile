@@ -2,14 +2,9 @@ docker_repo := zokradonh
 docker_login := `cat ~/.docker-account-user`
 docker_pwd := `cat ~/.docker-account-pwd`
 
-base_version = $(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion)
 base_download_version := $(shell ./version.sh core)
-core_version = $(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | cut -d- -f2)
-utils_version = $(shell docker run --rm $(docker_repo)/kopano_utils cat /kopano/buildversion | cut -d- -f2)
 core_download_version := $(shell ./version.sh core)
-webapp_version = $(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | grep webapp | cut -d- -f2 | cut -d+ -f1)
 webapp_download_version := $(shell ./version.sh webapp)
-zpush_version = $(shell docker run --rm $(docker_repo)/kopano_zpush cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)')
 zpush_download_version := $(shell ./version.sh zpush)
 
 KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
@@ -71,8 +66,8 @@ build-kweb:
 build-ldap-demo:
 	docker build -t $(docker_repo)/kopano_ldap_demo ldap-demo/
 
-tag: component ?= base
-tag:
+tag-container: component ?= base
+tag-container:
 	@echo 'create tag $($(component)_version)'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
 	@echo 'create tag latest'
@@ -81,23 +76,33 @@ tag:
 	git tag $(component)/${$(component)_version} || true
 
 tag-base:
-	component=base make tag
+	$(eval base_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion))
+	component=base make tag-container
 
 tag-core:
-	component=core make tag
+	$(eval core_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | cut -d- -f2))
+	component=core make tag-container
 
 tag-utils:
-	component=utils make tag
+	$(eval utils_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_utils cat /kopano/buildversion | cut -d- -f2))
+	component=utils make tag-container
 
 tag-webapp:
-	component=webapp make tag
+	$(eval webapp_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | grep webapp | cut -d- -f2 | cut -d+ -f1))
+	component=webapp make tag-container
 
 tag-zpush:
-	component=zpush make tag
+	$(eval zpush_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_zpush cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)'))
+	component=zpush make tag-container
 
 # Docker publish
 repo-login:
-	docker login -u $(docker_login) -p $(docker_pwd)
+	@docker login -u $(docker_login) -p $(docker_pwd)
 
 publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-kweb
 	git push

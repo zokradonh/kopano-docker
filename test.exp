@@ -1,0 +1,18 @@
+#!/usr/bin/expect
+
+# uncomment to debug expect:
+#exp_internal 1
+
+spawn "./setup.sh"
+
+expect {
+	"]:" {
+		send "\r"
+		exp_continue
+	}
+	"):" {
+		send "\r"
+		exp_continue
+	}
+	eof
+}

@@ -167,7 +167,7 @@ services:
       - KCCONF_LDAP_LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
       - KCUNCOMMENT_LDAP_1=${KCUNCOMMENT_LDAP_1}
       - KCCOMMENT_LDAP_1=${KCCOMMENT_LDAP_1}
-      #- ADDITIONAL_KOPANO_PACKAGES=kopano-migration-imap
+      - ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES}
     networks:
       - kopanonet
     volumes:
