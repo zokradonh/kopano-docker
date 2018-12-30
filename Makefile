@@ -108,8 +108,6 @@ repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
 publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-kweb
-	git push
-	git push origin --tags
 
 publish-container: component ?= base
 publish-container:
