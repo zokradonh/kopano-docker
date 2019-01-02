@@ -8,6 +8,9 @@ if [ ! -e /kopano/$SERVICE_TO_START.py ]
 then
     echo "Invalid service specified: $SERVICE_TO_START" | ts
     exit 1
+else
+	#ensure removed pid-file on unclean shutdowns and mounted volumes
+	rm -f /var/run/kopano/$SERVICE_TO_START.pid
 fi
 
 [ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && apt update
