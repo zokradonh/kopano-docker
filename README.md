@@ -1,4 +1,5 @@
 # (unofficial) Kopano Docker Images
+[![Build Status](https://travis-ci.com/zokradonh/kopano-docker.svg?branch=master)](https://travis-ci.com/zokradonh/kopano-docker)
 
 This repository contains an easy to replicate recipe to spin up a [Kopano](https://kopano.com/) demo environment, which can (through modification of `.env` and possibly `docker-compose.yml`) also be used for production environments.
 
