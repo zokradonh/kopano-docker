@@ -38,6 +38,7 @@ services:
       - ldap:/var/lib/ldap
       - slapd:/etc/ldap/slapd.d
     networks:
+      - ldap-net
       - kopanonet
 
   ldap-admin:
@@ -52,6 +53,7 @@ services:
     links:
       - ldap
     networks:
+      - ldap-net
       - web
 
   mail:
@@ -319,4 +321,6 @@ volumes:
 networks:
   web:
   kopanonet:
+    driver: bridge
+  ldap-net:
     driver: bridge
