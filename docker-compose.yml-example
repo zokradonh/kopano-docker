@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 
 services:
   web:
@@ -323,4 +323,5 @@ networks:
   kopanonet:
     driver: bridge
   ldap-net:
+    name: ldap-net
     driver: bridge
