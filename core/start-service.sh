@@ -4,13 +4,9 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 
-if [ ! -e /kopano/$SERVICE_TO_START.py ]
-then
-    echo "Invalid service specified: $SERVICE_TO_START" | ts
-    exit 1
-else
-	#ensure removed pid-file on unclean shutdowns and mounted volumes
-	rm -f /var/run/kopano/$SERVICE_TO_START.pid
+if [ ! -e /kopano/$SERVICE_TO_START.py ]; then
+	echo "Invalid service specified: $SERVICE_TO_START" | ts
+	exit 1
 fi
 
 [ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && apt update
@@ -29,11 +25,13 @@ echo "Set ownership" | ts
 chown -R kopano:kopano /run /tmp
 chown kopano:kopano /kopano/data/ /kopano/data/attachments
 
+# ensure removed pid-file on unclean shutdowns and mounted volumes
+rm -f /var/run/kopano/$SERVICE_TO_START.pid
+
 # allow helper commands given by "docker-compose run"
-if [ $# -gt 0 ]
-then
-    exec "$@"
-    exit
+if [ $# -gt 0 ]; then
+	exec "$@"
+	exit
 fi
 
 # start regular service
