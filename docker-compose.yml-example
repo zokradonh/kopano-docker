@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 
 services:
   web:
@@ -19,7 +19,7 @@ services:
     volumes:
       - web:/.kweb
     networks:
-      - web
+      - web-net
 
   ldap:
     image: ${docker_repo:?err}/kopano_ldap_demo
@@ -38,7 +38,7 @@ services:
       - ldap:/var/lib/ldap
       - slapd:/etc/ldap/slapd.d
     networks:
-      - kopanonet
+      - ldap-net
 
   ldap-admin:
     image: osixia/phpldapadmin:0.7.2
@@ -52,7 +52,8 @@ services:
     links:
       - ldap
     networks:
-      - web
+      - ldap-net
+      - web-net
 
   mail:
     image: tvial/docker-mailserver:release-v6.1.0
@@ -102,7 +103,8 @@ services:
       - POSTFIX_DAGENT=lmtp:kopano_dagent:2003
       - REPORT_RECIPIENT=1
     networks:
-      - kopanonet
+      - kopano-net
+      - ldap-net
     #dns: 1.1.1.1 # using Google DNS can lead to lookup errors uncomment this option and 
     # set to the ip of a trusted dns service (Cloudflare is given as an example). 
     # See https://github.com/zokradonh/kopano-docker/issues/52 for more information.
@@ -127,7 +129,7 @@ services:
       timeout: 10s
       retries: 4
     networks:
-      - kopanonet
+      - kopano-net
   
   kopano_ssl:
     image: ${docker_repo:?err}/kopano_ssl
@@ -171,7 +173,8 @@ services:
       - KCCOMMENT_LDAP_1=${KCCOMMENT_LDAP_1}
       - ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES}
     networks:
-      - kopanonet
+      - kopano-net
+      - ldap-net
     volumes:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
@@ -190,8 +193,8 @@ services:
       - TZ=${TZ}
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
     networks:
-      - web
-      - kopanonet
+      - web-net
+      - kopano-net
 
   kopano_zpush:
     image: ${docker_repo:?err}/kopano_zpush:${ZPUSH_VERSION}
@@ -206,8 +209,8 @@ services:
     environment:
       - TZ=${TZ}
     networks:
-      - web
-      - kopanonet
+      - web-net
+      - kopano-net
 
   kopano_dagent:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
@@ -223,7 +226,7 @@ services:
       - KCCONF_DAGENT_LOG_LEVEL=6
       - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kdagent.pem
     networks:
-      - kopanonet
+      - kopano-net
 
   kopano_spooler:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
@@ -242,7 +245,7 @@ services:
       - KCCONF_SPOOLER_SMTP_SERVER=mail
       - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kspooler.pem
     networks:
-      - kopanonet
+      - kopano-net
 
   kopano_gateway:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
@@ -258,7 +261,7 @@ services:
       - KCCONF_GATEWAY_SERVER_SOCKET=http://kopano_server:236/
       - KCCONF_GATEWAY_LOG_LEVEL=6
     networks:
-      - kopanonet
+      - kopano-net
 
   kopano_ical:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
@@ -273,7 +276,7 @@ services:
       - TZ=${TZ}
       - KCCONF_ICAL_SERVER_SOCKET=http://kopano_server:236/
     networks:
-      - kopanonet
+      - kopano-net
 
   kopano_monitor:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
@@ -287,7 +290,7 @@ services:
       - SERVICE_TO_START=monitor
       - TZ=${TZ}
     networks:
-      - kopanonet
+      - kopano-net
 
   kopano_search:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
@@ -302,7 +305,7 @@ services:
       - SERVICE_TO_START=search
       - TZ=${TZ}
     networks:
-      - kopanonet
+      - kopano-net
 volumes:
   web:
   ldap:
@@ -317,6 +320,9 @@ volumes:
   zpushstates:
 
 networks:
-  web:
-  kopanonet:
+  web-net:
+  kopano-net:
+    driver: bridge
+  ldap-net:
+    name: ldap-net
     driver: bridge
