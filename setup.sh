@@ -221,6 +221,15 @@ LDAP_QUERY_FILTER_ALIAS=(&(kopanoAccount=1)(kopanoAliases=%s))
 LDAP_QUERY_FILTER_DOMAIN=(&(|(mail=*@%s)(kopanoAliases=*@%s)))
 SASLAUTHD_LDAP_FILTER=(&(kopanoAccount=1)(uid=%s))
 
+# LDAP user password self-service reset settings
+SELF_SERVICE_SECRETEKEY=$(random_string)
+SELF_SERVICE_PASSWORD_MIN_LENGTH=
+SELF_SERVICE_PASSWORD_MAX_LENGTH=
+SELF_SERVICE_PASSWORD_MIN_LOWERCASE=
+SELF_SERVICE_PASSWORD_MIN_UPPERCASE=
+SELF_SERVICE_PASSWORD_MIN_DIGIT=
+SELF_SERVICE_PASSWORD_MIN_SPECIAL=
+
 # switch the value of these two variables to use the activedirectory configuration
 KCUNCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg
 KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.active-directory.cfg
