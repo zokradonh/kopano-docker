@@ -64,7 +64,7 @@ services:
       - mail
     environment:
       - LDAP_SERVER=ldap://ldap:389
-      - LDAP_BINDDN=cn=admin,${LDAP_BASE_DN}
+      - LDAP_BINDDN=cn=admin,${LDAP_BASE_DN} 
       - LDAP_BINDPASS=${LDAP_ADMIN_PASSWORD}
       - LDAP_BASE_SEARCH=${LDAP_BASE_DN}
       - MAIL_FROM=noreply@${LDAP_DOMAIN}
@@ -85,8 +85,6 @@ services:
       - PASSWORD_MIN_SPECIAL=${SELF_SERVICE_PASSWORD_MIN_SPECIAL}
     expose:
       - "80"
-    volumes:
-      - password-self-service:/www/ssp
     networks:
       - web-net # provide web-frontend
       - ldap-net # access ldap user base and write passwords
@@ -346,7 +344,6 @@ services:
 volumes:
   web:
   ldap:
-  password-self-service:
   slapd:
   maildata:
   mailstate:
