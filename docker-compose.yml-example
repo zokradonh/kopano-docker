@@ -148,6 +148,9 @@ services:
       - db
       - ldap
       - kopano_ssl
+    ports:
+      - 236:236
+      - 237:237
     environment:
       - SERVICE_TO_START=server
       - TZ=${TZ}
