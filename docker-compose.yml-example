@@ -51,7 +51,7 @@ services:
       - web-net
 
   password-self-service:
-    image: tiredofit/self-service-password:2.8
+    image: tiredofit/self-service-password
     container_name: password-self-service
     domainname: ${LDAP_DOMAIN}
     depends_on:
