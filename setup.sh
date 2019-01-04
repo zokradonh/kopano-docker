@@ -50,6 +50,7 @@ if [ ! -e ./.env ]; then
 	read -p "Which tag do you want to use for Z-Push? [$value_default]: " new_value
 	ZPUSH_VERSION=${new_value:-$value_default}
 
+	value_default=latest
 	read -p "Which tag do you want to use for Kopano Konnect? [$value_default]: " new_value
 	KONNECT_VERSION=${new_value:-$value_default}
 
@@ -193,11 +194,8 @@ if [ ! -e ./.env ]; then
 # for possible configuration values and their impact
 CORE_VERSION=$CORE_VERSION
 WEBAPP_VERSION=$WEBAPP_VERSION
-<<<<<<< HEAD
 ZPUSH_VERSION=$ZPUSH_VERSION
-=======
-Konnect_VERSION=$KONNECT_VERSION
->>>>>>> add konnect to compose file
+KONNECT_VERSION=$KONNECT_VERSION
 
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
 LDAP_DOMAIN=$FQDN
