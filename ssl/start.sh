@@ -23,11 +23,17 @@ if [ ! -f $enckey ]; then
 	openssl rand -out $enckey 32
 fi
 
-# Konnec - create token signing key if not already present
+# Konnect - create token signing key if not already present
 signkey="/kopano/ssl/konnectd-tokens-signing-key.pem"
 if [ ! -f $signkey ]; then
 	echo "creating new token signing key"
 	openssl genpkey -algorithm RSA -out $signkey -pkeyopt rsa_keygen_bits:4096
+fi
+
+# Kapi
+secretkey="/kopano/ssl/kapid-pubs-secret.key"
+if [ ! -f $secretkey ]; then
+	openssl rand -out $secretkey -hex 64
 fi
 
 ls -l /kopano/ssl/*.pem

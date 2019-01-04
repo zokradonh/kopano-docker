@@ -72,13 +72,29 @@ ical)
 	unset "${!KCCONF_@}"
 	exec /usr/sbin/kopano-ical -F
 	;;
-kapi)
+grapi)
 	dockerize \
-		-wait file://var/run/kopano/server.sock \
+		-wait tcp://kopano_server:236 \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec bash
+	LC_CTYPE=en_US.UTF-8
+	socket_path=/var/run/kopano/grapi
+	source /etc/kopano/grapi.cfg
+	mkdir $socket_path
+	chown -R kapi:kopano $socket_path
+	exec /usr/sbin/kopano-grapi serve
+	;;
+kapid)
+	dockerize \
+		-wait file://var/run/kopano/grapi/notify.sock \
+		-timeout 360s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	LC_CTYPE=en_US.UTF-8
+	source /etc/kopano/kapid.cfg
+	/usr/sbin/kopano-kapid setup
+	exec /usr/sbin/kopano-kapid serve --log-timestamp=false
 	;;
 monitor)
 	dockerize \
