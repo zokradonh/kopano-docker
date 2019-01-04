@@ -51,7 +51,7 @@ services:
       - web-net
 
   password-self-service:
-    image: tiredofit/self-service-password
+    image: tiredofit/self-service-password:2.8
     container_name: password-self-service
     domainname: ${LDAP_DOMAIN}
     depends_on:
@@ -59,7 +59,7 @@ services:
       - mail
     environment:
       - LDAP_SERVER=ldap://ldap:389
-      - LDAP_BINDDN=cn=admin,dc=kopano,dc=demo
+      - LDAP_BINDDN=cn=admin,${LDAP_BASE_DN}
       - LDAP_BINDPASS=${LDAP_ADMIN_PASSWORD}
       - LDAP_BASE_SEARCH=${LDAP_BASE_DN}
       - MAIL_FROM=noreply@${LDAP_DOMAIN}
