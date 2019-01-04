@@ -228,7 +228,8 @@ services:
       - TZ=${TZ}
       - KCCONF_KAPI_LOG_LEVEL=6
     networks:
-      - kopanonet
+      - kopano-net
+      - web-net
 
   kopano_dagent:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
@@ -337,7 +338,8 @@ services:
     environment:
      - FQDN=${FQDN}
     networks:
-     - kopanonet
+     - kopano-net
+     - web-net
 
 volumes:
   web:
