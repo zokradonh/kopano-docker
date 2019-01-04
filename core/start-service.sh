@@ -79,8 +79,7 @@ grapi)
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	LC_CTYPE=en_US.UTF-8
-	socket_path=/var/run/kopano/grapi
-	source /etc/kopano/grapi.cfg
+	export socket_path=/var/run/kopano/grapi
 	mkdir $socket_path
 	chown -R kapi:kopano $socket_path
 	exec /usr/sbin/kopano-grapi serve
@@ -89,11 +88,12 @@ kapid)
 	dockerize \
 		-wait file://var/run/kopano/grapi/notify.sock \
 		-timeout 360s
+	LC_CTYPE=en_US.UTF-8
+	sed -i s/\ *=\ */=/g /etc/kopano/kapid.cfg
+	export $(grep -v '^#' /etc/kopano/kapid.cfg | xargs -d '\n')
+	/usr/sbin/kopano-kapid setup
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	LC_CTYPE=en_US.UTF-8
-	source /etc/kopano/kapid.cfg
-	/usr/sbin/kopano-kapid setup
 	exec /usr/sbin/kopano-kapid serve --log-timestamp=false
 	;;
 monitor)

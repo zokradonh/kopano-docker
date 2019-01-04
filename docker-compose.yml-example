@@ -4,6 +4,7 @@ services:
   web:
     image: ${docker_repo:?err}/kopano_web
     container_name: web
+    hostname: ${FQDN}
     restart: always
     links:
       - kopano_webapp
@@ -215,18 +216,33 @@ services:
       - web-net
       - kopano-net
 
+  kopano_grapi:
+    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    container_name: kopano_grapi
+    links:
+      - kopano_server
+    volumes:
+      - kopanosocket/:/run/kopano
+    environment:
+      - SERVICE_TO_START=grapi
+      - TZ=${TZ}
+    networks:
+      - kopano-net
+
   kopano_kapi:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_kapi
     links:
       - kopano_server
+      - web
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
     environment:
-      - SERVICE_TO_START=kapi
+      - SERVICE_TO_START=kapid
       - TZ=${TZ}
-      - KCCONF_KAPI_LOG_LEVEL=6
+      - KCCONF_KAPID_LOG_LEVEL=DEBUG
+      - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${LDAP_DOMAIN}
     networks:
       - kopano-net
       - web-net
