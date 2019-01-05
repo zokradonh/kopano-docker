@@ -3,7 +3,7 @@ version: "3.5"
 services:
   web:
     image: ${docker_repo:?err}/kopano_web
-    container_name: ${FQDN}
+    container_name: web
     restart: always
     links:
       - kopano_webapp
@@ -241,7 +241,7 @@ services:
       - SERVICE_TO_START=kapid
       - TZ=${TZ}
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
-      - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${LDAP_DOMAIN}
+      - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=http://kopano_konnect:8777 # if this works, then it should go in the python script
     networks:
       - kopano-net
       - web-net

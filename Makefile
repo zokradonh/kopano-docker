@@ -140,13 +140,13 @@ publish-kweb: build-kweb
 	docker push $(docker_repo)/kopano_web:latest
 
 test:
-	docker-compose down -v || true
+	docker-compose -f docker-compose.yml-example down -v || true
 	make build-all
-	docker-compose build
-	docker-compose up -d
-	docker-compose ps
+	docker-compose -f docker-compose.yml-example build
+	docker-compose -f docker-compose.yml-example up -d
+	docker-compose -f docker-compose.yml-example ps
 
 test-quick:
-	docker-compose stop || true
-	docker-compose up -d
-	docker-compose ps
+	docker-compose -f docker-compose.yml-example stop || true
+	docker-compose -f docker-compose.yml-example up -d
+	docker-compose -f docker-compose.yml-example ps

@@ -73,15 +73,12 @@ ical)
 	exec /usr/sbin/kopano-ical -F
 	;;
 grapi)
-	dockerize \
-		-wait tcp://kopano_server:236 \
-		-timeout 360s
-	# cleaning up env variables
-	unset "${!KCCONF_@}"
 	LC_CTYPE=en_US.UTF-8
 	export socket_path=/var/run/kopano/grapi
 	mkdir $socket_path
 	chown -R kapi:kopano $socket_path
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
 	exec /usr/sbin/kopano-grapi serve
 	;;
 kapid)
