@@ -3,8 +3,7 @@ version: "3.5"
 services:
   web:
     image: ${docker_repo:?err}/kopano_web
-    container_name: web
-    hostname: ${FQDN}
+    container_name: ${FQDN}
     restart: always
     links:
       - kopano_webapp
