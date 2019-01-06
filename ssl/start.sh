@@ -20,20 +20,23 @@ fi
 enckey="/kopano/ssl/konnectd-encryption.key"
 if [ ! -f $enckey ]; then
 	echo "creating new encryption key"
-	openssl rand -out $enckey 32
+	openssl rand -out /tmp/$enckey 32
+	cp /tmp/$enckey $enckey
 fi
 
 # Konnect - create token signing key if not already present
 signkey="/kopano/ssl/konnectd-tokens-signing-key.pem"
 if [ ! -f $signkey ]; then
 	echo "creating new token signing key"
-	openssl genpkey -algorithm RSA -out $signkey -pkeyopt rsa_keygen_bits:4096
+	openssl genpkey -algorithm RSA -out /tmp/$signkey -pkeyopt rsa_keygen_bits:4096
+	cp /tmp/$signkey $signkey
 fi
 
 # Kapi
 secretkey="/kopano/ssl/kapid-pubs-secret.key"
 if [ ! -f $secretkey ]; then
-	openssl rand -out $secretkey -hex 64
+	openssl rand -out /tmp/$secretkey -hex 64
+	cp /tmp/$secretkey $secretkey
 fi
 
 ls -l /kopano/ssl/*.pem
