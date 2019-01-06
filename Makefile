@@ -19,6 +19,7 @@ KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_9.0/
 RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 
+COMPOSE_FILE := docker-compose.yml-example
 -include .env
 export
 
@@ -140,13 +141,13 @@ publish-kweb: build-kweb
 	docker push $(docker_repo)/kopano_web:latest
 
 test:
-	docker-compose -f docker-compose.yml-example down -v || true
+	docker-compose -f $(COMPOSE_FILE) down -v || true
 	make build-all
-	docker-compose -f docker-compose.yml-example build
-	docker-compose -f docker-compose.yml-example up -d
-	docker-compose -f docker-compose.yml-example ps
+	docker-compose -f $(COMPOSE_FILE) build
+	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) ps
 
 test-quick:
-	docker-compose -f docker-compose.yml-example stop || true
-	docker-compose -f docker-compose.yml-example up -d
-	docker-compose -f docker-compose.yml-example ps
+	docker-compose -f $(COMPOSE_FILE) stop || true
+	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) ps
