@@ -79,7 +79,7 @@ grapi)
 	chown -R kapi:kopano $socket_path
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-grapi serve
+	exec kopano-grapi serve
 	;;
 kapid)
 	dockerize \
@@ -88,10 +88,10 @@ kapid)
 	LC_CTYPE=en_US.UTF-8
 	sed -i s/\ *=\ */=/g /etc/kopano/kapid.cfg
 	export $(grep -v '^#' /etc/kopano/kapid.cfg | xargs -d '\n')
-	/usr/sbin/kopano-kapid setup
+	kopano-kapid setup
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-kapid serve --log-timestamp=false
+	exec kopano-kapid serve --log-timestamp=false
 	;;
 monitor)
 	dockerize \
