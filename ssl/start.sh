@@ -6,7 +6,6 @@ if [ ! -f /kopano/ssl/ca.pem ]; then
 	# https://github.com/google/easypki
 	echo "Creating CA and server certificates..."
 	easypki create --filename internalca --organizational-unit primary --expire 3650 --ca "Internal Kopano System"
-	cp /kopano/easypki/internalca/certs/internalca.crt /kopano/ssl/ca.pem
 
 	for s in kserver kdagent kmonitor ksearch kspooler kwebapp; do
 		easypki create --ca-name internalca --organizational-unit $s --expire 3650 $s
@@ -16,6 +15,8 @@ if [ ! -f /kopano/ssl/ca.pem ]; then
 		cp /tmp/$s.pem /kopano/ssl/$s.pem
 		cp /tmp/$s-public.pem /kopano/ssl/clients/$s-public.pem
 	done
+
+	cp /kopano/easypki/internalca/certs/internalca.crt /kopano/ssl/ca.pem
 fi
 
 # Konnect - create encryption key if not already present
