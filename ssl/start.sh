@@ -2,18 +2,19 @@
 
 mkdir -p /kopano/ssl/clients/
 
-
 if [ ! -f /kopano/ssl/ca.pem ]; then
 	# https://github.com/google/easypki
-	echo "Creating CA and Server certificates..."
+	echo "Creating CA and server certificates..."
 	easypki create --filename internalca --organizational-unit primary --expire 3650 --ca "Internal Kopano System"
 	cp /kopano/easypki/internalca/certs/internalca.crt /kopano/ssl/ca.pem
 
 	for s in kserver kdagent kmonitor ksearch kspooler kwebapp; do
 		easypki create --ca-name internalca --organizational-unit $s --expire 3650 $s
-		cp /kopano/easypki/internalca/keys/$s.key /kopano/ssl/$s.pem
-		cat /kopano/easypki/internalca/certs/$s.crt >> /kopano/ssl/$s.pem
-		openssl x509 -in /kopano/easypki/internalca/certs/$s.crt -pubkey -noout > /kopano/ssl/clients/$s-public.pem
+		cp /kopano/easypki/internalca/keys/$s.key /tmp/$s.pem
+		cat /kopano/easypki/internalca/certs/$s.crt >> /tmp/$s.pem
+		openssl x509 -in /kopano/easypki/internalca/certs/$s.crt -pubkey -noout > /tmp/$s-public.pem
+		cp /tmp/$s.pem /kopano/ssl/$s.pem
+		cp /tmp/$s-public.pem /kopano/ssl/clients/$s-public.pem
 	done
 fi
 
