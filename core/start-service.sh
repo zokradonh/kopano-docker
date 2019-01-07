@@ -16,7 +16,7 @@ fi
 	fi
 done
 
-mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs/db/migrations /tmp/$SERVICE_TO_START /var/run/kopano
+mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/$SERVICE_TO_START /var/run/kopano
 
 echo "Configure core service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/$SERVICE_TO_START.py
