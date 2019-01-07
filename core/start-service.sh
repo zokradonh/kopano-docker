@@ -16,7 +16,7 @@ fi
 	fi
 done
 
-mkdir -p /kopano/data/attachments /tmp/$SERVICE_TO_START /var/run/kopano
+mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs/db/migrations /tmp/$SERVICE_TO_START /var/run/kopano
 
 echo "Configure core service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/$SERVICE_TO_START.py
@@ -84,6 +84,7 @@ grapi)
 kapid)
 	dockerize \
 		-wait file://var/run/kopano/grapi/notify.sock \
+		-wait http://kopano_konnect:8777/.well-known/openid-configuration \
 		-timeout 360s
 	LC_CTYPE=en_US.UTF-8
 	sed -i s/\ *=\ */=/g /etc/kopano/kapid.cfg

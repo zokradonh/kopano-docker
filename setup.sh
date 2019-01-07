@@ -66,6 +66,13 @@ if [ ! -e ./.env ]; then
 	read -p "Email address to use for Lets Encrypt. Use 'self_signed' as your email to create self signed certificates [$value_default]: " new_value
 	EMAIL=${new_value:-$value_default}
 
+	# Let Kapi accept self signed certs if required
+	if [ "$EMAIL" == "self_signed" ]; then
+		INSECURE="yes"
+	else
+		INSECURE="no"
+	fi
+
 	LDAP_BASE_DN=$(fqdn_to_dn $FQDN)
 	value_default="$LDAP_BASE_DN"
 	read -p "Name of the BASE DN for LDAP [$value_default]: " new_value
@@ -234,6 +241,10 @@ FQDN=$FQDN
 EMAIL=$EMAIL
 HTTP=80
 HTTPS=443
+
+# Settings for test environments
+EXTRAHOSTS=$FQDN:$(ip route get 1 | awk '{print $NF;exit}')
+INSECURE=$INSECURE
 
 # Docker Repository to push to/pull from
 docker_repo=zokradonh

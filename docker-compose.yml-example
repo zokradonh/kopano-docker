@@ -216,13 +216,17 @@ services:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_kapi
     volumes:
+      - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=kapid
       - TZ=${TZ}
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
-      - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=http://kopano_konnect:8777 # if this works, then it should go in the python script
+      - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
+      - KCCONF_KAPID_INSECURE=${INSECURE}
+    extra_hosts:
+      - ${EXTRAHOSTS}
     networks:
       - kopano-net
       - web-net
