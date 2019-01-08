@@ -1,12 +1,20 @@
 dn: olcDatabase={1}mdb,cn=config
 changetype: modify
-add: olcDbIndex
-olcDbIndex: cn eq
+replace: olcDbIndex
+olcDbIndex: memberOf eq
+olcDbIndex: entryCSN eq
+olcDbIndex: entryUUID eq
+olcDbIndex: objectClass eq
+olcDbIndex: cn pres,eq,sub
 olcDbIndex: gidNumber eq
+olcDbIndex: mail pres,eq,sub
 olcDbIndex: memberUid eq
 olcDbIndex: ou eq
+olcDbIndex: uid eq
 olcDbIndex: uidNumber eq
 olcDbIndex: uniqueMember eq
-olcDbIndex: kopanoAccount eq
+olcDbIndex: kopanoAccount eq,pres
 olcDbIndex: kopanoAliases eq
 olcDbIndex: kopanoViewPrivilege eq
+olcDbIndex: sn pres,eq,sub
+olcDbIndex: givenName pres,eq,sub
