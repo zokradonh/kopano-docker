@@ -165,6 +165,10 @@ services:
       - KCUNCOMMENT_LDAP_1=${KCUNCOMMENT_LDAP_1}
       - KCCOMMENT_LDAP_1=${KCCOMMENT_LDAP_1}
       - ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES}
+      - KCCONF_SERVER_enable_sso=yes
+      - KCCONF_SERVER_kcoidc_issuer_identifier=https://${FQDN}
+      - KCCONF_SERVER_kcoidc_insecure_skip_verify=${INSECURE}
+      - KCCONF_SERVER_kcoidc_initialize_timeout=360
     networks:
       - kopano-net
       - ldap-net
