@@ -10,4 +10,5 @@ exec konnectd serve \
 	--signing-private-key=/kopano/ssl/konnectd-tokens-signing-key.pem \
 	--encryption-secret=/kopano/ssl/konnectd-encryption.key \
 	--iss=https://$FQDN \
+	--identifier-registration-conf /etc/kopano/identifier-registration.yaml \
 	kc
