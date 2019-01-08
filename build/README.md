@@ -1,11 +1,15 @@
 Helper container for systems where build requirements (bash, curl, jq, make) are not available (for example on Synology)
 
-Run the following command to enter the "build environment" (command may need to be adapted if the files are cloned into a different directory):
+Run the following command to enter the "build environment" (command may need to be run with `sudo` to work with the `docker` command):
+
 ```
-docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/..:/kopano-docker/ $(docker build -q .)
+$ ./run.sh
+bash-4.4$
+
 ```
 
 Afterwards you can execute the `setup.sh` script, modify `.env` to your liking and run any make commands:
+
 ```
 bash-4.4# ./setup.sh
 Creating an .env file for you
@@ -58,4 +62,5 @@ docker build -t zokradonh/kopano_ssl ssl/
 Sending build context to Docker daemon  4.608kB
 [...]
 ```
-Afterwards you can exit the container and run `docker-compose up -d` and will have the images you previously built.
+
+After exiting the container run `docker-compose up -d`, which will have the images started you previously built.
