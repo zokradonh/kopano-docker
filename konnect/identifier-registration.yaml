@@ -2,11 +2,11 @@
 
 # OpenID Connect client registry.
 clients:
-  - id: oidc-client-example.js
-    name: OIDC Playground
-    application_type: web
-    redirect_uris:
-       - https://devmail.kopano.com/kapi-playground/
+#  - id: oidc-client-example.js
+#    name: OIDC Playground
+#    application_type: web
+#    redirect_uris:
+#       - https://devmail.kopano.com/kapi-playground/
 #  - id: playground.js
 #    name: OIDC Playground
 #    application_type: web
