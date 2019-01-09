@@ -243,7 +243,7 @@ HTTP=80
 HTTPS=443
 
 # Settings for test environments
-EXTRAHOSTS=$FQDN:$(ip route get 1 | awk '{print $NF;exit}')
+EXTRAHOSTS=$FQDN:$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 INSECURE=$INSECURE
 
 # Docker Repository to push to/pull from
