@@ -172,6 +172,8 @@ services:
     networks:
       - kopano-net
       - ldap-net
+    extra_hosts:
+      - ${EXTRAHOSTS}
     volumes:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
