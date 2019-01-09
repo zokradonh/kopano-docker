@@ -68,11 +68,15 @@ While using kweb is recommended, this is of course possible.
 - The `kopano_webapp` image is accessible on port 80 and serves the WebApp both on `/` and `/webapp`.
 - The `kopano_zpush` image is accessible on port 80 and serves Z-Push on `/Microsoft-Server-ActiveSync` (additional urls may be needed in the future see #39).
 
+### What are and how can I use the Kapi Playground and OIDC Playground?
+
+This project includes a Docker container to easily inspect the data returned by the Kopano Rest API (KAPI), as well as the OpenID (Connect) Service Provider. To explore these applications you need to pass the URL of the "Issuer" when opening these. For the Kapi Playground this would for example be `https://kopano.demo/kapi-playground/?iss=https://kopano.demo`.
+
 ### I want to use these Docker images outside of an evaluation environment. What do I need to adjust to make this possible?
 
 To get a quick impression of Kopano this git repository bundles a locally build ldap image with some example users. When using the docker-compose.yml in a production environment make sure to:
 
-- either remove `ldap-demo/bootstrap/ldif/demo-users.ldif` from the locally built ldap image or complelty remove the local ldap from the compose file
+- either remove `ldap-demo/bootstrap/ldif/demo-users.ldif` from the locally built ldap image or complety remove the local ldap from the compose file
 - adapt ldap queries in .env to match you actual ldap server and users
 - all additional configuration of the Kopano components should be specified in the compose file and **not within the running container**
 
