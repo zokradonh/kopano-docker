@@ -331,6 +331,13 @@ services:
      - kopano-net
      - web-net
 
+  kopano_playground:
+    image: ${docker_repo:?err}/kopano_playground
+    container_name: kopano_playground
+    networks:
+     - kopano-net
+     - web-net
+
 volumes:
   web:
   ldap:

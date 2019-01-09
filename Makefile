@@ -26,7 +26,7 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-kweb build-konnect build-ldap-demo
+build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-kweb build-konnect build-playground build-ldap-demo
 
 build: component ?= base
 build:
@@ -69,6 +69,9 @@ build-kweb:
 
 build-konnect:
 	docker build -t $(docker_repo)/kopano_konnect konnect/
+
+build-playground:
+	docker build -t $(docker_repo)/kopano_playground playground/
 
 build-ldap-demo:
 	docker build -t $(docker_repo)/kopano_ldap_demo ldap-demo/
