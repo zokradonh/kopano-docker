@@ -5,9 +5,6 @@ services:
     image: ${docker_repo:?err}/kopano_web
     container_name: web
     restart: always
-    links:
-      - kopano_webapp
-      - kopano_zpush
     ports:
       - "2015:2015"
       - "${HTTP}:8080"
@@ -49,8 +46,6 @@ services:
       - PHPLDAPADMIN_LDAP_HOSTS=ldap
       - PHPLDAPADMIN_HTTPS=false
     command: -l debug
-    links:
-      - ldap
     networks:
       - ldap-net
       - web-net
@@ -62,8 +57,6 @@ services:
     domainname: ${LDAP_DOMAIN}
     container_name: mail
     depends_on:
-      - ldap
-    links:
       - ldap
     ports:
       - "25:25"
@@ -138,12 +131,9 @@ services:
       - kopanossl/:/kopano/ssl
 
   kopano_server:
-    image: ${docker_repo}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     hostname: kopano_server
     container_name: kopano_server
-    links:
-      - db
-      - ldap
     depends_on:
       - db
       - ldap
@@ -155,7 +145,7 @@ services:
       - SERVICE_TO_START=server
       - TZ=${TZ}
       - KCCONF_SERVER_COREDUMP_ENABLED=no
-      - KCCONF_SERVER_LOG_LEVEL=4
+      - KCCONF_SERVER_LOG_LEVEL=3
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
       - KCCONF_SERVER_MYSQL_PORT=3306
       - KCCONF_SERVER_MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -175,9 +165,15 @@ services:
       - KCUNCOMMENT_LDAP_1=${KCUNCOMMENT_LDAP_1}
       - KCCOMMENT_LDAP_1=${KCCOMMENT_LDAP_1}
       - ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES}
+      - KCCONF_SERVER_ENABLE_SSO=yes
+      - KCCONF_SERVER_KCOIDC_ISSUER_IDENTIFIER=https://${FQDN}
+      - KCCONF_SERVER_KCOIDC_INSECURE_SKIP_VERIFY=${INSECURE}
+      - KCCONF_SERVER_KCOIDC_INITIALIZE_TIMEOUT=360
     networks:
       - kopano-net
       - ldap-net
+    extra_hosts:
+      - ${EXTRAHOSTS}
     volumes:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
@@ -187,8 +183,6 @@ services:
     image: ${docker_repo:?err}/kopano_webapp:${WEBAPP_VERSION}
     hostname: kopano_webapp
     container_name: kopano_webapp
-    links:
-      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -203,8 +197,6 @@ services:
     image: ${docker_repo:?err}/kopano_zpush:${ZPUSH_VERSION}
     hostname: kopano_zpush
     container_name: kopano_zpush
-    links:
-      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -215,18 +207,46 @@ services:
       - web-net
       - kopano-net
 
+  kopano_grapi:
+    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    container_name: kopano_grapi
+    volumes:
+      - kopanosocket/:/run/kopano
+    environment:
+      - SERVICE_TO_START=grapi
+      - TZ=${TZ}
+    networks:
+      - kopano-net
+
+  kopano_kapi:
+    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    container_name: kopano_kapi
+    volumes:
+      - kopanodata/:/kopano/data
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
+    environment:
+      - SERVICE_TO_START=kapid
+      - TZ=${TZ}
+      - KCCONF_KAPID_LOG_LEVEL=DEBUG
+      - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
+      - KCCONF_KAPID_INSECURE=${INSECURE}
+    extra_hosts:
+      - ${EXTRAHOSTS}
+    networks:
+      - kopano-net
+      - web-net
+
   kopano_dagent:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_dagent
-    links:
-      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=dagent
       - TZ=${TZ}
-      - KCCONF_DAGENT_LOG_LEVEL=6
+      - KCCONF_DAGENT_LOG_LEVEL=3
       - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kdagent.pem
     networks:
       - kopano-net
@@ -236,15 +256,13 @@ services:
     container_name: kopano_spooler
     hostname: spooler
     domainname: ${LDAP_DOMAIN}
-    links:
-      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=spooler
       - TZ=${TZ}
-      - KCCONF_SPOOLER_LOG_LEVEL=4
+      - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_SMTP_SERVER=mail
       - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kspooler.pem
     networks:
@@ -253,8 +271,6 @@ services:
   kopano_gateway:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_gateway
-    links:
-      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -269,8 +285,6 @@ services:
   kopano_ical:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_ical
-    links:
-      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -284,8 +298,6 @@ services:
   kopano_monitor:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_monitor
-    links:
-      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -298,8 +310,6 @@ services:
   kopano_search:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_search
-    links:
-      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -309,6 +319,27 @@ services:
       - TZ=${TZ}
     networks:
       - kopano-net
+
+  kopano_konnect:
+    image: ${docker_repo:?err}/kopano_konnect
+    container_name: kopano_konnect
+    command: wrapper.sh
+    volumes:
+     - kopanossl/:/kopano/ssl
+     - kopanosocket/:/run/kopano
+    environment:
+     - FQDN=${FQDN}
+    networks:
+     - kopano-net
+     - web-net
+
+  kopano_playground:
+    image: ${docker_repo:?err}/kopano_playground
+    container_name: kopano_playground
+    networks:
+     - kopano-net
+     - web-net
+
 volumes:
   web:
   ldap:

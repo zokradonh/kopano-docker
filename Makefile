@@ -19,13 +19,14 @@ KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_9.0/
 RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 
+COMPOSE_FILE := docker-compose.yml-example
 -include .env
 export
 
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-kweb build-ldap-demo
+build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-kweb build-konnect build-playground build-ldap-demo
 
 build: component ?= base
 build:
@@ -65,6 +66,12 @@ build-ssl:
 
 build-kweb:
 	docker build -t $(docker_repo)/kopano_web kweb/
+
+build-konnect:
+	docker build -t $(docker_repo)/kopano_konnect konnect/
+
+build-playground:
+	docker build -t $(docker_repo)/kopano_playground playground/
 
 build-ldap-demo:
 	docker build -t $(docker_repo)/kopano_ldap_demo ldap-demo/
@@ -137,13 +144,13 @@ publish-kweb: build-kweb
 	docker push $(docker_repo)/kopano_web:latest
 
 test:
-	docker-compose down -v || true
+	docker-compose -f $(COMPOSE_FILE) down -v || true
 	make build-all
-	docker-compose build
-	docker-compose up -d
-	docker-compose ps
+	docker-compose -f $(COMPOSE_FILE) build
+	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) ps
 
 test-quick:
-	docker-compose stop || true
-	docker-compose up -d
-	docker-compose ps
+	docker-compose -f $(COMPOSE_FILE) stop || true
+	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) ps

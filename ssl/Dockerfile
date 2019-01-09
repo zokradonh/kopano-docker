@@ -16,8 +16,7 @@ RUN apk add --update \
     && rm -rf /var/cache/apk/*
 
 COPY start.sh /start.sh
-COPY gencerts.sh /gencerts.sh
 
-RUN chmod a+x /start.sh /gencerts.sh
+RUN chmod a+x /start.sh
 
 CMD ["/start.sh"]

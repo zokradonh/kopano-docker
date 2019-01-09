@@ -50,6 +50,10 @@ if [ ! -e ./.env ]; then
 	read -p "Which tag do you want to use for Z-Push? [$value_default]: " new_value
 	ZPUSH_VERSION=${new_value:-$value_default}
 
+	value_default=latest
+	read -p "Which tag do you want to use for Kopano Konnect? [$value_default]: " new_value
+	KONNECT_VERSION=${new_value:-$value_default}
+
 	value_default="Kopano Demo"
 	read -p "Name of the Organisation for LDAP [$value_default]: " new_value
 	LDAP_ORGANISATION=${new_value:-$value_default}
@@ -61,6 +65,13 @@ if [ ! -e ./.env ]; then
 	value_default="self_signed"
 	read -p "Email address to use for Lets Encrypt. Use 'self_signed' as your email to create self signed certificates [$value_default]: " new_value
 	EMAIL=${new_value:-$value_default}
+
+	# Let Kapi accept self signed certs if required
+	if [ "$EMAIL" == "self_signed" ]; then
+		INSECURE="yes"
+	else
+		INSECURE="no"
+	fi
 
 	LDAP_BASE_DN=$(fqdn_to_dn $FQDN)
 	value_default="$LDAP_BASE_DN"
@@ -191,6 +202,7 @@ if [ ! -e ./.env ]; then
 CORE_VERSION=$CORE_VERSION
 WEBAPP_VERSION=$WEBAPP_VERSION
 ZPUSH_VERSION=$ZPUSH_VERSION
+KONNECT_VERSION=$KONNECT_VERSION
 
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
 LDAP_DOMAIN=$FQDN
@@ -230,8 +242,13 @@ EMAIL=$EMAIL
 HTTP=80
 HTTPS=443
 
-# Docker Repository to push to
+# Settings for test environments
+EXTRAHOSTS=$FQDN:$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+INSECURE=$INSECURE
+
+# Docker Repository to push to/pull from
 docker_repo=zokradonh
+COMPOSE_PROJECT_NAME=kopano
 
 # Modify below to build a different version, than the kopano nightly release
 #KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/

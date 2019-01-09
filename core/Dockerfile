@@ -29,6 +29,7 @@ RUN \
     set -x && \
     apt-get install --no-install-recommends -y \
         kopano-server-packages \
+	kopano-grapi kopano-kapid \
         ${ADDITIONAL_KOPANO_PACKAGES} \
         && \
     set +x && \
