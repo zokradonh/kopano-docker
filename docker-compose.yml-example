@@ -51,13 +51,14 @@ services:
       - web-net
 
   password-self-service:
-    image: tiredofit/self-service-password
+    image: tiredofit/self-service-password:3.0
     container_name: password-self-service
     domainname: ${LDAP_DOMAIN}
     depends_on:
       - ldap
       - mail
     environment:
+      - SSP_VERSION=1.3
       - LDAP_SERVER=ldap://ldap:389
       - LDAP_BINDDN=cn=admin,${LDAP_BASE_DN} 
       - LDAP_BINDPASS=${LDAP_ADMIN_PASSWORD}
