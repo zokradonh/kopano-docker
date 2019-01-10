@@ -377,6 +377,16 @@ services:
      - kopano-net
      - web-net
 
+  kopano_kwmserver:
+    image: kopano/kwmserverd:0.13.1
+    container_name: kopano_kwmserver
+    environment:
+     - KWMSERVERD_ADMIN_TOKENS_KEY_FILE=/kopano/ssl/kwm-admin-tokens.key
+    volumes:
+     - kopanossl/:/kopano/ssl
+    networks:
+      - web-net
+
 volumes:
   web:
   ldap:

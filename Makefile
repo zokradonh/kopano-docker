@@ -65,8 +65,8 @@ build-zpush:
 build-ssl:
 	docker build -t $(docker_repo)/kopano_ssl ssl/
 
-build-kweb:
-	docker build -t $(docker_repo)/kopano_web kweb/
+build-web:
+	docker build -t $(docker_repo)/kopano_web web/
 
 build-konnect:
 	docker build -t $(docker_repo)/kopano_konnect konnect/
@@ -110,6 +110,12 @@ tag-zpush:
 	$(eval zpush_version := \
 	$(shell docker run --rm $(docker_repo)/kopano_zpush cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)'))
 	component=zpush make tag-container
+
+tag-web:
+	$(eval web_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_web echo "$CODE_VERSION"))
+	component=web make tag-container
+
 
 # Docker publish
 repo-login:
