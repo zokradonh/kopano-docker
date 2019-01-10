@@ -115,7 +115,7 @@ tag-zpush:
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-kweb
+publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-kweb publish-playground
 
 publish-container: component ?= base
 publish-container:
@@ -143,6 +143,9 @@ publish-ssl: build-ssl
 
 publish-kweb: build-kweb
 	docker push $(docker_repo)/kopano_web:latest
+
+publish-playground: build-playground
+	docker push $(docker_repo)/kopano_playground:latest
 
 test:
 	docker-compose -f $(COMPOSE_FILE) down -v || true
