@@ -144,6 +144,9 @@ publish-ssl: build-ssl
 publish-kweb: build-kweb
 	docker push $(docker_repo)/kopano_web:latest
 
+publish-konnect: build-konnect
+	docker push $(docker_repo)/kopano_konnect:latest
+
 publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
 
