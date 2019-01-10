@@ -76,7 +76,7 @@ While using kweb is recommended, this is of course possible.
 
 ### What are and how can I use the Kapi Playground and OIDC Playground?
 
-This project includes a Docker container to easily inspect the data returned by the Kopano Rest API (KAPI), as well as the OpenID (Connect) Service Provider. To explore these applications you need to pass the URL of the "Issuer" when opening these. For the Kapi Playground this would for example be `https://kopano.demo/kapi-playground/?iss=https://kopano.demo`.
+This project includes a Docker container to easily inspect the data returned by the Kopano Rest API (KAPI), as well as the OpenID (Connect) Service Provider. To explore these applications you need to pass the URL of the "Issuer" when opening these. For the Kapi Playground this would for example be `https://kopano.demo/kapi-playground/?iss=https://kopano.demo`. For the OIDC Playground it would be `https://kopano.demo/oidc-playground/?discovery_uri=https://kopano.demo/.well-known/openid-configuration&discovery=auto`.
 
 ### I want to use these Docker images outside of an evaluation environment. What do I need to adjust to make this possible?
 
