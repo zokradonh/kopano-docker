@@ -28,6 +28,7 @@ COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
 build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-kweb build-konnect build-playground build-ldap-demo
 
+.PHONY: build
 build: component ?= base
 build:
 	docker build \
@@ -154,3 +155,6 @@ test-quick:
 	docker-compose -f $(COMPOSE_FILE) stop || true
 	docker-compose -f $(COMPOSE_FILE) up -d
 	docker-compose -f $(COMPOSE_FILE) ps
+
+test-stop:
+	docker-compose -f $(COMPOSE_FILE) stop || true
