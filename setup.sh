@@ -101,6 +101,14 @@ if [ ! -e ./.env ]; then
 	read -p "Which tag do you want to use for Kopano Konnect? [$value_default]: " new_value
 	KONNECT_VERSION=${new_value:-$value_default}
 
+	value_default=latest
+	read -p "Which tag do you want to use for Kopano Kwmserver? [$value_default]: " new_value
+	KWM_VERSION=${new_value:-$value_default}
+
+	value_default=latest
+	read -p "Which tag do you want to use for Kopano Meet? [$value_default]: " new_value
+	MEET_VERSION=${new_value:-$value_default}
+
 	value_default="Kopano Demo"
 	read -p "Name of the Organisation for LDAP [$value_default]: " new_value
 	LDAP_ORGANISATION=${new_value:-$value_default}
@@ -258,6 +266,8 @@ CORE_VERSION=$CORE_VERSION
 WEBAPP_VERSION=$WEBAPP_VERSION
 ZPUSH_VERSION=$ZPUSH_VERSION
 KONNECT_VERSION=$KONNECT_VERSION
+KWM_VERSION=$KWM_VERSION
+MEET_VERSION=$MEET_VERSION
 
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
 LDAP_DOMAIN=$FQDN
@@ -317,6 +327,7 @@ COMPOSE_PROJECT_NAME=kopano
 
 # Modify below to build a different version, than the kopano nightly release
 #KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/
+#KOPANO_MEET_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/meet:/final/Debian_9.0/
 #KOPANO_WEBAPP_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/webapp:/final/Debian_9.0/
 #KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/files:/final/Debian_9.0/
 #KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/mdm:/final/Debian_9.0/

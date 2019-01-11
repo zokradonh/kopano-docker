@@ -7,10 +7,12 @@ endif
 
 base_download_version := $(shell ./version.sh core)
 core_download_version := $(shell ./version.sh core)
+meet_download_version := $(shell ./version.sh meet)
 webapp_download_version := $(shell ./version.sh webapp)
 zpush_download_version := $(shell ./version.sh zpush)
 
 KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
+KOPANO_MEET_REPOSITORY_URL := file:/kopano/repo/meet
 KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
 KOPANO_WEBAPP_FILES_REPOSITORY_URL := file:/kopano/repo/files
 KOPANO_WEBAPP_MDM_REPOSITORY_URL := file:/kopano/repo/mdm
@@ -26,7 +28,7 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-web build-konnect build-playground build-ldap-demo
+build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-web build-konnect build-playground build-kwmserver build-ldap-demo build-meet
 
 .PHONY: build
 build: component ?= base
@@ -36,6 +38,7 @@ build:
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
 		--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+		--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
@@ -67,6 +70,9 @@ build-webapp:
 build-zpush:
 	component=zpush make build
 
+build-meet:
+	component=meet make build
+
 build-ssl:
 	component=ssl make build-simple
 
@@ -78,6 +84,9 @@ build-konnect:
 
 build-playground:
 	component=playground make build-simple
+
+build-kwmserver:
+	docker build -t $(docker_repo)/kopano_kwmserver kwmserver/
 
 build-ldap-demo:
 	component=ldap_demo make build-simple
@@ -106,6 +115,11 @@ tag-utils:
 	$(shell docker run --rm $(docker_repo)/kopano_utils cat /kopano/buildversion | cut -d- -f2))
 	component=utils make tag-container
 
+tag-meet:
+	$(eval meet_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_meet cat /kopano/buildversion | grep meet | cut -d- -f2 | cut -d+ -f1))
+	component=meet make tag-container
+
 tag-webapp:
 	$(eval webapp_version := \
 	$(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | grep webapp | cut -d- -f2 | cut -d+ -f1))
@@ -126,12 +140,16 @@ tag-konnect:
 	$(shell docker run --rm $(docker_repo)/kopano_konnect env | grep CODE_VERSION | cut -d'=' -f2))
 	component=konnect make tag-container
 
+tag-kwmserver:
+	$(eval kwmserver_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_kwmserver env | grep CODE_VERSION | cut -d'=' -f2))
+	component=kwmserver make tag-container
 
 # Docker publish
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-web publish-konnect publish-playground
+publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-web publish-konnect publish-playground publish-kwmserver publish-meet
 
 publish-container: component ?= base
 publish-container:
@@ -158,13 +176,19 @@ publish-ssl: build-ssl
 	docker push $(docker_repo)/kopano_ssl:latest
 
 publish-web: build-web tag-web
-	docker push $(docker_repo)/kopano_web:latest
+	component=web make publish-container
 
 publish-konnect: build-konnect tag-konnect
 	component=konnect make publish-container
 
 publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
+
+publish-kwmserver: build-kwmserver tag-kwmserver
+	component=kwmserver make publish-container
+
+publish-meet: build-meet tag-meet
+	component=meet make publish-container
 
 test:
 	docker-compose -f $(COMPOSE_FILE) down -v || true
