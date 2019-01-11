@@ -110,7 +110,10 @@ if [ ! -e ./.env ]; then
 	FQDN=${new_value:-$value_default}
 
 	value_default="self_signed"
-	read -p "Email address to use for Lets Encrypt. Use 'self_signed' as your email to create self signed certificates [$value_default]: " new_value
+	read -p "Email address to use for Lets Encrypt.
+	Use 'self_signed' as your email to create self signed certificates.
+	Use 'off' if you want to run the service without tls encryption. Make sure to use an ssl-terminating reverse proxy in front in this case.
+	[$value_default]: " new_value
 	EMAIL=${new_value:-$value_default}
 
 	# Let Kapi accept self signed certs if required
