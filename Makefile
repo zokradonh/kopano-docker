@@ -113,8 +113,13 @@ tag-zpush:
 
 tag-web:
 	$(eval web_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_web echo "$CODE_VERSION"))
+	$(shell docker run --rm $(docker_repo)/kopano_web env | grep CODE_VERSION | cut -d'=' -f2))
 	component=web make tag-container
+
+tag-konnect:
+	$(eval konnect_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_konnect env | grep CODE_VERSION | cut -d'=' -f2))
+	component=konnect make tag-container
 
 
 # Docker publish
@@ -147,10 +152,10 @@ publish-zpush: build-zpush tag-zpush
 publish-ssl: build-ssl
 	docker push $(docker_repo)/kopano_ssl:latest
 
-publish-kweb: build-kweb
+publish-web: build-web tag-web
 	docker push $(docker_repo)/kopano_web:latest
 
-publish-konnect: build-konnect
+publish-konnect: build-konnect tag-konnect
 	docker push $(docker_repo)/kopano_konnect:latest
 
 publish-playground: build-playground
