@@ -26,7 +26,7 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-kweb build-konnect build-playground build-ldap-demo
+build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-web build-konnect build-playground build-ldap-demo
 
 .PHONY: build
 build: component ?= base
@@ -65,8 +65,8 @@ build-zpush:
 build-ssl:
 	docker build -t $(docker_repo)/kopano_ssl ssl/
 
-build-kweb:
-	docker build -t $(docker_repo)/kopano_web kweb/
+build-web:
+	docker build -t $(docker_repo)/kopano_web web/
 
 build-konnect:
 	docker build -t $(docker_repo)/kopano_konnect konnect/
@@ -111,11 +111,22 @@ tag-zpush:
 	$(shell docker run --rm $(docker_repo)/kopano_zpush cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)'))
 	component=zpush make tag-container
 
+tag-web:
+	$(eval web_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_web env | grep CODE_VERSION | cut -d'=' -f2))
+	component=web make tag-container
+
+tag-konnect:
+	$(eval konnect_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_konnect env | grep CODE_VERSION | cut -d'=' -f2))
+	component=konnect make tag-container
+
+
 # Docker publish
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-kweb publish-playground
+publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-web publish-playground
 
 publish-container: component ?= base
 publish-container:
@@ -141,10 +152,10 @@ publish-zpush: build-zpush tag-zpush
 publish-ssl: build-ssl
 	docker push $(docker_repo)/kopano_ssl:latest
 
-publish-kweb: build-kweb
+publish-web: build-web tag-web
 	docker push $(docker_repo)/kopano_web:latest
 
-publish-konnect: build-konnect
+publish-konnect: build-konnect tag-konnect
 	docker push $(docker_repo)/kopano_konnect:latest
 
 publish-playground: build-playground

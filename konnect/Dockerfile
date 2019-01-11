@@ -1,4 +1,7 @@
-FROM kopano/konnectd:0.16.1
+ARG CODE_VERSION=0.16.1
+FROM kopano/konnectd:${CODE_VERSION}
+ARG CODE_VERSION
+ENV CODE_VERSION="${CODE_VERSION}"
 
 RUN apk add --update \
 	openssl \
