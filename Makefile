@@ -26,7 +26,7 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-kweb build-konnect build-playground build-ldap-demo
+build-all: build-ssl build-base build-core build-utils build-webapp build-zpush build-web build-konnect build-playground build-ldap-demo
 
 .PHONY: build
 build: component ?= base
@@ -126,7 +126,7 @@ tag-konnect:
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-kweb publish-playground
+publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-web publish-playground
 
 publish-container: component ?= base
 publish-container:
