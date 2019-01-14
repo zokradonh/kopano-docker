@@ -51,7 +51,7 @@ services:
       - web-net
 
   password-self-service:
-    image: tiredofit/self-service-password:3.0
+    image: tiredofit/self-service-password:3.0.1
     container_name: password-self-service
     domainname: ${FQDN}
     depends_on:
