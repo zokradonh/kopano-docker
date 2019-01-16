@@ -28,7 +28,7 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-base build-core build-konnect build-kwmserver build-ldap-demo build-meet build-playground build-ssl build-utils build-web build-webapp build-zpush
+build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap-demo build-meet build-playground build-ssl build-utils build-web build-webapp build-zpush
 
 .PHONY: build
 build: component ?= base
@@ -152,7 +152,7 @@ tag-zpush:
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-base publish-core publish-konnect publish-kwmserver publish-meet publish-playground publish-ssl publish-utils publish-web publish-webapp publish-zpush
+publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-meet publish-playground publish-ssl publish-utils publish-web publish-webapp publish-zpush
 
 publish-container: component ?= base
 publish-container:
@@ -177,6 +177,10 @@ publish-meet: build-meet tag-meet
 
 publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
+
+
+publish-kdav: build-kdav tag-kdav
+	component=zpush make publish-container
 
 publish-ssl: build-ssl
 	docker push $(docker_repo)/kopano_ssl:latest
