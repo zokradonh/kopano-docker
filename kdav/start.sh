@@ -31,6 +31,12 @@ sed -e "s#define('DAV_ROOT_URI', '/');#define('DAV_ROOT_URI', '/kdav/');#" -i /u
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
 
+touch /var/log/kdav/kdav.log
+touch /var/log/kdav/kdav-error.log
+chown www-data:www-data /var/log/kdav/kdav.log /var/log/kdav/kdav-error.log
+tail --pid=$$ -F --lines=0 -q /var/log/kdav/kdav.log &
+tail --pid=$$ -F --lines=0 -q /var/log/kdav/kdav-error.log &
+
 echo "Starting Apache"
 rm -f /run/apache2/apache2.pid
 set +u
