@@ -126,7 +126,7 @@ tag-konnect:
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-web publish-playground
+publish: repo-login publish-ssl publish-base publish-core publish-utils publish-webapp publish-zpush publish-ssl publish-web publish-konnect publish-playground
 
 publish-container: component ?= base
 publish-container:
