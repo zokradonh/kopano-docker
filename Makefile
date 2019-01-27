@@ -156,7 +156,7 @@ publish-web: build-web tag-web
 	docker push $(docker_repo)/kopano_web:latest
 
 publish-konnect: build-konnect tag-konnect
-	docker push $(docker_repo)/kopano_konnect:latest
+	component=konnect make publish-container
 
 publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
