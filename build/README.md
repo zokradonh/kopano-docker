@@ -1,9 +1,9 @@
 Helper container for systems where build requirements (bash, curl, jq, make) are not available (for example on Synology)
 
-Run the following command to enter the "build environment" (command may need to be run with `sudo` to work with the `docker` command):
+Run the following command to enter the "build environment":
 
 ```
-$ ./run.sh
+$ sudo ./run.sh
 bash-4.4$
 
 ```
