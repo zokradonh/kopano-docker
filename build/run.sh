@@ -7,4 +7,4 @@ docker run \
 	-u $(id -u ${USER}):$(id -g ${USER}) \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ${PWD}/..:/kopano-docker/ \
-	$(docker build -q .)
+	$(docker build -q .) $@
