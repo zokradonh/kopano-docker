@@ -75,7 +75,7 @@ ical)
 grapi)
 	LC_CTYPE=en_US.UTF-8
 	export socket_path=/var/run/kopano/grapi
-	mkdir $socket_path
+	mkdir -p $socket_path
 	chown -R kapi:kopano $socket_path
 	# cleaning up env variables
 	unset "${!KCCONF_@}"

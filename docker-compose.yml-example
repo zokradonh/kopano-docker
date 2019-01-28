@@ -22,7 +22,7 @@ services:
     image: ${docker_repo:?err}/kopano_ldap_demo
     container_name: ldap
     ports:
-      - 389:389
+      - ${LDAPPORT:-389}:389
     environment:
       - LDAP_ORGANISATION=${LDAP_ORGANISATION}
       - LDAP_DOMAIN=${LDAP_DOMAIN}
