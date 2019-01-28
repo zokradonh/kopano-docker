@@ -1,4 +1,4 @@
-FROM docker:18.09.0
+FROM docker:18.09.1
 ENV COMPOSE_VERSION "1.23.2"
 RUN apk add bash curl expect make nano jq py-pip
 RUN pip install --no-cache-dir docker-compose==${COMPOSE_VERSION}
