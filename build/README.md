@@ -1,12 +1,17 @@
-Helper container for systems where build requirements (bash, curl, jq, make) are not available (for example on Synology)
+# Minimal build environment
+
+Helper container for systems where build requirements (bash, curl, docker-compose, jq, make) are not available (for example on Synology)
 
 Run the following command to enter the "build environment" (command may need to be run with `sudo` to work with the `docker` command):
 
 ```
 $ ./run.sh
+This script may need to be run as root to be able to use docker/docker-compose through it.
 bash-4.4$
 
 ```
+
+(the first time it will take a moment before the bash prompt is displayed, since the container is built locally first)
 
 Afterwards you can execute the `setup.sh` script, modify `.env` to your liking and run any make commands:
 
@@ -63,4 +68,4 @@ Sending build context to Docker daemon  4.608kB
 [...]
 ```
 
-After exiting the container run `docker-compose up -d`, which will have the images started you previously built.
+This container also includes ´docker-compose´ for systems that can not be easily updated (again Synology). You can freely choose to use ´docker-compose up -d´ from inside of outside of this container.

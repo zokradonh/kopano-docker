@@ -94,9 +94,9 @@ To get a quick impression of Kopano this git repository bundles a locally build 
 - Destroy local containers and network interfaces: `docker-compose down`
 - Destroy volumes as well (will completely reset the containers, **deletes all data**): `docker-compose down -v`
 - Run commands in a running container: `docker-compose exec kopano_server kopano-cli --list-users`
-- Get logs of a container running in the background: `docker-compose logs -f kopano_server`
-- Run a `kopano-backup`: `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils kopano-backup`
-- Get a shell in a new container to for example run `kopano-migration-pst`: `docker run -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils` (to directly run kopano-migration-pst just append it to the command)
+- Get logs of a in the background running container: `docker-compose logs -f kopano_server`
+- Run a `kopano-backup`: `docker run --rm -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils kopano-backup`
+- Get a shell in a new container to (for example) run `kopano-migration-pst`: `docker run --rm -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils` (to directly run kopano-migration-pst just append it to the command)
 
 ## Third party docker images
 
