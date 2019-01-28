@@ -297,6 +297,7 @@ FQDN=$FQDN
 EMAIL=$EMAIL
 HTTP=80
 HTTPS=443
+LDAPPORT=389
 
 # Settings for test environments
 EXTRAHOSTS=$FQDN:$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
