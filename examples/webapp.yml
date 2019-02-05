@@ -1,0 +1,42 @@
+version: "3.5"
+
+services:
+  web:
+    image: ${docker_repo:?err}/kopano_web
+    container_name: web
+    restart: always
+    ports:
+      - "2015:2015"
+      - "${HTTP}:8080"
+      - "${HTTPS}:8443"
+    environment:
+      - EMAIL=${EMAIL}
+      - FQDN=${FQDN}
+    command: wrapper.sh
+    volumes:
+      - web:/.kweb
+    networks:
+      - web-net
+
+  kopano_webapp:
+    image: ${docker_repo:?err}/kopano_webapp:${WEBAPP_VERSION}
+    hostname: kopano_webapp
+    container_name: kopano_webapp
+    volumes:
+      - /etc/kopano/ssl:/kopano/ssl
+      - /run/kopano:/run/kopano
+    environment:
+      - TZ=${TZ}
+      # hostname of kopano system, leave empty for unix socket
+      - KCCONF_SERVERHOSTNAME=
+      # https port of kopano system
+      - KCCONF_SERVERPORT=
+      - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
+    networks:
+      - web-net
+
+volumes:
+  web:
+
+networks:
+  web-net:

@@ -2,7 +2,7 @@
 
 # define default value for serverhostname and serverport if not passed into container
 KCCONF_SERVERHOSTNAME=${KCCONF_SERVERHOSTNAME:-127.0.0.1}
-KCCONF_SERVERPORT=${KCCONF_SERVERPORT:-236}
+KCCONF_SERVERPORT=${KCCONF_SERVERPORT:-237}
 ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS:-""}
 
@@ -10,8 +10,8 @@ set -eu # unset variables are errors & non-zero return values exit the whole scr
 
 ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
 
-[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && apt update
-[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && for installpkg in "$ADDITIONAL_KOPANO_PACKAGES"; do
+[ ! -z ${ADDITIONAL_KOPANO_PACKAGES// } ] && apt update
+[ ! -z ${ADDITIONAL_KOPANO_PACKAGES// } ] && for installpkg in "$ADDITIONAL_KOPANO_PACKAGES"; do
 	if [ $(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
 		apt --assume-yes install $installpkg;
 	fi

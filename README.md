@@ -82,9 +82,15 @@ This project includes a Docker container to easily inspect the data returned by 
 
 To get a quick impression of Kopano this git repository bundles a locally build ldap image with some example users. When using the docker-compose.yml in a production environment make sure to:
 
-- either remove `ldap-demo/bootstrap/ldif/demo-users.ldif` from the locally built ldap image or complety remove the local ldap from the compose file
+- either remove `ldap-demo/bootstrap/ldif/demo-users.ldif` from the locally built ldap image or completely remove the local ldap from the compose file
 - adapt ldap queries in .env to match you actual ldap server and users
 - all additional configuration of the Kopano components should be specified in the compose file and **not within the running container**
+
+#### Can I combine these Docker images with my existing environment?
+
+Yes, that is certainly a possibillity. Within the `examples/` directory you can find some ready to run examples that can be run in the following way:
+
+- `docker-compose -f examples/webapp.yml up -d`
 
 ### Some more commands for those unfamilar with docker-compose
 
