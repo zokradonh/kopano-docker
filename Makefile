@@ -47,6 +47,7 @@ build:
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
+.PHONY: build-simple
 build-simple: component ?= ssl
 build-simple:
 	docker build -t $(docker_repo)/kopano_$(component) $(component)/
@@ -57,7 +58,7 @@ build-base:
 build-core:
 	component=core make build
 
-build-utils:
+build-utils: build-core
 	component=utils make build
 
 build-webapp:
@@ -179,3 +180,5 @@ test-quick:
 
 test-stop:
 	docker-compose -f $(COMPOSE_FILE) stop || true
+
+default: build-all
