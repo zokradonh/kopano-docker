@@ -47,6 +47,10 @@ build:
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
+build-simple: component ?= ssl
+build-simple:
+	docker build -t $(docker_repo)/kopano_$(component) $(component)/
+
 build-base:
 	component=base make build
 
@@ -63,19 +67,19 @@ build-zpush:
 	component=zpush make build
 
 build-ssl:
-	docker build -t $(docker_repo)/kopano_ssl ssl/
+	component=ssl make build-simple
 
 build-web:
-	docker build -t $(docker_repo)/kopano_web web/
+	component=web make build-simple
 
 build-konnect:
-	docker build -t $(docker_repo)/kopano_konnect konnect/
+	component=konnect make build-simple
 
 build-playground:
-	docker build -t $(docker_repo)/kopano_playground playground/
+	component=playground make build-simple
 
 build-ldap-demo:
-	docker build -t $(docker_repo)/kopano_ldap_demo ldap-demo/
+	component=ldap_demo make build-simple
 
 tag-container: component ?= base
 tag-container:
