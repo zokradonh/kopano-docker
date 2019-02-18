@@ -10,6 +10,6 @@ dockerize \
 	--signing-private-key=/kopano/ssl/konnectd-tokens-signing-key.pem \
 	--encryption-secret=/kopano/ssl/konnectd-encryption.key \
 	--iss=https://$FQDN \
-	--identifier-registration-conf /etc/kopano/identifier-registration.yaml \
+	--identifier-registration-conf /etc/kopano/konnectd-identifier-registration.yaml \
 	--identifier-scopes-conf /etc/kopano/konnectd-identifier-scopes.yaml \
 	kc
