@@ -3,7 +3,7 @@
 set -e
 
 if [ -n "$oidc_issuer_identifier" ]; then
-	set -- "$@" --iss="https://$oidc_issuer_identifier"
+	set -- "$@" --iss="$oidc_issuer_identifier"
 fi
 
 if [ "$INSECURE" = "yes" ]; then

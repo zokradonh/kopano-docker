@@ -385,7 +385,7 @@ services:
     command: wrapper.sh
     environment:
      - INSECURE=${INSECURE}
-     - oidc_issuer_identifier=${FQDN}
+     - oidc_issuer_identifier=https://${FQDN}
     volumes:
      - kopanossl/:/kopano/ssl
     extra_hosts:
@@ -399,7 +399,6 @@ services:
     environment:
      - SERVICE_TO_START=meet
      - KCCONF_KWEBD_TLS=no
-     - oidc_issuer_identifier=${FQDN}
     depends_on:
      - kopano_kapi
      - kopano_konnect
