@@ -109,6 +109,11 @@ if [ ! -e ./.env ]; then
 	read -p "FQDN to be used (for reverse proxy) [$value_default]: " new_value
 	FQDN=${new_value:-$value_default}
 
+	LOCALIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+	value_default="$LOCALIP"
+	read -p "IP of your primary network interface (used to ensure to always resolve the FQDN) [$value_default]: " new_value
+	FQDNIP=${new_value:-$value_default}
+
 	value_default="self_signed"
 	read -p "Email address to use for Lets Encrypt.
 	Use 'self_signed' as your email to create self signed certificates.
@@ -303,7 +308,7 @@ HTTPS=443
 LDAPPORT=389
 
 # Settings for test environments
-EXTRAHOSTS=$FQDN:$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+EXTRAHOSTS=$FQDN:$FQDNIP
 INSECURE=$INSECURE
 
 # Docker Repository to push to/pull from
