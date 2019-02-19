@@ -39,5 +39,5 @@ ENV KOPANO_LOCALE="de_DE.UTF-8"
 ENV KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8"
 ENV LANG=en_US.UTF-8
 
-COPY kcconf.py defaultconfigs/ start-service.sh /kopano/
+COPY defaultconfigs/ start-service.sh /kopano/
 CMD [ "/kopano/start-service.sh" ]
