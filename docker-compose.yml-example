@@ -258,6 +258,8 @@ services:
   kopano_kapi:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
     container_name: kopano_kapi
+    depends_on:
+      - kopano_grapi
     volumes:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
@@ -358,7 +360,7 @@ services:
       - kopano-net
 
   kopano_konnect:
-    image: ${docker_repo:?err}/kopano_konnect
+    image: ${docker_repo:?err}/kopano_konnect:${KONNECT_VERSION}
     container_name: kopano_konnect
     command: wrapper.sh
     volumes:
@@ -378,14 +380,32 @@ services:
      - web-net
 
   kopano_kwmserver:
-    image: kopano/kwmserverd:0.13.1
+    image: ${docker_repo:?err}/kopano_kwmserver:${KWM_VERSION}
     container_name: kopano_kwmserver
+    command: wrapper.sh
     environment:
-     - KWMSERVERD_ADMIN_TOKENS_KEY_FILE=/kopano/ssl/kwm-admin-tokens.key
+     - INSECURE=${INSECURE}
+     - oidc_issuer_identifier=https://${FQDN}
     volumes:
      - kopanossl/:/kopano/ssl
+    extra_hosts:
+     - ${EXTRAHOSTS}
     networks:
-      - web-net
+     - web-net
+
+  kopano_meet:
+    image: ${docker_repo:?err}/kopano_meet:${MEET_VERSION}
+    container_name: kopano_meet
+    environment:
+     - SERVICE_TO_START=meet
+     - KCCONF_KWEBD_TLS=no
+    depends_on:
+     - kopano_kapi
+     - kopano_konnect
+     - kopano_kwmserver
+     - web
+    networks:
+     - web-net
 
 volumes:
   web:

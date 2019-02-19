@@ -1,0 +1,14 @@
+# This file contains additional scopes for Konnect. All of the scopes listed
+# here are made available to clients upon request if not limited by other means.
+
+---
+scopes:
+  kopano/kwm:
+    description: "Access Kopano Meet"
+
+  kopano/kvs:
+    description: "Access Kopano Key Value Store"
+
+  kopano/pubs:
+    description: "Access Kopano Pub/Sub"
+

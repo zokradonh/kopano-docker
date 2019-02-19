@@ -1,0 +1,6 @@
+ARG CODE_VERSION=0.15.1
+FROM kopano/kwmserverd:${CODE_VERSION}
+ARG CODE_VERSION
+ENV CODE_VERSION="${CODE_VERSION}"
+
+COPY wrapper.sh /usr/local/bin
