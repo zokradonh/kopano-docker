@@ -9,7 +9,7 @@ if [ ! -e /kopano/$SERVICE_TO_START.py ]; then
 	exit 1
 fi
 
-echo "Configure core service '$SERVICE_TO_START'" | ts
+echo "Configure service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/$SERVICE_TO_START.py
 
 # allow helper commands given by "docker-compose run"
@@ -18,8 +18,9 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
+sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
+export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
 # cleaning up env variables
 unset "${!KCCONF_@}"
-export tls=false
 exec kopano-kwebd serve
 
