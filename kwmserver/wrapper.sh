@@ -10,5 +10,5 @@ if [ "$INSECURE" = "yes" ]; then
 	set -- "$@" --insecure
 fi
 
-exec kwmserverd serve "$@"
+exec /usr/local/bin/docker-entrypoint.sh serve "$@"
 
