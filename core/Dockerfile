@@ -59,5 +59,5 @@ ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 CMD [ "/kopano/start-service.sh" ]
 
-HEALTHCHECK --interval=30s --timeout=60s \
+HEALTHCHECK --interval=5m --timeout=60s \
 	CMD /kopano/healthcheck.sh
