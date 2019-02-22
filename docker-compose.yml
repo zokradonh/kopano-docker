@@ -181,6 +181,9 @@ services:
   kopano_ssl:
     image: ${docker_repo:?err}/kopano_ssl
     container_name: kopano_ssl
+    environment:
+      - FQDN=${FQDN}
+      - PKI_COUNTRY=NL
     env_file:
       - kopano_ssl.env
     volumes:
@@ -207,7 +210,7 @@ services:
       - KCCONF_SERVER_MYSQL_DATABASE=${MYSQL_DATABASE}
       - KCCONF_SERVER_MYSQL_USER=${MYSQL_USER}
       - KCCONF_SERVER_MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kserver.pem
+      - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kopano_server.pem
       - KCCONF_SERVER_SERVER_SSL_CA_FILE=/kopano/ssl/ca.pem
       - KCCONF_SERVER_SERVER_NAME=Kopano
       - KCCONF_SERVER_SSLKEYS_PATH=/kopano/ssl/clients
@@ -311,8 +314,8 @@ services:
     environment:
       - SERVICE_TO_START=dagent
       - TZ=${TZ}
+      - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kopano_dagent.pem
       - KCCONF_DAGENT_LOG_LEVEL=3
-      - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kdagent.pem
     env_file:
       - kopano_dagent.env
     networks:
@@ -331,7 +334,7 @@ services:
       - TZ=${TZ}
       - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_SMTP_SERVER=mail
-      - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kspooler.pem
+      - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kopano_spooler.pem
     env_file:
       - kopano_spooler.env
     networks:
