@@ -33,6 +33,7 @@ signkey="/kopano/ssl/konnectd-tokens-signing-key.pem"
 if [ ! -f $signkey ]; then
 	echo "creating new token signing key"
 	openssl genpkey -algorithm RSA -out $signkey.tmp -pkeyopt rsa_keygen_bits:4096
+	chmod go+r $signkey.tmp
 	mv $signkey.tmp $signkey
 fi
 
