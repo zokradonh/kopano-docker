@@ -7,16 +7,25 @@ services:
     restart: always
     ports:
       - "2015:2015"
-      - "${HTTP}:8080"
-      - "${HTTPS}:8443"
+      - "${HTTP}:80"
+      - "${HTTPS}:443"
     environment:
       - EMAIL=${EMAIL}
       - FQDN=${FQDN}
     command: wrapper.sh
+    cap_drop:
+     - ALL
+    cap_add: 
+     - NET_BIND_SERVICE
+     - CHOWN
+     - SETGID
+     - SETUID
     volumes:
       - web:/.kweb
     networks:
-      - web-net
+      web-net:
+        aliases:
+         - ${FQDN}
 
   ldap:
     image: ${docker_repo:?err}/kopano_ldap_demo
@@ -209,8 +218,7 @@ services:
     networks:
       - kopano-net
       - ldap-net
-    extra_hosts:
-      - ${EXTRAHOSTS}
+      - web-net
     volumes:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
@@ -270,8 +278,6 @@ services:
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
       - KCCONF_KAPID_INSECURE=${INSECURE}
-    extra_hosts:
-      - ${EXTRAHOSTS}
     networks:
       - kopano-net
       - web-net
@@ -388,8 +394,6 @@ services:
      - oidc_issuer_identifier=https://${FQDN}
     volumes:
      - kopanossl/:/kopano/ssl
-    extra_hosts:
-     - ${EXTRAHOSTS}
     networks:
      - web-net
 
