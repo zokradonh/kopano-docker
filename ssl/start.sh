@@ -5,6 +5,9 @@ mkdir -p /kopano/ssl/clients/
 set -euo pipefail
 IFS=$'\n\t'
 
+# clean out any potential port numbers
+FQDN=${FQDN%:*}
+
 if [ ! -f /kopano/ssl/ca.pem ]; then
 	# https://github.com/google/easypki
 	echo "Creating CA certificate..."
