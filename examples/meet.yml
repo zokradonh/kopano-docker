@@ -75,7 +75,6 @@ services:
     environment:
      - FQDN=${FQDN}
     networks:
-     - kopano-net
      - web-net
 
   kopano_kwmserver:
