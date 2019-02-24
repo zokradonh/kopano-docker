@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   web:
-    image: ${docker_repo:?err}/kopano_web
+    image: ${docker_repo:-zokradonh}/kopano_web
     container_name: web
     restart: always
     ports:
@@ -28,7 +28,7 @@ services:
          - ${FQDN}
 
   kopano_webapp:
-    image: ${docker_repo:?err}/kopano_webapp:${WEBAPP_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
     hostname: kopano_webapp
     container_name: kopano_webapp
     volumes:
