@@ -7,11 +7,11 @@ services:
     restart: always
     ports:
       - "2015:2015"
-      - "${HTTP}:80"
-      - "${HTTPS}:443"
+      - "${HTTP:-80}:80"
+      - "${HTTPS:-443}:443"
     environment:
-      - EMAIL=${EMAIL}
-      - FQDN=${FQDN}
+      - EMAIL=${EMAIL:-off}
+      - FQDN=${FQDN?err}
     command: wrapper.sh
     cap_drop:
      - ALL
@@ -25,7 +25,7 @@ services:
     networks:
       web-net:
         aliases:
-         - ${FQDN}
+         - ${FQDNCLEANED?err}
 
   ldap:
     image: ${docker_repo:?err}/kopano_ldap_demo
@@ -109,7 +109,7 @@ services:
     depends_on:
       - ldap
     ports:
-      - "25:25"
+      - "${SMTPPORT:-25}:25"
     volumes:
       - maildata:/var/mail
       - mailstate:/var/mail-state
@@ -198,8 +198,8 @@ services:
       - ldap
       - kopano_ssl
     ports:
-      - 236:236
-      - 237:237
+      - ${KOPANOPORT:-236}:236
+      - ${KOPANOSPORT:-237}:237
     environment:
       - SERVICE_TO_START=server
       - TZ=${TZ}

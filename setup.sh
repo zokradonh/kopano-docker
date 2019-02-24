@@ -307,10 +307,14 @@ TZ=$TZ
 
 # Defines how Kopano can be accessed from the outside world
 FQDN=$FQDN
+FQDNCLEANED=${FQDN%:*}
 EMAIL=$EMAIL
 HTTP=80
 HTTPS=443
 LDAPPORT=389
+SMTPPORT=25
+KOPANOPORT=236
+KOPANOSPORT=237
 
 # Settings for test environments
 INSECURE=$INSECURE

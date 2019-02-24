@@ -7,15 +7,15 @@ services:
     restart: always
     ports:
       - "2015:2015"
-      - "${HTTP}:80"
-      - "${HTTPS}:443"
+      - "${HTTP:-80}:80"
+      - "${HTTPS:-443}:443"
     environment:
-      - EMAIL=${EMAIL}
-      - FQDN=${FQDN}
+      - EMAIL=${EMAIL:-off}
+      - FQDN=${FQDN?err}
     command: wrapper.sh
     cap_drop:
      - ALL
-    cap_add: 
+    cap_add:
      - NET_BIND_SERVICE
      - CHOWN
      - SETGID
@@ -25,7 +25,7 @@ services:
     networks:
       web-net:
         aliases:
-         - ${FQDN}
+         - ${FQDNCLEANED?err}
 
   kopano_ssl:
     image: ${docker_repo:?err}/kopano_ssl
