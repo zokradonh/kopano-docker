@@ -114,7 +114,9 @@ if [ ! -e ./.env ]; then
 	LDAP_ORGANISATION=${new_value:-$value_default}
 
 	value_default="kopano.demo"
-	read -p "FQDN to be used (for reverse proxy) [$value_default]: " new_value
+	read -p "FQDN to be used (for reverse proxy).
+	Tipp: use port 2015 in case port 443 is already in use on the system.
+	[$value_default]: " new_value
 	FQDN=${new_value:-$value_default}
 
 	value_default="self_signed"
