@@ -1,7 +1,10 @@
 #!/bin/sh
-if [ ! $(id -u) -eq 0 ]; then
+if [ ! "$(id -u)" -eq 0 ]; then
 	echo "This script may need to be run as root to be able to use docker/docker-compose through it."
 fi
+
+cd "$(dirname "$0")"
+
 docker run \
 	--rm -it \
 	-u $(id -u ${USER}):$(id -g ${USER}) \
