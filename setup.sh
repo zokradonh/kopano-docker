@@ -20,7 +20,7 @@ PLUGIN_OPTIONS=("contactfax" "desktopnotifications" "filepreviewer" "files" "fil
 
 lang_menu() {
 	echo "Avaliable options:"
-	for i in ${!LANG_OPTIONS[@]}; do
+	for i in "${!LANG_OPTIONS[@]}"; do
 		printf "%3d%s) %s\n" $((i+1)) "${lang_choices[i]:- }" "${LANG_OPTIONS[i]}"
 	done
 	[[ "$msg" ]] && echo "$msg"; :
@@ -28,7 +28,7 @@ lang_menu() {
 
 plugin_menu() {
 	echo "Avaliable options:"
-	for i in ${!PLUGIN_OPTIONS[@]}; do
+	for i in "${!PLUGIN_OPTIONS[@]}"; do
 		printf "%3d%s) %s\n" $((i+1)) "${plugin_choices[i]:- }" "${PLUGIN_OPTIONS[i]}"
 	done
 	[[ "$msg" ]] && echo "$msg"; :
@@ -131,7 +131,7 @@ if [ ! -e ./.env ]; then
 		INSECURE="no"
 	fi
 
-	LDAP_BASE_DN=$(fqdn_to_dn $FQDN)
+	LDAP_BASE_DN=$(fqdn_to_dn "$FQDN")
 	value_default="$LDAP_BASE_DN"
 	read -p "Name of the BASE DN for LDAP [$value_default]: " new_value
 	LDAP_BASE_DN=${new_value:-$value_default}
@@ -222,7 +222,7 @@ if [ ! -e ./.env ]; then
 
 	KOPANO_SPELL_PLUGIN=""
 	KOPANO_SPELL_LANG_PLUGIN=""
-	for i in ${!LANG_OPTIONS[@]}; do
+	for i in "${!LANG_OPTIONS[@]}"; do
 		[[ "${lang_choices[i]}" ]] && { KOPANO_SPELL_LANG_PLUGIN="${KOPANO_SPELL_LANG_PLUGIN} kopano-webapp-plugin-spell-${LANG_OPTIONS[i]}"; KOPANO_SPELL_PLUGIN="kopano-webapp-plugin-spell"; }
 	done
 
@@ -238,7 +238,7 @@ if [ ! -e ./.env ]; then
 	done
 
 	KOPANO_WEBAPP_PLUGIN=""
-	for i in ${!PLUGIN_OPTIONS[@]}; do
+	for i in "${!PLUGIN_OPTIONS[@]}"; do
 		[[ "${plugin_choices[i]}" ]] && { KOPANO_WEBAPP_PLUGIN="${KOPANO_WEBAPP_PLUGIN} kopano-webapp-plugin-${PLUGIN_OPTIONS[i]}"; }
 	done
 
@@ -252,9 +252,9 @@ if [ ! -e ./.env ]; then
 		ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} whatsapp4deskapp"
 	fi
 
-	echo ${PRINT_SETUP_SUCCESS}
+	echo "${PRINT_SETUP_SUCCESS}"
 
-		cat <<-EOF >"./.env"
+	cat <<-EOF >"./.env"
 # please consult https://github.com/zokradonh/kopano-docker
 # for possible configuration values and their impact
 CORE_VERSION=$CORE_VERSION
