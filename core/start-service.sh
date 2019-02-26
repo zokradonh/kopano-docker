@@ -4,29 +4,29 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 
-if [ ! -e /kopano/$SERVICE_TO_START.py ]; then
+if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	echo "Invalid service specified: $SERVICE_TO_START" | ts
 	exit 1
 fi
 
 [ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && apt update
-[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && for installpkg in "$ADDITIONAL_KOPANO_PACKAGES"; do
-	if [ $(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-		apt --assume-yes install $installpkg;
+[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
+	if [ $(dpkg-query -W -f='${Status}' "$installpkg" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+		apt --assume-yes install "$installpkg";
 	fi
 done
 
-mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/$SERVICE_TO_START /var/run/kopano
+mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano
 
 echo "Configure core service '$SERVICE_TO_START'" | ts
-/usr/bin/python3 /kopano/$SERVICE_TO_START.py
+/usr/bin/python3 /kopano/"$SERVICE_TO_START".py
 
 echo "Set ownership" | ts
 chown -R kopano:kopano /run /tmp
 chown kopano:kopano /kopano/data/ /kopano/data/attachments
 
 # ensure removed pid-file on unclean shutdowns and mounted volumes
-rm -f /var/run/kopano/$SERVICE_TO_START.pid
+rm -f /var/run/kopano/"$SERVICE_TO_START".pid
 
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]; then
@@ -40,8 +40,8 @@ server)
 	/kopano/services/kopano-public-store.sh &
 	/kopano/services/kopano-users.sh &
 	dockerize \
-		-wait file://$KCCONF_SERVER_SERVER_SSL_CA_FILE \
-		-wait file://$KCCONF_SERVER_SERVER_SSL_KEY_FILE \
+		-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
+		-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
 		-wait tcp://db:3306 \
 		-timeout 360s
 	# cleaning up env variables
@@ -75,8 +75,8 @@ ical)
 grapi)
 	LC_CTYPE=en_US.UTF-8
 	export socket_path=/var/run/kopano/grapi
-	mkdir -p $socket_path
-	chown -R kapi:kopano $socket_path
+	mkdir -p "$socket_path"
+	chown -R kapi:kopano "$socket_path"
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec kopano-grapi serve
