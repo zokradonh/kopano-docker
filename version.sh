@@ -7,7 +7,7 @@ fi
 source base/create-kopano-repo.sh
 
 component=${1:-core}
-COMPONENT=$(echo $component | tr a-z A-Z)
+COMPONENT=$(echo "$component" | tr a-z A-Z)
 
 if [ -e ./env ]; then
 	source ./env
@@ -17,7 +17,7 @@ case $component in
 core)
 	KOPANO_CORE_REPOSITORY_URL=${KOPANO_CORE_REPOSITORY_URL:-""}
 	if [[ $KOPANO_CORE_REPOSITORY_URL == http* ]]; then
-		version=$(curl -s -S -L $KOPANO_CORE_REPOSITORY_URL/Packages | grep -A2 "Package: kopano-server-packages")
+		version=$(curl -s -S -L "$KOPANO_CORE_REPOSITORY_URL"/Packages | grep -A2 "Package: kopano-server-packages")
 		echo "${version##* }"
 		exit
 	fi
@@ -25,7 +25,7 @@ core)
 webapp)
 	KOPANO_WEBAPP_REPOSITORY_URL=${KOPANO_WEBAPP_REPOSITORY_URL:-""}
 	if [[ $KOPANO_WEBAPP_REPOSITORY_URL == http* ]]; then
-		version=$(curl -s -S -L $KOPANO_WEBAPP_REPOSITORY_URL/Packages | grep -m1 -A1 "Package: kopano-webapp")
+		version=$(curl -s -S -L "$KOPANO_WEBAPP_REPOSITORY_URL"/Packages | grep -m1 -A1 "Package: kopano-webapp")
 		echo "${version##* }"
 		exit
 	fi
@@ -33,7 +33,7 @@ webapp)
 zpush)
 	KOPANO_ZPUSH_REPOSITORY_URL=${KOPANO_ZPUSH_REPOSITORY_URL:-"http://repo.z-hub.io/z-push:/final/Debian_9.0/"}
 	if [[ $KOPANO_ZPUSH_REPOSITORY_URL == http* ]]; then
-		version=$(curl -s -S -L $KOPANO_ZPUSH_REPOSITORY_URL/Packages | grep -m2 -A2 "Package: z-push-kopano")
+		version=$(curl -s -S -L "$KOPANO_ZPUSH_REPOSITORY_URL"/Packages | grep -m2 -A2 "Package: z-push-kopano")
 		echo "${version##* }"
 		exit
 	fi
@@ -45,4 +45,4 @@ filename=$(h5ai_query "$component")
 
 currentVersion=$(version_from_filename "$filename")
 
-echo $currentVersion
+echo "$currentVersion"
