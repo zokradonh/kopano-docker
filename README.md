@@ -24,7 +24,7 @@ The `docker-compose.yml` file by default pulls Docker containers from https://hu
 
 ## Updating
 
-Previously the `docker-compose.yml` file was not part of the git repository, which made it harder for users to pick and apply changes in the upstreamed `docker-compose.yml-example` file. This has meanwhile been changed and a `git pull` will now pull changes directly into `docker-compose.yml`. If you need to configure additional env variables, this can now be done in the additional env files (more details further below, for example for `kopano_server` this file is called `kopano_server.env`). If you only want to run a subset of containers it is recommended to create a copy of `docker-compose.yml` and specify your copy when running. e.g. like ´docker-compose -f my-setup.yml up -d´.
+The used `docker-compose.yml` is part of the git versioning. Which mean all changes in this repository will also be applied to your local data once you pull in the latest version. If you need to configure additional env variables, this can now be done in the additional env files (more details further below, for example for `kopano_server` this file is called `kopano_server.env`). If you only want to run a subset of containers it is recommended to create a copy of `docker-compose.yml` and specify your copy when running. e.g. like ´docker-compose -f my-setup.yml up -d´.
 
 ## Is this project also interesting for me when I already have a (non-Docker) Kopano environment?
 
