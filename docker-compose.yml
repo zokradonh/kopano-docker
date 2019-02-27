@@ -39,6 +39,8 @@ services:
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
       - LDAP_READONLY_USER=true
       - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_USER_PASSWORD}
+    env_file:
+      - ldap.env
     command: "--loglevel info --copy-service"
     volumes:
       - ldap:/var/lib/ldap
@@ -89,6 +91,8 @@ services:
       - PASSWORD_MIN_DIGIT=${SELF_SERVICE_PASSWORD_MIN_DIGIT}
       - PASSWORD_MIN_SPECIAL=${SELF_SERVICE_PASSWORD_MIN_SPECIAL}
       - PASSWORD_HASH=CRYPT
+    env_file:
+      - password-self-service.env
     expose:
       - "80"
     networks:
@@ -141,6 +145,8 @@ services:
       - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
       - POSTFIX_DAGENT=lmtp:kopano_dagent:2003
       - REPORT_RECIPIENT=1
+    env_file:
+      - mail.env
     networks:
       - kopano-net
       - ldap-net
@@ -162,6 +168,8 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
+    env_file:
+      - db.env
     healthcheck:
       test: ["CMD-SHELL", 'mysql --database=$$MYSQL_DATABASE --password=$$MYSQL_ROOT_PASSWORD --execute="SELECT count(table_name) > 0 FROM information_schema.tables;" --skip-column-names -B']
       interval: 30s
@@ -173,6 +181,8 @@ services:
   kopano_ssl:
     image: ${docker_repo:?err}/kopano_ssl
     container_name: kopano_ssl
+    env_file:
+      - kopano_ssl.env
     volumes:
       - kopanossl/:/kopano/ssl
 
@@ -215,6 +225,8 @@ services:
       - KCCONF_SERVER_KCOIDC_ISSUER_IDENTIFIER=https://${FQDN}
       - KCCONF_SERVER_KCOIDC_INSECURE_SKIP_VERIFY=${INSECURE}
       - KCCONF_SERVER_KCOIDC_INITIALIZE_TIMEOUT=360
+    env_file:
+      - kopano_server.env
     networks:
       - kopano-net
       - ldap-net
@@ -234,6 +246,8 @@ services:
     environment:
       - TZ=${TZ}
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
+    env_file:
+      - kopano_webapp.env
     networks:
       - web-net
       - kopano-net
@@ -248,6 +262,8 @@ services:
       - zpushstates/:/var/lib/z-push/
     environment:
       - TZ=${TZ}
+    env_file:
+      - kopano_zpush.env
     networks:
       - web-net
       - kopano-net
@@ -260,6 +276,8 @@ services:
     environment:
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
+    env_file:
+      - kopano_grapi.env
     networks:
       - kopano-net
 
@@ -278,6 +296,8 @@ services:
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
       - KCCONF_KAPID_INSECURE=${INSECURE}
+    env_file:
+      - kopano_kapi.env
     networks:
       - kopano-net
       - web-net
@@ -293,6 +313,8 @@ services:
       - TZ=${TZ}
       - KCCONF_DAGENT_LOG_LEVEL=3
       - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kdagent.pem
+    env_file:
+      - kopano_dagent.env
     networks:
       - kopano-net
 
@@ -310,6 +332,8 @@ services:
       - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_SMTP_SERVER=mail
       - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kspooler.pem
+    env_file:
+      - kopano_spooler.env
     networks:
       - kopano-net
 
@@ -323,7 +347,9 @@ services:
       - SERVICE_TO_START=gateway
       - TZ=${TZ}
       - KCCONF_GATEWAY_SERVER_SOCKET=http://kopano_server:236/
-      - KCCONF_GATEWAY_LOG_LEVEL=6
+      - KCCONF_GATEWAY_LOG_LEVEL=3
+    env_file:
+      - kopano_gateway.env
     networks:
       - kopano-net
 
@@ -337,6 +363,8 @@ services:
       - SERVICE_TO_START=ical
       - TZ=${TZ}
       - KCCONF_ICAL_SERVER_SOCKET=http://kopano_server:236/
+    env_file:
+      - kopano_ical.env
     networks:
       - kopano-net
 
@@ -349,6 +377,8 @@ services:
     environment:
       - SERVICE_TO_START=monitor
       - TZ=${TZ}
+    env_file:
+      - kopano_monitor.env
     networks:
       - kopano-net
 
@@ -362,6 +392,8 @@ services:
     environment:
       - SERVICE_TO_START=search
       - TZ=${TZ}
+    env_file:
+      - kopano_search.env
     networks:
       - kopano-net
 
@@ -374,6 +406,8 @@ services:
      - kopanosocket/:/run/kopano
     environment:
      - FQDN=${FQDN}
+    env_file:
+     - kopano_konnect.env
     networks:
      - kopano-net
      - web-net
@@ -392,6 +426,8 @@ services:
     environment:
      - INSECURE=${INSECURE}
      - oidc_issuer_identifier=https://${FQDN}
+    env_file:
+     - kopano_kwmserver.env
     volumes:
      - kopanossl/:/kopano/ssl
     networks:
@@ -403,6 +439,8 @@ services:
     environment:
      - SERVICE_TO_START=meet
      - KCCONF_KWEBD_TLS=no
+    env_file:
+     - kopano_meet.env
     depends_on:
      - kopano_kapi
      - kopano_konnect

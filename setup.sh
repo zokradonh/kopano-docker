@@ -10,11 +10,6 @@ random_string() {
 	hexdump -n 16 -v -e '/1 "%02X"' /dev/urandom
 }
 
-if [ ! -e ./docker-compose.yml ]; then
-	echo "copying example compose file"
-	cp docker-compose.yml-example docker-compose.yml
-fi
-
 LANG_OPTIONS=("de-at" "de-ch" "de-de" "en" "en-gb" "es" "fr" "it" "nl" "pl-pl")
 PLUGIN_OPTIONS=("contactfax" "desktopnotifications" "filepreviewer" "files" "filesbackend-smb" "filesbackend-owncloud" "folderwidgets" "gmaps" "intranet" "mattermost" "mdm" "pimfolder" "quickitems" "smime" "titlecounter" "webappmanual" "zdeveloper")
 
@@ -68,6 +63,11 @@ docker_tag_search () {
 
 	echo "$results" | xargs -n1 | sort -ru | xargs
 }
+
+echo "Creating individual env files for containers (if they do not exist already)"
+for dockerenv in ldap password-self-service mail db kopano_ssl kopano_server kopano_webapp kopano_zpush kopano_grapi kopano_kapi kopano_dagent kopano_spooler kopano_gateway kopano_ical kopano_monitor kopano_search kopano_konnect kopano_kwmserver kopano_meet; do
+	touch ./"$dockerenv".env
+done
 
 if [ ! -e ./.env ]; then
 	PRINT_SETUP_SUCCESS=""

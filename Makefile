@@ -21,7 +21,7 @@ KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_9.0/
 RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 
-COMPOSE_FILE := docker-compose.yml-example
+COMPOSE_FILE := docker-compose.yml
 -include .env
 export
 
