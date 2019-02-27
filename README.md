@@ -22,6 +22,10 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 
 The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
 
+## Updating
+
+Previously the `docker-compose.yml` file was not part of the git repository, which made it harder for users to pick and apply changes in the upstreamed `docker-compose.yml-example` file. This has meanwhile been changed and a `git pull` will now pull changes directly into `docker-compose.yml`. If you need to configure additional env variables, this can now be done in the additional env files (more details further below, for example for `kopano_server` this file is called `kopano_server.env`). If you only want to run a subset of containers it is recommended to create a copy of `docker-compose.yml` and specify your copy when running. e.g. like ´docker-compose -f my-setup.yml up -d´.
+
 ## Is this project also interesting for me when I already have a (non-Docker) Kopano environment?
 
 Yes, indeed. You could for example use this to easily try out newer Kopano WebApp or Z-Push releases, without touching your production environment. Through the `zokradonh/kopano_core` image you could even try out newer version of e.g. `kopano-gateway` without jumping into a dependecy mess in your production environment.
@@ -30,7 +34,9 @@ And last but not least this project also offers a `zokradonh/kopano_utils` image
 
 ### Need to adjust any values after the initial run of `setup.sh`?
 
-If you want to modify some of the values from the `setup.sh` run you can simply edit `.env` in your favourite editor. Repeated runs of `setup.sh` will neither modify `docker-compose.yml` nor `.env`. In that file you will also find some given defaults like ldap query filters and the local ports for the reverse proxy.
+If you want to modify some of the values from the `setup.sh` run you can simply edit `.env` in your favourite editor. Repeated runs of `setup.sh` will neither modify `docker-compose.yml` nor `.env`. In the ´.env´ file you will also find some given defaults like ldap query filters and the local ports for the reverse proxy.
+
+Additionally a dedicated env file is created for each container (at least where that would make sense). The env file has the container name as part of the file name. For example for the `kopano_server` container the filename is `kopano_server.env`. These additional env files are auto created when running `setup.sh`
 
 ### How to use a newer version than the one available from the Docker Hub?
 

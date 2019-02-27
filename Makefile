@@ -21,7 +21,6 @@ KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_9.0/
 RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 
-COMPOSE_FILE := docker-compose.yml-example
 -include .env
 export
 
@@ -191,18 +190,18 @@ publish-zpush: build-zpush tag-zpush
 	component=zpush make publish-container
 
 test:
-	docker-compose -f $(COMPOSE_FILE) down -v || true
+	docker-compose down -v || true
 	make build-all
-	docker-compose -f $(COMPOSE_FILE) build
-	docker-compose -f $(COMPOSE_FILE) up -d
-	docker-compose -f $(COMPOSE_FILE) ps
+	docker-compose build
+	docker-compose up -d
+	docker-compose ps
 
 test-quick:
-	docker-compose -f $(COMPOSE_FILE) stop || true
-	docker-compose -f $(COMPOSE_FILE) up -d
-	docker-compose -f $(COMPOSE_FILE) ps
+	docker-compose stop || true
+	docker-compose up -d
+	docker-compose ps
 
 test-stop:
-	docker-compose -f $(COMPOSE_FILE) stop || true
+	docker-compose stop || true
 
 default: build-all
