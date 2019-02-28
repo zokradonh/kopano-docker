@@ -1,4 +1,10 @@
 ARG docker_repo=zokradonh
+FROM composer:1.8.4 as composer
+
+RUN git clone --depth 1 https://stash.kopano.io/scm/kc/kdav.git /usr/share/kdav && \
+    cd /usr/share/kdav && \
+    composer install
+
 FROM ${docker_repo}/kopano_base
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -55,18 +61,12 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     crudini --set /etc/php/7.0/apache2/php.ini PHP post_max_size 500M && \
     crudini --set /etc/php/7.0/apache2/php.ini PHP max_input_vars 1800 && \
     crudini --set /etc/php/7.0/apache2/php.ini Session session.save_path /run/sessions && \
-    # install & configure kdav
-    git clone --depth 1 https://stash.kopano.io/scm/kc/kdav.git /usr/share/kdav && \
-    cd /usr/share/kdav && \
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php -r "if (hash_file('sha384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
-    php composer-setup.php && \
-    php -r "unlink('composer-setup.php');" && \
-    ./composer.phar install && \
     mkdir -p /var/lib/kopano/kdav && \
     chown www-data:www-data /var/lib/kopano/kdav && \
     mkdir -p /var/log/kdav && \
     chown www-data:www-data /var/log/kdav
+
+COPY --from=composer /usr/share/kdav /usr/share/kdav
 
 EXPOSE 80/tcp
 
