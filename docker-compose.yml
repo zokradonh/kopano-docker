@@ -308,7 +308,7 @@ services:
       - web-net
 
   kopano_kdav:
-    image: ${docker_repo:?err}/kopano_kdav:${KDAV_VERSION}
+    image: ${docker_repo:?err}/kopano_kdav:${KDAV_VERSION:-latest}
     hostname: kopano_kdav
     container_name: kopano_kdav
     ports:
