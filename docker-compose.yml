@@ -363,10 +363,12 @@ services:
       - SERVICE_TO_START=ical
       - TZ=${TZ}
       - KCCONF_ICAL_SERVER_SOCKET=http://kopano_server:236/
+      - KCCONF_ICAL_ICAL_LISTEN=*:80
     env_file:
       - kopano_ical.env
     networks:
       - kopano-net
+			- web-net
 
   kopano_monitor:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
