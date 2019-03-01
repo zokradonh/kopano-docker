@@ -368,7 +368,7 @@ services:
       - kopano_ical.env
     networks:
       - kopano-net
-			- web-net
+      - web-net
 
   kopano_monitor:
     image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
