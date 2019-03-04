@@ -2,16 +2,16 @@ version: "3.5"
 
 services:
   web:
-    image: ${docker_repo:?err}/kopano_web
+    image: ${docker_repo:-zokradonh}/kopano_web
     container_name: web
     restart: always
     ports:
       - "2015:2015"
-      - "${HTTP}:80"
-      - "${HTTPS}:443"
+      - "${HTTP:-80}:80"
+      - "${HTTPS:-443}:443"
     environment:
-      - EMAIL=${EMAIL}
-      - FQDN=${FQDN}
+      - EMAIL=${EMAIL:-off}
+      - FQDN=${FQDN?err}
     command: wrapper.sh
     cap_drop:
      - ALL
@@ -25,10 +25,10 @@ services:
     networks:
       web-net:
         aliases:
-         - ${FQDN}
+         - ${FQDNCLEANED?err}
 
   ldap:
-    image: ${docker_repo:?err}/kopano_ldap_demo
+    image: ${docker_repo:-zokradonh}/kopano_ldap_demo
     container_name: ldap
     ports:
       - ${LDAPPORT:-389}:389
@@ -109,7 +109,7 @@ services:
     depends_on:
       - ldap
     ports:
-      - "25:25"
+      - "${SMTPPORT:-25}:25"
       - "465:465"
       - "587:587"
     volumes:
@@ -181,15 +181,18 @@ services:
       - kopano-net
   
   kopano_ssl:
-    image: ${docker_repo:?err}/kopano_ssl
+    image: ${docker_repo:-zokradonh}/kopano_ssl
     container_name: kopano_ssl
+    environment:
+      - FQDN=${FQDN}
+      - PKI_COUNTRY=NL
     env_file:
       - kopano_ssl.env
     volumes:
       - kopanossl/:/kopano/ssl
 
   kopano_server:
-    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     hostname: kopano_server
     container_name: kopano_server
     depends_on:
@@ -197,8 +200,8 @@ services:
       - ldap
       - kopano_ssl
     ports:
-      - 236:236
-      - 237:237
+      - ${KOPANOPORT:-236}:236
+      - ${KOPANOSPORT:-237}:237
     environment:
       - SERVICE_TO_START=server
       - TZ=${TZ}
@@ -209,7 +212,7 @@ services:
       - KCCONF_SERVER_MYSQL_DATABASE=${MYSQL_DATABASE}
       - KCCONF_SERVER_MYSQL_USER=${MYSQL_USER}
       - KCCONF_SERVER_MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kserver.pem
+      - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kopano_server.pem
       - KCCONF_SERVER_SERVER_SSL_CA_FILE=/kopano/ssl/ca.pem
       - KCCONF_SERVER_SERVER_NAME=Kopano
       - KCCONF_SERVER_SSLKEYS_PATH=/kopano/ssl/clients
@@ -239,7 +242,7 @@ services:
       - kopanosocket/:/run/kopano
 
   kopano_webapp:
-    image: ${docker_repo:?err}/kopano_webapp:${WEBAPP_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
     hostname: kopano_webapp
     container_name: kopano_webapp
     volumes:
@@ -255,7 +258,7 @@ services:
       - kopano-net
 
   kopano_zpush:
-    image: ${docker_repo:?err}/kopano_zpush:${ZPUSH_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_zpush:${ZPUSH_VERSION:-latest}
     hostname: kopano_zpush
     container_name: kopano_zpush
     volumes:
@@ -271,7 +274,7 @@ services:
       - kopano-net
 
   kopano_grapi:
-    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: kopano_grapi
     volumes:
       - kopanosocket/:/run/kopano
@@ -284,7 +287,7 @@ services:
       - kopano-net
 
   kopano_kapi:
-    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: kopano_kapi
     depends_on:
       - kopano_grapi
@@ -305,7 +308,7 @@ services:
       - web-net
 
   kopano_dagent:
-    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: kopano_dagent
     volumes:
       - kopanossl/:/kopano/ssl
@@ -313,15 +316,15 @@ services:
     environment:
       - SERVICE_TO_START=dagent
       - TZ=${TZ}
+      - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kopano_dagent.pem
       - KCCONF_DAGENT_LOG_LEVEL=3
-      - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kdagent.pem
     env_file:
       - kopano_dagent.env
     networks:
       - kopano-net
 
   kopano_spooler:
-    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: kopano_spooler
     hostname: spooler
     domainname: ${LDAP_DOMAIN}
@@ -333,14 +336,14 @@ services:
       - TZ=${TZ}
       - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_SMTP_SERVER=mail
-      - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kspooler.pem
+      - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kopano_spooler.pem
     env_file:
       - kopano_spooler.env
     networks:
       - kopano-net
 
   kopano_gateway:
-    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: kopano_gateway
     volumes:
       - kopanossl/:/kopano/ssl
@@ -356,7 +359,7 @@ services:
       - kopano-net
 
   kopano_ical:
-    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: kopano_ical
     volumes:
       - kopanossl/:/kopano/ssl
@@ -372,7 +375,7 @@ services:
       - web-net
 
   kopano_monitor:
-    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: kopano_monitor
     volumes:
       - kopanossl/:/kopano/ssl
@@ -386,7 +389,7 @@ services:
       - kopano-net
 
   kopano_search:
-    image: ${docker_repo:?err}/kopano_core:${CORE_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: kopano_search
     volumes:
       - kopanossl/:/kopano/ssl
@@ -401,7 +404,7 @@ services:
       - kopano-net
 
   kopano_konnect:
-    image: ${docker_repo:?err}/kopano_konnect:${KONNECT_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
     container_name: kopano_konnect
     command: wrapper.sh
     volumes:
@@ -416,14 +419,14 @@ services:
      - web-net
 
   kopano_playground:
-    image: ${docker_repo:?err}/kopano_playground
+    image: ${docker_repo:-zokradonh}/kopano_playground
     container_name: kopano_playground
     networks:
      - kopano-net
      - web-net
 
   kopano_kwmserver:
-    image: ${docker_repo:?err}/kopano_kwmserver:${KWM_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_kwmserver:${KWM_VERSION:-latest}
     container_name: kopano_kwmserver
     command: wrapper.sh
     environment:
@@ -437,7 +440,7 @@ services:
      - web-net
 
   kopano_meet:
-    image: ${docker_repo:?err}/kopano_meet:${MEET_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_meet:${MEET_VERSION:-latest}
     container_name: kopano_meet
     environment:
      - SERVICE_TO_START=meet

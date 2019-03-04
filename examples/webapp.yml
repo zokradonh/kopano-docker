@@ -2,24 +2,33 @@ version: "3.5"
 
 services:
   web:
-    image: ${docker_repo:?err}/kopano_web
+    image: ${docker_repo:-zokradonh}/kopano_web
     container_name: web
     restart: always
     ports:
       - "2015:2015"
-      - "${HTTP}:8080"
-      - "${HTTPS}:8443"
+      - "${HTTP}:80"
+      - "${HTTPS}:443"
     environment:
       - EMAIL=${EMAIL}
       - FQDN=${FQDN}
     command: wrapper.sh
+    cap_drop:
+     - ALL
+    cap_add:
+     - NET_BIND_SERVICE
+     - CHOWN
+     - SETGID
+     - SETUID
     volumes:
       - web:/.kweb
     networks:
-      - web-net
+      web-net:
+        aliases:
+         - ${FQDN}
 
   kopano_webapp:
-    image: ${docker_repo:?err}/kopano_webapp:${WEBAPP_VERSION}
+    image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
     hostname: kopano_webapp
     container_name: kopano_webapp
     volumes:
