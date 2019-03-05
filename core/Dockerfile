@@ -40,6 +40,7 @@ RUN \
         && \
     set +x && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
+    touch /etc/kopano/admin.cfg && \
     cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ && \
     cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ && \
     gzip -d -f /etc/kopano/*.gz
