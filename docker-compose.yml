@@ -311,8 +311,6 @@ services:
     image: ${docker_repo:?err}/kopano_kdav:${KDAV_VERSION:-latest}
     hostname: kopano_kdav
     container_name: kopano_kdav
-    ports:
-      - "8888:80"
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano

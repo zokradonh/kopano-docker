@@ -35,11 +35,13 @@ RUN \
         php-xml \
         php-mbstring \
 	php-zip \
+        sqlite \
+        php-sqlite3 \
         ca-certificates \
         git \
         unzip \
         ${ADDITIONAL_KOPANO_PACKAGES} \
-    && rm -rf /var/cache/apt /var/lib/apt/lists
+    && rm -rf /var/cache/apt /var/lib/apt/lists/*
 
 COPY apache2-kopano-kdav.conf /etc/apache2/sites-available/kopano-kdav.conf
 

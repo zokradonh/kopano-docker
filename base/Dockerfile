@@ -24,7 +24,7 @@ RUN apt-get update && \
         moreutils \
         python3 \
         && \
-    rm -rf /var/cache/apt /var/lib/apt/lists
+    rm -rf /var/cache/apt /var/lib/apt/lists/*
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
