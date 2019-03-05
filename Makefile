@@ -179,7 +179,8 @@ publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
 
 publish-kdav: build-kdav #tag-kdav
-	component=zpush make publish-container
+	#component=zpush make publish-container
+	docker push $(docker_repo)/kopano_kdav:latest
 
 publish-ssl: build-ssl
 	docker push $(docker_repo)/kopano_ssl:latest
