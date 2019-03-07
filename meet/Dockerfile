@@ -32,6 +32,7 @@ RUN \
 	kopano-meet kopano-meet-webapp \
         ${ADDITIONAL_KOPANO_PACKAGES} \
         && \
+    cp /usr/share/doc/kopano-meet-webapp/config.json.in /usr/share/kopano-kweb/www/config/kopano/meet.json && \
     set +x && \
     rm -rf /var/cache/apt /var/lib/apt/lists
 
