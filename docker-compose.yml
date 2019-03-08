@@ -462,6 +462,8 @@ services:
     environment:
      - SERVICE_TO_START=meet
      - KCCONF_KWEBD_TLS=no
+     - KCCONF_MEET_guests_enabled=true
+     - KCCONF_MEET_disableFullGAB=true
     env_file:
      - kopano_meet.env
     depends_on:
