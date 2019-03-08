@@ -19,16 +19,12 @@ if [ $# -gt 0 ]; then
 fi
 
 CONFIG_JSON="/usr/share/kopano-kweb/www/config/kopano/meet.json"
+echo "Updating $CONFIG_JSON"
 for setting in $(compgen -A variable KCCONF_MEET); do
-	echo "Variable: $setting"
 	setting2=${setting#KCCONF_MEET_}
-	echo "Setting: $setting2"
-	echo "Cleaned setting: ${setting2//_/.}"
-	echo "Value: ${!setting}"
+	# dots in setting2 need to be escaped to not be handled as separate entities in the json file
 	jq ".\"${setting2//_/\".\"}\" = \"${!setting}\"" $CONFIG_JSON | sponge $CONFIG_JSON
 done
-
-jq . $CONFIG_JSON
 
 sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
 # shellcheck disable=SC2046
