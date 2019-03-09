@@ -5,7 +5,7 @@ set -e
 dockerize \
 	-wait file:///kopano/ssl/meet-kwmserver.pem \
 	-timeout 360s
-cd /kopano/ssl/ && konnectd utils --use sig jwk-from-pem meet-kwmserver.pem > meet-jwk.json
+cd /kopano/ssl/ && konnectd utils jwk-from-pem --use sig /kopano/ssl/meet-kwmserver.pem > /tmp/meet.ywk
 
 dockerize \
 	-wait file:///kopano/ssl/konnectd-tokens-signing-key.pem \
