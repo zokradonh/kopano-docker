@@ -3,7 +3,7 @@
 set -e
 
 fqdn_to_dn() {
-	printf 'dc=%s' "$1" | sed -r 's/\./,dc=/g'
+	printf 'dc=%s' "$1" | sed -E 's/\./,dc=/g'
 }
 
 random_string() {
