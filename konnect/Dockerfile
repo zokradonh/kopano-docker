@@ -3,9 +3,9 @@ FROM kopano/konnectd:${CODE_VERSION}
 ARG CODE_VERSION
 ENV CODE_VERSION="${CODE_VERSION}"
 
+# 	moreutils \
 RUN apk add --update \
 	jq \
-	moreutils \
 	openssl \
 	py-pip \
 	&& pip install yq \
@@ -16,6 +16,5 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-RUN mkdir -p /etc/kopano/
-COPY konnectd-identifier-registration.yaml konnectd-identifier-scopes.yaml /etc/kopano/
+COPY --chown=nobody:nogroup konnectd-identifier-registration.yaml konnectd-identifier-scopes.yaml /etc/kopano/
 COPY wrapper.sh /usr/local/bin
