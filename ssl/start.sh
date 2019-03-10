@@ -68,8 +68,6 @@ if [ ! -f $eckey ]; then
 	mv $eckey.tmp $eckey
 fi
 
-# TODO generate identifier-registration.yaml
-
 echo "SSL certs:"
 ls -l /kopano/ssl/*.*
 

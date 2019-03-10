@@ -3,8 +3,13 @@ FROM kopano/konnectd:${CODE_VERSION}
 ARG CODE_VERSION
 ENV CODE_VERSION="${CODE_VERSION}"
 
-RUN apk add --no-cache \
-	openssl
+RUN apk add --update \
+	jq \
+	moreutils \
+	openssl \
+	py-pip \
+	&& pip install yq \
+	&& rm -rf /var/cache/apk/*
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
