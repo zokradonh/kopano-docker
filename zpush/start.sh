@@ -26,7 +26,7 @@ else
 fi
 
 echo "Configuring Z-Push for use behind a reverse proxy"
-sed -e "s#define([\"']USE_CUSTOM_REMOTE_IP_HEADER[\"'],\s*false)#define('USE_CUSTOM_REMOTE_IP_HEADER', true)#" \
+sed -e "s#define([\"']USE_CUSTOM_REMOTE_IP_HEADER[\"'],\s*false)#define('USE_CUSTOM_REMOTE_IP_HEADER', 'HTTP_X_FORWARDED_FOR')#" \
     -i /etc/z-push/z-push.conf.php
 
 echo "Ensure config ownership"
