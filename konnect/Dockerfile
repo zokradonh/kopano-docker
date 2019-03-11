@@ -3,9 +3,9 @@ FROM kopano/konnectd:${CODE_VERSION}
 ARG CODE_VERSION
 ENV CODE_VERSION="${CODE_VERSION}"
 
-# 	moreutils \
 RUN apk add --update \
 	jq \
+	moreutils \
 	openssl \
 	py-pip \
 	&& pip install yq \
