@@ -26,6 +26,11 @@ for setting in $(compgen -A variable KCCONF_MEET); do
 	jq ".\"${setting2//_/\".\"}\" = \"${!setting}\"" $CONFIG_JSON | sponge $CONFIG_JSON
 done
 
+# enable Kopano WebApp in the app switcher
+jq '.apps += {"enabled": ["kopano-webapp"]}' $CONFIG_JSON | sponge $CONFIG_JSON
+
+#cat $CONFIG_JSON
+
 sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
 # shellcheck disable=SC2046
 export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
