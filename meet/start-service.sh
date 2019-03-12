@@ -37,4 +37,3 @@ export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
 # cleaning up env variables
 unset "${!KCCONF_@}"
 exec kopano-kwebd serve
-
