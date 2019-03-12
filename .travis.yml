@@ -19,11 +19,11 @@ before_install:
     && chmod 700 ${HADOLINT}
 - sudo apt update && sudo apt install -y expect
 - "./test.exp"
-script:
+install:
   # List files which name starts with 'Dockerfile'
   # eg. Dockerfile, Dockerfile.build, etc.
   - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
-install: make build-all
+  - make build-all
 deploy:
 - provider: script
   script: make publish
