@@ -1,5 +1,5 @@
 ARG docker_repo=zokradonh
-FROM ${docker_repo}/kopano_base
+FROM ${docker_repo}/kopano_base:latest
 
 ARG DEBIAN_FRONTEND=noninteractive
 
