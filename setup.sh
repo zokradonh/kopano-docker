@@ -65,7 +65,7 @@ docker_tag_search () {
 }
 
 echo "Creating individual env files for containers (if they do not exist already)"
-for dockerenv in ldap password-self-service mail db kopano_ssl kopano_server kopano_webapp kopano_zpush kopano_grapi kopano_kapi kopano_dagent kopano_spooler kopano_gateway kopano_ical kopano_monitor kopano_search kopano_konnect kopano_kwmserver kopano_meet; do
+for dockerenv in ldap password-self-service mail db kopano_ssl kopano_server kopano_webapp kopano_zpush kopano_gabsync kopano_grapi kopano_kapi kopano_dagent kopano_spooler kopano_gateway kopano_ical kopano_monitor kopano_search kopano_konnect kopano_kwmserver kopano_meet; do
 	touch ./"$dockerenv".env
 done
 
