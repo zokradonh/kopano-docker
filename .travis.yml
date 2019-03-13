@@ -15,7 +15,7 @@ before_install:
 - sudo curl -L https://github.com/aelsabbahy/goss/releases/download/v$GOSS_VERSION/dgoss -o /usr/local/bin/dgoss
 - sudo chmod +rx /usr/local/bin/goss
 - sudo chmod +rx /usr/local/bin/dgoss
-- sudo curl sL https://github.com/hadolint/hadolint/releases/download/v1.16.0/hadolint-$(uname -s)-$(uname -m)" -o /usr/local/bin/hadolint
+- sudo curl sL https://github.com/hadolint/hadolint/releases/download/v1.16.0/hadolint-$(uname -s)-$(uname -m) -o /usr/local/bin/hadolint
 - sudo chmod +rx /usr/local/bin/hadolint
 - sudo apt update && sudo apt install -y expect
 - "./test.exp"
