@@ -219,11 +219,12 @@ if [ ! -e ./.env ]; then
 
 	prompt="Check language spell support (again to uncheck, ENTER when done): "
 	while lang_menu && read -rp "$prompt" num && [[ "$num" ]]; do
+		# shellcheck disable=SC2015
 		[[ "$num" != *[![:digit:]]* ]] &&
 		(( num > 0 && num <= ${#LANG_OPTIONS[@]} )) ||
 		{ msg="Invalid option: $num"; continue; }
-		((num--)); msg="${LANG_OPTIONS[num]} was ${choices[num]:+un}checked"
-		[[ "${choices[num]}" ]] && lang_choices[num]="" || lang_choices[num]="+"
+		((num--)); msg="${LANG_OPTIONS[num]} was ${lang_choices[num]:+un}checked"
+		[[ "${lang_choices[num]}" ]] && lang_choices[num]="" || lang_choices[num]="+"
 	done
 
 	KOPANO_SPELL_PLUGIN=""
@@ -236,6 +237,7 @@ if [ ! -e ./.env ]; then
 
 	prompt="Check for additional plugins (again to uncheck, ENTER when done): "
 	while plugin_menu && read -rp "$prompt" num && [[ "$num" ]]; do
+		# shellcheck disable=SC2015
 		[[ "$num" != *[![:digit:]]* ]] &&
 		(( num > 0 && num <= ${#PLUGIN_OPTIONS[@]} )) ||
 		{ msg="Invalid option: $num"; continue; }
