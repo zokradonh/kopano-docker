@@ -10,10 +10,9 @@ ENV PKI_ROOT /kopano/easypki
 ENV PKI_ORGANIZATION Internal Kopano System
 ENV PKI_COUNTRY DE
 
-RUN apk add --update \
+RUN apk add --no-cache \
     easypki \
-    openssl \
-    && rm -rf /var/cache/apk/*
+    openssl
 
 COPY start.sh /start.sh
 

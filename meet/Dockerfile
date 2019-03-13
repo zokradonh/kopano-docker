@@ -10,6 +10,8 @@ ARG KOPANO_MEET_VERSION=newest
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG RELEASE_KEY_DOWNLOAD=0
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # install Kopano Core and refresh ca-certificates
 RUN \
     # community download and package as apt source repository

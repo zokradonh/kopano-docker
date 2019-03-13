@@ -34,7 +34,10 @@ ENV KOPANO_WEBAPP_SMIME_VERSION=$KOPANO_WEBAPP_SMIME_VERSION
 ARG RELEASE_KEY_DOWNLOAD=0
 ENV RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # install Kopano WebApp and refresh ca-certificates
+# hadolint ignore=SC2129
 RUN \
     # community download and package as apt source repository
     . /kopano/helper/create-kopano-repo.sh && \

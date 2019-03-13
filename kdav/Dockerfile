@@ -2,8 +2,8 @@ ARG docker_repo=zokradonh
 FROM composer:1.8.4 as composer
 
 RUN git clone --depth 1 https://stash.kopano.io/scm/kc/kdav.git /usr/share/kdav && \
-    cd /usr/share/kdav && \
-    composer install
+WORKDIR /usr/share/kdav
+RUN composer install
 
 FROM ${docker_repo}/kopano_base
 
