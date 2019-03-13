@@ -1,2 +1,7 @@
+ignored:
+  # disable following sourced files
+  - SC1091
+  # disable don't use :latest
+  - DL3007
 trustedRegistries:
   - docker.io

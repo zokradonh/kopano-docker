@@ -15,14 +15,12 @@ before_install:
 - sudo curl -L https://github.com/aelsabbahy/goss/releases/download/v$GOSS_VERSION/dgoss -o /usr/local/bin/dgoss
 - sudo chmod +rx /usr/local/bin/goss
 - sudo chmod +rx /usr/local/bin/dgoss
-- curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.16.0/hadolint-$(uname -s)-$(uname -m)"
-    && chmod 700 ${HADOLINT}
+- sudo curl sL https://github.com/hadolint/hadolint/releases/download/v1.16.0/hadolint-$(uname -s)-$(uname -m)" -o /usr/local/bin/hadolint
+- sudo chmod +rx /usr/local/bin/hadolint
 - sudo apt update && sudo apt install -y expect
 - "./test.exp"
 install:
-  # List files which name starts with 'Dockerfile'
-  # eg. Dockerfile, Dockerfile.build, etc.
-  - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
+  - make check-scripts
   - make build-all
 deploy:
 - provider: script
