@@ -7,7 +7,7 @@ cd "$(dirname "$0")"
 
 docker run \
 	--rm -it \
-	-u $(id -u ${USER}):$(id -g ${USER}) \
+	-u "$(id -u)":"$(id -g)" \
 	-v /var/run/docker.sock:/var/run/docker.sock \
-	-v ${PWD}/..:/kopano-docker/ \
-	$(docker build -q .) $@
+	-v "$(pwd)"/..:/kopano-docker/ \
+	"$(docker build -q .)" "$@"
