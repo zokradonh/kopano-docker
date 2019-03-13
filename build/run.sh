@@ -5,6 +5,8 @@ fi
 
 cd "$(dirname "$0")"
 
+docker build .
+
 docker run \
 	--rm -it \
 	-u "$(id -u)":"$(id -g)" \

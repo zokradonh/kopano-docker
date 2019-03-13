@@ -73,28 +73,28 @@ if [ ! -e ./.env ]; then
 	PRINT_SETUP_SUCCESS=""
 
 	echo "Creating an .env file for you"
-	if type jq 2&> /dev/null; then
+	if command -v jq > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_core/: $(docker_tag_search zokradonh/kopano_core)"
 	fi
 	value_default=latest
 	read -p "Which tag do you want to use for Kopano Core components? [$value_default]: " new_value
 	CORE_VERSION=${new_value:-$value_default}
 
-	if type jq 2&> /dev/null; then
+	if command -v jq > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_webapp/: $(docker_tag_search zokradonh/kopano_webapp)"
 	fi
 	value_default=latest
 	read -p "Which tag do you want to use for Kopano WebApp? [$value_default]: " new_value
 	WEBAPP_VERSION=${new_value:-$value_default}
 
-	if type jq 2&> /dev/null; then
+	if command -v jq > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_zpush/: $(docker_tag_search zokradonh/kopano_zpush)"
 	fi
 	value_default=latest
 	read -p "Which tag do you want to use for Z-Push? [$value_default]: " new_value
 	ZPUSH_VERSION=${new_value:-$value_default}
 
-	if type jq 2&> /dev/null; then
+	if command -v jq > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_konnect/: $(docker_tag_search zokradonh/kopano_konnect)"
 	fi
 	value_default=latest
