@@ -89,7 +89,8 @@ kapid)
 		-timeout 360s
 	LC_CTYPE=en_US.UTF-8
 	sed -i s/\ *=\ */=/g /etc/kopano/kapid.cfg
-	export "$(grep -v '^#' /etc/kopano/kapid.cfg | xargs -d '\n')"
+	# shellcheck disable=SC2046
+	export $(grep -v '^#' /etc/kopano/kapid.cfg | xargs -d '\n')
 	kopano-kapid setup
 	# cleaning up env variables
 	unset "${!KCCONF_@}"

@@ -21,7 +21,8 @@ fi
 # TODO use jq to modify /usr/share/kopano-kweb/www/config/kopano/meet.json
 
 sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
-export "$(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')"
+# shellcheck disable=SC2046
+export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
 # cleaning up env variables
 unset "${!KCCONF_@}"
 exec kopano-kwebd serve
