@@ -4,7 +4,7 @@ services:
   web:
     image: ${docker_repo:-zokradonh}/kopano_web
     container_name: web
-    restart: always
+    restart: unless-stopped
     ports:
       - "2015:2015"
       - "${HTTP:-80}:80"
@@ -102,7 +102,7 @@ services:
 
   mail:
     image: tvial/docker-mailserver:release-v6.1.0
-    restart: always
+    restart: unless-stopped
     hostname: mail
     domainname: ${LDAP_DOMAIN}
     container_name: mail
@@ -161,7 +161,7 @@ services:
 
   db:
     image: mariadb:10.3.10-bionic
-    restart: always
+    restart: unless-stopped
     container_name: kopano_db
     volumes:
       - mysql/:/var/lib/mysql
