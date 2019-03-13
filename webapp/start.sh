@@ -12,7 +12,8 @@ ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAP
 
 [ ! -z "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 [ ! -z "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
-	if [ $(dpkg-query -W -f='${Status}' "$installpkg" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+	# shellcheck disable=SC2016 disable=SC2086
+	if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
 		apt --assume-yes install "$installpkg"
 	fi
 done
