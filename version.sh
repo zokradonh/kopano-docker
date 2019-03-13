@@ -14,6 +14,7 @@ if [ -e ./.env ]; then
 	tmpfile=$(mktemp /tmp/kopano-docker-env.XXXXXX)
 	sed -i '/LDAP_QUERY_FILTER/s/^/#/g' "$tmpfile"
 	sed -i '/SASLAUTHD_LDAP_FILTER/s/^/#/g' "$tmpfile"
+	# shellcheck disable=SC1090
 	source "$tmpfile"
 fi
 

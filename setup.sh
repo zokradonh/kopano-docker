@@ -57,7 +57,7 @@ docker_tag_search () {
 		i=$((i+1))
 		result=$(curl "https://registry.hub.docker.com/v2/repositories/${name}/tags/?page=${i}" 2>/dev/null | jq -r '."results"[]["name"]' 2>/dev/null)
 		has_more=$?
-		if [[ ! -z "${result// }" ]]; then results="${results} ${result}"; fi
+		if [[ -n "${result// }" ]]; then results="${results} ${result}"; fi
 			#printf "."
 	done
 
@@ -77,54 +77,54 @@ if [ ! -e ./.env ]; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_core/: $(docker_tag_search zokradonh/kopano_core)"
 	fi
 	value_default=latest
-	read -p "Which tag do you want to use for Kopano Core components? [$value_default]: " new_value
+	read -r -p "Which tag do you want to use for Kopano Core components? [$value_default]: " new_value
 	CORE_VERSION=${new_value:-$value_default}
 
 	if command -v jq > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_webapp/: $(docker_tag_search zokradonh/kopano_webapp)"
 	fi
 	value_default=latest
-	read -p "Which tag do you want to use for Kopano WebApp? [$value_default]: " new_value
+	read -r -p "Which tag do you want to use for Kopano WebApp? [$value_default]: " new_value
 	WEBAPP_VERSION=${new_value:-$value_default}
 
 	if command -v jq > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_zpush/: $(docker_tag_search zokradonh/kopano_zpush)"
 	fi
 	value_default=latest
-	read -p "Which tag do you want to use for Z-Push? [$value_default]: " new_value
+	read -r -p "Which tag do you want to use for Z-Push? [$value_default]: " new_value
 	ZPUSH_VERSION=${new_value:-$value_default}
 
 	if command -v jq > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_konnect/: $(docker_tag_search zokradonh/kopano_konnect)"
 	fi
 	value_default=latest
-	read -p "Which tag do you want to use for Kopano Konnect? [$value_default]: " new_value
+	read -r -p "Which tag do you want to use for Kopano Konnect? [$value_default]: " new_value
 	KONNECT_VERSION=${new_value:-$value_default}
 
 	value_default=latest
-	read -p "Which tag do you want to use for Kopano Kwmserver? [$value_default]: " new_value
+	read -r -p "Which tag do you want to use for Kopano Kwmserver? [$value_default]: " new_value
 	KWM_VERSION=${new_value:-$value_default}
 
 	value_default=latest
-	read -p "Which tag do you want to use for Kopano Meet? [$value_default]: " new_value
+	read -r -p "Which tag do you want to use for Kopano Meet? [$value_default]: " new_value
 	MEET_VERSION=${new_value:-$value_default}
 
 	value_default=latest
-	read -p "Which tag do you want to use for Kopano kDAV? [$value_default]: " new_value
+	read -r -p "Which tag do you want to use for Kopano kDAV? [$value_default]: " new_value
 	KDAV_VERSION=${new_value:-$value_default}
 
 	value_default="Kopano Demo"
-	read -p "Name of the Organisation for LDAP [$value_default]: " new_value
+	read -r -p "Name of the Organisation for LDAP [$value_default]: " new_value
 	LDAP_ORGANISATION=${new_value:-$value_default}
 
 	value_default="kopano.demo"
-	read -p "FQDN to be used (for reverse proxy).
+	read -r -p "FQDN to be used (for reverse proxy).
 	Tipp: use port 2015 in case port 443 is already in use on the system.
 	[$value_default]: " new_value
 	FQDN=${new_value:-$value_default}
 
 	value_default="self_signed"
-	read -p "Email address to use for Lets Encrypt.
+	read -r -p "Email address to use for Lets Encrypt.
 	Use 'self_signed' as your email to create self signed certificates.
 	Use 'off' if you want to run the service without tls encryption. Make sure to use an ssl-terminating reverse proxy in front in this case.
 	[$value_default]: " new_value
@@ -139,11 +139,11 @@ if [ ! -e ./.env ]; then
 
 	LDAP_BASE_DN=$(fqdn_to_dn "$FQDN")
 	value_default="$LDAP_BASE_DN"
-	read -p "Name of the BASE DN for LDAP [$value_default]: " new_value
+	read -r -p "Name of the BASE DN for LDAP [$value_default]: " new_value
 	LDAP_BASE_DN=${new_value:-$value_default}
 
 	value_default="ldap://ldap:389"
-	read -p "LDAP server to be used (defaults to the bundled OpenLDAP) [$value_default]: " new_value
+	read -r -p "LDAP server to be used (defaults to the bundled OpenLDAP) [$value_default]: " new_value
 	LDAP_SERVER=${new_value:-$value_default}
 
 	if [ "$LDAP_SERVER" != "$value_default" ]; then
@@ -151,15 +151,15 @@ if [ ! -e ./.env ]; then
 		LDAP_ADMIN_PASSWORD=""
 
 		value_default="$LDAP_BASE_DN"
-		read -p "LDAP search base [$value_default]: " new_value
+		read -r -p "LDAP search base [$value_default]: " new_value
 		LDAP_SEARCH_BASE=${new_value:-$value_default}
 
 		value_default="cn=readonly,$LDAP_BASE_DN"
-		read -p "LDAP bind user (needs read permissions) [$value_default]: " new_value
+		read -r -p "LDAP bind user (needs read permissions) [$value_default]: " new_value
 		LDAP_BIND_DN=${new_value:-$value_default}
 
 		value_default="kopano123"
-		read -p "LDAP bind password to be used [$value_default]: " new_value
+		read -r -p "LDAP bind password to be used [$value_default]: " new_value
 		LDAP_BIND_PW=${new_value:-$value_default}
 
 		PRINT_SETUP_SUCCESS="$PRINT_SETUP_SUCCESS \n!! You have specified the LDAP server '${LDAP_SERVER}', don't forget to remove the bundled ldap and ldap-admin services in docker-compose.yml\n"
@@ -180,15 +180,15 @@ if [ ! -e ./.env ]; then
 		value_default="Europe/Berlin".
 	fi
 
-	read -p "Timezone to be used [$value_default]: " new_value
+	read -r -p "Timezone to be used [$value_default]: " new_value
 	TZ=${new_value:-$value_default}
 
 	value_default="postmaster@$FQDN"
-	read -p "E-Mail Address displayed for the 'postmaster' [$value_default]: " new_value
+	read -r -p "E-Mail Address displayed for the 'postmaster' [$value_default]: " new_value
 	POSTMASTER_ADDRESS=${new_value:-$value_default}
 
 	value_default="db"
-	read -p "Name/Address of Database server (defaults to the bundled one) [$value_default]: " new_value
+	read -r -p "Name/Address of Database server (defaults to the bundled one) [$value_default]: " new_value
 	MYSQL_HOST=${new_value:-$value_default}
 
 	if [ "$MYSQL_HOST" != "$value_default" ]; then
@@ -196,15 +196,15 @@ if [ ! -e ./.env ]; then
 		MYSQL_ROOT_PASSWORD=""
 
 		value_default="kopanoDbUser"
-		read -p "Username to connect to the database [$value_default]: " new_value
+		read -r -p "Username to connect to the database [$value_default]: " new_value
 		MYSQL_USER=${new_value:-$value_default}
 
 		value_default="kopanoDbPw"
-		read -p "Password to connect to the database [$value_default]: " new_value
+		read -r -p "Password to connect to the database [$value_default]: " new_value
 		MYSQL_PASSWORD=${new_value:-$value_default}
 
 		value_default="kopano"
-		read -p "Database to use for Kopano [$value_default]: " new_value
+		read -r -p "Database to use for Kopano [$value_default]: " new_value
 		MYSQL_DATABASE=${new_value:-$value_default}
 
 		PRINT_SETUP_SUCCESS="$PRINT_SETUP_SUCCESS \n!! You have specified the DB server '${MYSQL_HOST}', don't forget to remove the bundled db service in docker-compose.yml\n"
@@ -253,7 +253,7 @@ if [ ! -e ./.env ]; then
 	ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}${KOPANO_WEBAPP_PLUGIN}"
 
 	value_default="no"
-	read -p "Integrate WhatsApp into DeskApp yes/no [$value_default]: " new_value
+	read -r -p "Integrate WhatsApp into DeskApp yes/no [$value_default]: " new_value
 	WHATSAPPDESKAPP_BOOLEAN=${new_value:-$value_default}
 
 	if [ "${WHATSAPPDESKAPP_BOOLEAN}" == "yes" ]; then

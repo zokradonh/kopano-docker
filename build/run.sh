@@ -3,7 +3,7 @@ if [ ! "$(id -u)" -eq 0 ]; then
 	echo "This script may need to be run as root to be able to use docker/docker-compose through it."
 fi
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit
 
 docker build .
 
