@@ -16,6 +16,8 @@ if [ -e ./.env ]; then
 	sed -i '/SASLAUTHD_LDAP_FILTER/s/^/#/g' "$tmpfile"
 	# shellcheck disable=SC1090
 	source "$tmpfile"
+else
+	tmpfile="undefined"
 fi
 
 case $component in
@@ -54,4 +56,6 @@ filename=$(h5ai_query "$component")
 currentVersion=$(version_from_filename "$filename")
 
 echo "$currentVersion"
-rm "$tmpfile"
+if [ -e "$tmpfile" ]; then
+	rm "$tmpfile"
+fi
