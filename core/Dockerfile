@@ -16,6 +16,8 @@ ENV KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS
 ARG RELEASE_KEY_DOWNLOAD=0
 ENV RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # install Kopano Core and refresh ca-certificates
 RUN \
     # community download and package as apt source repository

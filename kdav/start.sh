@@ -7,10 +7,11 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 
-[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && apt update
-[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && for installpkg in "$ADDITIONAL_KOPANO_PACKAGES"; do
-	if [ $(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-		apt --assume-yes install $installpkg;
+[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
+[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
+	# shellcheck disable=SC2016 disable=SC2086
+	if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
+		apt --assume-yes install "$installpkg"
 	fi
 done
 
@@ -40,6 +41,7 @@ tail --pid=$$ -F --lines=0 -q /var/log/kdav/kdav-error.log &
 echo "Starting Apache"
 rm -f /run/apache2/apache2.pid
 set +u
+# shellcheck disable=SC1091
 source /etc/apache2/envvars
 # cleaning up env variables
 unset "${!KCCONF_@}"

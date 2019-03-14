@@ -197,6 +197,14 @@ publish-webapp: build-webapp tag-webapp
 publish-zpush: build-zpush tag-zpush
 	component=zpush make publish-container
 
+check-scripts:
+	grep -rIl '^#![[:blank:]]*/bin/\(bash\|sh\|zsh\)' \
+	--exclude-dir=.git --exclude=*.sw? \
+	| xargs shellcheck
+	# List files which name starts with 'Dockerfile'
+	# eg. Dockerfile, Dockerfile.build, etc.
+	git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint
+
 test:
 	docker-compose -f $(COMPOSE_FILE) down -v || true
 	make build-all

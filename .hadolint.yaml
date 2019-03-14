@@ -1,0 +1,13 @@
+ignored:
+  # disable following sourced files
+  - SC1091
+  # disable check for versioned upstream image
+  - DL3006
+  # disable don't use :latest
+  - DL3007
+  # disable explicit version for apt install
+  - DL3008
+  # disable explicit version for apk install
+  - DL3018
+trustedRegistries:
+  - docker.io
