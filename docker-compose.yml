@@ -427,6 +427,8 @@ services:
     volumes:
      - kopanossl/:/kopano/ssl
      - kopanosocket/:/run/kopano
+    depends_on:
+     - kopano_ssl
     environment:
      - FQDN=${FQDN}
     env_file:
@@ -438,6 +440,8 @@ services:
   kopano_playground:
     image: ${docker_repo:-zokradonh}/kopano_playground
     container_name: kopano_playground
+    depends_on:
+     - kopano_kapi
     networks:
      - kopano-net
      - web-net
