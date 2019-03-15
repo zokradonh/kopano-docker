@@ -61,6 +61,10 @@ if [ ! -f $ecparam ]; then
 	mv $ecparam.tmp $ecparam
 fi
 
+# create registration.yml so that konnect can write to it
+touch /kopano/ssl/konnectd-identifier-registration.yaml
+chown nobody:nobody /kopano/ssl/konnectd-identifier-registration.yaml
+
 eckey="/kopano/ssl/meet-kwmserver.pem"
 if [ ! -f $eckey ]; then
 	echo "Creating ec key for Meet..."
