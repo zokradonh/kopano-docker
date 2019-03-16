@@ -55,11 +55,12 @@ if [ -n "$public_guest_access_regexp" ]; then
 	set -- "$@" --public-guest-access-regexp="$public_guest_access_regexp"
 fi
 
+# shellcheck disable=SC2034
 registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
 
 # originally I wanted to wait for $registration_conf, but I needed to precreate the file
 # so the konnect container (since the startup is running as nobody) can write to it.
 exec dockerize \
-	-wait http://kopano_konnect:8777/.well-known/openid-configuration
+	-wait http://kopano_konnect:8777/.well-known/openid-configuration \
         -timeout 360s \
 	/usr/local/bin/docker-entrypoint.sh serve "$@"
