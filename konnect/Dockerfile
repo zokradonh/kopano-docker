@@ -3,7 +3,7 @@ FROM kopano/konnectd:${CODE_VERSION}
 ARG CODE_VERSION
 ENV CODE_VERSION="${CODE_VERSION}"
 
-RUN apk add --update \
+RUN apk add --no-cache \
 	jq \
 	moreutils \
 	openssl \
