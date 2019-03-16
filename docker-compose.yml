@@ -430,7 +430,9 @@ services:
     depends_on:
      - kopano_ssl
     environment:
+     - log_level=debug
      - FQDN=${FQDN}
+     - allow_client_guests=yes
     env_file:
      - kopano_konnect.env
     networks:
@@ -471,7 +473,7 @@ services:
      - SERVICE_TO_START=meet
      - KCCONF_KWEBD_TLS=no
      - KCCONF_MEET_guests_enabled=true
-     - KCCONF_MEET_disableFullGAB=true
+     - KCCONF_MEET_disableFullGAB=false
     env_file:
      - kopano_meet.env
     depends_on:

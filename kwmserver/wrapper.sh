@@ -57,6 +57,7 @@ fi
 
 registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
 
+# TODO this check does not really do a thing since an empty file has already been created there in the ssl container
 exec dockerize \
         -wait file://$registration_conf \
         -timeout 360s \
