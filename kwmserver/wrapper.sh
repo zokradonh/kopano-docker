@@ -68,4 +68,6 @@ export registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
 exec dockerize \
 	-wait http://kopano_konnect:8777/.well-known/openid-configuration \
         -timeout 360s \
-	/usr/local/bin/docker-entrypoint.sh serve "$@"
+	/usr/local/bin/docker-entrypoint.sh serve \
+	--registration-conf /kopano/ssl/konnectd-identifier-registration.yaml \
+	"$@"
