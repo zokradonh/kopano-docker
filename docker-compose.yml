@@ -430,7 +430,6 @@ services:
     depends_on:
      - kopano_ssl
     environment:
-     - log_level=debug
      - FQDN=${FQDN}
      - allow_client_guests=yes
     env_file:
@@ -444,6 +443,7 @@ services:
     container_name: kopano_playground
     depends_on:
      - kopano_kapi
+     - kopano_konnect
     networks:
      - kopano-net
      - web-net
@@ -453,10 +453,10 @@ services:
     container_name: kopano_kwmserver
     command: wrapper.sh
     depends_on:
+     - kopano_kapi
      - kopano_konnect
     environment:
      - INSECURE=${INSECURE}
-     - log_level=debug
      - oidc_issuer_identifier=https://${FQDN}
      - enable_guest_api=yes
      - public_guest_access_regexp=^group/public/.*
