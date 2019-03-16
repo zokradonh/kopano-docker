@@ -456,6 +456,7 @@ services:
      - kopano_konnect
     environment:
      - INSECURE=${INSECURE}
+     - log_level=debug
      - oidc_issuer_identifier=https://${FQDN}
      - enable_guest_api=yes
      - public_guest_access_regexp=^group/public/.*

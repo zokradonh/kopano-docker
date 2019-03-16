@@ -3,6 +3,11 @@
 set -e
 
 # shellcheck disable=SC2154
+if [ -n "$log_level" ]; then
+	set -- "$@" --log-level="$log_level"
+fi
+
+# shellcheck disable=SC2154
 if [ -n "$oidc_issuer_identifier" ]; then
 	set -- "$@" --iss="$oidc_issuer_identifier"
 fi
@@ -56,7 +61,7 @@ if [ -n "$public_guest_access_regexp" ]; then
 fi
 
 # shellcheck disable=SC2034
-registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
+export registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
 
 # originally I wanted to wait for $registration_conf, but I needed to precreate the file
 # so the konnect container (since the startup is running as nobody) can write to it.
