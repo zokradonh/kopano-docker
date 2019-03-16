@@ -18,7 +18,7 @@ ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAP
 	fi
 done
 
-echo "Ensure directories"
+# Ensure directories exist
 mkdir -p /run/sessions /tmp/webapp
 
 if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
@@ -34,6 +34,26 @@ echo "Configuring Kopano WebApp for use behind a reverse proxy"
 sed \
     -e "s#define(\"INSECURE_COOKIES\",\s*.*)#define(\"INSECURE_COOKIES\", true)#" \
     -i /etc/kopano/webapp/config.php
+
+# configuring webapp from env
+for setting in $(compgen -A variable KCCONF_WEBAPP); do
+	setting2=${setting#KCCONF_WEBAPP_}
+	echo "Setting ${setting2} = ${!setting} in config.php"
+	sed -ri "s/(\s*define).+${setting2}.+/\1\(\x27${setting2}\x27, \x27${!setting}\x27\);/g" /etc/kopano/webapp/config.php
+done
+
+# configuring webapp plugins from env
+for setting in $(compgen -A variable KCCONF_WEBAPPPLUGIN); do
+	setting2=${setting#KCCONF_WEBAPPPLUGIN_}
+	part="${setting2%%_*}"
+	filename="${part,,}"
+	echo "Setting ${setting2} = ${!setting} in config-$filename.php"
+	if [ -e /etc/kopano/webapp/config-"$filename".php ]; then
+		sed -ri "s/(\s*define).+${setting2}.+/\1\(\x27${setting2}\x27, \x27${!setting}\x27\);/g" /etc/kopano/webapp/config-"$filename".php
+	else
+	echo "The $filename plugin does not seem to be installed!"
+	fi
+done
 
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions /tmp/webapp
