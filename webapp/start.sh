@@ -45,13 +45,13 @@ done
 # configuring webapp plugins from env
 for setting in $(compgen -A variable KCCONF_WEBAPPPLUGIN); do
 	setting2=${setting#KCCONF_WEBAPPPLUGIN_}
-	part="${setting2%%_*}"
-	filename="${part,,}"
-	echo "Setting ${setting2} = ${!setting} in config-$filename.php"
-	if [ -e /etc/kopano/webapp/config-"$filename".php ]; then
-		sed -ri "s/(\s*define).+${setting2}.+/\1\(\x27${setting2}\x27, \x27${!setting}\x27\);/g" /etc/kopano/webapp/config-"$filename".php
+	filename="${setting2%%_*}"
+	identifier="${filename,,}"
+	echo "Setting ${setting2} = ${!setting} in config-$identifier.php"
+	if [ -e /etc/kopano/webapp/config-"$identifier".php ]; then
+		sed -ri "s/(\s*define).+${setting2}.+/\1\(\x27${setting2}\x27, \x27${!setting}\x27\);/g" /etc/kopano/webapp/config-"$identifier".php
 	else
-	echo "The $filename plugin does not seem to be installed!"
+		echo "The $identifier plugin does not seem to be installed!"
 	fi
 done
 
