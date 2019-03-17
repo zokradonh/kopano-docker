@@ -30,7 +30,6 @@ install:
   - make test
 script:
     - curl -sSf --insecure https://localhost > /dev/null
-    - docker-compose ps
 after_failure:
     - timeout 3s docker-compose logs
 deploy:
