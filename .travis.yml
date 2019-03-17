@@ -4,6 +4,8 @@ env:
   global:
   - GOSS_VERSION=0.3.6
   - GOSS_PATH=/usr/local/bin/goss
+  - HADOLINT_VERSION=1.16.0
+  - DOCKER_COMPOSE_VERSION=1.23.2
   - secure: iSwQW1ytg9/ntqlF1nMzYcg0ouT3TifuAzauu//vWMiRfRthAi0bLuz3nBvlkQwtUk/iF3+smdOtwvjlmW7wWdwdf9tzpsyVKVYcS/+1MbxnGXE4OyNLkUJ7KASRk4otfsujMDNO95q/m04sOLJ721dsOWR6dv+5MNJ3LrushsbFfuStHmM1cNyUR6NuPy4g/x4oppv23rbSXU/qS7ULUsOTEUuTsmgvvKQRZiiOFaOgzeHCIEdrX6Dpsx6DPtYQ5az88q6CrkkTaw7GhP1qBXAGNX03NeHPd7YZvsgePoZJEJ/jTRsZVx9LxwkmnVTJDqthgqTGXTBJIvow3oICjKLf/DhURvkHaAJPu+Nxyvxo2xgYaa0Zbau5fmhEblyKU8Q9g+ZXsdjC5uy/vqJjg1rZD9BZjbKXRP9nb5VpxLdzcWE80XpEj7tHMfF4bN7LvIHZ81wINtZdZeFLVW53YzIO0NAoRCDk1SmR6N11T1uE8FrBzO80oETUMud2zYTx9U+J0m/qsNK+fOz2GtxwI3mlU0/bgVlcFE6865lOPuRwcTOhDwGqeWsLbBYsYXaJhqktn6XKiZ/BEeJLx6Z/CvyNXbzexn1i4wyVZAK7xxkhjxFPnWFU9WPan4ibkGLsS9sFsUTLVa4oBszkTO6q5NU7vIycdgJpfZlkdL2V0EA=
   - secure: kj/KcPck6RHSQdcN29+OoxSufHX8KgMXs/ekVUsgcXfWb8iwo0UbfGwyPf+oy1vvjO65e0xsdGHN6Vk++opJT1qaAMpIInfh3+otXmDrT4Uq0s+vBkyQ/EPNeTy6oWK28y5+IVrR3Nd4FMK8CQ4FKzqKAAOQDkusI1182tRL9wDPnCbUD92cNcTPh7aHccSflkBOzw0G6d0v3RFIseOdYMA4DN72YfUV6RHVgOz7PSPmZ9p9lza1Fdbd1fBYoqBapzm3tIWiaU20OkyYNorZzsT+afTTpfHIb5ku+emNCiKDORuX4XQHDiS+PtqDNJRL2WsOsudVf9ckd9wpTkDj5rFnVex7GtS4z47kLDahzNWMQs4gnpDVUi3jbGeU/62EXdiAmuWs0A2kUSPYZwAKVbfIDlp3tAy0dzGivnBfTdN/TYVRm0IDRJZZNp964Tu3rGLazbRCYpGTIYz4KlMRrIN4QJj8JMmvcaOidp/xQJL+MkZTNY653VFHYeu61XEUV3RkGkkhZL967w+VuhkULDppslKExsJzXXX6ITauLu6hqAj+fWrn0WDxn/Km+sx9aJaBNqg4egT8mX5+WeDdoV+3NyODjbYUaEPKSuUkW/Skm+VGlYeyc9apahTSDe1H/W2KUcramkMT17IdPqXTqvlo+HSR97IGoE37OWKdoVM=
   - secure: k5V2o5xIGGQ2vlWaCfWHAn68z7k/FSL8bXgow6/x0svxmsvDxJzRrpnM3xn681ogUEoQP1hQeHWeR0tg88RcDFmjzEObMjVd7Av289YIQ/W6hmFFb+SCa+TmAe49ybPLZA2UNygC/zqH5N6U5iMYsyPrChw4oUv9X9lfDJUz08crRVwffm/JwcEfV1tH722I2WUcEpxKYyqymK9CaO3e2UTXnPaASNOPuZ2v0T3D1lvla+XRNG+JJ6+BJjBRkzMMg584IaBIqGVf9tlImZkGfYmVWUVvBfpuHMSU9OC4CJXBRqy6K/nUlw5bDDsGFbLGA9Tg1qgLzAZsPCSMSCC2Gq0rLxuihudWEJ9e8dnRLIbt+Zxlqa2s7DQ2FTWyofQfR4GL6cD4uSoSh+k9ij6PeJMSEzplaO01Fyh87uRbcVBxwktIXeVuJsBG8uQ2wdWjQ41g4noDHzsV1duJ1nz9b6JRH7Vbp8bKXow3K+EtlFfa9GcD4I64oksbWH+hx+PBBf0qEdUzZnHmw2vEqJyjdlCoQ1k7pX6c9rxzNiKIb8Hsmhu1r7DCNYBYZIZ1pGhVBilxrr9QiU0hGpRsON0QOzTobz6TohW9w+LNgBMPMizLRFi3r14Nqel8GIWcQUP/RBTiXb8Lr+D9oq0oY1Up4QyfEq1SfkJ1yD4qzCOhb5I=
@@ -12,12 +14,14 @@ services:
 before_install:
   - sudo curl -L https://github.com/aelsabbahy/goss/releases/download/v$GOSS_VERSION/goss-linux-amd64 -o /usr/local/bin/goss
   - sudo curl -L https://github.com/aelsabbahy/goss/releases/download/v$GOSS_VERSION/dgoss -o /usr/local/bin/dgoss
-  - sudo curl -L https://github.com/hadolint/hadolint/releases/download/v1.16.0/hadolint-$(uname -s)-$(uname -m) -o /usr/local/bin/hadolint
+  - sudo curl -L https://github.com/hadolint/hadolint/releases/download/v$HADOLINT_VERSION/hadolint-$(uname -s)-$(uname -m) -o /usr/local/bin/hadolint
+  - sudo rm /usr/local/bin/docker-compose
+  - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
   - sudo chmod +rx /usr/local/bin/goss
   - sudo chmod +rx /usr/local/bin/dgoss
   - sudo chmod +rx /usr/local/bin/hadolint
+  - sudo chmod +rx /usr/local/bin/docker-compose
   - sudo apt update && sudo apt install -y expect
-  - docker-compose -v
 install:
   - make check-scripts
   - "./test.exp"
