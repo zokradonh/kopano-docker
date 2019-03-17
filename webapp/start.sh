@@ -17,11 +17,15 @@ php_cfg_gen() {
 			echo "Setting $cfg_setting = $cfg_value in $cfg_file"
 			sed -ri "s/(\s*define).+${cfg_setting}.+/\1\(\x27${cfg_setting}\x27, \x27${cfg_value}\x27\);/g" "$cfg_file"
 		else
-			echo "Config option $cfg_setting not found in $cfg_file"
+			echo "Error: Config option $cfg_setting not found in $cfg_file"
+			cat "$cfg_file"
 			exit 1
 		fi
-	else
-		echo "Config file $cfg_file not found. Plugin not installed?"
+		else
+		echo "Error: Config file $cfg_file not found. Plugin not installed?"
+		local dir
+		dir=$(dirname "$cfg_file")
+		ls -la "$dir"
 		exit 1
 	fi
 }
