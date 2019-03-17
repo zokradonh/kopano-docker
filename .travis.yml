@@ -17,6 +17,7 @@ before_install:
   - sudo chmod +rx /usr/local/bin/dgoss
   - sudo chmod +rx /usr/local/bin/hadolint
   - sudo apt update && sudo apt install -y expect
+  - docker-compose -v
 install:
   - make check-scripts
   - "./test.exp"
