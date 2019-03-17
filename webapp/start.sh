@@ -8,6 +8,24 @@ ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 
+php_cfg_gen() {
+	local cfg_file="$1"
+	local cfg_setting="$2"
+	local cfg_value="$3"
+	if [ -e "$cfg_file" ]; then
+		if grep -q "$cfg_setting" "$cfg_file"; then
+			echo "Setting $cfg_setting = $cfg_value in $cfg_file"
+			sed -ri "s/(\s*define).+${cfg_setting}.+/\1\(\x27${cfg_setting}\x27, \x27${cfg_value}\x27\);/g" "$cfg_file"
+		else
+			echo "Config option $cfg_setting not found in $cfg_file"
+			exit 1
+		fi
+	else
+		echo "Config file $cfg_file not found. Plugin not installed?"
+		exit 1
+	fi
+}
+
 ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
 
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
@@ -38,8 +56,7 @@ sed \
 # configuring webapp from env
 for setting in $(compgen -A variable KCCONF_WEBAPP_); do
 	setting2=${setting#KCCONF_WEBAPP_}
-	echo "Setting ${setting2} = ${!setting} in config.php"
-	sed -ri "s/(\s*define).+${setting2}.+/\1\(\x27${setting2}\x27, \x27${!setting}\x27\);/g" /etc/kopano/webapp/config.php
+	php_cfg_gen /etc/kopano/webapp/config.php "${setting2}" "${!setting}"
 done
 
 # configuring webapp plugins from env
@@ -48,12 +65,7 @@ for setting in $(compgen -A variable KCCONF_WEBAPPPLUGIN_); do
 	filename="${setting2%%_*}"
 	setting3=${setting#KCCONF_WEBAPPPLUGIN_${filename}_}
 	identifier="${filename,,}"
-	echo "Setting ${setting3} = ${!setting} in config-$identifier.php"
-	if [ -e /etc/kopano/webapp/config-"$identifier".php ]; then
-		sed -ri "s/(\s*define).+${setting3}.+/\1\(\x27${setting3}\x27, \x27${!setting}\x27\);/g" /etc/kopano/webapp/config-"$identifier".php
-	else
-		echo "The $identifier plugin does not seem to be installed!"
-	fi
+	php_cfg_gen /etc/kopano/webapp/config-"$identifier".php "${setting3}" "${!setting}"
 done
 
 echo "Ensure config ownership"
