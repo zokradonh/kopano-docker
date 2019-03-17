@@ -17,8 +17,9 @@ before_install:
   - sudo chmod +rx /usr/local/bin/dgoss
   - sudo chmod +rx /usr/local/bin/hadolint
   - sudo apt update && sudo apt install -y expect
-  - "./test.exp"
 install:
+  - make check-scripts
+  - "./test.exp"
   - make check-scripts
   - make build-all
   - make test
