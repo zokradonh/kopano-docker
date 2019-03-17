@@ -36,20 +36,21 @@ sed \
     -i /etc/kopano/webapp/config.php
 
 # configuring webapp from env
-for setting in $(compgen -A variable KCCONF_WEBAPP); do
+for setting in $(compgen -A variable KCCONF_WEBAPP_); do
 	setting2=${setting#KCCONF_WEBAPP_}
 	echo "Setting ${setting2} = ${!setting} in config.php"
 	sed -ri "s/(\s*define).+${setting2}.+/\1\(\x27${setting2}\x27, \x27${!setting}\x27\);/g" /etc/kopano/webapp/config.php
 done
 
 # configuring webapp plugins from env
-for setting in $(compgen -A variable KCCONF_WEBAPPPLUGIN); do
+for setting in $(compgen -A variable KCCONF_WEBAPPPLUGIN_); do
 	setting2=${setting#KCCONF_WEBAPPPLUGIN_}
 	filename="${setting2%%_*}"
+	setting3=${setting#KCCONF_WEBAPPPLUGIN_${filename}_}
 	identifier="${filename,,}"
-	echo "Setting ${setting2} = ${!setting} in config-$identifier.php"
+	echo "Setting ${setting3} = ${!setting} in config-$identifier.php"
 	if [ -e /etc/kopano/webapp/config-"$identifier".php ]; then
-		sed -ri "s/(\s*define).+${setting2}.+/\1\(\x27${setting2}\x27, \x27${!setting}\x27\);/g" /etc/kopano/webapp/config-"$identifier".php
+		sed -ri "s/(\s*define).+${setting3}.+/\1\(\x27${setting3}\x27, \x27${!setting}\x27\);/g" /etc/kopano/webapp/config-"$identifier".php
 	else
 		echo "The $identifier plugin does not seem to be installed!"
 	fi
