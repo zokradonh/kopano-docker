@@ -15,7 +15,7 @@ php_cfg_gen() {
 	if [ -e "$cfg_file" ]; then
 		if grep -q "$cfg_setting" "$cfg_file"; then
 			echo "Setting $cfg_setting = $cfg_value in $cfg_file"
-			case cfg_value in
+			case $cfg_value in
 			true|TRUE|false|FALSE)
 				echo boolean value
 				sed -ri "s#(\s*define).+${cfg_setting}.+#\define(\x27${cfg_setting}\x27, ${cfg_value}\);#g" "$cfg_file"
