@@ -63,7 +63,8 @@ fi
 
 # create registration.yml so that konnect can write to it
 touch /kopano/ssl/konnectd-identifier-registration.yaml
-chown nobody:nobody /kopano/ssl/konnectd-identifier-registration.yaml
+# chown to the numerical representation of nobody/nogroup
+chown 65534:65534 /kopano/ssl/konnectd-identifier-registration.yaml
 
 eckey="/kopano/ssl/meet-kwmserver.pem"
 if [ ! -f $eckey ]; then
