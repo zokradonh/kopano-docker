@@ -47,15 +47,11 @@ if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
 	echo "Kopano WebApp is using the default: connection"
 else
 	echo "Kopano WebApp is using an ip connection"
-	sed -e "s#define(\"DEFAULT_SERVER\",\s*\".*\"#define(\"DEFAULT_SERVER\", \"https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano\"#" \
-	    -i /etc/kopano/webapp/config.php
+	php_cfg_gen /etc/kopano/webapp/config.php DEFAULT_SERVER "https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano"
 fi
 
-# TODO is enabling this really neccesary when reverse proxying webapp?
 echo "Configuring Kopano WebApp for use behind a reverse proxy"
-sed \
-    -e "s#define(\"INSECURE_COOKIES\",\s*.*)#define(\"INSECURE_COOKIES\", true)#" \
-    -i /etc/kopano/webapp/config.php
+php_cfg_gen /etc/kopano/webapp/config.php INSECURE_COOKIES true
 
 # configuring webapp from env
 for setting in $(compgen -A variable KCCONF_WEBAPP_); do
