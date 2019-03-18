@@ -53,6 +53,27 @@ if [ ! -f $secretkey ]; then
 	mv $secretkey.tmp $secretkey
 fi
 
+# Meet guest mode
+ecparam="/kopano/ssl/ecparam.pem"
+if [ ! -f $ecparam ]; then
+	echo "Creating ec param key for Meet..."
+	openssl ecparam -name prime256v1 -genkey -noout -out $ecparam.tmp >/dev/null 2>&1
+	mv $ecparam.tmp $ecparam
+fi
+
+# create registration.yml so that konnect can write to it
+touch /kopano/ssl/konnectd-identifier-registration.yaml
+# chown to the numerical representation of nobody/nogroup
+chown 65534:65534 /kopano/ssl/konnectd-identifier-registration.yaml
+
+eckey="/kopano/ssl/meet-kwmserver.pem"
+if [ ! -f $eckey ]; then
+	echo "Creating ec key for Meet..."
+	openssl ec -in $ecparam -out $eckey.tmp >/dev/null 2>&1
+	chown 65534:65534 $eckey.tmp
+	mv $eckey.tmp $eckey
+fi
+
 echo "SSL certs:"
 ls -l /kopano/ssl/*.*
 

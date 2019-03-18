@@ -18,7 +18,18 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
-# TODO use jq to modify /usr/share/kopano-kweb/www/config/kopano/meet.json
+CONFIG_JSON="/usr/share/kopano-kweb/www/config/kopano/meet.json"
+echo "Updating $CONFIG_JSON"
+for setting in $(compgen -A variable KCCONF_MEET); do
+	setting2=${setting#KCCONF_MEET_}
+	# dots in setting2 need to be escaped to not be handled as separate entities in the json file
+	jq ".\"${setting2//_/\".\"}\" = \"${!setting}\"" $CONFIG_JSON | sponge $CONFIG_JSON
+done
+
+# enable Kopano WebApp in the app switcher
+jq '.apps += {"enabled": ["kopano-webapp"]}' $CONFIG_JSON | sponge $CONFIG_JSON
+
+#cat $CONFIG_JSON
 
 sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
 # shellcheck disable=SC2046
@@ -26,4 +37,3 @@ export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
 # cleaning up env variables
 unset "${!KCCONF_@}"
 exec kopano-kwebd serve
-
