@@ -9,10 +9,11 @@ if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	exit 1
 fi
 
-[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && apt update
-[ ! -z "$ADDITIONAL_KOPANO_PACKAGES" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
-	if [ $(dpkg-query -W -f='${Status}' "$installpkg" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-		apt --assume-yes install "$installpkg";
+[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
+[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
+	# shellcheck disable=SC2016 disable=SC2086
+	if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
+		apt --assume-yes install "$installpkg"
 	fi
 done
 
@@ -88,6 +89,7 @@ kapid)
 		-timeout 360s
 	LC_CTYPE=en_US.UTF-8
 	sed -i s/\ *=\ */=/g /etc/kopano/kapid.cfg
+	# shellcheck disable=SC2046
 	export $(grep -v '^#' /etc/kopano/kapid.cfg | xargs -d '\n')
 	kopano-kapid setup
 	# cleaning up env variables

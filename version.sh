@@ -7,10 +7,17 @@ fi
 source base/create-kopano-repo.sh
 
 component=${1:-core}
-COMPONENT=$(echo "$component" | tr a-z A-Z)
 
-if [ -e ./env ]; then
-	source ./env
+if [ -e ./.env ]; then
+	# this is a kind of ugly hack to be able to source the env file
+	# this is sadly needed since postfix in https://github.com/tomav/docker-mailserver/ cannot deal with quotes values
+	tmpfile=$(mktemp /tmp/kopano-docker-env.XXXXXX)
+	sed -i '/LDAP_QUERY_FILTER/s/^/#/g' "$tmpfile"
+	sed -i '/SASLAUTHD_LDAP_FILTER/s/^/#/g' "$tmpfile"
+	# shellcheck disable=SC1090
+	source "$tmpfile"
+else
+	tmpfile="undefined"
 fi
 
 case $component in
@@ -49,3 +56,6 @@ filename=$(h5ai_query "$component")
 currentVersion=$(version_from_filename "$filename")
 
 echo "$currentVersion"
+if [ -e "$tmpfile" ]; then
+	rm "$tmpfile"
+fi

@@ -1,5 +1,5 @@
 ARG docker_repo=zokradonh
-FROM ${docker_repo}/kopano_base
+FROM ${docker_repo}/kopano_base:latest
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -9,6 +9,8 @@ ARG KOPANO_MEET_REPOSITORY_URL="file:/kopano/repo/meet"
 ARG KOPANO_MEET_VERSION=newest
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG RELEASE_KEY_DOWNLOAD=0
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Kopano Core and refresh ca-certificates
 RUN \

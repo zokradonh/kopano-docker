@@ -3,7 +3,6 @@
 mkdir -p /kopano/ssl/clients/
 
 set -euo pipefail
-IFS=$'\n\t'
 
 # clean out any potential port numbers
 FQDN=${FQDN%:*}
@@ -19,7 +18,7 @@ if [ ! -f /kopano/ssl/ca.pem ]; then
 	for s in kopano_server kopano_dagent kopano_monitor kopano_search kopano_spooler kopano_webapp; do
 		if [ ! -f /kopano/ssl/$s.pem ]; then
 			echo "Creating $s certificate..."
-			easypki create --ca-name internalca --organizational-unit $s --expire 3650 --dns $s --dns $FQDN $s
+			easypki create --ca-name internalca --organizational-unit $s --expire 3650 --dns $s --dns "$FQDN" $s
 			cp /kopano/easypki/internalca/keys/$s.key /kopano/ssl/$s.pem.tmp
 			cat /kopano/easypki/internalca/certs/$s.crt >> /kopano/ssl/$s.pem.tmp
 			openssl x509 -in /kopano/easypki/internalca/certs/$s.crt -pubkey -noout >  /kopano/ssl/clients/$s-public.pem.tmp
@@ -41,7 +40,7 @@ fi
 signkey="/kopano/ssl/konnectd-tokens-signing-key.pem"
 if [ ! -f $signkey ]; then
 	echo "Creating Konnect token signing key..."
-	openssl genpkey -algorithm RSA -out $signkey.tmp -pkeyopt rsa_keygen_bits:4096 2&> /dev/null
+	openssl genpkey -algorithm RSA -out $signkey.tmp -pkeyopt rsa_keygen_bits:4096 >/dev/null 2>&1
 	chmod go+r $signkey.tmp
 	mv $signkey.tmp $signkey
 fi
@@ -52,6 +51,27 @@ if [ ! -f $secretkey ]; then
 	echo "Creating Kapi secret key..."
 	openssl rand -out $secretkey.tmp -hex 64
 	mv $secretkey.tmp $secretkey
+fi
+
+# Meet guest mode
+ecparam="/kopano/ssl/ecparam.pem"
+if [ ! -f $ecparam ]; then
+	echo "Creating ec param key for Meet..."
+	openssl ecparam -name prime256v1 -genkey -noout -out $ecparam.tmp >/dev/null 2>&1
+	mv $ecparam.tmp $ecparam
+fi
+
+# create registration.yml so that konnect can write to it
+touch /kopano/ssl/konnectd-identifier-registration.yaml
+# chown to the numerical representation of nobody/nogroup
+chown 65534:65534 /kopano/ssl/konnectd-identifier-registration.yaml
+
+eckey="/kopano/ssl/meet-kwmserver.pem"
+if [ ! -f $eckey ]; then
+	echo "Creating ec key for Meet..."
+	openssl ec -in $ecparam -out $eckey.tmp >/dev/null 2>&1
+	chown 65534:65534 $eckey.tmp
+	mv $eckey.tmp $eckey
 fi
 
 echo "SSL certs:"

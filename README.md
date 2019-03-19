@@ -32,11 +32,52 @@ Yes, indeed. You could for example use this to easily try out newer Kopano WebAp
 
 And last but not least this project also offers a `zokradonh/kopano_utils` image to easily run tools such as `kopano-backup`, `kopano-migration-pst`, `kopano-migration-imap` and all the other utilities that are bundles with Kopano. See [below](#some-more-commands-for-those-unfamilar-with-docker-compose) to see how to run `zokradonh/kopano_utils`.
 
-### Need to adjust any values after the initial run of `setup.sh`?
+### Additional configuration / Need to adjust any values after the initial run of `setup.sh`?
 
 If you want to modify some of the values from the `setup.sh` run you can simply edit `.env` in your favourite editor. Repeated runs of `setup.sh` will neither modify `docker-compose.yml` nor `.env`. In the ´.env´ file you will also find some given defaults like ldap query filters and the local ports for the reverse proxy.
 
 Additionally a dedicated env file is created for each container (at least where that would make sense). The env file has the container name as part of the file name. For example for the `kopano_server` container the filename is `kopano_server.env`. These additional env files are auto created when running `setup.sh`
+
+Any additional configuration should be done through environment variables and not done in the actual container. The images working with configuration files (e.g. `kopano_core`, `kopano_webapp`, `kopano_meet`) have a mechanism built in to translate env variables into configuration files. For services that can directly work with env variables (e.g. `kopano_konnect`, ´kopano_kwmserver´) these can be specified directly.
+
+Examples of env variables:
+
+```
+KCCONF_KWEBD_TLS=no
+^      ^     ^   ^
+|      |     |   |
+General prefix   |
+       |     |   |
+       Name of the relevant configuration file (kwebd.cfg in this case)
+             |   |
+             Name of the configuration option in the configuration file
+                 |
+                 Value of the configuration option
+
+KCCONF_WEBAPP_CLIENT_TIMEOUT=3600
+^      ^      ^              ^
+|      |      |              |
+General prefix|              |
+       |      |              |
+       Special value to signal the change should go into config.php belonging to WebApp
+              |              |
+              Name of the configuration option in the configuration file
+                             |
+                             Value of the configuration option
+
+KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_USER_DEFAULT_ENABLE_MDM=true
+^      ^            ^   ^                                  ^
+|      |            |   |                                  |
+General prefix      |   |                                  |
+       |            |   |                                  |
+       Special value to signal the change should go into config-$identifier.php (located in /etc/kopano/webapp)
+                    |   |                                  |
+                    Identifier for the configuration file (config-$identifier.php)
+                        |                                  |
+                        Name of the configuration option in the configuration file
+                                                           |
+                                                           Value of the configuration option
+```
 
 ### How to use a newer version than the one available from the Docker Hub?
 

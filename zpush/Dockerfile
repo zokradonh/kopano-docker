@@ -20,6 +20,8 @@ ENV KOPANO_ZPUSH_VERSION=$KOPANO_ZPUSH_VERSION
 ARG RELEASE_KEY_DOWNLOAD=0
 ENV RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # install Kopano WebApp and refresh ca-certificates
 RUN \
     # community download and package as apt source repository
