@@ -38,12 +38,14 @@ fi
 # start regular service
 case "$SERVICE_TO_START" in
 server)
+	# determine db connection mode (unix vs. network socket)
+	if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then DB_CONN="file://$KCCONF_SERVER_MYSQL_SOCKET"; else DB_CONN="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"; fi
 	/kopano/services/kopano-public-store.sh &
 	/kopano/services/kopano-users.sh &
 	dockerize \
 		-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
 		-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
-		-wait tcp://db:3306 \
+		-wait "$DB_CONN" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -115,7 +117,7 @@ search)
 spooler)
 	dockerize \
 		-wait file://var/run/kopano/server.sock \
-		-wait tcp://mail:25 \
+		-wait tcp://$KCCONF_SPOOLER_SMTP_SERVER:25 \
 		-timeout 1080s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
