@@ -1,7 +1,7 @@
 # (unofficial) Kopano Docker Images
 [![Build Status](https://travis-ci.com/zokradonh/kopano-docker.svg?branch=master)](https://travis-ci.com/zokradonh/kopano-docker)
 
-This repository contains an easy to replicate recipe to spin up a [Kopano](https://kopano.com/) demo environment, which can (through modification of `.env` and possibly `docker-compose.yml`) also be used for production environments.
+This repository contains an easy to replicate recipe to spin up a [Kopano](https://kopano.com/) demo environment, which can (through modification of `.env` and possibly `docker-compose.yml`/`docker-compose.override.yml`) also be used for production environments.
 
 ## How to get started?
 
@@ -78,6 +78,8 @@ General prefix      |   |                                  |
                                                            |
                                                            Value of the configuration option
 ```
+
+The compose file itself is part of the git repository and should not be edited directly. Instead a `docker-compose.override.yml` (will be ignored by git) file can be created to override and extend the default one. See https://docs.docker.com/compose/extends/ for more information.
 
 ### How to use a newer version than the one available from the Docker Hub?
 
