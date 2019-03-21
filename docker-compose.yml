@@ -6,7 +6,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_web
     restart: unless-stopped
     ports:
-      - "2015:2015"
+      - "${CADDY:-2015}:2015"
       - "${HTTP:-80}:80"
       - "${HTTPS:-443}:443"
     environment:
