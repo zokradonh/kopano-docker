@@ -117,7 +117,7 @@ search)
 spooler)
 	dockerize \
 		-wait file://var/run/kopano/server.sock \
-		-wait tcp://$KCCONF_SPOOLER_SMTP_SERVER:25 \
+		-wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":25 \
 		-timeout 1080s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
