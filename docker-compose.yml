@@ -470,7 +470,6 @@ services:
     container_name: kopano_meet
     environment:
      - SERVICE_TO_START=meet
-     - KCCONF_KWEBD_TLS=no
      - KCCONF_MEET_guests_enabled=true
      - KCCONF_MEET_disableFullGAB=false
     env_file:
