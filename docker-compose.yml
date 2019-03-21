@@ -493,6 +493,19 @@ services:
     networks:
      - web-net
 
+  scheduler:
+    image: scheduler.local
+    build:
+      context: scheduler
+    container_name: scheduler
+    restart: always
+    command: supercronic /etc/crontab
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./scheduler/crontab:/etc/crontab:ro
+
 volumes:
   web:
   ldap:

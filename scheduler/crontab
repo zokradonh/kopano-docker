@@ -1,0 +1,3 @@
+#*/1 * * * * echo "hello"
+0 22 * * * docker exec kopano_zpush /usr/share/z-push/tools/gab-sync/gab-sync.php -a sync
+
