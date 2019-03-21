@@ -1,0 +1,7 @@
+version: "3.5"
+
+services:
+  # disable services
+  mail:
+    image: hello-world
+    restart: "no"
