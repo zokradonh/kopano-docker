@@ -27,11 +27,10 @@ install:
   - "./test.exp"
   - make check-scripts
   - make build-all
-  - make test-ci
 script:
-    - curl -sSf --insecure https://localhost > /dev/null
+  - mate test-ci
 after_failure:
-    - timeout 3s docker-compose logs
+  - timeout 3s docker-compose logs
 deploy:
   - provider: script
     script: make publish

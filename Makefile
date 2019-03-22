@@ -215,10 +215,12 @@ test:
 test-update-env:
 	docker-compose -f $(COMPOSE_FILE) up -d
 
-test-ci: build-all
-	docker-compose -f $(COMPOSE_FILE) down -v || true
-	docker-compose -f $(COMPOSE_FILE) up -d
-	docker-compose -f $(COMPOSE_FILE) ps | grep "Exit"
+test-ci:
+	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml build
+	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml up -d
+	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml ps
+	docker wait kopano_test_1
+	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop
 
 test-quick:
 	docker-compose -f $(COMPOSE_FILE) stop || true
