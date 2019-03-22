@@ -27,7 +27,7 @@ install:
   - "./test.exp"
   - make check-scripts
   - make build-all
-  - make test
+  - make test-ci
 script:
     - curl -sSf --insecure https://localhost > /dev/null
 after_failure:

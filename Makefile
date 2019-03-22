@@ -215,6 +215,11 @@ test:
 test-update-env:
 	docker-compose -f $(COMPOSE_FILE) up -d
 
+test-ci: build-all
+	docker-compose -f $(COMPOSE_FILE) down -v || true
+	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) ps | grep "Exit"
+
 test-quick:
 	docker-compose -f $(COMPOSE_FILE) stop || true
 	docker-compose -f $(COMPOSE_FILE) up -d
