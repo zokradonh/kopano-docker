@@ -12,4 +12,4 @@ exec dockerize \
 	-wait tcp://kopano_zpush:80 \
 	-wait file://var/run/kopano/server.sock \
 	-wait tcp://"${KCCONF_SERVER_MYSQL_HOST}":3306 \
-	-timeout 360s
+	-timeout 120s
