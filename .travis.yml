@@ -28,7 +28,7 @@ install:
   - make check-scripts # rerun check-scripts to see if output is different with .env in place
   - make build-all
 script:
-  - mate test-ci
+  - make test-ci
 after_failure:
   - timeout 3s docker-compose logs
 deploy:
