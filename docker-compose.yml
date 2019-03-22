@@ -3,10 +3,10 @@ version: "3.5"
 services:
   web:
     image: ${docker_repo:-zokradonh}/kopano_web
-    container_name: web
+    container_name: ${COMPOSE_PROJECT_NAME}_web
     restart: unless-stopped
     ports:
-      - "2015:2015"
+      - "${CADDY:-2015}:2015"
       - "${HTTP:-80}:80"
       - "${HTTPS:-443}:443"
     environment:
@@ -29,7 +29,7 @@ services:
 
   ldap:
     image: ${docker_repo:-zokradonh}/kopano_ldap_demo
-    container_name: ldap
+    container_name: ${COMPOSE_PROJECT_NAME}_ldap
     ports:
       - ${LDAPPORT:-389}:389
     environment:
@@ -50,7 +50,7 @@ services:
 
   ldap-admin:
     image: osixia/phpldapadmin:0.7.2
-    container_name: ldap-admin
+    container_name: ${COMPOSE_PROJECT_NAME}_ldap-admin
     depends_on:
       - ldap
     environment:
@@ -63,7 +63,7 @@ services:
 
   password-self-service:
     image: tiredofit/self-service-password:3.0
-    container_name: password-self-service
+    container_name: ${COMPOSE_PROJECT_NAME}_password-self-service
     domainname: ${LDAP_DOMAIN}
     depends_on:
       - ldap
@@ -105,7 +105,7 @@ services:
     restart: unless-stopped
     hostname: mail
     domainname: ${LDAP_DOMAIN}
-    container_name: mail
+    container_name: ${COMPOSE_PROJECT_NAME}_mail
     depends_on:
       - ldap
     ports:
@@ -162,7 +162,7 @@ services:
   db:
     image: mariadb:10.3.10-bionic
     restart: unless-stopped
-    container_name: kopano_db
+    container_name: ${COMPOSE_PROJECT_NAME}_db
     volumes:
       - mysql/:/var/lib/mysql
     environment:
@@ -182,7 +182,7 @@ services:
   
   kopano_ssl:
     image: ${docker_repo:-zokradonh}/kopano_ssl
-    container_name: kopano_ssl
+    container_name: ${COMPOSE_PROJECT_NAME}_ssl
     environment:
       - FQDN=${FQDN}
       - PKI_COUNTRY=NL
@@ -194,7 +194,7 @@ services:
   kopano_server:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     hostname: kopano_server
-    container_name: kopano_server
+    container_name: ${COMPOSE_PROJECT_NAME}_server
     depends_on:
       - db
       - ldap
@@ -242,7 +242,7 @@ services:
   kopano_webapp:
     image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
     hostname: kopano_webapp
-    container_name: kopano_webapp
+    container_name: ${COMPOSE_PROJECT_NAME}_webapp
     depends_on:
       - kopano_server
     volumes:
@@ -261,7 +261,7 @@ services:
   kopano_zpush:
     image: ${docker_repo:-zokradonh}/kopano_zpush:${ZPUSH_VERSION:-latest}
     hostname: kopano_zpush
-    container_name: kopano_zpush
+    container_name: ${COMPOSE_PROJECT_NAME}_zpush
     depends_on:
       - kopano_server
     volumes:
@@ -278,7 +278,7 @@ services:
 
   kopano_grapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: kopano_grapi
+    container_name: ${COMPOSE_PROJECT_NAME}_grapi
     depends_on:
       - kopano_server
     volumes:
@@ -293,7 +293,7 @@ services:
 
   kopano_kapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: kopano_kapi
+    container_name: ${COMPOSE_PROJECT_NAME}_kapi
     depends_on:
       - kopano_grapi
     volumes:
@@ -315,9 +315,10 @@ services:
   kopano_kdav:
     image: ${docker_repo:?err}/kopano_kdav:${KDAV_VERSION:-latest}
     hostname: kopano_kdav
-    container_name: kopano_kdav
+    container_name: ${COMPOSE_PROJECT_NAME}_kdav
     depends_on:
       - kopano_server
+    container_name: ${COMPOSE_PROJECT_NAME}_kdav
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -330,7 +331,7 @@ services:
 
   kopano_dagent:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: kopano_dagent
+    container_name: ${COMPOSE_PROJECT_NAME}_dagent
     depends_on:
       - kopano_server
     volumes:
@@ -348,7 +349,7 @@ services:
 
   kopano_spooler:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: kopano_spooler
+    container_name: ${COMPOSE_PROJECT_NAME}_spooler
     hostname: spooler
     domainname: ${LDAP_DOMAIN}
     depends_on:
@@ -370,7 +371,7 @@ services:
 
   kopano_gateway:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: kopano_gateway
+    container_name: ${COMPOSE_PROJECT_NAME}_gateway
     depends_on:
       - kopano_server
     ports:
@@ -390,7 +391,7 @@ services:
 
   kopano_ical:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: kopano_ical
+    container_name: ${COMPOSE_PROJECT_NAME}_ical
     depends_on:
       - kopano_server
     volumes:
@@ -408,7 +409,7 @@ services:
 
   kopano_monitor:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: kopano_monitor
+    container_name: ${COMPOSE_PROJECT_NAME}_monitor
     depends_on:
       - kopano_server
     volumes:
@@ -424,7 +425,7 @@ services:
 
   kopano_search:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: kopano_search
+    container_name: ${COMPOSE_PROJECT_NAME}_search
     depends_on:
       - kopano_server
     volumes:
@@ -441,7 +442,7 @@ services:
 
   kopano_konnect:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
-    container_name: kopano_konnect
+    container_name: ${COMPOSE_PROJECT_NAME}_konnect
     command: wrapper.sh
     depends_on:
       - kopano_server
@@ -461,7 +462,7 @@ services:
 
   kopano_playground:
     image: ${docker_repo:-zokradonh}/kopano_playground
-    container_name: kopano_playground
+    container_name: ${COMPOSE_PROJECT_NAME}_playground
     depends_on:
      - kopano_kapi
      - kopano_konnect
@@ -471,7 +472,7 @@ services:
 
   kopano_kwmserver:
     image: ${docker_repo:-zokradonh}/kopano_kwmserver:${KWM_VERSION:-latest}
-    container_name: kopano_kwmserver
+    container_name: ${COMPOSE_PROJECT_NAME}_kwmserver
     command: wrapper.sh
     depends_on:
      - kopano_kapi
@@ -490,7 +491,7 @@ services:
 
   kopano_meet:
     image: ${docker_repo:-zokradonh}/kopano_meet:${MEET_VERSION:-latest}
-    container_name: kopano_meet
+    container_name: ${COMPOSE_PROJECT_NAME}_meet
     environment:
      - SERVICE_TO_START=meet
      - KCCONF_MEET_guests_enabled=true
