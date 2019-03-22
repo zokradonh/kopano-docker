@@ -218,7 +218,6 @@ services:
       - KCCONF_SERVER_SSLKEYS_PATH=/kopano/ssl/clients
       - KCCONF_SERVER_PROXY_HEADER=* # delete line if webapp is not behind reverse proxy
       - KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS=${POSTMASTER_ADDRESS}
-      - KCCONF_SERVER_SYNC_GAB_REALTIME=no
       - KCCONF_LDAP_LDAP_URI=${LDAP_SERVER}
       - KCCONF_LDAP_LDAP_BIND_USER=${LDAP_BIND_DN}
       - KCCONF_LDAP_LDAP_BIND_PASSWD=${LDAP_BIND_PW}
@@ -229,7 +228,6 @@ services:
       - KCCONF_SERVER_ENABLE_SSO=yes
       - KCCONF_SERVER_KCOIDC_ISSUER_IDENTIFIER=https://${FQDN}
       - KCCONF_SERVER_KCOIDC_INSECURE_SKIP_VERIFY=${INSECURE}
-      - KCCONF_SERVER_KCOIDC_INITIALIZE_TIMEOUT=360
     env_file:
       - kopano_server.env
     networks:
@@ -245,6 +243,8 @@ services:
     image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
     hostname: kopano_webapp
     container_name: ${COMPOSE_PROJECT_NAME}_webapp
+    depends_on:
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -262,6 +262,8 @@ services:
     image: ${docker_repo:-zokradonh}/kopano_zpush:${ZPUSH_VERSION:-latest}
     hostname: kopano_zpush
     container_name: ${COMPOSE_PROJECT_NAME}_zpush
+    depends_on:
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -277,6 +279,8 @@ services:
   kopano_grapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
+    depends_on:
+      - kopano_server
     volumes:
       - kopanosocket/:/run/kopano
     environment:
@@ -312,6 +316,9 @@ services:
     image: ${docker_repo:?err}/kopano_kdav:${KDAV_VERSION:-latest}
     hostname: kopano_kdav
     container_name: ${COMPOSE_PROJECT_NAME}_kdav
+    depends_on:
+      - kopano_server
+    container_name: ${COMPOSE_PROJECT_NAME}_kdav
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -325,6 +332,8 @@ services:
   kopano_dagent:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: ${COMPOSE_PROJECT_NAME}_dagent
+    depends_on:
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -343,6 +352,9 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_spooler
     hostname: spooler
     domainname: ${LDAP_DOMAIN}
+    depends_on:
+      - kopano_server
+      - mail
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -360,6 +372,8 @@ services:
   kopano_gateway:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: ${COMPOSE_PROJECT_NAME}_gateway
+    depends_on:
+      - kopano_server
     ports:
       - "${IMAPPORT:-143}:143"
     volumes:
@@ -378,6 +392,8 @@ services:
   kopano_ical:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: ${COMPOSE_PROJECT_NAME}_ical
+    depends_on:
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -394,6 +410,8 @@ services:
   kopano_monitor:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: ${COMPOSE_PROJECT_NAME}_monitor
+    depends_on:
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -408,6 +426,8 @@ services:
   kopano_search:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     container_name: ${COMPOSE_PROJECT_NAME}_search
+    depends_on:
+      - kopano_server
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -424,6 +444,8 @@ services:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
     container_name: ${COMPOSE_PROJECT_NAME}_konnect
     command: wrapper.sh
+    depends_on:
+      - kopano_server
     volumes:
      - kopanossl/:/kopano/ssl
      - kopanosocket/:/run/kopano
@@ -472,7 +494,6 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_meet
     environment:
      - SERVICE_TO_START=meet
-     - KCCONF_KWEBD_TLS=no
      - KCCONF_MEET_guests_enabled=true
      - KCCONF_MEET_disableFullGAB=false
     env_file:
