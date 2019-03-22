@@ -25,7 +25,7 @@ before_install:
 install:
   - make check-scripts
   - "./test.exp"
-  - make check-scripts
+  - make check-scripts # rerun check-scripts to see if output is different with .env in place
   - make build-all
 script:
   - mate test-ci
