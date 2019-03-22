@@ -12,7 +12,7 @@ kcconf.configkopano({
         'server_listen': "*:236",
         'server_listen_tls': "*:237",
         'sync_gab_realtime': "no",
-        'kdoidc_initialize_timeout': "360"
+        'kcoidc_initialize_timeout': "360"
     }
 })
 
