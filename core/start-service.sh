@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
+KCCONF_SERVER_MYSQL_SOCKET=${KCCONF_SERVER_MYSQL_SOCKET:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 
@@ -39,7 +40,11 @@ fi
 case "$SERVICE_TO_START" in
 server)
 	# determine db connection mode (unix vs. network socket)
-	if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then DB_CONN="file://$KCCONF_SERVER_MYSQL_SOCKET"; else DB_CONN="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"; fi
+	if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
+		DB_CONN="file://$KCCONF_SERVER_MYSQL_SOCKET"
+	else
+		DB_CONN="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
+	fi
 	/kopano/services/kopano-public-store.sh &
 	/kopano/services/kopano-users.sh &
 	dockerize \
