@@ -3,7 +3,6 @@ version: "3.5"
 services:
   web:
     image: ${docker_repo:-zokradonh}/kopano_web
-    container_name: ${COMPOSE_PROJECT_NAME}_web
     restart: unless-stopped
     ports:
       - "${CADDY:-2015}:2015"
@@ -29,6 +28,7 @@ services:
 
   ldap:
     image: ${docker_repo:-zokradonh}/kopano_ldap_demo
+    restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_ldap
     ports:
       - ${LDAPPORT:-389}:389
@@ -50,20 +50,17 @@ services:
 
   ldap-admin:
     image: osixia/phpldapadmin:0.7.2
-    container_name: ${COMPOSE_PROJECT_NAME}_ldap-admin
     depends_on:
       - ldap
     environment:
       - PHPLDAPADMIN_LDAP_HOSTS=ldap
       - PHPLDAPADMIN_HTTPS=false
-    command: -l debug
     networks:
       - ldap-net
       - web-net
 
   password-self-service:
     image: tiredofit/self-service-password:3.0
-    container_name: ${COMPOSE_PROJECT_NAME}_password-self-service
     domainname: ${LDAP_DOMAIN}
     depends_on:
       - ldap
@@ -182,7 +179,6 @@ services:
   
   kopano_ssl:
     image: ${docker_repo:-zokradonh}/kopano_ssl
-    container_name: ${COMPOSE_PROJECT_NAME}_ssl
     environment:
       - FQDN=${FQDN}
       - PKI_COUNTRY=NL
@@ -331,7 +327,6 @@ services:
 
   kopano_dagent:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: ${COMPOSE_PROJECT_NAME}_dagent
     depends_on:
       - kopano_server
     volumes:
@@ -349,7 +344,6 @@ services:
 
   kopano_spooler:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: ${COMPOSE_PROJECT_NAME}_spooler
     hostname: spooler
     domainname: ${LDAP_DOMAIN}
     depends_on:
@@ -371,7 +365,6 @@ services:
 
   kopano_gateway:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: ${COMPOSE_PROJECT_NAME}_gateway
     depends_on:
       - kopano_server
     ports:
@@ -391,7 +384,6 @@ services:
 
   kopano_ical:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: ${COMPOSE_PROJECT_NAME}_ical
     depends_on:
       - kopano_server
     volumes:
@@ -409,7 +401,6 @@ services:
 
   kopano_monitor:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    container_name: ${COMPOSE_PROJECT_NAME}_monitor
     depends_on:
       - kopano_server
     volumes:
@@ -442,7 +433,6 @@ services:
 
   kopano_konnect:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
-    container_name: ${COMPOSE_PROJECT_NAME}_konnect
     command: wrapper.sh
     depends_on:
       - kopano_server
@@ -462,7 +452,6 @@ services:
 
   kopano_playground:
     image: ${docker_repo:-zokradonh}/kopano_playground
-    container_name: ${COMPOSE_PROJECT_NAME}_playground
     depends_on:
      - kopano_kapi
      - kopano_konnect
@@ -472,7 +461,6 @@ services:
 
   kopano_kwmserver:
     image: ${docker_repo:-zokradonh}/kopano_kwmserver:${KWM_VERSION:-latest}
-    container_name: ${COMPOSE_PROJECT_NAME}_kwmserver
     command: wrapper.sh
     depends_on:
      - kopano_kapi
@@ -491,7 +479,6 @@ services:
 
   kopano_meet:
     image: ${docker_repo:-zokradonh}/kopano_meet:${MEET_VERSION:-latest}
-    container_name: ${COMPOSE_PROJECT_NAME}_meet
     environment:
      - SERVICE_TO_START=meet
      - KCCONF_MEET_guests_enabled=true
