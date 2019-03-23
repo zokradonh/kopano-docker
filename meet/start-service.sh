@@ -32,6 +32,7 @@ jq '.apps += {"enabled": ["kopano-webapp"]}' $CONFIG_JSON | sponge $CONFIG_JSON
 #cat $CONFIG_JSON
 
 sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
+export tls=no
 # shellcheck disable=SC2046
 export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
 # cleaning up env variables
