@@ -215,6 +215,14 @@ test:
 test-update-env:
 	docker-compose -f $(COMPOSE_FILE) up -d
 
+test-ci:
+	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml build
+	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml up -d
+	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml ps
+	docker wait kopano_test_1
+	docker logs --tail 10 kopano_test_1
+	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
+
 test-quick:
 	docker-compose -f $(COMPOSE_FILE) stop || true
 	docker-compose -f $(COMPOSE_FILE) up -d

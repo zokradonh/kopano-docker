@@ -1,0 +1,16 @@
+version: "3.5"
+
+services:
+  test:
+    build:
+      context: tests/startup-test
+    networks:
+      - kopano-net
+      - ldap-net
+      - web-net
+    volumes:
+      - kopanodata/:/kopano/data
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
+    environment:
+      - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
