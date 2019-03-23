@@ -220,6 +220,7 @@ test-ci:
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml up -d
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml ps
 	docker wait kopano_test_1
+	docker logs --tail 10 kopano_test_1
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop
 
 test-quick:
