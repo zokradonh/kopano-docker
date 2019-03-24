@@ -446,6 +446,7 @@ services:
     environment:
      - FQDN=${FQDN}
      - allow_client_guests=yes
+     - allow_dynamic_client_registration=yes
     env_file:
      - kopano_konnect.env
     networks:
