@@ -59,16 +59,35 @@ echo "Configuring Z-Push for use behind a reverse proxy"
 php_cfg_gen /etc/z-push/z-push.conf.php USE_CUSTOM_REMOTE_IP_HEADER HTTP_X_FORWARDED_FOR
 
 # configuring z-push from env
-for setting in $(compgen -A variable KCCONF_WEBAPP_); do
+for setting in $(compgen -A variable KCCONF_ZPUSH_); do
 	setting2=${setting#KCCONF_ZPUSH_}
 	php_cfg_gen /etc/z-push/z-push.conf.php "${setting2}" "${!setting}"
 done
 
+# configuring z-push gabsync
 php_cfg_gen /etc/z-push/gabsync.conf.php USERNAME SYSTEM
-# configuring z-push gabsync from env
-for setting in $(compgen -A variable KCCONF_WEBAPP_); do
-	setting2=${setting#KCCONF_ZPUSHGABSYNC_}
+
+for setting in $(compgen -A variable KCCONF_ZPUSHGABSYNC_); do
+	setting2=${setting#KCCONF_ZPUSHGAVSYNC_}
 	php_cfg_gen /etc/z-push/z-push.conf.php "${setting2}" "${!setting}"
+done
+
+# configuring z-push sql state engine
+for setting in $(compgen -A variable KCCONF_ZPUSHSQL_); do
+	setting2=${setting#KCCONF_ZPUSHSQL_}
+	php_cfg_gen /etc/z-push/state-sql.conf.php "${setting2}" "${!setting}"
+done
+
+# configuring z-push memcached
+for setting in $(compgen -A variable KCCONF_ZPUSHMEMCACHED_); do
+	setting2=${setting#KCCONF_ZPUSHMEMCACHED_}
+	php_cfg_gen /etc/z-push/memcached.conf.php "${setting2}" "${!setting}"
+done
+
+# configuring z-push gab2contacts
+for setting in $(compgen -A variable KCCONF_ZPUSHGA2CONTACTS_); do
+	setting2=${setting#KCCONF_ZPUSHSQL_}
+	php_cfg_gen /etc/z-push/gab2contacts.conf.php "${setting2}" "${!setting}"
 done
 
 echo "Ensure config ownership"
