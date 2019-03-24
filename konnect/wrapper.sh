@@ -21,6 +21,11 @@ if [ "$allow_client_guests" = "yes" ]; then
 	set -- "$@" "--allow-client-guests"
 fi
 
+# shellcheck disable=SC2154
+if [ "$allow_dynamic_client_registration" = "yes" ]; then
+	set -- "$@" "--allow-dynamic-client-registration"
+fi
+
 dockerize \
 	-wait file:///kopano/ssl/konnectd-tokens-signing-key.pem \
 	-wait file:///kopano/ssl/konnectd-encryption.key \
