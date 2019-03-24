@@ -30,7 +30,6 @@ echo "Configuring Z-Push for use behind a reverse proxy"
 sed -e "s#define([\"']USE_CUSTOM_REMOTE_IP_HEADER[\"'],\s*false)#define('USE_CUSTOM_REMOTE_IP_HEADER', 'HTTP_X_FORWARDED_FOR')#" \
     -i /etc/z-push/z-push.conf.php
 
-
 sed -e "s#define([\"']USERNAME[\"'],\s*'')#define('USERNAME', 'SYSTEM')#" \
     -i /etc/z-push/gabsync.conf.php
 
