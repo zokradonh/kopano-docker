@@ -10,6 +10,12 @@ for cronvar in ${!CRON_*}; do
 	echo "$cronvalue" >> "$cronfile"
 done
 
+for cronvar in ${!CRONDELAYED_*}; do
+	cronvalue=${!cronvar}
+	echo "Adding $cronvalue to crontab"
+	echo "$cronvalue" >> "$cronfile"
+done
+
 # wait for kopano_server statup to run one-off commands
 dockerize \
 	-wait tcp://kopano_server:236 \
