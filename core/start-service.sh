@@ -45,8 +45,6 @@ server)
 	else
 		DB_CONN="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
 	fi
-	/kopano/services/kopano-public-store.sh &
-	/kopano/services/kopano-users.sh &
 	dockerize \
 		-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
 		-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
