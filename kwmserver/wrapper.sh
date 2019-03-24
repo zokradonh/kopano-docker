@@ -23,7 +23,6 @@ fi
 
 # kwmserver turn
 # shellcheck disable=SC2154
-
 if [ -z "$turn_service_url" ]; then
 	turn_service_url=https://turnauth.kopano.com/turnserverauth/
 fi
@@ -33,9 +32,15 @@ if [ -n "$turn_service_url" ]; then
 fi
 
 # shellcheck disable=SC2154
+if [ -n "$turn_service_credentials_user" ] && [ -n "$turn_service_credentials_password" ]; then
+	turn_service_credentials=/tmp/turn_service_credentials
+	echo "$turn_service_credentials_user":"$turn_service_credentials_password" > "$turn_service_credentials"
+fi
+
+# shellcheck disable=SC2154
 if [ -n "$turn_service_credentials" ]; then
-	set -- "$@" --turn-service-credentials="$$turn_service_credentials"
-	fi
+	set -- "$@" --turn-service-credentials="$turn_service_credentials"
+fi
 
 # shellcheck disable=SC2154
 if [ -n "$turn_server_shared_secret" ]; then
