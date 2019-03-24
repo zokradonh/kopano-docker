@@ -28,7 +28,7 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap-demo build-meet build-playground build-ssl build-utils build-web build-webapp build-zpush
+build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap-demo build-meet build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
 
 .PHONY: build
 build: component ?= base
@@ -79,6 +79,9 @@ build-playground:
 build-kdav:
 	component=kdav make build
 
+build-scheduler:
+	component=scheduler make build-simple
+
 build-ssl:
 	component=ssl make build-simple
 
@@ -127,6 +130,11 @@ tag-meet:
 	$(eval meet_version := \
 	$(shell docker run --rm $(docker_repo)/kopano_meet cat /kopano/buildversion | grep meet | cut -d- -f2 | cut -d+ -f1))
 	component=meet make tag-container
+
+tag-scheduler:
+	$(eval scheduler_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_scheduler env | grep SUPERCRONIC_VERSION | cut -d'=' -f2))
+	component=scheduler make tag-container
 
 tag-utils:
 	$(eval utils_version := \
@@ -181,6 +189,9 @@ publish-playground: build-playground
 publish-kdav: build-kdav #tag-kdav
 	#component=zpush make publish-container
 	docker push $(docker_repo)/kopano_kdav:latest
+
+publish-scheduler: build-scheduler tag-scheduler
+	component=scheduler make publish-container
 
 publish-ssl: build-ssl
 	docker push $(docker_repo)/kopano_ssl:latest

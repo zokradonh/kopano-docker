@@ -89,6 +89,19 @@ You can easily rebuild all images based on the currently available Kopano versio
 
 To be able to easily go back to a previous version you can also "tag" you Docker images by running e.g. `make tag-core`.
 
+### Recurring tasks and maintenance tasks within Kopano
+
+There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external ldap tree). For convinience this project includes a "schedular" container that will take care of this and that can be dynamically configured through env variables.
+
+The container knows two kinds of cron jobs (syntax is the same as within crontab):
+
+- `CRON_ZPUSHGAB=0 22 * * * docker exec kopano_zpush z-push-gabsync -a sync`
+  - Jobs prefixed with `CRON_` are executed once at container startup (and container startup will fail if one of the jobs fail) and then at the scheduled time.
+- `CRONDELAYED_KBACKUP=30 1 * * * docker run --rm -it zokradonh/kopano_utils kopano-backup -h`
+  - Jobs prefixed with `CRONDELAYED_` are only executed at the scheduled time.
+
+Instead of using the internal scheduler one can also just use an existing scheduler (cron on the docker host?) to execute these tasks.
+
 ### How to use the project with the official and supported Kopano releases?
 
 This project also makes it possible to build Docker images based on the official Kopano releases. For this the following section needs to be modified in `.env`:

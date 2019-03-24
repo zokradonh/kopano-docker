@@ -45,6 +45,7 @@ RUN \
         crudini \
         z-push-kopano \
         z-push-config-apache \
+        z-push-kopano-gabsync \
         ca-certificates \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
@@ -72,6 +73,12 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     # configure z-push
     mkdir -p /var/lib/z-push /var/log/z-push && \
     chown www-data:www-data /var/lib/z-push /var/log/z-push
+
+# Patch Gabsync to make it work
+# See https://jira.z-hub.io/browse/ZP-1463
+# https://forum.kopano.io/topic/1928/8-7-80-missing-php-files-in-php-mapi-deb-package-ubuntu-16-04
+# can be removed once gabsync is fixed - should not hurt
+RUN sed -i -e "s/set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH_CLI);/define('PATH_TO_ZPUSH', '..\/..\/backend\/kopano\/');\n    set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH_CLI . PATH_SEPARATOR . BASE_PATH_CLI . PATH_TO_ZPUSH);/" /usr/share/z-push/tools/gab-sync/gab-sync.php
 
 VOLUME /var/lib/z-push/
 

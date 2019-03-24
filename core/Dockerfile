@@ -54,7 +54,6 @@ ENV LANG=en_US.UTF-8
 ENV SERVICE_TO_START=server
 
 COPY defaultconfigs/ start-service.sh /kopano/
-COPY services /kopano/services
 
 WORKDIR /kopano/path
 
