@@ -446,7 +446,6 @@ services:
     environment:
      - FQDN=${FQDN}
      - allow_client_guests=yes
-     - log_level=debug
     env_file:
      - kopano_konnect.env
     networks:
