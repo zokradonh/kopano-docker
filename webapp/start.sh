@@ -29,7 +29,7 @@ php_cfg_gen() {
 			cat "$cfg_file"
 			exit 1
 		fi
-		else
+	else
 		echo "Error: Config file $cfg_file not found. Plugin not installed?"
 		local dir
 		dir=$(dirname "$cfg_file")

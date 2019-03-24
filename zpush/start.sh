@@ -7,6 +7,36 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 
+php_cfg_gen() {
+	local cfg_file="$1"
+	local cfg_setting="$2"
+	local cfg_value="$3"
+	if [ -e "$cfg_file" ]; then
+		if grep -q "$cfg_setting" "$cfg_file"; then
+			echo "Setting $cfg_setting = $cfg_value in $cfg_file"
+			case $cfg_value in
+			true|TRUE|false|FALSE)
+				echo boolean value
+				sed -ri "s#(\s*define).+${cfg_setting}.+#\tdefine(\x27${cfg_setting}\x27, ${cfg_value}\);#g" "$cfg_file"
+				;;
+			*)
+				sed -ri "s#(\s*define).+${cfg_setting}.+#\tdefine(\x27${cfg_setting}\x27, \x27${cfg_value}\x27\);#g" "$cfg_file"
+				;;
+			esac
+		else
+			echo "Error: Config option $cfg_setting not found in $cfg_file"
+			cat "$cfg_file"
+			exit 1
+		fi
+	else
+		echo "Error: Config file $cfg_file not found. Plugin not installed?"
+		local dir
+		dir=$(dirname "$cfg_file")
+		ls -la "$dir"
+		exit 1
+	fi
+}
+
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
 	# shellcheck disable=SC2016 disable=SC2086
@@ -15,23 +45,31 @@ set -eu # unset variables are errors & non-zero return values exit the whole scr
 	fi
 done
 
-echo "Ensure directories"
+# Ensure directories
 mkdir -p /run/sessions
 
 if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
 	echo "Z-Push is using the default: connection"
 else
 	echo "Z-Push is using an ip connection"
-	sed -e "s#define([\"']MAPI_SERVER[\"'],\s*[\"']default:[\"'])#define('MAPI_SERVER', 'https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano')#" \
-	    -i /etc/z-push/kopano.conf.php
+	php_cfg_gen /etc/z-push/kopano.conf.php MAPI_SERVER "https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano"
 fi
 
 echo "Configuring Z-Push for use behind a reverse proxy"
-sed -e "s#define([\"']USE_CUSTOM_REMOTE_IP_HEADER[\"'],\s*false)#define('USE_CUSTOM_REMOTE_IP_HEADER', 'HTTP_X_FORWARDED_FOR')#" \
-    -i /etc/z-push/z-push.conf.php
+php_cfg_gen /etc/z-push/z-push.conf.php USE_CUSTOM_REMOTE_IP_HEADER HTTP_X_FORWARDED_FOR
 
-sed -e "s#define([\"']USERNAME[\"'],\s*'')#define('USERNAME', 'SYSTEM')#" \
-    -i /etc/z-push/gabsync.conf.php
+# configuring z-push from env
+for setting in $(compgen -A variable KCCONF_WEBAPP_); do
+	setting2=${setting#KCCONF_ZPUSH_}
+	php_cfg_gen /etc/z-push/z-push.conf.php "${setting2}" "${!setting}"
+done
+
+php_cfg_gen /etc/z-push/gabsync.conf.php USERNAME SYSTEM
+# configuring z-push gabsync from env
+for setting in $(compgen -A variable KCCONF_WEBAPP_); do
+	setting2=${setting#KCCONF_ZPUSHGABSYNC_}
+	php_cfg_gen /etc/z-push/z-push.conf.php "${setting2}" "${!setting}"
+done
 
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
