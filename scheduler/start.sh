@@ -21,7 +21,7 @@ docker exec kopano_server kopano-storeadm -h default: -P || true
 for cronvar in ${!CRON_*}; do
 	cronvalue=${!cronvar}
 	croncommand=$(echo "$cronvalue" | cut -d ' ' -f 6-)
-	echo "Runnin: $croncommand"
+	echo "Running: $croncommand"
 	$croncommand
 done
 

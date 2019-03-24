@@ -31,7 +31,7 @@ sed -e "s#define([\"']USE_CUSTOM_REMOTE_IP_HEADER[\"'],\s*false)#define('USE_CUS
     -i /etc/z-push/z-push.conf.php
 
 
-sed -e "s#define([\"']USERNAME[\"']#define('USERNAME', 'SYSTEM');#" \
+sed -e "s#define([\"']USERNAME[\"'],\s*'')#define('USERNAME', 'SYSTEM')#" \
     -i /etc/z-push/gabsync.conf.php
 
 echo "Ensure config ownership"
