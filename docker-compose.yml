@@ -440,12 +440,14 @@ services:
     volumes:
      - kopanossl/:/kopano/ssl
      - kopanosocket/:/run/kopano
+     - /root/konnectd:/usr/local/bin/konnectd
     depends_on:
      - kopano_ssl
      - web
     environment:
      - FQDN=${FQDN}
      - allow_client_guests=yes
+     - log_level=debug
     env_file:
      - kopano_konnect.env
     networks:
