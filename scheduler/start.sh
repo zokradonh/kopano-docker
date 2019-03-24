@@ -4,6 +4,9 @@ set -eo pipefail
 
 cronfile=/etc/crontab
 
+# purge existing entries from crontab
+true > "$cronfile"
+
 for cronvar in ${!CRON_*}; do
 	cronvalue=${!cronvar}
 	echo "Adding $cronvalue to crontab"
