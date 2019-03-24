@@ -34,7 +34,7 @@ fi
 # shellcheck disable=SC2154
 if [ -n "$turn_service_credentials_user" ] && [ -n "$turn_service_credentials_password" ]; then
 	turn_service_credentials=/tmp/turn_service_credentials
-	echo $turn_service_credentials_user:$turn_service_credentials_password > $turn_service_credentials
+	echo "$turn_service_credentials_user":"$turn_service_credentials_password" > "$turn_service_credentials"
 fi
 
 # shellcheck disable=SC2154
