@@ -160,7 +160,7 @@ tag-zpush:
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-meet publish-playground publish-ssl publish-utils publish-web publish-webapp publish-zpush
+publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-meet publish-playground publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
 
 publish-container: component ?= base
 publish-container:
