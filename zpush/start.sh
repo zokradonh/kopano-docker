@@ -64,6 +64,12 @@ for setting in $(compgen -A variable KCCONF_ZPUSH_); do
 	php_cfg_gen /etc/z-push/z-push.conf.php "${setting2}" "${!setting}"
 done
 
+# configuring autodiscover
+for setting in $(compgen -A variable KCCONF_ZPUSHAUTODISCOVER_); do
+	setting2=${setting#KCCONF_ZPUSHAUTODISCOVER_}
+	php_cfg_gen /etc/z-push/autodiscover.conf.php "${setting2}" "${!setting}"
+done
+
 # configuring z-push gabsync
 php_cfg_gen /etc/z-push/gabsync.conf.php USERNAME SYSTEM
 
@@ -94,11 +100,12 @@ echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
 
 echo "Activate z-push log rerouting"
-touch /var/log/z-push/z-push.log
-touch /var/log/z-push/z-push-error.log
-chown www-data:www-data /var/log/z-push/z-push.log /var/log/z-push/z-push-error.log
+touch /var/log/z-push/{z-push.log,z-push-error.log,autodiscover.log,autodiscover-error.log}
+chown -R www-data:www-data /var/log/z-push
 tail --pid=$$ -F --lines=0 -q /var/log/z-push/z-push.log &
 tail --pid=$$ -F --lines=0 -q /var/log/z-push/z-push-error.log &
+tail --pid=$$ -F --lines=0 -q /var/log/z-push/autodiscover.log &
+tail --pid=$$ -F --lines=0 -q /var/log/z-push/autodiscover-error.log &
 
 echo "Starting Apache"
 rm -f /run/apache2/apache2.pid
