@@ -1,0 +1,40 @@
+version: "3.5"
+# example file to store attachments in s3 (provided by minio)
+# rename to docker-compose.override.yml and place it along the existing file to use it
+# (and change accesskey an secretkey below)
+
+services:
+  kopano_server:
+    depends_on:
+      - minio
+    environment:
+      - KCCONF_SERVER_ATTACHMENT_STORAGE=s3
+      - KCCONF_SERVER_LOG_LEVEL=6
+      - KCCONF_SERVER_ATTACHMENT_S3_HOSTNAME=minio:9000
+      - KCCONF_SERVER_ATTACHMENT_S3_PROTOCOL=http
+      - KCCONF_SERVER_ATTACHMENT_S3_URISTYLE=path
+      - KCCONF_SERVER_ATTACHMENT_S3_REGION=us-east-1
+      - KCCONF_SERVER_ATTACHMENT_S3_ACCESSKEYID=ACCESSKEY
+      - KCCONF_SERVER_ATTACHMENT_S3_SECRETACCESSKEY=SECRETKEY
+      - KCCONF_SERVER_ATTACHMENT_S3_BUCKETNAME=kopano
+      - KCCONF_SERVER_ATTACHMENT_PATH=attachments
+
+  minio:
+    image: minio/minio
+    ports:
+      - '9000:9000'
+    volumes:
+      - miniodata:/data
+      - minioconfig:/root/.minio
+    environment:
+      - "MINIO_ACCESS_KEY=ACCESSKEY"
+      - "MINIO_SECRET_KEY=SECRETKEY"
+    command: server /data
+    entrypoint: sh
+    command: -c 'mkdir -p /export/kopano && /usr/bin/minio server /export'
+    networks:
+      - kopano-net
+
+volumes:
+  miniodata:
+  minioconfig:
