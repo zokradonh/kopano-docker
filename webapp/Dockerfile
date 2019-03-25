@@ -66,8 +66,8 @@ RUN \
     # install
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
-        apache2 \
-        libapache2-mod-php7.0 \
+        kopano-kwebd \
+        php-fpm \
         crudini \
         ca-certificates \
         kopano-webapp \
@@ -75,30 +75,22 @@ RUN \
         ${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
-COPY apache2-kopano.conf /etc/apache2/sites-available/kopano.conf
-
 # configure basics
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8 && \
-    # configure apache
-    rm /etc/apache2/sites-enabled/* && \
-    sed -e 's,^ErrorLog.*,ErrorLog "|/bin/cat",' -i /etc/apache2/apache2.conf && \
-    sed -e "s,MaxSpareServers[^:].*,MaxSpareServers 5," -i /etc/apache2/mods-available/mpm_prefork.conf && \
-    a2disconf other-vhosts-access-log && \
-    a2ensite kopano kopano-webapp && \
-    echo "Listen 80" > /etc/apache2/ports.conf && \
-    # configure mod_php
-    a2enmod rewrite && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP upload_max_filesize 500M && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP post_max_size 500M && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP max_input_vars 1800 && \
-    crudini --set /etc/php/7.0/apache2/php.ini Session session.save_path /run/sessions
+    # configure php-fpm
+    mkdir -p /run/php && chown www-data:www-data /run/php && \
+    crudini --set /etc/php/7.0/fpm/php.ini PHP upload_max_filesize 500M && \
+    crudini --set /etc/php/7.0/fpm/php.ini PHP post_max_size 500M && \
+    crudini --set /etc/php/7.0/fpm/php.ini PHP max_input_vars 1800 && \
+    crudini --set /etc/php/7.0/fpm/php.ini Session session.save_path /run/sessions
 
 EXPOSE 80/tcp
 
 COPY start.sh /kopano/start.sh
+COPY extra.cfg /etc/kopano/kweb/extra.d/extra.cfg
 
 ENV LANG en_US.UTF-8
 

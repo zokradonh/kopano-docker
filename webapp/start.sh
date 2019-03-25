@@ -76,14 +76,18 @@ for setting in $(compgen -A variable KCCONF_WEBAPPPLUGIN_); do
 	php_cfg_gen /etc/kopano/webapp/config-"$identifier".php "${setting3}" "${!setting}"
 done
 
+sed -i '/#tls /c\tls = no' /etc/kopano/kwebd.cfg
+
+sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
+export tls=no
+# shellcheck disable=SC2046
+export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
+
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions /tmp/webapp
 
-echo "Starting Apache"
-rm -f /run/apache2/apache2.pid
-set +u
-# shellcheck disable=SC1091
-source /etc/apache2/envvars
 # cleaning up env variables
 unset "${!KCCONF_@}"
-exec /usr/sbin/apache2 -DFOREGROUND
+echo "Starting php-fpm"
+/usr/sbin/php-fpm7.0 -F &
+exec bash -x kopano-kwebd serve
