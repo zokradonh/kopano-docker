@@ -46,8 +46,8 @@ RUN \
         z-push-kopano \
         z-push-config-apache \
         z-push-kopano-gabsync \
-	z-push-autodiscover \
-	z-push-config-apache-autodiscover \
+        z-push-autodiscover \
+        z-push-config-apache-autodiscover \
         ca-certificates \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
