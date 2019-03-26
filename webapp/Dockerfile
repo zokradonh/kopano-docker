@@ -90,7 +90,7 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 EXPOSE 80/tcp
 
 COPY start.sh /kopano/start.sh
-COPY extra.cfg /etc/kopano/kweb/extra.d/extra.cfg
+COPY kweb.cfg /etc/kweb.cfg
 
 ENV LANG en_US.UTF-8
 
