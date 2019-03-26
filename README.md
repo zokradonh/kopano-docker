@@ -133,8 +133,8 @@ The built image includes your subscription key! Do not push this image to any pu
 
 While using kweb is recommended, this is of course possible.
 
-- The `kopano_webapp` image is accessible on port 80 and serves the WebApp both on `/` and `/webapp`.
-- The `kopano_zpush` image is accessible on port 80 and serves Z-Push on `/Microsoft-Server-ActiveSync` (additional urls may be needed in the future see #39).
+- The `kopano_webapp` container is accessible on port 9080 and serves the WebApp both on `/` and `/webapp`.
+- The `kopano_zpush` container is accessible on port 80 and serves Z-Push on `/Microsoft-Server-ActiveSync` (additional urls are needed in case auto discover should be used).
 
 ### What are and how can I use the Kapi Playground and OIDC Playground?
 
