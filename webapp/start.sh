@@ -79,7 +79,7 @@ done
 sed -i '/#tls /c\tls = no' /etc/kopano/kwebd.cfg
 
 sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
-export tls=no
+#export tls=no
 # shellcheck disable=SC2046
 export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
 
@@ -90,4 +90,4 @@ chown -R www-data:www-data /run/sessions /tmp/webapp
 unset "${!KCCONF_@}"
 echo "Starting php-fpm"
 /usr/sbin/php-fpm7.0 -F &
-exec bash -x kopano-kwebd serve
+exec kopano-kwebd serve
