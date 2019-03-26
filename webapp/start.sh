@@ -76,10 +76,11 @@ for setting in $(compgen -A variable KCCONF_WEBAPPPLUGIN_); do
 	php_cfg_gen /etc/kopano/webapp/config-"$identifier".php "${setting3}" "${!setting}"
 done
 
+# disable tls internally
 sed -i '/#tls /c\tls = no' /etc/kopano/kwebd.cfg
 
+# load kweb cfg into env for kopano-kwebd
 sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
-#export tls=no
 # shellcheck disable=SC2046
 export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
 
