@@ -15,5 +15,5 @@ exec dockerize \
 	-wait tcp://kopano_server:237 \
 	-wait tcp://web:2015 \
 	-wait tcp://kopano_webapp:9080 \
-	-wait tcp://kopano_zpush:80 \
+	-wait tcp://kopano_zpush:9080 \
 	-timeout 120s
