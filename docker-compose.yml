@@ -498,7 +498,7 @@ services:
 
   kopano_scheduler:
     image: ${docker_repo:-zokradonh}/kopano_scheduler:${SCHEDULER_VERSION:-latest}
-    container_name: kopano_scheduler
+    container_name: ${COMPOSE_PROJECT_NAME}_scheduler
     restart: always
     networks:
       - kopano-net
