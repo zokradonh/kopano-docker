@@ -498,7 +498,7 @@ services:
 
   kopano_scheduler:
     image: ${docker_repo:-zokradonh}/kopano_scheduler:${SCHEDULER_VERSION:-latest}
-    container_name: kopano_scheduler
+    container_name: ${COMPOSE_PROJECT_NAME}_scheduler
     restart: always
     networks:
       - kopano-net
@@ -513,7 +513,7 @@ services:
       - CRON_ZPUSHGAB=0 22 * * * docker exec kopano_zpush z-push-gabsync -a sync
       - CRONDELAYED_KBACKUP=30 1 * * * docker run --rm -it zokradonh/kopano_utils kopano-backup -h
     env_file:
-      - ldap.env
+      - kopano_scheduler.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
