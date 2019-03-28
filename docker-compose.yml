@@ -513,7 +513,7 @@ services:
       - CRON_ZPUSHGAB=0 22 * * * docker exec kopano_zpush z-push-gabsync -a sync
       - CRONDELAYED_KBACKUP=30 1 * * * docker run --rm -it zokradonh/kopano_utils kopano-backup -h
     env_file:
-      - ldap.env
+      - kopano_scheduler.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
