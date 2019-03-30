@@ -58,7 +58,7 @@ build-simple:
 build-base:
 	component=base make build
 
-build-core:
+build-core: build-base
 	component=core make build
 
 build-konnect:
@@ -70,7 +70,7 @@ build-kwmserver:
 build-ldap-demo:
 	component=ldap_demo make build-simple
 
-build-meet:
+build-meet: build-base
 	component=meet make build
 
 build-playground:
@@ -91,7 +91,7 @@ build-utils: build-core
 build-web:
 	component=web make build-simple
 
-build-webapp:
+build-webapp: build-base
 	component=webapp make build
 
 build-zpush:
