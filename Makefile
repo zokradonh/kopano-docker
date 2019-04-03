@@ -34,9 +34,9 @@ build-all: build-base build-core build-kdav build-konnect build-kwmserver build-
 build: component ?= base
 build:
 	# fetch previous build to warm up build cache (only on travis)
-	ifndef TRAVIS
-		docker pull  $(docker_repo)/kopano_$(component) || true
-	endif
+ifdef TRAVIS
+	docker pull  $(docker_repo)/kopano_$(component) || true
+endif
 	docker build \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
@@ -52,16 +52,19 @@ build:
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
 		--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
+		--cache-from $(docker_repo)/kopano_$(component) \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-simple
 build-simple: component ?= ssl
 build-simple:
 	# fetch previous build to warm up build cache (only on travis)
-	ifndef TRAVIS
-		docker pull  $(docker_repo)/kopano_$(component) || true
-	endif
-	docker build -t $(docker_repo)/kopano_$(component) $(component)/
+ifdef TRAVIS
+	docker pull  $(docker_repo)/kopano_$(component) || true
+endif
+	docker build \
+	--cache-from $(docker_repo)/kopano_$(component) \
+	-t $(docker_repo)/kopano_$(component) $(component)/
 
 build-base:
 	component=base make build
