@@ -9,10 +9,11 @@ function version_from_filename {
 }
 
 function h5ai_query {
-    component="$1"
+    component=${1:-core}
+    distributiont=${2:-Debian_9.0}
     filename=$(curl -s -S -L -d "action=get&items%5Bhref%5D=%2Fcommunity%2F$component%3A%2F&items%5Bwhat%5D=1" -H \
                 "Accept: application/json" https://download.kopano.io/community/ | jq '.items[].href' | \
-                grep 'Debian_9.0-all\|Debian_9.0-amd64' | sed 's#"##g' | sed "s#/community/$component:/##")
+                grep "§distribution-all\|$distribution-amd64" | sed 's#"##g' | sed "s#/community/$component:/##")
 
     if [ -z "${filename// }" ]; then
         echo "unknown component"
@@ -26,9 +27,10 @@ function h5ai_query {
 function dl_and_package_community {
     # take component as first argument and fallback to core if none given
     component=${1:-core}
+    distribution=${2:-Debian_9.0}
 
     # query community server by h5ai API
-    filename=$(h5ai_query "$component")
+    filename=$(h5ai_query "$component" "$distribution")
 
     # download & extract packages
     curl -s -S -L -o "$filename" https://download.kopano.io/community/"$component":/"${filename}"
