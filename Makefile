@@ -33,9 +33,10 @@ build-all: build-base build-core build-kdav build-konnect build-kwmserver build-
 .PHONY: build
 build: component ?= base
 build:
-	# fetch previous build to warm up build cache (only on travis)
 ifdef TRAVIS
+	@echo  fetching previous build to warm up build cache (only on travis)
 	docker pull  $(docker_repo)/kopano_$(component) || true
+	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build \
 		--build-arg docker_repo=${docker_repo} \
@@ -53,32 +54,45 @@ endif
 		--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
 		--cache-from $(docker_repo)/kopano_$(component) \
+		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-simple
 build-simple: component ?= ssl
 build-simple:
-	# fetch previous build to warm up build cache (only on travis)
 ifdef TRAVIS
+	@echo fetching previous build to warm up build cache (only on travis)
 	docker pull  $(docker_repo)/kopano_$(component) || true
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	docker build --target builder \
-	--cache-from $(docker_repo)/kopano_$(component) \
-	--cache-from $(docker_repo)/kopano_$(component):builder \
-	-t $(docker_repo)/kopano_$(component):builder $(component)/
 	docker build \
 	--cache-from $(docker_repo)/kopano_$(component) \
 	--cache-from $(docker_repo)/kopano_$(component):builder \
+	--build-arg docker_repo=$(docker_repo) \
 	-t $(docker_repo)/kopano_$(component) $(component)/
-.PHONY: build-simple
+
+.PHONY: build-builder
 build-builder: component ?= kdav
 build-builder:
-	# fetch previous build to warm up build cache (only on travis)
 ifdef TRAVIS
+	@echo fetching previous build to warm up build cache (only on travis)
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build --target builder \
+	--build-arg docker_repo=${docker_repo} \
+	--build-arg KOPANO_CORE_VERSION=${core_download_version} \
+	--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
+	--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+	--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
+	--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
+	--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
+	--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
+	--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
+	--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
+	--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
+	--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
+	--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
+	--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
 	--cache-from $(docker_repo)/kopano_$(component) \
 	--cache-from $(docker_repo)/kopano_$(component):builder \
 	-t $(docker_repo)/kopano_$(component):builder $(component)/
