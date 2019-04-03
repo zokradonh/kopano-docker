@@ -61,10 +61,27 @@ build-simple:
 	# fetch previous build to warm up build cache (only on travis)
 ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component) || true
+	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
+	docker build --target builder \
+	--cache-from $(docker_repo)/kopano_$(component) \
+	--cache-from $(docker_repo)/kopano_$(component):builder \
+	-t $(docker_repo)/kopano_$(component):builder $(component)/
 	docker build \
 	--cache-from $(docker_repo)/kopano_$(component) \
+	--cache-from $(docker_repo)/kopano_$(component):builder \
 	-t $(docker_repo)/kopano_$(component) $(component)/
+.PHONY: build-simple
+build-builder: component ?= kdav
+build-builder:
+	# fetch previous build to warm up build cache (only on travis)
+ifdef TRAVIS
+	docker pull  $(docker_repo)/kopano_$(component):builder || true
+endif
+	docker build --target builder \
+	--cache-from $(docker_repo)/kopano_$(component) \
+	--cache-from $(docker_repo)/kopano_$(component):builder \
+	-t $(docker_repo)/kopano_$(component):builder $(component)/
 
 build-base:
 	component=base make build
@@ -85,9 +102,11 @@ build-meet: build-base
 	component=meet make build
 
 build-playground:
+	component=playground make build-builder
 	component=playground make build-simple
 
 build-kdav:
+	component=kdav make build-builder
 	component=kdav make build
 
 build-scheduler:
@@ -196,10 +215,12 @@ publish-meet: build-meet tag-meet
 
 publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
+	docker push $(docker_repo)/kopano_playground:builder
 
 publish-kdav: build-kdav #tag-kdav
 	#component=zpush make publish-container
 	docker push $(docker_repo)/kopano_kdav:latest
+	docker push $(docker_repo)/kopano_kdav:builder
 
 publish-scheduler: build-scheduler tag-scheduler
 	component=scheduler make publish-container
