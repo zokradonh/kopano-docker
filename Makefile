@@ -34,7 +34,7 @@ build-all: build-base build-core build-kdav build-konnect build-kwmserver build-
 build: component ?= base
 build:
 ifdef TRAVIS
-	@echo  fetching previous build to warm up build cache (only on travis)
+	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component) || true
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
@@ -61,7 +61,7 @@ endif
 build-simple: component ?= ssl
 build-simple:
 ifdef TRAVIS
-	@echo fetching previous build to warm up build cache (only on travis)
+	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component) || true
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
@@ -75,7 +75,7 @@ endif
 build-builder: component ?= kdav
 build-builder:
 ifdef TRAVIS
-	@echo fetching previous build to warm up build cache (only on travis)
+	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build --target builder \
