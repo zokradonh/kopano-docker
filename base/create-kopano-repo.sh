@@ -10,7 +10,8 @@ function version_from_filename {
 
 function h5ai_query {
     component=${1:-core}
-    distributiont=${2:-Debian_9.0}
+    distribution=${2:-Debian_9.0}
+
     filename=$(curl -s -S -L -d "action=get&items%5Bhref%5D=%2Fcommunity%2F$component%3A%2F&items%5Bwhat%5D=1" -H \
                 "Accept: application/json" https://download.kopano.io/community/ | jq '.items[].href' | \
                 grep "§distribution-all\|$distribution-amd64" | sed 's#"##g' | sed "s#/community/$component:/##")

@@ -7,7 +7,7 @@ fi
 source base/create-kopano-repo.sh
 
 component=${1:-core}
-component=${2:-Debian_9.0}
+distribution=${2:-Debian_9.0}
 
 if [ -e ./.env ]; then
 	# this is a kind of ugly hack to be able to source the env file
