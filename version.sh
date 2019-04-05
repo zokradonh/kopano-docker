@@ -7,6 +7,7 @@ fi
 source base/create-kopano-repo.sh
 
 component=${1:-core}
+distribution=${2:-Debian_9.0}
 
 if [ -e ./.env ]; then
 	# this is a kind of ugly hack to be able to source the env file
@@ -51,7 +52,7 @@ kdav)
 esac
 
 # query community server by h5ai API
-filename=$(h5ai_query "$component")
+filename=$(h5ai_query "$component" "$distribution")
 
 currentVersion=$(version_from_filename "$filename")
 

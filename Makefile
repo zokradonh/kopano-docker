@@ -33,6 +33,11 @@ build-all: build-base build-core build-kdav build-konnect build-kwmserver build-
 .PHONY: build
 build: component ?= base
 build:
+ifdef TRAVIS
+	@echo "fetching previous build to warm up build cache (only on travis)"
+	docker pull  $(docker_repo)/kopano_$(component) || true
+	docker pull  $(docker_repo)/kopano_$(component):builder || true
+endif
 	docker build \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
@@ -48,12 +53,49 @@ build:
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
 		--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
+		--cache-from $(docker_repo)/kopano_$(component) \
+		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-simple
 build-simple: component ?= ssl
 build-simple:
-	docker build -t $(docker_repo)/kopano_$(component) $(component)/
+ifdef TRAVIS
+	@echo "fetching previous build to warm up build cache (only on travis)"
+	docker pull  $(docker_repo)/kopano_$(component) || true
+	docker pull  $(docker_repo)/kopano_$(component):builder || true
+endif
+	docker build \
+	--cache-from $(docker_repo)/kopano_$(component) \
+	--cache-from $(docker_repo)/kopano_$(component):builder \
+	--build-arg docker_repo=$(docker_repo) \
+	-t $(docker_repo)/kopano_$(component) $(component)/
+
+.PHONY: build-builder
+build-builder: component ?= kdav
+build-builder:
+ifdef TRAVIS
+	@echo "fetching previous build to warm up build cache (only on travis)"
+	docker pull  $(docker_repo)/kopano_$(component):builder || true
+endif
+	docker build --target builder \
+	--build-arg docker_repo=${docker_repo} \
+	--build-arg KOPANO_CORE_VERSION=${core_download_version} \
+	--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
+	--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+	--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
+	--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
+	--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
+	--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
+	--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
+	--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
+	--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
+	--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
+	--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
+	--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
+	--cache-from $(docker_repo)/kopano_$(component) \
+	--cache-from $(docker_repo)/kopano_$(component):builder \
+	-t $(docker_repo)/kopano_$(component):builder $(component)/
 
 build-base:
 	component=base make build
@@ -74,9 +116,11 @@ build-meet: build-base
 	component=meet make build
 
 build-playground:
+	component=playground make build-builder
 	component=playground make build-simple
 
 build-kdav:
+	component=kdav make build-builder
 	component=kdav make build
 
 build-scheduler:
@@ -185,10 +229,12 @@ publish-meet: build-meet tag-meet
 
 publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
+	docker push $(docker_repo)/kopano_playground:builder
 
 publish-kdav: build-kdav #tag-kdav
 	#component=zpush make publish-container
 	docker push $(docker_repo)/kopano_kdav:latest
+	docker push $(docker_repo)/kopano_kdav:builder
 
 publish-scheduler: build-scheduler tag-scheduler
 	component=scheduler make publish-container

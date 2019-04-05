@@ -1,5 +1,5 @@
 ARG docker_repo=zokradonh
-FROM composer:1.8.4 as composer
+FROM composer:1.8.4 as builder
 
 RUN git clone --depth 1 https://stash.kopano.io/scm/kc/kdav.git /usr/share/kdav
 WORKDIR /usr/share/kdav
@@ -68,7 +68,7 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     mkdir -p /var/log/kdav && \
     chown www-data:www-data /var/log/kdav
 
-COPY --from=composer /usr/share/kdav /usr/share/kdav
+COPY --from=builder /usr/share/kdav /usr/share/kdav
 
 EXPOSE 80/tcp
 
