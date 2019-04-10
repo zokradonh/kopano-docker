@@ -8,6 +8,9 @@ ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 
+# shellcheck source=php/start-helper.sh
+source /kopano/start-helper.sh
+
 # Ensure directories exist
 mkdir -p /run/sessions /tmp/webapp
 

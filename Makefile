@@ -260,7 +260,7 @@ publish-zpush: build-zpush tag-zpush
 check-scripts:
 	grep -rIl '^#![[:blank:]]*/bin/\(bash\|sh\|zsh\)' \
 	--exclude-dir=.git --exclude=*.sw? \
-	| xargs shellcheck
+	| xargs shellcheck -x
 	# List files which name starts with 'Dockerfile'
 	# eg. Dockerfile, Dockerfile.build, etc.
 	git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint
