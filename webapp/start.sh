@@ -59,9 +59,6 @@ else
 	php_cfg_gen /etc/kopano/webapp/config.php DEFAULT_SERVER "https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano"
 fi
 
-echo "Configuring Kopano WebApp for use behind a reverse proxy"
-php_cfg_gen /etc/kopano/webapp/config.php INSECURE_COOKIES true
-
 # configuring webapp from env
 for setting in $(compgen -A variable KCCONF_WEBAPP_); do
 	setting2=${setting#KCCONF_WEBAPP_}
