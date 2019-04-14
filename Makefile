@@ -178,6 +178,11 @@ tag-meet:
 	$(shell docker run --rm $(docker_repo)/kopano_meet cat /kopano/buildversion | grep meet | cut -d- -f2 | cut -d+ -f1))
 	component=meet make tag-container
 
+tag-php:
+	$(eval php_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_php cat /kopano/buildversion | cut -d- -f2))
+	component=php make tag-container
+
 tag-scheduler:
 	$(eval scheduler_version := \
 	$(shell docker run --rm $(docker_repo)/kopano_scheduler env | grep SUPERCRONIC_VERSION | cut -d'=' -f2))
@@ -207,7 +212,7 @@ tag-zpush:
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-meet publish-playground publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
+publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-meet publish-php publish-playground publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
 
 publish-container: component ?= base
 publish-container:
@@ -230,12 +235,14 @@ publish-kwmserver: build-kwmserver tag-kwmserver
 publish-meet: build-meet tag-meet
 	component=meet make publish-container
 
+publish-php: build-php tag-php
+	component=php make publish-container
+
 publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
 	docker push $(docker_repo)/kopano_playground:builder
 
 publish-kdav: build-kdav #tag-kdav
-	#component=zpush make publish-container
 	docker push $(docker_repo)/kopano_kdav:latest
 	docker push $(docker_repo)/kopano_kdav:builder
 
