@@ -11,6 +11,16 @@ set -eu # unset variables are errors & non-zero return values exit the whole scr
 # shellcheck source=php/start-helper.sh
 source /kopano/start-helper.sh
 
+ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
+
+[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
+[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
+	# shellcheck disable=SC2016 disable=SC2086
+	if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
+		apt --assume-yes install "$installpkg"
+	fi
+done
+
 # Ensure directories exist
 mkdir -p /run/sessions /tmp/webapp
 
@@ -42,8 +52,8 @@ chown -R www-data:www-data /run/sessions /tmp/webapp
 echo "Starting Apache"
 rm -f /run/apache2/apache2.pid
 set +u
-# shellcheck disable=SC1091
-source /etc/apache2/envvars
 # cleaning up env variables
 unset "${!KCCONF_@}"
-exec /usr/sbin/apache2 -DFOREGROUND
+echo "Starting php-fpm"
+php-fpm7.0 -F &
+exec /usr/libexec/kopano/kwebd caddy -conf /etc/kweb.cfg

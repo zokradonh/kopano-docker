@@ -77,8 +77,3 @@ EXPOSE 9080/tcp
 
 COPY start-helper.sh /kopano/start-helper.sh
 COPY kweb.cfg /etc/kweb.cfg
-
-ENV LANG en_US.UTF-8
-
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD [ "/kopano/start.sh" ]
