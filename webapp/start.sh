@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 # define default value for serverhostname and serverport if not passed into container
 KCCONF_SERVERHOSTNAME=${KCCONF_SERVERHOSTNAME:-127.0.0.1}
 KCCONF_SERVERPORT=${KCCONF_SERVERPORT:-237}
@@ -24,10 +22,10 @@ php_cfg_gen() {
 		fi
 		case $cfg_value in
 		true|TRUE|false|FALSE)
-			sed -ri "s#(\s*define).+${cfg_setting}'.+#\tdefine(\x27${cfg_setting}\x27, ${cfg_value}\);#g" "$cfg_file"
+			sed -ri "s#(\s*define).+${cfg_setting}.+#\tdefine(\x27${cfg_setting}\x27, ${cfg_value}\);#g" "$cfg_file"
 			;;
 		*)
-			sed -ri "s#(\s*define).+${cfg_setting}'.+#\tdefine(\x27${cfg_setting}\x27, \x27${cfg_value}\x27\);#g" "$cfg_file"
+			sed -ri "s#(\s*define).+${cfg_setting}.+#\tdefine(\x27${cfg_setting}\x27, \x27${cfg_value}\x27\);#g" "$cfg_file"
 			;;
 		esac
 	else
