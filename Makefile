@@ -28,7 +28,7 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap-demo build-meet build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
+build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap-demo build-meet build-php build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
 
 .PHONY: build
 build: component ?= base
@@ -115,6 +115,9 @@ build-ldap-demo:
 build-meet: build-base
 	component=meet make build
 
+build-php: build-base
+	component=php make build
+
 build-playground:
 	component=playground make build-builder
 	component=playground make build-simple
@@ -135,7 +138,7 @@ build-utils: build-core
 build-web:
 	component=web make build-simple
 
-build-webapp: build-base
+build-webapp: build-php
 	component=webapp make build
 
 build-zpush:
@@ -175,6 +178,11 @@ tag-meet:
 	$(shell docker run --rm $(docker_repo)/kopano_meet cat /kopano/buildversion | grep meet | cut -d- -f2 | cut -d+ -f1))
 	component=meet make tag-container
 
+tag-php:
+	$(eval php_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_php cat /kopano/buildversion | cut -d- -f2))
+	component=php make tag-container
+
 tag-scheduler:
 	$(eval scheduler_version := \
 	$(shell docker run --rm $(docker_repo)/kopano_scheduler env | grep SUPERCRONIC_VERSION | cut -d'=' -f2))
@@ -204,7 +212,7 @@ tag-zpush:
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
-publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-meet publish-playground publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
+publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-meet publish-php publish-playground publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
 
 publish-container: component ?= base
 publish-container:
@@ -227,12 +235,14 @@ publish-kwmserver: build-kwmserver tag-kwmserver
 publish-meet: build-meet tag-meet
 	component=meet make publish-container
 
+publish-php: build-php tag-php
+	component=php make publish-container
+
 publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
 	docker push $(docker_repo)/kopano_playground:builder
 
 publish-kdav: build-kdav #tag-kdav
-	#component=zpush make publish-container
 	docker push $(docker_repo)/kopano_kdav:latest
 	docker push $(docker_repo)/kopano_kdav:builder
 
@@ -257,7 +267,7 @@ publish-zpush: build-zpush tag-zpush
 check-scripts:
 	grep -rIl '^#![[:blank:]]*/bin/\(bash\|sh\|zsh\)' \
 	--exclude-dir=.git --exclude=*.sw? \
-	| xargs shellcheck
+	| xargs shellcheck -x
 	# List files which name starts with 'Dockerfile'
 	# eg. Dockerfile, Dockerfile.build, etc.
 	git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint

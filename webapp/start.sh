@@ -8,34 +8,8 @@ ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 
-php_cfg_gen() {
-	local cfg_file="$1"
-	local cfg_setting="$2"
-	local cfg_value="$3"
-	if [ -e "$cfg_file" ]; then
-		echo "Setting $cfg_setting = $cfg_value in $cfg_file"
-		if ! grep -q "$cfg_setting" "$cfg_file"; then
-			echo "WARNING: Config option $cfg_setting not found in $cfg_file! You may have misspelled the confing setting."
-			echo "define('$cfg_setting', '$cfg_value');" >> "$cfg_file"
-			cat "$cfg_file"
-			return
-		fi
-		case $cfg_value in
-		true|TRUE|false|FALSE)
-			sed -ri "s#(\s*define).+${cfg_setting}.+#\tdefine(\x27${cfg_setting}\x27, ${cfg_value}\);#g" "$cfg_file"
-			;;
-		*)
-			sed -ri "s#(\s*define).+${cfg_setting}.+#\tdefine(\x27${cfg_setting}\x27, \x27${cfg_value}\x27\);#g" "$cfg_file"
-			;;
-		esac
-	else
-		echo "Error: Config file $cfg_file not found. Plugin not installed?"
-		local dir
-		dir=$(dirname "$cfg_file")
-		ls -la "$dir"
-		exit 1
-	fi
-}
+# shellcheck source=php/start-helper.sh
+source /kopano/start-helper.sh
 
 ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
 
@@ -78,8 +52,8 @@ chown -R www-data:www-data /run/sessions /tmp/webapp
 echo "Starting Apache"
 rm -f /run/apache2/apache2.pid
 set +u
-# shellcheck disable=SC1091
-source /etc/apache2/envvars
 # cleaning up env variables
 unset "${!KCCONF_@}"
-exec /usr/sbin/apache2 -DFOREGROUND
+echo "Starting php-fpm"
+php-fpm7.0 -F &
+exec /usr/libexec/kopano/kwebd caddy -conf /etc/kweb.cfg
