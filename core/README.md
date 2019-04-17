@@ -1,24 +1,43 @@
-E-Mail attachment directory is by default in `/kopano/data/attachments/` so bind `/kopano/data` as volume.
+# Kopano Core image
 
-You can reconfigure by setting environment variable `KCCONF_SERVER_ATTACHMENT_PATH`.
+[![](https://images.microbadger.com/badges/image/zokradonh/kopano_core.svg)](https://microbadger.com/images/zokradonh/kopano_core "Microbadger size/labels") [![](https://images.microbadger.com/badges/version/zokradonh/kopano_core.svg)](https://microbadger.com/images/zokradonh/kopano_core "Microbadger version")
 
-You can change all server.cfg settings you like prefixed with `KCCONF_SERVER_`
-So specify `KCCONF_SERVER_MYSQL_HOST` for `mysql_host` setting in `server.cfg`.
-Or specify `KCCONF_LDAP_LDAP_SEARCH_BASE` to set `ldap_search_base` in `ldap.cfg`.
+Image for components out of the "Kopano Core" repository. Is used to start containers for e.g. `kopano-server` and `kopano-gateway`.
 
-You may override default settings with `KCCONF_*` options or comment specific options in/out with `KCCOMMENT_filenameWithoutExtension_anystring=searchline`  
+E-Mail attachment directory is by default in `/kopano/data/attachments/` it is recommended to bind `/kopano/data` as volume.
+
+Attachment location can be configured by setting the environment variable `KCCONF_SERVER_ATTACHMENT_PATH`.
+
+All configuration can be adjusted dynamically through environment variables. 
+
+```
+KCCONF_SERVER_MYSQL_HOST=127.0.0.1
+^      ^     ^   ^
+|      |     |   |
+General prefix   |
+       |     |   |
+       Name of the relevant configuration file (server.cfg in this case)
+             |   |
+             Name of the configuration option in the configuration file
+                 |
+                 Value of the configuration option
+```
+
+Examples:
+- specify `KCCONF_SERVER_MYSQL_HOST` for `mysql_host` setting in `server.cfg`
+- specify `KCCONF_LDAP_LDAP_SEARCH_BASE` to set `ldap_search_base` in `ldap.cfg`
+
+Additionally it is possible to comment specific options in/out with `KCCOMMENT_filenameWithoutExtension_anystring=searchline`  
 e.g. `KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg`
 
 For coredumps on crashes kopano-server requires the fs.suid_dumpable sysctl to contain the value 2, not 0.
 
-The docker image kopano_ssl will create certificates for all containers. Those certificates are selfsigned and only for internal Kopano component communication.
-
-kopano_webapp port 80 is meant to be published through a https reverse proxy. MAPI connection for Outlook is also handled over port 80.
-
-Maybe you need to execute `kopano-cli --list-users` once after initial install in the kopano_server container.
-
-See: https://documentation.kopano.io/kopanocore_administrator_manual/configure_kc_components.html#testing-ldap-configuration
+It is recommended to sync the user list before the first login of a user. With the bundled ´docker-compose.yml´ the ´kopano_scheduler´ container will take care of this. Alternatively `kopano-cli --list-users` could be run once after initial install in the kopano_server container.
 
 Example:
 
-`docker-compose exec kserver kopano-cli --list-users` (This may last very long without any console output.)
+`docker-compose exec kserver kopano-cli --list-users`
+
+Depending on the overall performance of the system and the amount of user the first execution of this command will take a moment before it produces any output. This is since this command kicks off the mailbox creation for the users.
+
+See https://documentation.kopano.io/kopanocore_administrator_manual/configure_kc_components.html#testing-ldap-configuration for more information.
