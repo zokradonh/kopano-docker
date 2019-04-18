@@ -68,4 +68,4 @@ Sending build context to Docker daemon  4.608kB
 [...]
 ```
 
-This container also includes ´docker-compose´ for systems that can not be easily updated (again Synology). You can freely choose to use ´docker-compose up -d´ from inside of outside of this container.
+This container also includes ´docker-compose´ for systems that can not be easily updated (again Synology). You can freely choose to use ´docker-compose up -d´ from inside or outside of this container.
