@@ -25,12 +25,6 @@ ARG KOPANO_CORE_VERSION=newest
 ENV KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION
 ARG KOPANO_WEBAPP_VERSION=newest
 ENV KOPANO_WEBAPP_VERSION=$KOPANO_WEBAPP_VERSION
-ARG KOPANO_WEBAPP_FILES_VERSION=newest
-ENV KOPANO_WEBAPP_FILES_VERSION=$KOPANO_WEBAPP_FILES_VERSION
-ARG KOPANO_WEBAPP_MDM_VERSION=newest
-ENV KOPANO_WEBAPP_MDM_VERSION=$KOPANO_WEBAPP_MDM_VERSION
-ARG KOPANO_WEBAPP_SMIME_VERSION=newest
-ENV KOPANO_WEBAPP_SMIME_VERSION=$KOPANO_WEBAPP_SMIME_VERSION
 ARG RELEASE_KEY_DOWNLOAD=0
 ENV RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
@@ -53,9 +47,8 @@ RUN \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_FILES_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
     # save kopano version
     echo "webapp-${KOPANO_WEBAPP_VERSION}" >> /kopano/buildversion; \
-    echo "files-${KOPANO_WEBAPP_FILES_VERSION}" >> /kopano/buildversion; \
-    echo "mdm-${KOPANO_WEBAPP_MDM_VERSION}" >> /kopano/buildversion; \
-    echo "smime-${KOPANO_WEBAPP_SMIME_VERSION}" >> /kopano/buildversion; \
+    # sort version file uniquely
+    sort -u -o /kopano/buildversion /kopano/buildversion; \
     # install apt keys if supported kopano
     if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
         curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \

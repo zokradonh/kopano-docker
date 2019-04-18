@@ -200,7 +200,7 @@ tag-web:
 
 tag-webapp:
 	$(eval webapp_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | grep webapp | cut -d- -f2 | cut -d+ -f1 | head -n 1))
+	$(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | grep webapp | cut -d- -f2 | cut -d+ -f1))
 	component=webapp make tag-container
 
 tag-zpush:
