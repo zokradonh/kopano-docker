@@ -36,48 +36,9 @@ And last but not least this project also offers a `zokradonh/kopano_utils` image
 
 If you want to modify some of the values from the `setup.sh` run you can simply edit `.env` in your favourite editor. Repeated runs of `setup.sh` will neither modify `docker-compose.yml` nor `.env`. In the ´.env´ file you will also find some given defaults like ldap query filters and the local ports for the reverse proxy.
 
-Additionally a dedicated env file is created for each container (at least where that would make sense). The env file has the container name as part of the file name. For example for the `kopano_server` container the filename is `kopano_server.env`. These additional env files are auto created when running `setup.sh`
+Additionally a dedicated env file is created for each container (at least where that would make sense). The env file has the container name as part of the file name. For example for the `kopano_server` container the filename is named `kopano_server.env`. These additional env files are auto created when running `setup.sh`.
 
-Any additional configuration should be done through environment variables and not done in the actual container. The images working with configuration files (e.g. `kopano_core`, `kopano_webapp`, `kopano_meet`) have a mechanism built in to translate env variables into configuration files. For services that can directly work with env variables (e.g. `kopano_konnect`, ´kopano_kwmserver´) these can be specified directly.
-
-Examples of env variables:
-
-```
-KCCONF_KWEBD_TLS=no
-^      ^     ^   ^
-|      |     |   |
-General prefix   |
-       |     |   |
-       Name of the relevant configuration file (kwebd.cfg in this case)
-             |   |
-             Name of the configuration option in the configuration file
-                 |
-                 Value of the configuration option
-
-KCCONF_WEBAPP_CLIENT_TIMEOUT=3600
-^      ^      ^              ^
-|      |      |              |
-General prefix|              |
-       |      |              |
-       Special value to signal the change should go into config.php belonging to WebApp
-              |              |
-              Name of the configuration option in the configuration file
-                             |
-                             Value of the configuration option
-
-KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_USER_DEFAULT_ENABLE_MDM=true
-^      ^            ^   ^                                  ^
-|      |            |   |                                  |
-General prefix      |   |                                  |
-       |            |   |                                  |
-       Special value to signal the change should go into config-$identifier.php (located in /etc/kopano/webapp)
-                    |   |                                  |
-                    Identifier for the configuration file (config-$identifier.php)
-                        |                                  |
-                        Name of the configuration option in the configuration file
-                                                           |
-                                                           Value of the configuration option
-```
+Any additional configuration should be done through environment variables and not done in the actual container. The images working with configuration files (e.g. `kopano_core`, `kopano_webapp`, `kopano_meet`) have a mechanism built in to translate env variables into configuration files. For services that can directly work with env variables (e.g. `kopano_konnect`, ´kopano_kwmserver´) these can be specified directly. Please check the individual `README.md` files for further instructions.
 
 The compose file itself is part of the git repository and should not be edited directly. Instead a `docker-compose.override.yml` (will be ignored by git) file can be created to override and extend the default one. See https://docs.docker.com/compose/extends/ for more information.
 
@@ -91,16 +52,11 @@ To be able to easily go back to a previous version you can also "tag" you Docker
 
 ### Recurring tasks and maintenance tasks within Kopano
 
-There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external ldap tree). For convinience this project includes a "schedular" container that will take care of this and that can be dynamically configured through env variables.
+There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external ldap tree). For convinience this project includes a "scheduler" container that will take care of this and that can be dynamically configured through env variables.
 
-The container knows two kinds of cron jobs (syntax is the same as within crontab):
+Please check the `README.md` of the scheduler image for further instructions.
 
-- `CRON_ZPUSHGAB=0 22 * * * docker exec kopano_zpush z-push-gabsync -a sync`
-  - Jobs prefixed with `CRON_` are executed once at container startup (and container startup will fail if one of the jobs fail) and then at the scheduled time.
-- `CRONDELAYED_KBACKUP=30 1 * * * docker run --rm -it zokradonh/kopano_utils kopano-backup -h`
-  - Jobs prefixed with `CRONDELAYED_` are only executed at the scheduled time.
-
-Instead of using the internal scheduler one can also just use an existing scheduler (cron on the docker host?) to execute these tasks.
+Instead of using the internal scheduler one can also just use an existing scheduler (cron on the docker host for example) to execute these tasks.
 
 ### How to use the project with the official and supported Kopano releases?
 
@@ -133,12 +89,7 @@ The built image includes your subscription key! Do not push this image to any pu
 
 While using kweb is recommended, this is of course possible.
 
-- The `kopano_webapp` container is accessible on port 9080 and serves the WebApp on `/webapp`.
-- The `kopano_zpush` container is accessible on port 80 and serves Z-Push on `/Microsoft-Server-ActiveSync` ((additional urls are needed in case auto discover should be used).
-
-### What are and how can I use the Kapi Playground and OIDC Playground?
-
-This project includes a Docker container to easily inspect the data returned by the Kopano Rest API (KAPI), as well as the OpenID (Connect) Service Provider. To explore these applications you need to pass the URL of the "Issuer" when opening these. For the Kapi Playground this would for example be `https://kopano.demo/kapi-playground/?iss=https://kopano.demo`. For the OIDC Playground it would be `https://kopano.demo/oidc-playground/?discovery_uri=https://kopano.demo/.well-known/openid-configuration&discovery=auto`.
+Please check the individual web containers (kDAV, WebApp and Z-Push for individual instructions).
 
 ### I want to use these Docker images outside of an evaluation environment. What do I need to adjust to make this possible?
 
