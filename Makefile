@@ -28,6 +28,9 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
+.PHONY: all
+all: build-all
+
 build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap-demo build-meet build-php build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
 
 .PHONY: build
@@ -212,6 +215,7 @@ tag-zpush:
 repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
+.PHONY: publish
 publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-meet publish-php publish-playground publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
 
 publish-container: component ?= base
@@ -272,6 +276,11 @@ check-scripts:
 	# eg. Dockerfile, Dockerfile.build, etc.
 	git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint
 
+.PHONY: clean
+clean:
+	docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans || true
+
+.PHONY: test
 test:
 	docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans || true
 	make build-all
@@ -298,4 +307,5 @@ test-quick:
 test-stop:
 	docker-compose -f $(COMPOSE_FILE) stop || true
 
+.PHONY: default
 default: build-all
