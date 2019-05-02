@@ -125,6 +125,9 @@ build-playground:
 	component=playground make build-builder
 	component=playground make build-simple
 
+build-python:
+	component=python make build
+
 build-kdav:
 	component=kdav make build-builder
 	component=kdav make build
@@ -186,6 +189,11 @@ tag-php:
 	$(shell docker run --rm $(docker_repo)/kopano_php cat /kopano/buildversion | cut -d- -f2))
 	component=php make tag-container
 
+tag-python:
+	$(eval python_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_python cat /kopano/buildversion | cut -d- -f2))
+	component=python make tag-container
+
 tag-scheduler:
 	$(eval scheduler_version := \
 	$(shell docker run --rm $(docker_repo)/kopano_scheduler env | grep SUPERCRONIC_VERSION | cut -d'=' -f2))
@@ -216,7 +224,7 @@ repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
 .PHONY: publish
-publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-ldap-demo publish-meet publish-php publish-playground publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
+publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-ldap-demo publish-meet publish-php publish-playground publish-python publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
 
 publish-container: component ?= base
 publish-container:
@@ -248,6 +256,9 @@ publish-php: build-php tag-php
 publish-playground: build-playground
 	docker push $(docker_repo)/kopano_playground:latest
 	docker push $(docker_repo)/kopano_playground:builder
+
+publish-python: build-python tag-python
+	component=python make publish-container
 
 publish-kdav: build-kdav #tag-kdav
 	docker push $(docker_repo)/kopano_kdav:latest
