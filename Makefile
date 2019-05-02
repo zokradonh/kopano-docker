@@ -216,7 +216,7 @@ repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
 .PHONY: publish
-publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-meet publish-php publish-playground publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
+publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-ldap-demo publish-meet publish-php publish-playground publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
 
 publish-container: component ?= base
 publish-container:
@@ -235,6 +235,9 @@ publish-konnect: build-konnect tag-konnect
 
 publish-kwmserver: build-kwmserver tag-kwmserver
 	component=kwmserver make publish-container
+
+publish-ldap-demo: build-ldap-demo
+	docker push $(docker_repo)/kopano_ldap_demo:latest
 
 publish-meet: build-meet tag-meet
 	component=meet make publish-container
