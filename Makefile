@@ -125,6 +125,9 @@ build-playground:
 	component=playground make build-builder
 	component=playground make build-simple
 
+build-python:
+	component=python make build
+
 build-kdav:
 	component=kdav make build-builder
 	component=kdav make build
