@@ -147,6 +147,12 @@ build-web:
 build-webapp: build-php
 	component=webapp make build
 
+# replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com
+build-webapp-demo:
+	docker build \
+		-f webapp/Dockerfile.demo \
+		-t $(docker_repo)/kopano_webapp webapp/
+
 build-zpush:
 	component=zpush make build
 
