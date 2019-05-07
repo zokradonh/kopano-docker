@@ -14,7 +14,7 @@ LANG_OPTIONS=("de-at" "de-ch" "de-de" "en" "en-gb" "es" "fr" "it" "nl" "pl-pl")
 PLUGIN_OPTIONS=("contactfax" "desktopnotifications" "filepreviewer" "files" "filesbackend-smb" "filesbackend-owncloud" "folderwidgets" "gmaps" "intranet" "mattermost" "mdm" "pimfolder" "quickitems" "smime" "titlecounter" "webappmanual" "zdeveloper")
 
 lang_menu() {
-	echo "Avaliable options:"
+	echo "Available options:"
 	for i in "${!LANG_OPTIONS[@]}"; do
 		printf "%3d%s) %s\n" $((i+1)) "${lang_choices[i]:- }" "${LANG_OPTIONS[i]}"
 	done
@@ -22,7 +22,7 @@ lang_menu() {
 }
 
 plugin_menu() {
-	echo "Avaliable options:"
+	echo "Available options:"
 	for i in "${!PLUGIN_OPTIONS[@]}"; do
 		printf "%3d%s) %s\n" $((i+1)) "${plugin_choices[i]:- }" "${PLUGIN_OPTIONS[i]}"
 	done
