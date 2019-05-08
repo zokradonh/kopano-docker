@@ -27,7 +27,7 @@ services:
          - ${FQDNCLEANED?err}
 
   ldap:
-    image: ${docker_repo:-zokradonh}/kopano_ldap_demo
+    image: ${docker_repo:-zokradonh}/${LDAP_CONTAINER:-kopano_ldap_demo}
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_ldap
     ports:

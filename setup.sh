@@ -164,6 +164,7 @@ if [ ! -e ./.env ]; then
 
 		PRINT_SETUP_SUCCESS="$PRINT_SETUP_SUCCESS \n!! You have specified the LDAP server '${LDAP_SERVER}', don't forget to remove the bundled ldap and ldap-admin services in docker-compose.yml\n"
 	else
+		# TODO add question here if demo users should be used
 		LDAP_ADMIN_PASSWORD=$(random_string)
 		LDAP_SEARCH_BASE="$LDAP_BASE_DN"
 		LDAP_BIND_DN="cn=readonly,$LDAP_BASE_DN"
