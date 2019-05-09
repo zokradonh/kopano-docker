@@ -31,7 +31,7 @@ COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 .PHONY: all
 all: build-all
 
-build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap-demo build-meet build-php build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
+build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap build-ldap-demo build-meet build-php build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
 
 .PHONY: build
 build: component ?= base
@@ -112,7 +112,10 @@ build-konnect:
 build-kwmserver:
 	component=kwmserver make build-simple
 
-build-ldap-demo:
+build-ldap:
+	component=ldap make build-simple
+
+build-ldap-demo: build-ldap
 	component=ldap_demo make build-simple
 
 build-meet: build-base
@@ -249,6 +252,9 @@ publish-konnect: build-konnect tag-konnect
 
 publish-kwmserver: build-kwmserver tag-kwmserver
 	component=kwmserver make publish-container
+
+publish-ldap: build-ldap
+	docker push $(docker_repo)/kopano_ldap:latest
 
 publish-ldap-demo: build-ldap-demo
 	docker push $(docker_repo)/kopano_ldap_demo:latest

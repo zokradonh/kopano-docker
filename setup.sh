@@ -164,6 +164,16 @@ if [ ! -e ./.env ]; then
 
 		PRINT_SETUP_SUCCESS="$PRINT_SETUP_SUCCESS \n!! You have specified the LDAP server '${LDAP_SERVER}', don't forget to remove the bundled ldap and ldap-admin services in docker-compose.yml\n"
 	else
+		value_default="yes"
+		read -r -p "Use bundled LDAP with demo users? yes/no [$value_default]: " new_value
+		LDAP_CONTAINER_QUESTION=${new_value:-$value_default}
+
+		if [ "${LDAP_CONTAINER_QUESTION}" == "yes" ]; then
+			LDAP_CONTAINER="kopano_ldap_demo"
+		else
+			LDAP_CONTAINER="kopano_ldap"
+		fi
+
 		LDAP_ADMIN_PASSWORD=$(random_string)
 		LDAP_SEARCH_BASE="$LDAP_BASE_DN"
 		LDAP_BIND_DN="cn=readonly,$LDAP_BASE_DN"
@@ -273,6 +283,7 @@ KWM_VERSION=$KWM_VERSION
 MEET_VERSION=$MEET_VERSION
 KDAV_VERSION=$KDAV_VERSION
 
+LDAP_CONTAINER=$LDAP_CONTAINER
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
 LDAP_DOMAIN=$FQDN
 LDAP_BASE_DN=$LDAP_BASE_DN
