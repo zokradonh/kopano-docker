@@ -113,6 +113,8 @@ search)
 	dockerize \
 		-wait file://var/run/kopano/server.sock \
 		-timeout 360s
+	# give kopano-server a moment to settler before starting search
+	sleep 5
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec /usr/bin/python3 /usr/sbin/kopano-search -F
