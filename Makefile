@@ -208,6 +208,11 @@ tag-scheduler:
 	$(shell docker run --rm $(docker_repo)/kopano_scheduler env | grep SUPERCRONIC_VERSION | cut -d'=' -f2))
 	component=scheduler make tag-container
 
+tag-ssl:
+	$(eval ssl_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_ssl env | grep CODE_VERSION | cut -d'=' -f2))
+	component=ssl make tag-container
+
 tag-utils:
 	$(eval utils_version := \
 	$(shell docker run --rm $(docker_repo)/kopano_utils cat /kopano/buildversion | cut -d- -f2))
@@ -279,8 +284,8 @@ publish-kdav: build-kdav #tag-kdav
 publish-scheduler: build-scheduler tag-scheduler
 	component=scheduler make publish-container
 
-publish-ssl: build-ssl
-	docker push $(docker_repo)/kopano_ssl:latest
+publish-ssl: build-ssl tag-ssl
+	component=scheduler make publish-container
 
 publish-utils: build-core build-utils tag-utils
 	component=utils make publish-container
