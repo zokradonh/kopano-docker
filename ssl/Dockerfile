@@ -1,4 +1,5 @@
-FROM alpine:latest
+FROM alpine:3.9
+ENV CODE_VERSION=1.0
 
 LABEL maintainer=az@zok.xyz \
       version="1.0"
