@@ -30,7 +30,8 @@ plugin_menu() {
 }
 
 docker_tag_search () {
-	results=$(reg tags $1 2> /dev/null)
+	image="$1"
+	results=$(reg tags "$image" 2> /dev/null)
 	echo "$results" | xargs -n1 | sort -ru | xargs
 }
 
