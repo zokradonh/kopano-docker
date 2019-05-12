@@ -30,37 +30,7 @@ plugin_menu() {
 }
 
 docker_tag_search () {
-	set +e
-	# Display help
-	if [[ "${1}" == "" ]]; then
-		echo "Usage: docker tags repo/image"
-		echo "       docker tags image"
-		return
-	fi
-
-	# Full repo/image was supplied
-	if [[ $1 == *"/"* ]]; then
-		name=$1
-
-	# Only image was supplied, default to library/image
-	else
-		name=library/${1}
-	fi
-	#printf "Searching tags for ${name}"
-
-	# Fetch all pages, because the only endpoint supporting pagination params
-	# appears to be tags/lists, but that needs authorization
-	results=""
-	i=0
-	has_more=0
-	while [ $has_more -eq 0 ]; do
-		i=$((i+1))
-		result=$(curl "https://registry.hub.docker.com/v2/repositories/${name}/tags/?page=${i}" 2>/dev/null | jq -r '."results"[]["name"]' 2>/dev/null)
-		has_more=$?
-		if [[ -n "${result// }" ]]; then results="${results} ${result}"; fi
-			#printf "."
-	done
-
+	results=$(reg tags $1 2> /dev/null)
 	echo "$results" | xargs -n1 | sort -ru | xargs
 }
 
@@ -73,28 +43,29 @@ if [ ! -e ./.env ]; then
 	PRINT_SETUP_SUCCESS=""
 
 	echo "Creating an .env file for you"
-	if command -v jq > /dev/null; then
-		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_core/: $(docker_tag_search zokradonh/kopano_core)"
+
+	if command -v reg > /dev/null; then
+		echo "Available tags in zokradonh/kopano_core/: $(docker_tag_search zokradonh/kopano_core)"
 	fi
 	value_default=latest
 	read -r -p "Which tag do you want to use for Kopano Core components? [$value_default]: " new_value
 	CORE_VERSION=${new_value:-$value_default}
 
-	if command -v jq > /dev/null; then
+	if command -v reg > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_webapp/: $(docker_tag_search zokradonh/kopano_webapp)"
 	fi
 	value_default=latest
 	read -r -p "Which tag do you want to use for Kopano WebApp? [$value_default]: " new_value
 	WEBAPP_VERSION=${new_value:-$value_default}
 
-	if command -v jq > /dev/null; then
+	if command -v reg > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_zpush/: $(docker_tag_search zokradonh/kopano_zpush)"
 	fi
 	value_default=latest
 	read -r -p "Which tag do you want to use for Z-Push? [$value_default]: " new_value
 	ZPUSH_VERSION=${new_value:-$value_default}
 
-	if command -v jq > /dev/null; then
+	if command -v reg > /dev/null; then
 		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_konnect/: $(docker_tag_search zokradonh/kopano_konnect)"
 	fi
 	value_default=latest
