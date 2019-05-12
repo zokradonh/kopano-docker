@@ -28,14 +28,14 @@ docker_tag_search () {
 # define a default docker_repo in case its not in .env
 docker_repo=${docker_repo:-zokradonh}
 
-echo "Available tags in $docker_repo/kopano_core/: $(docker_tag_search $docker_repo/kopano_core)"
+echo "Available tags in $docker_repo/kopano_core/: $(docker_tag_search "$docker_repo"/kopano_core)"
 value_default="$CORE_VERSION"
 read -r -p "Which tag do you want to use for Kopano Core components?
 Please note that using an older version than the current one will result in failure to start. [$value_default]: " new_value
 CORE_VERSION=${new_value:-$value_default}
 sed -i "/^CORE_VERSION/c CORE_VERSION=$CORE_VERSION" ./.env
 
-echo "Available tags in $docker_repo/kopano_webapp/: $(docker_tag_search $docker_repo/kopano_webapp)"
+echo "Available tags in $docker_repo/kopano_webapp/: $(docker_tag_search "$docker_repo"/kopano_webapp)"
 value_default="$WEBAPP_VERSION"
 read -r -p "Which tag do you want to use for Kopano WebApp? [$value_default]: " new_value
 WEBAPP_VERSION=${new_value:-$value_default}
