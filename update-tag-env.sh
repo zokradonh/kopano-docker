@@ -35,11 +35,19 @@ Please note that using an older version than the current one will result in fail
 CORE_VERSION=${new_value:-$value_default}
 sed -i "/^CORE_VERSION/c CORE_VERSION=$CORE_VERSION" ./.env
 
+# todo how to simplify?
 echo "Available tags in $docker_repo/kopano_webapp/: $(docker_tag_search "$docker_repo"/kopano_webapp)"
 value_default="$WEBAPP_VERSION"
 read -r -p "Which tag do you want to use for Kopano WebApp? [$value_default]: " new_value
 WEBAPP_VERSION=${new_value:-$value_default}
 sed -i "/^WEBAPP_VERSION/c WEBAPP_VERSION=$WEBAPP_VERSION" ./.env
+
+echo "Available tags in $docker_repo/kopano_web/: $(docker_tag_search "$docker_repo"/kopano_web)"
+value_default="$KWEB_VERSION"
+read -r -p "Which tag do you want to use for the web container? [$value_default]: " new_value
+KWEB_VERSION=${new_value:-$value_default}
+# TODO how to handle version strings not yet in .env?
+sed -i "/^KWEB_VERSION/c KWEB_VERSION=$KWEB_VERSION" ./.env
 
 if [ -e "$tmpfile" ]; then
 	rm "$tmpfile"
