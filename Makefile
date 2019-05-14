@@ -238,7 +238,7 @@ repo-login:
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
 .PHONY: publish
-publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-ldap-demo publish-meet publish-php publish-playground publish-python publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
+publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-ldap publish-ldap-demo publish-meet publish-php publish-playground publish-python publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
 
 publish-container: component ?= base
 publish-container:
