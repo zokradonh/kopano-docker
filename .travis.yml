@@ -36,8 +36,3 @@ deploy:
     script: make publish
     on:
       branch: master
-after_deploy:
-  - provider: script
-    script: docker system prune -a -f && make test-ci && echo "LDAP_CONTAINER=kopano_ldap" >> .env && make test-ci
-    on:
-      branch: master
