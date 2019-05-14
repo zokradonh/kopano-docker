@@ -157,9 +157,7 @@ if [ ! -e ./.env ]; then
 		value_default=$(cat /etc/timezone)
 	elif [ -f /etc/localtime ]; then
 		value_default=$(readlink /etc/localtime|sed -n 's|^.*zoneinfo/||p')
-	fi
-
-	if [ -z "${value_default}" ]; then
+	else
 		value_default="Europe/Berlin"
 	fi
 
