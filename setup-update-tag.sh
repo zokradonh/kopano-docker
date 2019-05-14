@@ -64,7 +64,7 @@ update_env_file KWEB_VERSION "$return_value"
 tag_question kopano_zpush "${ZPUSH_VERSION:-latest}" "Z-Push"
 update_env_file ZPUSH_VERSION "$return_value"
 
-tag_question kopano_kdav "${KDAV_VERSION:-latest}" "KDav"
+tag_question kopano_kdav "${KDAV_VERSION:-latest}" "kDAV"
 update_env_file KDAV_VERSION "$return_value"
 
 tag_question kopano_konnect "${KONNECT_VERSION:-latest}" "Kopano Konnect"
