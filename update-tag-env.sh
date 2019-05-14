@@ -47,13 +47,14 @@ tag_question () {
 	description="$3"
 	echo "Available tags in $docker_repo/$containername/: $(docker_tag_search "$docker_repo/$containername")"
 	read -r -p "Which tag do you want to use for $description? [$value_default]: " new_value
-	echo ${new_value:-$value_default}
+	return ${new_value:-$value_default}
 }
 
 echo "Please be aware that downgrading to an older version could result in failure to start!"
 
 # TODO this currently puts the full echo into the .env file
-update_env_file CORE_VERSION $(tag_question kopano_core $CORE_VERSION "Kopano Core components")
+tag_question kopano_core $CORE_VERSION "Kopano Core components"
+update_env_file CORE_VERSION $?
 
 exit
 
