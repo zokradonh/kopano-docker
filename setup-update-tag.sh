@@ -47,40 +47,37 @@ tag_question () {
 	description="$3"
 	echo "Available tags in $docker_repo/$containername/: $(docker_tag_search "$docker_repo/$containername")"
 	read -r -p "Which tag do you want to use for $description? [$value_default]: " new_value
-	return ${new_value:-$value_default}
+	return_value=${new_value:-$value_default}
 }
 
 echo "Please be aware that downgrading to an older version could result in failure to start!"
 
-# TODO this currently puts the full echo into the .env file
 tag_question kopano_core $CORE_VERSION "Kopano Core components"
-update_env_file CORE_VERSION $?
+update_env_file CORE_VERSION $return_value
 
-exit
+tag_question kopano_webapp $WEBAPP_VERSION "Kopano WebApp"
+update_env_file WEBAPP_VERSION $return_value
 
-echo "Available tags in $docker_repo/kopano_core/: $(docker_tag_search "$docker_repo"/kopano_core)"
-value_default="$CORE_VERSION"
-read -r -p "Which tag do you want to use for Kopano Core components? [$value_default]: " new_value
-CORE_VERSION=${new_value:-$value_default}
+tag_question kopano_web $KWEB_VERSION "reverse proxy"
+update_env_file KWEB_VERSION $return_value
 
-echo "Available tags in $docker_repo/kopano_webapp/: $(docker_tag_search "$docker_repo"/kopano_webapp)"
-value_default="$WEBAPP_VERSION"
-read -r -p "Which tag do you want to use for Kopano WebApp? [$value_default]: " new_value
-WEBAPP_VERSION=${new_value:-$value_default}
-update_env_file WEBAPP_VERSION $WEBAPP_VERSION
+tag_question kopano_zpush $ZPUSH_VERSION "Z-Push"
+update_env_file ZPUSH_VERSION $return_value
 
-ZPUSH_VERSION
-KDAV_VERSION
-KONNECT_VERSION
-KWM_VERSION
-MEET_VERSION
-SCHEDULER_VERSION
+tag_question kopano_kdav $KDAV_VERSION "KDav"
+update_env_file KDAV_VERSION $return_value
 
-echo "Available tags in $docker_repo/kopano_web/: $(docker_tag_search "$docker_repo"/kopano_web)"
-value_default=${KWEB_VERSION:-latest}
-read -r -p "Which tag do you want to use for the web container? [$value_default]: " new_value
-KWEB_VERSION=${new_value:-$value_default}
-update_env_file KWEB_VERSION $KWEB_VERSION
+tag_question kopano_konnect $KONNECT_VERSION "Kopano Konnect"
+update_env_file KONNECT_VERSION $return_value
+
+tag_question kopano_kwmserver $KWM_VERSION "Kopano Kwmserver"
+update_env_file KWM_VERSION $return_value
+
+tag_question kopano_meet $MEET_VERSION "Kopano Meet"
+update_env_file MEET_VERSION $return_value
+
+tag_question kopano_scheduler ${SCHEDULER_VERSION:-latest} "Scheduler"
+update_env_file SCHEDULER_VERSION $return_value
 
 if [ -e "$tmpfile" ]; then
 	rm "$tmpfile"
