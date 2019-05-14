@@ -52,32 +52,35 @@ tag_question () {
 
 echo "Please be aware that downgrading to an older version could result in failure to start!"
 
-tag_question kopano_core $CORE_VERSION "Kopano Core components"
-update_env_file CORE_VERSION $return_value
+tag_question kopano_core "${CORE_VERSION:-latest}" "Kopano Core components"
+update_env_file CORE_VERSION "$return_value"
 
-tag_question kopano_webapp $WEBAPP_VERSION "Kopano WebApp"
-update_env_file WEBAPP_VERSION $return_value
+tag_question kopano_webapp "${WEBAPP_VERSION:-latest}" "Kopano WebApp"
+update_env_file WEBAPP_VERSION "$return_value"
 
-tag_question kopano_web $KWEB_VERSION "reverse proxy"
-update_env_file KWEB_VERSION $return_value
+tag_question kopano_web "${KWEB_VERSION:-latest}" "reverse proxy"
+update_env_file KWEB_VERSION "$return_value"
 
-tag_question kopano_zpush $ZPUSH_VERSION "Z-Push"
-update_env_file ZPUSH_VERSION $return_value
+tag_question kopano_zpush "${ZPUSH_VERSION:-latest}" "Z-Push"
+update_env_file ZPUSH_VERSION "$return_value"
 
-tag_question kopano_kdav $KDAV_VERSION "KDav"
-update_env_file KDAV_VERSION $return_value
+tag_question kopano_kdav "${KDAV_VERSION:-latest}" "KDav"
+update_env_file KDAV_VERSION "$return_value"
 
-tag_question kopano_konnect $KONNECT_VERSION "Kopano Konnect"
-update_env_file KONNECT_VERSION $return_value
+tag_question kopano_konnect "${KONNECT_VERSION:-latest}" "Kopano Konnect"
+update_env_file KONNECT_VERSION "$return_value"
 
-tag_question kopano_kwmserver $KWM_VERSION "Kopano Kwmserver"
-update_env_file KWM_VERSION $return_value
+tag_question kopano_kwmserver "${KWM_VERSION:-latest}" "Kopano Kwmserver"
+update_env_file KWM_VERSION "$return_value"
 
-tag_question kopano_meet $MEET_VERSION "Kopano Meet"
-update_env_file MEET_VERSION $return_value
+tag_question kopano_meet "${MEET_VERSION:-latest}" "Kopano Meet"
+update_env_file MEET_VERSION "$return_value"
 
-tag_question kopano_scheduler ${SCHEDULER_VERSION:-latest} "Scheduler"
-update_env_file SCHEDULER_VERSION $return_value
+tag_question kopano_scheduler "${SCHEDULER_VERSION:-latest}" "Scheduler"
+update_env_file SCHEDULER_VERSION "$return_value"
+
+tag_question kopano_ssl "${SSL_VERSION:-latest}" "SSL helper container"
+update_env_file SSL_VERSION "$return_value"
 
 if [ -e "$tmpfile" ]; then
 	rm "$tmpfile"
