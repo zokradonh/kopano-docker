@@ -45,6 +45,7 @@ if [ ! -e ./.env ]; then
 
 	echo "Creating an .env file for you"
 
+	# if the optional https://github.com/genuinetools/reg is installed this will list available tags
 	if command -v reg > /dev/null; then
 		echo "Available tags in zokradonh/kopano_core/: $(docker_tag_search zokradonh/kopano_core)"
 	fi
