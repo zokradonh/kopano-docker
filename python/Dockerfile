@@ -36,7 +36,7 @@ RUN \
     # install
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
-        python-kopano \
+        python3-kopano \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
