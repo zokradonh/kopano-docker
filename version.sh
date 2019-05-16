@@ -1,5 +1,5 @@
 #!/bin/bash
-if ! hash jq; then
+if ! command -v jq > /dev/null; then
 	echo "Please install jq in order to run this build script."
 	exit 1
 fi
