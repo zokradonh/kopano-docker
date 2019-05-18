@@ -3,7 +3,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-if ! hash reg; then
+if ! command -v reg > /dev/null; then
 	echo "Please install reg in order to run this script."
 	exit 1
 fi
