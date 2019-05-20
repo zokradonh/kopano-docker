@@ -330,6 +330,7 @@ test-ci:
 	docker wait kopano_test_1
 	docker logs --tail 10 kopano_test_1
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
+	docker rm kopano_test_1
 
 test-quick:
 	docker-compose -f $(COMPOSE_FILE) stop || true
