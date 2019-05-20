@@ -37,7 +37,7 @@ update_env_file () {
 	if ! grep -q "$varname" ./.env; then
 		echo "$varname=$varvalue" >> ./.env
 	else
-		sed -i "/^$varname/c $varname=$varvalue" ./.env
+		sed -i "/$varname/c $varname=$varvalue" ./.env
 	fi
 }
 
