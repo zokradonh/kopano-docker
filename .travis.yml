@@ -16,18 +16,22 @@ before_install:
   - sudo curl -L https://github.com/aelsabbahy/goss/releases/download/v$GOSS_VERSION/dgoss -o /usr/local/bin/dgoss
   - sudo curl -L https://github.com/hadolint/hadolint/releases/download/v$HADOLINT_VERSION/hadolint-$(uname -s)-$(uname -m) -o /usr/local/bin/hadolint
   - sudo rm /usr/local/bin/docker-compose
-  - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+  - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose 
   - sudo chmod +rx /usr/local/bin/goss
   - sudo chmod +rx /usr/local/bin/dgoss
   - sudo chmod +rx /usr/local/bin/hadolint
   - sudo chmod +rx /usr/local/bin/docker-compose
   - sudo apt update && sudo apt install -y expect
+  - export TRIVY_VERSION=$(curl --silent "https://api.github.com/repos/knqyf263/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+  - wget https://github.com/knqyf263/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+  - sudo tar zxvf trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz -C /usr/local/bin trivy
 install:
   - make check-scripts
   - "./test.exp"
   - make check-scripts # rerun check-scripts to see if output is different with .env in place
   - make build-all
 script:
+  - make test-security
   - make test-ci
 after_failure:
   - timeout 3s docker-compose logs

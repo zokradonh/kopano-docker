@@ -22,6 +22,7 @@ RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 
 COMPOSE_FILE := docker-compose.yml
+TAG_FILE := ./build.tags
 -include .env
 export
 
@@ -164,6 +165,7 @@ tag-container: component ?= base
 tag-container:
 	@echo 'create tag $($(component)_version)'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
+	@echo $(docker_repo)/kopano_$(component):${$(component)_version} >> $(TAG_FILE)
 	@echo 'create tag latest'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):latest
 	git commit -m 'ci: committing changes for $(component)' -- $(component) || true
@@ -339,7 +341,11 @@ test-ci:
 	docker logs --tail 10 kopano_test_1
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker rm kopano_test_1
-	
+
+test-security:
+	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'
+	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 1 --severity CRITICAL --quiet --auto-refresh %'
+
 test-quick:
 	docker-compose -f $(COMPOSE_FILE) stop || true
 	docker-compose -f $(COMPOSE_FILE) up -d
