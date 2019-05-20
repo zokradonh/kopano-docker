@@ -334,11 +334,12 @@ test-ci:
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml build
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml up -d
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml ps
+	# TODO this just echos the exit code of the kopano_test container. if this is not 0 we should do something with it
 	docker wait kopano_test_1
 	docker logs --tail 10 kopano_test_1
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker rm kopano_test_1
-
+	
 test-quick:
 	docker-compose -f $(COMPOSE_FILE) stop || true
 	docker-compose -f $(COMPOSE_FILE) up -d
