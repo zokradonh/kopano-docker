@@ -3,6 +3,8 @@ FROM debian:stretch
 LABEL maintainer=az@zok.xyz \
       version="2.0"
 
+ENV BASE_VERSION=1.0
+
 RUN mkdir -p /kopano/repo /kopano/data /kopano/helper /kopano/path
 WORKDIR /kopano/repo
 
@@ -46,6 +48,6 @@ ARG RELEASE_KEY_DOWNLOAD=0
 # get common utilities
 COPY create-kopano-repo.sh /kopano/helper/
 COPY kcconf.py /kopano/
-RUN date +%s > /kopano/buildversion
+RUN echo $BASE_VERSION > /kopano/buildversion
 
 SHELL [ "/bin/bash", "-c"]
