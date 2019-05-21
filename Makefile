@@ -107,6 +107,7 @@ endif
 	--cache-from $(docker_repo)/kopano_$(component) \
 	--cache-from $(docker_repo)/kopano_$(component):builder \
 	-t $(docker_repo)/kopano_$(component):builder $(component)/
+	@echo $(docker_repo)/kopano_$(component):builder >> $(TAG_FILE)
 
 build-base: ## Build new base image.
 	docker pull debian:stretch
@@ -356,7 +357,8 @@ test-ci:
 # TODO this requires images to be tagged already, but currently tagging is only done on publish
 test-security: tag-all
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'
-	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity CRITICAL --quiet --auto-refresh %'
+	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 1 --severity CRITICAL --quiet --auto-refresh %'
+	rm $(TAG_FILE)
 
 test-quick:
 	docker-compose -f $(COMPOSE_FILE) stop || true
