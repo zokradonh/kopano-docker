@@ -29,12 +29,15 @@ export
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-.PHONY: all
-all: build-all
+.PHONY: default
+default: help
 
 .PHONY: help
 help:
 	@eval $$(sed -r -n 's/^([a-zA-Z0-9_-]+):.*?## (.*)$$/printf "\\033[36m%-30s\\033[0m %s\\n" "\1" "\2" ;/; ta; b; :a p' $(MAKEFILE_LIST) | sort)
+
+.PHONY: build-all
+all: build-all
 
 build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap build-ldap-demo build-meet build-php build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
 
@@ -164,6 +167,9 @@ build-webapp-demo: ## Replaces the actual kopano_webapp container with one that 
 
 build-zpush:
 	component=zpush make build
+
+tag-all: build-all ## Helper target to create tags for all images.
+	make $(shell grep -o ^tag-.*: Makefile | grep -Ev 'tag-all|tag-container' | uniq | sed s/://g | xargs)
 
 tag-container: component ?= base
 tag-container: ## Helper target to tag a given image. Defaults to the base image.
@@ -359,6 +365,3 @@ test-quick:
 
 test-stop:
 	docker-compose -f $(COMPOSE_FILE) stop || true
-
-.PHONY: default
-default: build-all
