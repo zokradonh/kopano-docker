@@ -32,11 +32,15 @@ COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 .PHONY: all
 all: build-all
 
+.PHONY: help
+help:
+	@eval $$(sed -r -n 's/^([a-zA-Z0-9_-]+):.*?## (.*)$$/printf "\\033[36m%-30s\\033[0m %s\\n" "\1" "\2" ;/; ta; b; :a p' $(MAKEFILE_LIST) | sort)
+
 build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap build-ldap-demo build-meet build-php build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
 
 .PHONY: build
 build: component ?= base
-build:
+build: ## Helper target to build a given image. Defaults to the "base" image.
 ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component) || true
@@ -63,7 +67,7 @@ endif
 
 .PHONY: build-simple
 build-simple: component ?= ssl
-build-simple:
+build-simple: ## Helper target to build a simplified image (no Kopano repo integration).
 ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component) || true
@@ -77,7 +81,7 @@ endif
 
 .PHONY: build-builder
 build-builder: component ?= kdav
-build-builder:
+build-builder: ## Helper target for images with a build stage.
 ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
@@ -101,7 +105,7 @@ endif
 	--cache-from $(docker_repo)/kopano_$(component):builder \
 	-t $(docker_repo)/kopano_$(component):builder $(component)/
 
-build-base:
+build-base: ## Build new base image.
 	docker pull debian:stretch
 	component=base make build
 
@@ -152,8 +156,8 @@ build-web:
 build-webapp: build-php
 	component=webapp make build
 
-# replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com
-build-webapp-demo:
+
+build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
 	docker build \
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
@@ -162,7 +166,7 @@ build-zpush:
 	component=zpush make build
 
 tag-container: component ?= base
-tag-container:
+tag-container: ## Helper target to tag a given image. Defaults to the base image.
 	@echo 'create tag $($(component)_version)'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
 	@echo $(docker_repo)/kopano_$(component):${$(component)_version} >> $(TAG_FILE)
@@ -244,14 +248,14 @@ tag-zpush:
 	component=zpush make tag-container
 
 # Docker publish
-repo-login:
+repo-login: ## Login at hub.docker.com
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
 .PHONY: publish
 publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-ldap publish-ldap-demo publish-meet publish-php publish-playground publish-python publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
 
 publish-container: component ?= base
-publish-container:
+publish-container: ## Helper target to push a given image to a registry. Defaults to the base image.
 	@echo 'publish latest to $(docker_repo)/kopano_$(component)'
 	docker push $(docker_repo)/kopano_$(component):${$(component)_version}
 	docker push $(docker_repo)/kopano_$(component):latest
