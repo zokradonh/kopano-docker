@@ -268,6 +268,7 @@ publish-konnect: build-konnect tag-konnect
 publish-kwmserver: build-kwmserver tag-kwmserver
 	component=kwmserver make publish-container
 
+# TODO also add tag for ldap images
 publish-ldap: build-ldap
 	docker push $(docker_repo)/kopano_ldap:latest
 
@@ -297,7 +298,7 @@ publish-scheduler: build-scheduler tag-scheduler
 publish-ssl: build-ssl tag-ssl
 	component=scheduler make publish-container
 
-publish-utils: build-core build-utils tag-utils
+publish-utils: build-utils tag-utils
 	component=utils make publish-container
 
 publish-web: build-web tag-web
@@ -342,6 +343,7 @@ test-ci:
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker rm kopano_test_1
 
+# TODO this requires images to be tagged already, but currently tagging is only done on publish
 test-security:
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 1 --severity CRITICAL --quiet --auto-refresh %'
