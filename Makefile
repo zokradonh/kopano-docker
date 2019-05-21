@@ -22,7 +22,7 @@ RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 
 COMPOSE_FILE := docker-compose.yml
-TAG_FILE := ./build.tags
+TAG_FILE := build.tags
 -include .env
 export
 
