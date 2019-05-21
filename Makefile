@@ -39,7 +39,8 @@ help:
 .PHONY: build-all
 all: build-all
 
-build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap build-ldap-demo build-meet build-php build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
+build-all:
+	echo make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder' | uniq | sed s/://g | xargs)
 
 .PHONY: build
 build: component ?= base
@@ -160,7 +161,6 @@ build-web:
 build-webapp: build-php
 	component=webapp make build
 
-
 build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
 	docker build \
 		-f webapp/Dockerfile.demo \
@@ -259,7 +259,8 @@ repo-login: ## Login at hub.docker.com
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
 .PHONY: publish
-publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-ldap publish-ldap-demo publish-meet publish-php publish-playground publish-python publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
+publish: repo-login
+	echo make $(shell grep -o ^publish-.*: Makefile | grep -Ev 'publish-container' | uniq | sed s/://g | xargs)
 
 publish-container: component ?= base
 publish-container: ## Helper target to push a given image to a registry. Defaults to the base image.
@@ -354,7 +355,6 @@ test-ci:
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker rm kopano_test_1
 
-# TODO this requires images to be tagged already, but currently tagging is only done on publish
 test-security: tag-all
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 1 --severity CRITICAL --quiet --auto-refresh %'
