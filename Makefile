@@ -40,7 +40,7 @@ help:
 all: build-all
 
 build-all:
-	echo make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder' | uniq | sed s/://g | xargs)
+	make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder' | uniq | sed s/://g | xargs)
 
 .PHONY: build
 build: component ?= base
@@ -260,7 +260,7 @@ repo-login: ## Login at hub.docker.com
 
 .PHONY: publish
 publish: repo-login
-	echo make $(shell grep -o ^publish-.*: Makefile | grep -Ev 'publish-container' | uniq | sed s/://g | xargs)
+	make $(shell grep -o ^publish-.*: Makefile | grep -Ev 'publish-container' | uniq | sed s/://g | xargs)
 
 publish-container: component ?= base
 publish-container: ## Helper target to push a given image to a registry. Defaults to the base image.
