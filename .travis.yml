@@ -27,8 +27,6 @@ install:
 script:
   - make test-security
   - make test-ci
-after_failure:
-  - timeout 3s docker-compose logs
 deploy:
   - provider: script
     script: make publish
