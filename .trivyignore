@@ -1,0 +1,5 @@
+# we're not using systemd
+CVE-2017-1000082
+
+# tar setuid issue
+CVE-2005-2541
