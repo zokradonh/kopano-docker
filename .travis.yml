@@ -24,7 +24,7 @@ install:
   - "./test.exp"
   - make check-scripts # rerun check-scripts to see if output is different with .env in place
   - make build-all
-  - make tag-all
+  #- make tag-all
 script:
   - make test-ci
 deploy:
