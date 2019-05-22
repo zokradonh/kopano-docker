@@ -26,7 +26,6 @@ install:
   - make build-all
   - make tag-all
 script:
-  - make test-security
   - make test-ci
 deploy:
   - provider: script
