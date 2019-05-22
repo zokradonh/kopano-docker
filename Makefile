@@ -355,7 +355,7 @@ test-ci:
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker rm kopano_test_1
 
-test-security: tag-all
+test-security:
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 1 --severity CRITICAL --quiet --auto-refresh %'
 	rm $(TAG_FILE)
