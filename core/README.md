@@ -41,3 +41,9 @@ Example:
 Depending on the overall performance of the system and the amount of user the first execution of this command will take a moment before it produces any output. This is since this command kicks off the mailbox creation for the users.
 
 See https://documentation.kopano.io/kopanocore_administrator_manual/configure_kc_components.html#testing-ldap-configuration for more information.
+
+## Ports & Proxying
+
+- kopano-server is configured to listen on the ports 236 (plain) and 237 (https)
+- kopano-ical is configured to listen on the port 8080, but the web container is also configured to proxy access to http(s)://FQDN/caldav to kopano-ical
+- kopano-gateway is configured to listen on IMAP traffic on port 143. Pop3 is deactivated by default but whould be listening on port 110. Pop3s and IMAPs are currently not configured. (see https://github.com/zokradonh/kopano-docker/issues/16 for more details).
