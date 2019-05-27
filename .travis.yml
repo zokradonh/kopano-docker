@@ -31,6 +31,6 @@ deploy:
     script: make publish
     on:
       branch: master
-cache:
-  directories:
-    - $HOME/.cache/trivy
+#cache: # uncomment to not load/upload trivy files each time
+#  directories:
+#    - $HOME/.cache/trivy

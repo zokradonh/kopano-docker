@@ -334,32 +334,32 @@ clean:
 	docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans || true
 
 .PHONY: test
-test:
+test: ## Build and start new containers for testing (also deletes existing data volumes).
 	docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans || true
 	make build-all
 	docker-compose -f $(COMPOSE_FILE) build
 	docker-compose -f $(COMPOSE_FILE) up -d
 	docker-compose -f $(COMPOSE_FILE) ps
 
-test-update-env:
+test-update-env: ## Recreate containers based on updated .env.
 	docker-compose -f $(COMPOSE_FILE) up -d
 
-test-ci:
+test-ci: ## Test if all containers start up
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml build
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml up -d
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml ps
-	# TODO this just echos the exit code of the kopano_test container. if this is not 0 we should do something with it
+	# TODO this just echos the exit code of the kopano_test container. if this is not 0 we should do something with it.
 	docker wait kopano_test_1
 	docker logs --tail 10 kopano_test_1
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker rm kopano_test_1
 
-test-security:
+test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 1 --severity CRITICAL --quiet --auto-refresh %'
 	rm $(TAG_FILE)
 
-test-quick:
+test-quick: ## Similar to test target, but does not delete existing data volumes and does not rebuild images.
 	docker-compose -f $(COMPOSE_FILE) stop || true
 	docker-compose -f $(COMPOSE_FILE) up -d
 	docker-compose -f $(COMPOSE_FILE) ps
