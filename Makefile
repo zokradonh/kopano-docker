@@ -280,7 +280,6 @@ publish-konnect: build-konnect tag-konnect
 publish-kwmserver: build-kwmserver tag-kwmserver
 	component=kwmserver make publish-container
 
-# TODO also add tag for ldap images
 publish-ldap: build-ldap
 	docker push $(docker_repo)/kopano_ldap:latest
 
