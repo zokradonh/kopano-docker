@@ -40,7 +40,7 @@ help:
 all: build-all
 
 build-all:
-	make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder' | uniq | sed s/://g | xargs)
+	make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder|build-webapp-demo' | uniq | sed s/://g | xargs)
 
 .PHONY: build
 build: component ?= base
