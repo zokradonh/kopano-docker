@@ -47,6 +47,7 @@ tag_question () {
 	description="$3"
 	echo "Which tag do you want to use for $description? [$value_default]"
 	echo "Available tags in $docker_repo/$containername/: "
+	# select does not work with an empty/default value https://stackoverflow.com/questions/42789273/bash-choose-default-from-case-when-enter-is-pressed-in-a-select-prompt
 	select new_value in $(docker_tag_search "$docker_repo/$containername"); do
 	    if [[ -n $new_value ]]; then
 	        return_value=${new_value:-$value_default}
