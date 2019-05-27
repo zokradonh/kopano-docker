@@ -1,5 +1,5 @@
 ARG docker_repo=zokradonh
-FROM composer:1.8.4 as builder
+FROM composer:1.8 as builder
 
 RUN git clone --depth 1 https://stash.kopano.io/scm/kc/kdav.git /usr/share/kdav
 WORKDIR /usr/share/kdav
@@ -46,10 +46,7 @@ RUN \
 COPY apache2-kopano-kdav.conf /etc/apache2/sites-available/kopano-kdav.conf
 
 # configure basics
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8 && \
+RUN \
     # configure apache
     rm /etc/apache2/sites-enabled/* && \
     sed -e 's,^ErrorLog.*,ErrorLog "|/bin/cat",' -i /etc/apache2/apache2.conf && \

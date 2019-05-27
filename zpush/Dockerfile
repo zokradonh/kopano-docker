@@ -55,10 +55,7 @@ RUN \
 COPY apache2-kopano.conf /etc/apache2/sites-available/kopano.conf
 
 # configure basics
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8 && \
+RUN \
     # configure apache
     rm /etc/apache2/sites-enabled/* && \
     sed -e 's,^ErrorLog.*,ErrorLog "|/bin/cat",' -i /etc/apache2/apache2.conf && \
