@@ -42,7 +42,6 @@ ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build \
-		--pull \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
@@ -102,6 +101,7 @@ endif
 	-t $(docker_repo)/kopano_$(component):builder $(component)/
 
 build-base:
+	docker pull debian:stretch
 	component=base make build
 
 build-core: build-base
