@@ -90,6 +90,9 @@ update_env_file SCHEDULER_VERSION "$return_value"
 tag_question kopano_ssl "${SSL_VERSION:-latest}" "SSL helper container"
 update_env_file SSL_VERSION "$return_value"
 
+tag_question kopano_ldap "${LDAP_VERSION:-latest}" "LDAP container"
+update_env_file LDAP_VERSION "$return_value"
+
 if [ -e "$tmpfile" ]; then
 	rm "$tmpfile"
 fi
