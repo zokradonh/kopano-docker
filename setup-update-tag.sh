@@ -28,7 +28,7 @@ docker_repo=${docker_repo:-zokradonh}
 docker_tag_search () {
 	image="$1"
 	results=$(reg tags "$image" 2> /dev/null)
-	echo "$results" | xargs -n1 | sort -ru | xargs
+	echo "$results" | xargs -n1 | sort -ru
 }
 
 update_env_file () {
@@ -45,9 +45,16 @@ tag_question () {
 	containername="$1"
 	value_default="$2"
 	description="$3"
-	echo "Available tags in $docker_repo/$containername/: $(docker_tag_search "$docker_repo/$containername")"
-	read -r -p "Which tag do you want to use for $description? [$value_default]: " new_value
-	return_value=${new_value:-$value_default}
+	echo "Which tag do you want to use for $description? [$value_default]"
+	echo "Available tags in $docker_repo/$containername/: "
+	select new_value in $(docker_tag_search "$docker_repo/$containername"); do
+	    if [[ -n $new_value ]]; then
+	        return_value=${new_value:-$value_default}
+    	else
+	        return_value=$value_default
+	    fi
+		break
+	done
 }
 
 echo "Please be aware that downgrading to an older version could result in failure to start!"
