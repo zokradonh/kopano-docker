@@ -1,0 +1,8 @@
+# we're not using systemd
+CVE-2017-1000082
+
+# tar setuid issue
+CVE-2005-2541
+
+# libssh2 issue not relevant since not using ssh
+CVE-2019-3855

@@ -6,3 +6,4 @@ data/*
 .env
 *.env
 docker-compose.override.yml
+build.tags

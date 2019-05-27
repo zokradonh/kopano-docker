@@ -22,20 +22,29 @@ RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 
 COMPOSE_FILE := docker-compose.yml
+TAG_FILE := build.tags
 -include .env
 export
 
 # convert lowercase componentname to uppercase
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
-.PHONY: all
+.PHONY: default
+default: help
+
+.PHONY: help
+help:
+	@eval $$(sed -r -n 's/^([a-zA-Z0-9_-]+):.*?## (.*)$$/printf "\\033[36m%-30s\\033[0m %s\\n" "\1" "\2" ;/; ta; b; :a p' $(MAKEFILE_LIST) | sort)
+
+.PHONY: build-all
 all: build-all
 
-build-all: build-base build-core build-kdav build-konnect build-kwmserver build-ldap build-ldap-demo build-meet build-php build-playground build-scheduler build-ssl build-utils build-web build-webapp build-zpush
+build-all:
+	make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder|build-webapp-demo' | uniq | sed s/://g | xargs)
 
 .PHONY: build
 build: component ?= base
-build:
+build: ## Helper target to build a given image. Defaults to the "base" image.
 ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component) || true
@@ -62,7 +71,7 @@ endif
 
 .PHONY: build-simple
 build-simple: component ?= ssl
-build-simple:
+build-simple: ## Helper target to build a simplified image (no Kopano repo integration).
 ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component) || true
@@ -76,7 +85,7 @@ endif
 
 .PHONY: build-builder
 build-builder: component ?= kdav
-build-builder:
+build-builder: ## Helper target for images with a build stage.
 ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
@@ -99,8 +108,9 @@ endif
 	--cache-from $(docker_repo)/kopano_$(component) \
 	--cache-from $(docker_repo)/kopano_$(component):builder \
 	-t $(docker_repo)/kopano_$(component):builder $(component)/
+	@echo $(docker_repo)/kopano_$(component):builder >> $(TAG_FILE)
 
-build-base:
+build-base: ## Build new base image.
 	docker pull debian:stretch
 	component=base make build
 
@@ -151,8 +161,7 @@ build-web:
 build-webapp: build-php
 	component=webapp make build
 
-# replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com
-build-webapp-demo:
+build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
 	docker build \
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
@@ -160,10 +169,14 @@ build-webapp-demo:
 build-zpush:
 	component=zpush make build
 
+tag-all: build-all ## Helper target to create tags for all images.
+	make $(shell grep -o ^tag-.*: Makefile | grep -Ev 'tag-all|tag-container' | uniq | sed s/://g | xargs)
+
 tag-container: component ?= base
-tag-container:
+tag-container: ## Helper target to tag a given image. Defaults to the base image.
 	@echo 'create tag $($(component)_version)'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
+	@echo $(docker_repo)/kopano_$(component):${$(component)_version} >> $(TAG_FILE)
 	@echo 'create tag latest'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):latest
 	git commit -m 'ci: committing changes for $(component)' -- $(component) || true
@@ -242,14 +255,15 @@ tag-zpush:
 	component=zpush make tag-container
 
 # Docker publish
-repo-login:
+repo-login: ## Login at hub.docker.com
 	@docker login -u $(docker_login) -p $(docker_pwd)
 
 .PHONY: publish
-publish: repo-login publish-base publish-core publish-kdav publish-konnect publish-kwmserver publish-ldap publish-ldap-demo publish-meet publish-php publish-playground publish-python publish-scheduler publish-ssl publish-utils publish-web publish-webapp publish-zpush
+publish: repo-login
+	make $(shell grep -o ^publish-.*: Makefile | grep -Ev 'publish-container' | uniq | sed s/://g | xargs)
 
 publish-container: component ?= base
-publish-container:
+publish-container: ## Helper target to push a given image to a registry. Defaults to the base image.
 	@echo 'publish latest to $(docker_repo)/kopano_$(component)'
 	docker push $(docker_repo)/kopano_$(component):${$(component)_version}
 	docker push $(docker_repo)/kopano_$(component):latest
@@ -295,7 +309,7 @@ publish-scheduler: build-scheduler tag-scheduler
 publish-ssl: build-ssl tag-ssl
 	component=scheduler make publish-container
 
-publish-utils: build-core build-utils tag-utils
+publish-utils: build-utils tag-utils
 	component=utils make publish-container
 
 publish-web: build-web tag-web
@@ -320,32 +334,35 @@ clean:
 	docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans || true
 
 .PHONY: test
-test:
+test: ## Build and start new containers for testing (also deletes existing data volumes).
 	docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans || true
 	make build-all
 	docker-compose -f $(COMPOSE_FILE) build
 	docker-compose -f $(COMPOSE_FILE) up -d
 	docker-compose -f $(COMPOSE_FILE) ps
 
-test-update-env:
+test-update-env: ## Recreate containers based on updated .env.
 	docker-compose -f $(COMPOSE_FILE) up -d
 
-test-ci:
+test-ci: ## Test if all containers start up
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml build
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml up -d
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml ps
+	# TODO this just echos the exit code of the kopano_test container. if this is not 0 we should do something with it.
 	docker wait kopano_test_1
 	docker logs --tail 10 kopano_test_1
 	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker rm kopano_test_1
 
-test-quick:
+test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
+	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'
+	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 1 --severity CRITICAL --quiet --auto-refresh %'
+	rm $(TAG_FILE)
+
+test-quick: ## Similar to test target, but does not delete existing data volumes and does not rebuild images.
 	docker-compose -f $(COMPOSE_FILE) stop || true
 	docker-compose -f $(COMPOSE_FILE) up -d
 	docker-compose -f $(COMPOSE_FILE) ps
 
 test-stop:
 	docker-compose -f $(COMPOSE_FILE) stop || true
-
-.PHONY: default
-default: build-all
