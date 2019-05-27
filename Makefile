@@ -189,6 +189,13 @@ tag-kwmserver:
 	$(shell docker run --rm $(docker_repo)/kopano_kwmserver env | grep CODE_VERSION | cut -d'=' -f2))
 	component=kwmserver make tag-container
 
+tag-ldap:
+	$(eval ldap_version := \
+	$(shell docker run --rm $(docker_repo)/kopano_ldap env | grep CODE_VERSION | cut -d'=' -f2))
+	component=ldap make tag-container
+	$(eval ldap_demo_version := $(ldap_version))
+	component=ldap_demo make tag-container
+
 tag-meet:
 	$(eval meet_version := \
 	$(shell docker run --rm $(docker_repo)/kopano_meet cat /kopano/buildversion | grep meet | cut -d- -f2 | cut -d+ -f1))
