@@ -16,3 +16,13 @@ expect {
 	}
 	eof
 }
+
+spawn "./setup-update-tag.sh"
+
+expect {
+	"#?" {
+		send "\r"
+		exp_continue
+	}
+	eof
+}

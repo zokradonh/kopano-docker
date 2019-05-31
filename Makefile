@@ -1,3 +1,5 @@
+SHELL := /bin/bash # Use bash syntax
+
 # if not run in travis, get docker_login and _pwd from file
 ifndef TRAVIS
 	docker_repo := zokradonh
@@ -174,6 +176,7 @@ tag-all: build-all ## Helper target to create tags for all images.
 
 tag-container: component ?= base
 tag-container: ## Helper target to tag a given image. Defaults to the base image.
+	# TODO how to tag additional releases. e.g. also tag 8.7.80.1035 as 8.7.80?
 	@echo 'create tag $($(component)_version)'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
 	@echo $(docker_repo)/kopano_$(component):${$(component)_version} >> $(TAG_FILE)
