@@ -14,7 +14,7 @@ if [ ! -e ./.env ]; then
 fi
 
 # this is a kind of ugly hack to be able to source the env file
-# this is sadly needed since postfix in https://github.com/tomav/docker-mailserver/ cannot deal with quotes values
+# this is sadly needed since postfix in https://github.com/tomav/docker-mailserver/ cannot deal with quoted values
 tmpfile=$(mktemp /tmp/kopano-docker-env.XXXXXX)
 cp ./.env "$tmpfile"
 sed -i '/LDAP_QUERY_FILTER/s/^/#/g' "$tmpfile"
