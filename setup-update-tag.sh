@@ -31,6 +31,30 @@ docker_tag_search () {
 	echo "$results" | xargs -n1 | sort -ru
 }
 
+# function from https://stackoverflow.com/a/42790579/4754613
+selectWithDefault() {
+
+	local item i=0 numItems=$#
+
+	# Print numbered menu items, based on the arguments passed.
+	for item; do         # Short for: for item in "$@"; do
+		printf '%s\n' "$((++i))) $item"
+	done >&2 # Print to stderr, as `select` does.
+
+	# Prompt the user for the index of the desired item.
+	while :; do
+		printf %s "${PS3-#? }" >&2 # Print the prompt string to stderr, as `select` does.
+		read -r index
+		# Make sure that the input is either empty or that a valid index was entered.
+		[[ -z $index ]] && break  # empty input
+		(( index >= 1 && index <= numItems )) 2>/dev/null || { echo "Invalid selection. Please try again." >&2; continue; }
+		break
+	done
+
+	# Output the selected item, if any.
+	[[ -n $index ]] && printf %s "${@: index:1}"
+}
+
 update_env_file () {
 	varname="$1"
 	varvalue="$2"
@@ -47,15 +71,10 @@ tag_question () {
 	description="$3"
 	echo "Which tag do you want to use for $description? [$value_default]"
 	echo "Available tags in $docker_repo/$containername/: "
-	# select does not work with an empty/default value https://stackoverflow.com/questions/42789273/bash-choose-default-from-case-when-enter-is-pressed-in-a-select-prompt
-	select new_value in $(docker_tag_search "$docker_repo/$containername"); do
-	    if [[ -n $new_value ]]; then
-	        return_value=${new_value:-$value_default}
-    	else
-	        return_value=$value_default
-	    fi
-		break
-	done
+	set +e
+	new_value=$(selectWithDefault $(docker_tag_search "$docker_repo/$containername"))
+	set -e
+	return_value=${new_value:-$value_default}
 }
 
 echo "Please be aware that downgrading to an older version could result in failure to start!"
