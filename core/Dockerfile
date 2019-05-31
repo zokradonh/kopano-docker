@@ -65,6 +65,7 @@ ENV LANG=en_US.UTF-8
 ENV SERVICE_TO_START=server
 
 COPY defaultconfigs/ start-service.sh healthcheck.sh /kopano/
+COPY reload-service.sh /usr/local/bin/
 COPY goss/ /kopano/goss
 
 WORKDIR /kopano/path
