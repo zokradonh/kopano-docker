@@ -72,6 +72,7 @@ tag_question () {
 	echo "Which tag do you want to use for $description? [$value_default]"
 	echo "Available tags in $docker_repo/$containername/: "
 	set +e
+	# shellcheck disable=SC2046
 	new_value=$(selectWithDefault $(docker_tag_search "$docker_repo/$containername"))
 	set -e
 	return_value=${new_value:-$value_default}
