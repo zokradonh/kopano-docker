@@ -19,7 +19,7 @@ server)
 	env
 	unset "${!KCCONF_@}"
 	env
-	kill -HUP $(pidof kopano-server)
+	kill -HUP "$(pidof kopano-server)"
 	;;
 *)
 	echo "Failed to start: Unhandled service name: '$SERVICE_TO_START'" | ts
