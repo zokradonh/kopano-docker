@@ -11,4 +11,9 @@ KCCONF_SERVER_ENABLE_HOSTED_KOPANO=YES
 KCCONF_LDAP_LDAP_COMPANY_TYPE_ATTRIBUTE_VALUE=kopano-company
 ```
 
+Additionally the ldap tree is also prepared for multi server installations (also referred to as "distributed"), where multiple `kopano-server` processes share the total amount of mailboxes (controlled through a manual mapping in LDAP).
+
+```
+$ docker-compose -f examples/kopano-multiserver.yml up
+```
 Demo users created in the demo ldap all have a password that is identical to the username, e.g. the password for `user1` user `user1`.
