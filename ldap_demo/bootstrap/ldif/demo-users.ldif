@@ -1,17 +1,53 @@
+dn: ou=CompanyA,{{ LDAP_BASE_DN }}
+objectclass: organizationalUnit
+objectclass: top
+objectclass: kopano-company
+ou: CompanyA
+
 # users, {{ LDAP_DOMAIN }}
-dn: ou=users,{{ LDAP_BASE_DN }}
+dn: ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 objectClass: organizationalUnit
 objectClass: top
 ou: users
 
 # groups, {{ LDAP_DOMAIN }}
-dn: ou=groups,{{ LDAP_BASE_DN }}
+dn: ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
 objectClass: organizationalUnit
 objectClass: top
 ou: groups
 
+# resources, {{ LDAP_DOMAIN }}
+dn: ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
+objectClass: organizationalUnit
+objectClass: top
+ou: resources
+
+dn: ou=CompanyB,{{ LDAP_BASE_DN }}
+objectclass: organizationalUnit
+objectclass: top
+objectclass: kopano-company
+ou: CompanyB
+
+# users, {{ LDAP_DOMAIN }}
+dn: ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
+objectClass: organizationalUnit
+objectClass: top
+ou: users
+
+# groups, {{ LDAP_DOMAIN }}
+dn: ou=groups,ou=CompanyB,{{ LDAP_BASE_DN }}
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+
+# resources, {{ LDAP_DOMAIN }}
+dn: ou=resources,ou=CompanyB,{{ LDAP_BASE_DN }}
+objectClass: organizationalUnit
+objectClass: top
+ou: resources
+
 # user2, users, {{ LDAP_DOMAIN }}
-dn: uid=user2,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user2,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 gidNumber: 2
 homeDirectory: /home/user2
 objectClass: posixAccount
@@ -34,7 +70,7 @@ street: 'Oliviaboulevard 1'
 title: Arts development officer
 l: Krommenie
 postalCode: 1713 QP
-secretary: uid=user3,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user3,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 kopanoSendAsPrivilege: 3
 jpegPhoto:: iVBORw0KGgoAAAANSUhEUgAABLAAAAMgCAIAAAC8ggxVAAAAGXRFWHRTb2Z0d2FyZQ
  BBZG9iZSBJbWFnZVJlYWR5ccllPAAAAxJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2t
@@ -19445,7 +19481,7 @@ jpegPhoto:: iVBORw0KGgoAAAANSUhEUgAABLAAAAMgCAIAAAC8ggxVAAAAGXRFWHRTb2Z0d2FyZQ
 physicalDeliveryOfficeName: Munich
 
 # user5, users, {{ LDAP_DOMAIN }}
-dn: uid=user5,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user5,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Joep Goderts
 gidNumber: 5
 givenName: Joep
@@ -19469,7 +19505,7 @@ postalCode: 79522
 street: Roseallee 84
 telephoneNumber: 09884464725
 title: Doctor, general practice
-secretary: uid=user6,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user6,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 jpegPhoto:: /9j/4AAQSkZJRgABAQEASABIAAD/4R79RXhpZgAATU0AKgAAAAgABwESAAMAAAABAA
  EAAAEaAAUAAAABAAAAYgEbAAUAAAABAAAAagEoAAMAAAABAAIAAAExAAIAAAAiAAAAcgEyAAIAAAA
  UAAAAlIdpAAQAAAABAAAAqAAAANQACvyAAAAnEAAK/IAAACcQQWRvYmUgUGhvdG9zaG9wIENDIDIw
@@ -20457,7 +20493,7 @@ jpegPhoto:: /9j/4AAQSkZJRgABAQEASABIAAD/4R79RXhpZgAATU0AKgAAAAgABwESAAMAAAABAA
 physicalDeliveryOfficeName: Urk
 
 # user6, users, {{ LDAP_DOMAIN }}
-dn: uid=user6,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user6,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Roy Pettersen
 gidNumber: 6
 givenName: Roy
@@ -20481,10 +20517,10 @@ title: Agricultural engineer
 l: Nieuw-Schoonebeek
 postalCode: 9704BF
 street: Mettering 960
-secretary: uid=user7,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user7,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user7, users, {{ LDAP_DOMAIN }}
-dn: uid=user7,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user7,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn:: TMOtdmlhIFJvY2hh
 gidNumber: 7
 givenName:: TMOtdmlh
@@ -20508,11 +20544,11 @@ title: Building control surveyor
 l: Brilon
 postalCode: 57621
 street: Monika-Werner-Strasse 88
-secretary: uid=user8,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user8,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 physicalDeliveryOfficeName: Barcelona
 
 # user8, users, {{ LDAP_DOMAIN }}
-dn: uid=user8,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user8,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Joakim Lunde
 gidNumber: 8
 givenName: Joakim
@@ -20536,10 +20572,10 @@ title: Nature conservation officer
 l: Koudum
 postalCode: 7263 YB
 street: Arieweg 464
-secretary: uid=user9,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user9,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user9, users, {{ LDAP_DOMAIN }}
-dn: uid=user9,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user9,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn:: 4KS44KWN4oCN4KS14KWA4KSV4KWD4KSk4KWAIOCkpOCkv+CkteCkvuCksOClgA==
 gidNumber: 9
 givenName:: 4KS44KWN4oCN4KS14KWA4KSV4KWD4KSk4KWA
@@ -20564,10 +20600,10 @@ title: Facilities manager
 l: Vriescheloo
 postalCode: 1984 GB
 street: Haileysteeg 758
-secretary: uid=user10,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user10,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user10, users, {{ LDAP_DOMAIN }}
-dn: uid=user10,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user10,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn:: 57qi5qKFIOWuuQ==
 gidNumber: 10
 givenName:: 57qi5qKF
@@ -20591,10 +20627,10 @@ mobile: +31(0)390-440010
 telephoneNumber: 088 9637134
 labeledURI: http://www.van.org/
 title: Patent examiner
-secretary: uid=user11,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user11,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user11, users, {{ LDAP_DOMAIN }}
-dn: uid=user11,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user11,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn:: 6ZuqIOS9lQ==
 gidNumber: 11
 givenName:: 6Zuq
@@ -20663,10 +20699,10 @@ labeledURI: http://www.van.com/
 title: Education administrator
 l: Burgerveen
 postalCode: 3343RP
-secretary: uid=user12,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user12,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user12, users, {{ LDAP_DOMAIN }}
-dn: uid=user12,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user12,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn:: 4KS24KWN4oCN4KSv4KS+4KSu4KS+IOCktuCljeCksOClh+Ckt+CljeCkoA==
 gidNumber: 12
 givenName:: 4KS24KWN4oCN4KSv4KS+4KSu4KS+
@@ -20694,7 +20730,7 @@ l: Eisenberg
 postalCode: 48453
 
 # user13, users, {{ LDAP_DOMAIN }}
-dn: uid=user13,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user13,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Klaus Dieter Segebahn
 gidNumber: 13
 givenName: Klaus Dieter
@@ -20719,10 +20755,10 @@ labeledURI: http://www.zieme-lueilwitz.info/
 title: Dramatherapist
 l: West Tatyanna
 postalCode: CV66 3NT
-secretary: uid=user14,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user14,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user14, users, {{ LDAP_DOMAIN }}
-dn: uid=user14,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user14,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Aleksandra Kade
 gidNumber: 14
 givenName: Aleksandra
@@ -20747,10 +20783,10 @@ mobile: 08721 334583
 telephoneNumber: 0587440322
 labeledURI: http://www.hermann.com/
 title: Occupational psychologist
-secretary: uid=user15,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user15,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user15, users, {{ LDAP_DOMAIN }}
-dn: uid=user15,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user15,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Alford Predovic
 gidNumber: 15
 givenName: Alford
@@ -20777,7 +20813,7 @@ labeledURI: http://kirlin.com/
 title: Training and development officer
 
 # user16, users, {{ LDAP_DOMAIN }}
-dn: uid=user16,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user16,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Roberto Collins
 gidNumber: 16
 givenName: Roberto
@@ -20802,10 +20838,10 @@ labeledURI: http://gotthard.com/
 title: Social worker
 l: Geithain
 postalCode: 41858
-secretary: uid=user17,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user17,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user17, users, {{ LDAP_DOMAIN }}
-dn: uid=user17,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user17,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Owen Koster
 gidNumber: 17
 givenName: Owen
@@ -20832,7 +20868,7 @@ labeledURI: http://bonbach.com/
 title: Medical secretary
 
 # user18, users, {{ LDAP_DOMAIN }}
-dn: uid=user18,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user18,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Florian de Roo
 gidNumber: 18
 givenName: Florian
@@ -20857,10 +20893,10 @@ labeledURI: http://wieloch.de/
 title: Exhibition designer
 l: Dinkelsbuhl
 postalCode: 70320
-secretary: uid=user19,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user19,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user19, users, {{ LDAP_DOMAIN }}
-dn: uid=user19,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user19,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Leopoldine Sauer
 gidNumber: 19
 givenName: Leopoldine
@@ -20886,124 +20922,8 @@ title: Agricultural consultant
 l: South Marquiseshire
 postalCode: ML13 2RQ
 
-# user20, users, {{ LDAP_DOMAIN }}
-dn: uid=user20,ou=users,{{ LDAP_BASE_DN }}
-gidNumber: 20
-givenName: Niko
-homeDirectory: /home/user20
-objectClass: posixAccount
-objectClass: top
-objectClass: inetOrgPerson
-objectClass: kopano-user
-uidNumber: 20
-userPassword:: dXNlcjIw
-kopanoAccount: 1
-uid: user20
-mail: user20@{{ LDAP_DOMAIN }}
-kopanoAliases: Niko@{{ LDAP_DOMAIN }}
-kopanoAliases: Niko.Liebelt@{{ LDAP_DOMAIN }}
-sn: Liebelt
-street: 'Mario-Fechner-Gasse 03'
-mobile: +49(0)7396 409977
-telephoneNumber: +49(0)4534 940400
-labeledURI: http://www.putz.de/
-title: Advertising copywriter
-l: Rottweil
-postalCode: 13145
-secretary: uid=user21,ou=users,{{ LDAP_BASE_DN }}
-kopanoAdmin: 0
-cn: Niko Liebelt & Co
-
-# user21, users, {{ LDAP_DOMAIN }}
-dn: uid=user21,ou=users,{{ LDAP_BASE_DN }}
-cn:: 5bu65YabIOS7uw==
-gidNumber: 21
-givenName:: 5bu65Yab
-homeDirectory: /home/user21
-objectClass: posixAccount
-objectClass: top
-objectClass: inetOrgPerson
-objectClass: kopano-user
-uidNumber: 21
-userPassword:: dXNlcjIx
-kopanoAccount: 1
-uid: user21
-mail: user21@{{ LDAP_DOMAIN }}
-kopanoAliases:: 5bu65YabQGZhcm1lci5sYW4=
-kopanoAliases:: 5bu65YabLuS7u0BmYXJtZXIubGFu
-sn:: 5Lu7
-street: '9 Inell pike'
-mobile: +44(0)2603605434
-telephoneNumber: +44(0)2220 89305
-labeledURI: http://rice-schmidt.com/
-title: Engineer, water
-l: East Colonel
-postalCode: WN7R 3AB
-
-# user22, users, {{ LDAP_DOMAIN }}
-dn: uid=user22,ou=users,{{ LDAP_BASE_DN }}
-cn: Juliana Langern
-gidNumber: 22
-givenName: Juliana
-homeDirectory: /home/user22
-objectClass: posixAccount
-objectClass: top
-objectClass: inetOrgPerson
-objectClass: kopano-user
-uidNumber: 22
-kopanoAccount: 1
-uid: user22
-mail: user22@{{ LDAP_DOMAIN }}
-kopanoAliases: Juliana@{{ LDAP_DOMAIN }}
-kopanoAliases: Juliana.Langern@{{ LDAP_DOMAIN }}
-sn: Langern
-street: 'Rudiger-Jacobi Jackel-Platz 81'
-mobile: +49 (0) 5530 903513
-telephoneNumber: +49 (0) 9270 268919
-labeledURI: http://www.roemer.com/
-title: Trade mark attorney
-l: Neuss
-postalCode: 56933
-secretary: uid=user23,ou=users,{{ LDAP_BASE_DN }}
-userPassword:: e0NSWVBUfXNUNDd4VE5IUTh5U2c=
-
-# user23, users, {{ LDAP_DOMAIN }}
-dn: uid=user23,ou=users,{{ LDAP_BASE_DN }}
-givenName: Katarina
-homeDirectory: /home/user23
-objectClass: posixAccount
-objectClass: top
-objectClass: inetOrgPerson
-objectClass: kopano-user
-uidNumber: 23
-userPassword:: dXNlcjIz
-kopanoAccount: 1
-uid: user23
-mail: user23@{{ LDAP_DOMAIN }}
-kopanoAliases: Katarina@{{ LDAP_DOMAIN }}
-kopanoAliases: Katarina.Sager@{{ LDAP_DOMAIN }}
-cn: Katarina NO PUB CERT Sager
-sn: Sagerd
-gidNumber: 501
-loginShell: /bin/bash
-street: 'Justinsteeg 9'
-mobile: +31(0)928 062774
-telephoneNumber: +31485-902791
-labeledURI: http://boudewijns.org/
-title: Programmer, systems
-l: Opeinde
-postalCode: 5557CV
-secretary: uid=user1,ou=users,{{ LDAP_BASE_DN }}
-kopanoSendAsPrivilege: 22
-
-# resources, {{ LDAP_DOMAIN }}
-dn: ou=resources,{{ LDAP_BASE_DN }}
-objectClass: organizationalUnit
-objectClass: top
-ou: resources
-
 # beamer, resources, {{ LDAP_DOMAIN }}
-dn: uid=beamer,ou=resources,{{ LDAP_BASE_DN }}
+dn: uid=beamer,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
 gidNumber: 2001
 objectClass: top
 objectClass: kopano-user
@@ -21023,7 +20943,7 @@ uid: beamer
 mail: beamer@{{ LDAP_DOMAIN }}
 
 # trainingroom, resources, {{ LDAP_DOMAIN }}
-dn: uid=trainingroom,ou=resources,{{ LDAP_BASE_DN }}
+dn: uid=trainingroom,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: trainingroom
 gidNumber: 2002
 givenName: Beamer
@@ -21043,7 +20963,7 @@ userPassword:: dHJhaW5pbmdyb29t
 mail: trainingroom@{{ LDAP_DOMAIN }}
 
 # sharedbox, resources, {{ LDAP_DOMAIN }}
-dn: uid=sharedbox,ou=resources,{{ LDAP_BASE_DN }}
+dn: uid=sharedbox,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: sharedbox
 gidNumber: 2003
 givenName: Beamer
@@ -21062,7 +20982,7 @@ mail: sharedbox@{{ LDAP_DOMAIN }}
 kopanoSharedStoreOnly: 1
 
 # sales, groups, {{ LDAP_DOMAIN }}
-dn: cn=sales,ou=groups,{{ LDAP_BASE_DN }}
+dn: cn=sales,ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: sales
 gidNumber: 500
 objectClass: posixGroup
@@ -21078,7 +20998,7 @@ mail: sales@{{ LDAP_DOMAIN }}
 kopanoSendAsPrivilege: 1
 
 # IT, groups, {{ LDAP_DOMAIN }}
-dn: cn=IT,ou=groups,{{ LDAP_BASE_DN }}
+dn: cn=IT,ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
 gidNumber: 501
 objectClass: posixGroup
 objectClass: top
@@ -21092,7 +21012,7 @@ memberUid: user7
 cn: IT
 
 # QA, groups, {{ LDAP_DOMAIN }}
-dn: cn=QA,ou=groups,{{ LDAP_BASE_DN }}
+dn: cn=QA,ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: QA
 gidNumber: 502
 memberUid: user11
@@ -21106,35 +21026,35 @@ objectClass: top
 objectClass: kopano-group
 
 # asian-users, groups, {{ LDAP_DOMAIN }}
-dn: cn=asian-users,ou=groups,{{ LDAP_BASE_DN }}
+dn: cn=asian-users,ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
 objectClass: groupOfNames
 objectClass: top
-member: uid=user10,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user11,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user12,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user21,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user3,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user9,ou=users,{{ LDAP_BASE_DN }}
+member: uid=user10,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user11,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user12,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user21,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user3,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user9,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: asian-users
 description:: YXNpYW4gVXNlcnMNCg==
 
 # german-users, groups, {{ LDAP_DOMAIN }}
-dn: cn=german-users,ou=groups,{{ LDAP_BASE_DN }}
+dn: cn=german-users,ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: german-users
 objectClass: groupOfNames
 objectClass: top
 description:: R2VybWFuIFVzZXJzDQo=
-member: uid=user4,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user1,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user13,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user19,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user2,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user22,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user23,ou=users,{{ LDAP_BASE_DN }}
-member: uid=user5,ou=users,{{ LDAP_BASE_DN }}
+member: uid=user4,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user1,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user13,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user19,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user2,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user22,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user23,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+member: uid=user5,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 
 # user4, users, {{ LDAP_DOMAIN }}
-dn: uid=user4,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user4,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn:: 4KSa4KS/4KSw4KSo4KSc4KWA4KS14KWAIOCksOKAjOCknOCkv+CkpOCkleCkvuCksA==
 gidNumber: 4
 givenName:: 4KSa4KS/4KSw4KSo4KSc4KWA4KS14KWA
@@ -21160,7 +21080,7 @@ mobile: (00025) 56666
 telephoneNumber: (03677) 30964
 labeledURI: http://www.fechner.org/
 title: Charity fundraiser
-secretary: uid=user5,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user5,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 jpegPhoto:: /9j/4RkYRXhpZgAASUkqAAgAAAAQAAABAwABAAAAYBUAAAEBAwABAAAAQA4AAAIBAw
  ADAAAAzgAAAAYBAwABAAAAAgAAAA8BAgAGAAAA1AAAABABAgAOAAAA2gAAABIBAwABAAAAAQAAABU
  BAwABAAAAAwAAABoBBQABAAAA6AAAABsBBQABAAAA8AAAACgBAwABAAAAAgAAADEBAgAkAAAA+AAA
@@ -24869,7 +24789,7 @@ jpegPhoto:: /9j/4RkYRXhpZgAASUkqAAgAAAAQAAABAwABAAAAYBUAAAEBAwABAAAAQA4AAAIBAw
 physicalDeliveryOfficeName: Mumbai
 
 # user3, users, {{ LDAP_DOMAIN }}
-dn: uid=user3,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user3,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Marijn Peters
 gidNumber: 3
 givenName: Marijn
@@ -24894,7 +24814,7 @@ labeledURI: http://muller.com/
 title: Operations geologist
 l: Zwartemeer
 postalCode: 1062DY
-secretary: uid=user4,ou=users,{{ LDAP_BASE_DN }}
+secretary: uid=user4,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 jpegPhoto:: /9j/4AAQSkZJRgABAQAAAQABAAD//gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2
  luZyBJSkcgSlBFRyB2ODApLCBxdWFsaXR5ID0gOTAK/9sAQwADAgIDAgIDAwMDBAMDBAUIBQUEBAU
  KBwcGCAwKDAwLCgsLDQ4SEA0OEQ4LCxAWEBETFBUVFQwPFxgWFBgSFBUU/9sAQwEDBAQFBAUJBQUJ
@@ -25092,7 +25012,7 @@ jpegPhoto:: /9j/4AAQSkZJRgABAQAAAQABAAD//gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2
 physicalDeliveryOfficeName: Delft
 
 # user1, users, {{ LDAP_DOMAIN }}
-dn: uid=user1,ou=users,{{ LDAP_BASE_DN }}
+dn: uid=user1,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: Jonas Brekke
 mail: user1@{{ LDAP_DOMAIN }}
 givenName: Jonas
@@ -25118,8 +25038,8 @@ initials: J.B.
 street: Dietzweg 9
 l: Kulmbach
 postalCode: 78572
-manager: uid=user3,ou=users,{{ LDAP_BASE_DN }}
-secretary: uid=user2,ou=users,{{ LDAP_BASE_DN }}
+manager: uid=user3,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
+secretary: uid=user2,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 kopanoEnabledFeatures: imap
 jpegPhoto:: /9j/4QlQaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW
  49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng
@@ -26407,7 +26327,7 @@ kopanoQuotaOverride: 1
 kopanoQuotaHard: 1200000000
 
 # distributionlist, groups, {{ LDAP_DOMAIN }}
-dn: cn=distributionlist,ou=groups,{{ LDAP_BASE_DN }}
+dn: cn=distributionlist,ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: distributionlist
 mail: distribution@{{ LDAP_DOMAIN }}
 gidNumber: 600
@@ -26423,7 +26343,7 @@ objectClass: kopano-group
 kopanoSecurityGroup: 0
 
 # Language-users, resources, {{ LDAP_DOMAIN }}
-dn: cn=Language-users,ou=resources,{{ LDAP_BASE_DN }}
+dn: cn=Language-users,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
 objectClass: top
 objectClass: kopano-addresslist
 kopanoAccount: 1
@@ -26432,7 +26352,7 @@ kopanoFilter: (preferredLanguage=*)
 cn: Language-users
 
 # dutch-users, groups, {{ LDAP_DOMAIN }}
-dn: cn=dutch-users,ou=groups,{{ LDAP_BASE_DN }}
+dn: cn=dutch-users,ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: dutch-users
 gidNumber: 15007
 memberUid: user1
@@ -26447,10 +26367,10 @@ objectClass: kopano-group
 description: Dutch Users
 kopanoAliases: Dutch-OesOers
 kopanoSendAsPrivilege: 3
-mail: dutch-users@kopano.com
+mail: dutch-users@{{ LDAP_DOMAIN }}
 
 # meetingroom, resources, {{ LDAP_DOMAIN }}
-dn: uid=meetingroom,ou=resources,{{ LDAP_BASE_DN }}
+dn: uid=meetingroom,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: meetingroom
 gidNumber: 2004
 givenName: meetingroom
@@ -26470,7 +26390,7 @@ mail: meetingroom@{{ LDAP_DOMAIN }}
 kopanoSharedStoreOnly: 1
 
 # meetingroom2, resources, {{ LDAP_DOMAIN }}
-dn: uid=meetingroom2,ou=resources,{{ LDAP_BASE_DN }}
+dn: uid=meetingroom2,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: meetingroom2
 gidNumber: 2005
 givenName: meetingroom2
@@ -26490,7 +26410,7 @@ uidNumber: 2005
 userPassword:: bWVldGluZ3Jvb20y
 
 # beamer1, resources, {{ LDAP_DOMAIN }}
-dn: uid=beamer1,ou=resources,{{ LDAP_BASE_DN }}
+dn: uid=beamer1,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: beamer1
 mail: beamer1@{{ LDAP_DOMAIN }}
 gidNumber: 9101
@@ -26510,7 +26430,7 @@ uidNumber: 9101
 uid: beamer1
 
 # beamer2, resources, {{ LDAP_DOMAIN }}
-dn: uid=beamer2,ou=resources,{{ LDAP_BASE_DN }}
+dn: uid=beamer2,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
 cn: beamer2
 mail: beamer2@{{ LDAP_DOMAIN }}
 gidNumber: 9102
@@ -26529,26 +26449,134 @@ sn: beamer2
 uidNumber: 9102
 uid: beamer2
 
-# groep1, groups, {{ LDAP_DOMAIN }}
-dn: cn=groep1,ou=groups,{{ LDAP_BASE_DN }}
-cn: groep1
-description: Groep1
-mail: groep1@kopano.com
+# user20, users, {{ LDAP_DOMAIN }}
+dn: uid=user20,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
+gidNumber: 20
+givenName: Niko
+homeDirectory: /home/user20
+objectClass: posixAccount
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: kopano-user
+uidNumber: 20
+userPassword:: dXNlcjIw
+kopanoAccount: 1
+uid: user20
+mail: user20@{{ LDAP_DOMAIN }}
+kopanoAliases: Niko@{{ LDAP_DOMAIN }}
+kopanoAliases: Niko.Liebelt@{{ LDAP_DOMAIN }}
+sn: Liebelt
+street: 'Mario-Fechner-Gasse 03'
+mobile: +49(0)7396 409977
+telephoneNumber: +49(0)4534 940400
+labeledURI: http://www.putz.de/
+title: Advertising copywriter
+l: Rottweil
+postalCode: 13145
+secretary: uid=user21,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
+kopanoAdmin: 0
+cn: Niko Liebelt & Co
+
+# user21, users, {{ LDAP_DOMAIN }}
+dn: uid=user21,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
+cn:: 5bu65YabIOS7uw==
+gidNumber: 21
+givenName:: 5bu65Yab
+homeDirectory: /home/user21
+objectClass: posixAccount
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: kopano-user
+uidNumber: 21
+userPassword:: dXNlcjIx
+kopanoAccount: 1
+uid: user21
+mail: user21@{{ LDAP_DOMAIN }}
+kopanoAliases:: 5bu65YabQGZhcm1lci5sYW4=
+kopanoAliases:: 5bu65YabLuS7u0BmYXJtZXIubGFu
+sn:: 5Lu7
+street: '9 Inell pike'
+mobile: +44(0)2603605434
+telephoneNumber: +44(0)2220 89305
+labeledURI: http://rice-schmidt.com/
+title: Engineer, water
+l: East Colonel
+postalCode: WN7R 3AB
+
+# user22, users, {{ LDAP_DOMAIN }}
+dn: uid=user22,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
+cn: Juliana Langern
+gidNumber: 22
+givenName: Juliana
+homeDirectory: /home/user22
+objectClass: posixAccount
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: kopano-user
+uidNumber: 22
+kopanoAccount: 1
+uid: user22
+mail: user22@{{ LDAP_DOMAIN }}
+kopanoAliases: Juliana@{{ LDAP_DOMAIN }}
+kopanoAliases: Juliana.Langern@{{ LDAP_DOMAIN }}
+sn: Langern
+street: 'Rudiger-Jacobi Jackel-Platz 81'
+mobile: +49 (0) 5530 903513
+telephoneNumber: +49 (0) 9270 268919
+labeledURI: http://www.roemer.com/
+title: Trade mark attorney
+l: Neuss
+postalCode: 56933
+secretary: uid=user23,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
+userPassword:: e0NSWVBUfXNUNDd4VE5IUTh5U2c=
+
+# user23, users, {{ LDAP_DOMAIN }}
+dn: uid=user23,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
+givenName: Katarina
+homeDirectory: /home/user23
+objectClass: posixAccount
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: kopano-user
+uidNumber: 23
+userPassword:: dXNlcjIz
+kopanoAccount: 1
+uid: user23
+mail: user23@{{ LDAP_DOMAIN }}
+kopanoAliases: Katarina@{{ LDAP_DOMAIN }}
+kopanoAliases: Katarina.Sager@{{ LDAP_DOMAIN }}
+cn: Katarina NO PUB CERT Sager
+sn: Sagerd
+gidNumber: 501
+loginShell: /bin/bash
+street: 'Justinsteeg 9'
+mobile: +31(0)928 062774
+telephoneNumber: +31485-902791
+labeledURI: http://boudewijns.org/
+title: Programmer, systems
+l: Opeinde
+postalCode: 5557CV
+secretary: uid=user1,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
+kopanoSendAsPrivilege: 22
+
+# group1, groups, {{ LDAP_DOMAIN }}
+dn: cn=group1,ou=groups,ou=CompanyB,{{ LDAP_BASE_DN }}
+cn: group1
+description: group
+mail: group1@{{ LDAP_DOMAIN }}
 gidNumber: 16161
 kopanoAliases: Groepuno
 kopanoSendAsPrivilege: 3
-memberUid: user1
-memberUid: user2
-memberUid: user3
-memberUid: user4
-memberUid: user5
-memberUid: user6
+memberUid: user20
+memberUid: user21
+memberUid: user22
+memberUid: user23
 objectClass: posixGroup
 objectClass: top
 objectClass: kopano-group
 
 # meetingroom3, resources, {{ LDAP_DOMAIN }}
-dn: uid=meetingroom3,ou=resources,{{ LDAP_BASE_DN }}
+dn: uid=meetingroom3,ou=resources,ou=CompanyB,{{ LDAP_BASE_DN }}
 cn: meetingroom3
 mail: meetingroom3@{{ LDAP_DOMAIN }}
 gidNumber: 20055
