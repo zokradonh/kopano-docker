@@ -243,9 +243,15 @@ if [ ! -e ./.env ]; then
 
 	echo "${PRINT_SETUP_SUCCESS}"
 
+if [ ! -e ./docker-compose.override.yml ]; then
+	echo 'version: "3.5"' >> ./docker-compose.override.yml
+fi
+
 	cat <<EOF > "./.env"
 # please consult https://github.com/zokradonh/kopano-docker
 # for possible configuration values and their impact
+COMPOSE_FILE=docker-compose.yml:docker-compose.portmapping.yml:docker-compose.override.yml
+
 CORE_VERSION=$CORE_VERSION
 WEBAPP_VERSION=$WEBAPP_VERSION
 ZPUSH_VERSION=$ZPUSH_VERSION
