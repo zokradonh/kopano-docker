@@ -4,10 +4,6 @@ services:
   web:
     image: ${docker_repo:-zokradonh}/kopano_web:${KWEB_VERSION:-latest}
     restart: unless-stopped
-    ports:
-      - "${CADDY:-2015}:2015"
-      - "${HTTP:-80}:80"
-      - "${HTTPS:-443}:443"
     environment:
       - EMAIL=${EMAIL:-off}
       - FQDN=${FQDN?err}
@@ -30,8 +26,6 @@ services:
     image: ${docker_repo:-zokradonh}/${LDAP_CONTAINER:-kopano_ldap_demo}:${LDAP_VERSION:-latest}
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_ldap
-    ports:
-      - ${LDAPPORT:-389}:389
     environment:
       - LDAP_ORGANISATION=${LDAP_ORGANISATION}
       - LDAP_DOMAIN=${LDAP_DOMAIN}
@@ -105,10 +99,6 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_mail
     depends_on:
       - ldap
-    ports:
-      - "${SMTPPORT:-25}:25"
-      - "${SMTPSPORT:-465}:465"
-      - "${MSAPORT:-587}:587"
     volumes:
       - maildata:/var/mail
       - mailstate:/var/mail-state
@@ -196,9 +186,6 @@ services:
       - ldap
       - kopano_ssl
       - kopano_konnect
-    ports:
-      - ${KOPANOPORT:-236}:236
-      - ${KOPANOSPORT:-237}:237
     environment:
       - SERVICE_TO_START=server
       - TZ=${TZ}
@@ -367,9 +354,6 @@ services:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     depends_on:
       - kopano_server
-    ports:
-      - "${POP3PORT:-110}:110"
-      - "${IMAPPORT:-143}:143"
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -387,8 +371,6 @@ services:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     depends_on:
       - kopano_server
-    ports:
-      - "${ICALPORT:-8080}:8080"
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano

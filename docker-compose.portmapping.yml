@@ -1,0 +1,33 @@
+version: "3.5"
+
+services:
+  web:
+    ports:
+      - "${CADDY:-2015}:2015"
+      - "${HTTP:-80}:80"
+      - "${HTTPS:-443}:443"
+
+  ldap:
+    ports:
+      - ${LDAPPORT:-389}:389
+
+  mail:
+    ports:
+      - "${SMTPPORT:-25}:25"
+      - "${SMTPSPORT:-465}:465"
+      - "${MSAPORT:-587}:587"
+
+  kopano_server:
+    ports:
+      - ${KOPANOPORT:-236}:236
+      - ${KOPANOSPORT:-237}:237
+
+  kopano_gateway:
+    ports:
+      - "${POP3PORT:-110}:110"
+      - "${IMAPPORT:-143}:143"
+
+  kopano_ical:
+    ports:
+      - "${ICALPORT:-8080}:8080"
+
