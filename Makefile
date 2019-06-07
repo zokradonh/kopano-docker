@@ -23,7 +23,7 @@ KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_9.0/
 RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 
-COMPOSE_FILE := docker-compose.yml
+DOCKERCOMPOSE_FILE := docker-compose.yml
 TAG_FILE := build.tags
 -include .env
 export
@@ -334,27 +334,27 @@ check-scripts:
 
 .PHONY: clean
 clean:
-	docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans || true
+	docker-compose -f $(DOCKERCOMPOSE_FILE) down -v --remove-orphans || true
 
 .PHONY: test
 test: ## Build and start new containers for testing (also deletes existing data volumes).
-	docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans || true
+	docker-compose -f $(DOCKERCOMPOSE_FILE) down -v --remove-orphans || true
 	make build-all
-	docker-compose -f $(COMPOSE_FILE) build
-	docker-compose -f $(COMPOSE_FILE) up -d
-	docker-compose -f $(COMPOSE_FILE) ps
+	docker-compose -f $(DOCKERCOMPOSE_FILE) build
+	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
+	docker-compose -f $(DOCKERCOMPOSE_FILE) ps
 
 test-update-env: ## Recreate containers based on updated .env.
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
 
 test-ci: ## Test if all containers start up
-	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml build
-	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml up -d
-	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml ps
+	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml build
+	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml up -d
+	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml ps
 	# TODO this just echos the exit code of the kopano_test container. if this is not 0 we should do something with it.
 	docker wait kopano_test_1
 	docker logs --tail 10 kopano_test_1
-	docker-compose -f $(COMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
+	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker rm kopano_test_1
 
 test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
@@ -363,9 +363,9 @@ test-security: ## Scan containers with Trivy for known security risks (not part 
 	rm $(TAG_FILE)
 
 test-quick: ## Similar to test target, but does not delete existing data volumes and does not rebuild images.
-	docker-compose -f $(COMPOSE_FILE) stop || true
-	docker-compose -f $(COMPOSE_FILE) up -d
-	docker-compose -f $(COMPOSE_FILE) ps
+	docker-compose -f $(DOCKERCOMPOSE_FILE) stop || true
+	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
+	docker-compose -f $(DOCKERCOMPOSE_FILE) ps
 
 test-stop:
-	docker-compose -f $(COMPOSE_FILE) stop || true
+	docker-compose -f $(DOCKERCOMPOSE_FILE) stop || true
