@@ -48,6 +48,5 @@ ARG RELEASE_KEY_DOWNLOAD=0
 # get common utilities
 COPY create-kopano-repo.sh /kopano/helper/
 COPY kcconf.py /kopano/
-RUN echo $BASE_VERSION > /kopano/buildversion
 
 SHELL [ "/bin/bash", "-c"]
