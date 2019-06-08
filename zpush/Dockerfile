@@ -30,9 +30,6 @@ RUN \
         dl_and_package_community "core"; \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    # save kopano version
-    echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
-    echo "zpush-${KOPANO_ZPUSH_VERSION}" >> /kopano/buildversion; \
     # prepare z-push installation
     echo "deb ${KOPANO_ZPUSH_REPOSITORY_URL} /" > /etc/apt/sources.list.d/zpush.list && \
     curl -s -S -o - "${KOPANO_ZPUSH_REPOSITORY_URL}/Release.key" | apt-key add - && \
