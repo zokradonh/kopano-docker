@@ -14,6 +14,7 @@ ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG KOPANO_CORE_VERSION=newest
+ENV KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION
 ARG RELEASE_KEY_DOWNLOAD=0
 
 # install Kopano WebApp and refresh ca-certificates
@@ -24,8 +25,6 @@ RUN \
         dl_and_package_community "core"; \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    # save kopano version
-    echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \

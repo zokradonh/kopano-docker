@@ -214,7 +214,7 @@ tag-ldap:
 
 tag-meet:
 	$(eval meet_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_meet cat /kopano/buildversion | grep meet | cut -d- -f2 | cut -d+ -f1))
+	$(shell docker run --rm $(docker_repo)/kopano_meet env | grep KOPANO_MEET_VERSION | cut -d'=' -f2 | cut -d+ -f1))
 	component=meet make tag-container
 
 tag-php:
