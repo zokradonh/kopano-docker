@@ -254,7 +254,7 @@ tag-webapp:
 
 tag-zpush:
 	$(eval zpush_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_zpush cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)'))
+	$(shell docker run --rm $(docker_repo)/kopano_zpush env | grep KOPANO_ZPUSH_VERSION | cut -d'=' -f2 | cut -d+ -f1))
 	component=zpush make tag-container
 
 # Docker publish
