@@ -12,6 +12,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # install basics
 # TODO require python3 or python3-minimal?
+# TODO install apt keys if supported kopano (instead of in core, php, meet, ...)
 # hadolint ignore=DL3005
 RUN apt-get update && \
     apt-get upgrade -y && \

@@ -219,7 +219,7 @@ tag-meet:
 
 tag-php:
 	$(eval php_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_php cat /kopano/buildversion | cut -d- -f2))
+	$(shell docker run --rm $(docker_repo)/kopano_php env | grep KOPANO_CORE_VERSION | cut -d'=' -f2 | cut -d- -f1))
 	component=php make tag-container
 
 tag-python:
