@@ -1,7 +1,19 @@
 ARG CODE_VERSION=0.23.4
 FROM kopano/konnectd:${CODE_VERSION}
+
+ARG VCS_REF
 ARG CODE_VERSION
+
 ENV CODE_VERSION="${CODE_VERSION}"
+
+LABEL maintainer=az@zok.xyz \
+    org.label-schema.name="Kopano kDAV container" \
+    org.label-schema.description="Container for running Kopano kDAV" \
+    org.label-schema.url="https://kopano.io" \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
+	org.label-schema.version=$CODE_VERSION \
+    org.label-schema.schema-version="1.0"
 
 RUN apk add --no-cache \
 	jq \
