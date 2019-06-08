@@ -239,7 +239,7 @@ tag-ssl:
 
 tag-utils:
 	$(eval utils_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_utils cat /kopano/buildversion | cut -d- -f2))
+	$(shell docker run --rm $(docker_repo)/kopano_utils env | grep KOPANO_CORE_VERSION | cut -d'=' -f2 | cut -d- -f1))
 	component=utils make tag-container
 
 tag-web:
