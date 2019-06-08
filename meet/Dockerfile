@@ -7,6 +7,7 @@ ARG ADDITIONAL_KOPANO_PACKAGES=""
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_MEET_REPOSITORY_URL="file:/kopano/repo/meet"
 ARG KOPANO_MEET_VERSION=newest
+ENV KOPANO_MEET_VERSION=$KOPANO_MEET_VERSION
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG RELEASE_KEY_DOWNLOAD=0
 
@@ -20,8 +21,6 @@ RUN \
         dl_and_package_community "meet"; \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_MEET_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    # save kopano version
-    echo "meet-${KOPANO_MEET_VERSION}" > /kopano/buildversion; \
     # install apt key if supported kopano
     if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
         curl -s -S -o - "${KOPANO_MEET_REPOSITORY_URL}/Release.key" | apt-key add -; \
