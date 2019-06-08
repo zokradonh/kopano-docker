@@ -3,7 +3,7 @@ FROM debian:stretch
 LABEL maintainer=az@zok.xyz \
       version="2.0"
 
-ENV BASE_VERSION=1.0
+ENV BASE_VERSION=1.1.0
 
 RUN mkdir -p /kopano/repo /kopano/data /kopano/helper /kopano/path
 WORKDIR /kopano/repo
