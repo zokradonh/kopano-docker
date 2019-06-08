@@ -7,17 +7,31 @@ RUN composer install
 
 FROM ${docker_repo}/kopano_base
 
-ARG DEBIAN_FRONTEND=noninteractive
-
+ARG VCS_REF
 ARG ADDITIONAL_KOPANO_PACKAGES=""
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
-ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
-ARG KOPANO_CORE_VERSION=newest
-ENV KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION
 ARG RELEASE_KEY_DOWNLOAD=0
+ARG DEBIAN_FRONTEND=noninteractive
+ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
+ARG KOPANO_CORE_VERSION=newest
 
-# install Kopano WebApp and refresh ca-certificates
+ENV ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES
+ENV DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES
+ENV KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL
+ENV KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION
+ENV KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS
+ENV RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
+
+LABEL maintainer=az@zok.xyz \
+    org.label-schema.name="Kopano kDAV container" \
+    org.label-schema.description="Container for running Kopano kDAV" \
+    org.label-schema.url="https://kopano.io" \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
+    org.label-schema.schema-version="1.0"
+
+# install Kopano kDAV and refresh ca-certificates
 RUN \
     # community download and package as apt source repository
     . /kopano/helper/create-kopano-repo.sh && \
@@ -33,7 +47,7 @@ RUN \
         php7-mapi \
         php-xml \
         php-mbstring \
-	php-zip \
+	    php-zip \
         sqlite \
         php-sqlite3 \
         ca-certificates \

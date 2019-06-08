@@ -53,6 +53,7 @@ ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build \
+		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
@@ -80,10 +81,11 @@ ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build \
-	--cache-from $(docker_repo)/kopano_$(component) \
-	--cache-from $(docker_repo)/kopano_$(component):builder \
-	--build-arg docker_repo=$(docker_repo) \
-	-t $(docker_repo)/kopano_$(component) $(component)/
+		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--cache-from $(docker_repo)/kopano_$(component) \
+		--cache-from $(docker_repo)/kopano_$(component):builder \
+		--build-arg docker_repo=$(docker_repo) \
+		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-builder
 build-builder: component ?= kdav
@@ -93,24 +95,25 @@ ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build --target builder \
-	--build-arg docker_repo=${docker_repo} \
-	--build-arg KOPANO_CORE_VERSION=${core_download_version} \
-	--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
-	--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
-	--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
-	--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
-	--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
-	--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
-	--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
-	--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
-	--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
-	--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
-	--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
-	--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
-	--cache-from $(docker_repo)/kopano_$(component) \
-	--cache-from $(docker_repo)/kopano_$(component):builder \
-	-t $(docker_repo)/kopano_$(component):builder $(component)/
-	@echo $(docker_repo)/kopano_$(component):builder >> $(TAG_FILE)
+		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--build-arg docker_repo=${docker_repo} \
+		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
+		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
+		--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+		--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
+		--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
+		--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
+		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
+		--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
+		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
+		--cache-from $(docker_repo)/kopano_$(component) \
+		--cache-from $(docker_repo)/kopano_$(component):builder \
+		-t $(docker_repo)/kopano_$(component):builder $(component)/
+		@echo $(docker_repo)/kopano_$(component):builder >> $(TAG_FILE)
 
 build-base: ## Build new base image.
 	docker pull debian:stretch
@@ -187,17 +190,17 @@ tag-container: ## Helper target to tag a given image. Defaults to the base image
 
 tag-base:
 	$(eval base_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_base env | grep BASE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_base | cut -d'=' -f2))
 	component=base make tag-container
 
 tag-core:
 	$(eval core_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_core env | grep KOPANO_CORE_VERSION | cut -d'=' -f2 | cut -d- -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_core | cut -d'=' -f2 | cut -d- -f1))
 	component=core make tag-container
 
 tag-konnect:
 	$(eval konnect_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_konnect env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_konnect))
 	component=konnect make tag-container
 
 tag-kwmserver:
