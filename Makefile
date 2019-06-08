@@ -190,12 +190,12 @@ tag-container: ## Helper target to tag a given image. Defaults to the base image
 
 tag-base:
 	$(eval base_version := \
-	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_base | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_base))
 	component=base make tag-container
 
 tag-core:
 	$(eval core_version := \
-	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_core | cut -d'=' -f2 | cut -d- -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_core | cut -d+ -f1))
 	component=core make tag-container
 
 tag-konnect:
