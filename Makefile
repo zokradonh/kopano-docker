@@ -187,7 +187,7 @@ tag-container: ## Helper target to tag a given image. Defaults to the base image
 
 tag-base:
 	$(eval base_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion))
+	$(shell docker run --rm $(docker_repo)/kopano_base env | grep BASE_VERSION | cut -d'=' -f2))
 	component=base make tag-container
 
 tag-core:
