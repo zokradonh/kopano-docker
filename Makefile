@@ -192,7 +192,7 @@ tag-base:
 
 tag-core:
 	$(eval core_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | cut -d- -f2))
+	$(shell docker run --rm $(docker_repo)/kopano_core env | grep KOPANO_CORE_VERSION | cut -d'=' -f2 | cut -d- -f1))
 	component=core make tag-container
 
 tag-konnect:
