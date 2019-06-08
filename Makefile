@@ -224,7 +224,7 @@ tag-php:
 
 tag-python:
 	$(eval python_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_python cat /kopano/buildversion | cut -d- -f2))
+	$(shell docker run --rm $(docker_repo)/kopano_python env | grep KOPANO_CORE_VERSION | cut -d'=' -f2 | cut -d- -f1))
 	component=python make tag-container
 
 tag-scheduler:
