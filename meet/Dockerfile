@@ -21,8 +21,8 @@ ENV KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS
 ENV RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
 LABEL maintainer=az@zok.xyz \
-    org.label-schema.name="Kopano coreS container" \
-    org.label-schema.description="Container for running applications out of Kopano Groupware Core" \
+    org.label-schema.name="Kopano Meet container" \
+    org.label-schema.description="Container for running Kopano Meet" \
     org.label-schema.url="https://kopano.io" \
     org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \

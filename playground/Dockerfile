@@ -19,7 +19,7 @@ env PORT 8888
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano Playground" \
-    org.label-schema.description="Container for running Kopano playground application for Kapi and OIDC" \
+    org.label-schema.description="Container for running Kopano playground applications for Kapi and OIDC" \
     org.label-schema.url="https://kopano.io" \
     org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
