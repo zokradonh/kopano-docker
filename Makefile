@@ -205,59 +205,59 @@ tag-konnect:
 
 tag-kwmserver:
 	$(eval kwmserver_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_kwmserver env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_kwmserver))
 	component=kwmserver make tag-container
 
 tag-ldap:
 	$(eval ldap_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_ldap env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_ldap))
 	component=ldap make tag-container
 	$(eval ldap_demo_version := $(ldap_version))
 	component=ldap_demo make tag-container
 
 tag-meet:
 	$(eval meet_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_meet env | grep KOPANO_MEET_VERSION | cut -d'=' -f2 | cut -d+ -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_meet | cut -d+ -f1))
 	component=meet make tag-container
 
 tag-php:
 	$(eval php_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_php env | grep KOPANO_CORE_VERSION | cut -d'=' -f2 | cut -d- -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_php | cut -d- -f1))
 	component=php make tag-container
 
 tag-python:
 	$(eval python_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_python env | grep KOPANO_CORE_VERSION | cut -d'=' -f2 | cut -d- -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_python | cut -d- -f1))
 	component=python make tag-container
 
 tag-scheduler:
 	$(eval scheduler_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_scheduler env | grep SUPERCRONIC_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_scheduler))
 	component=scheduler make tag-container
 
 tag-ssl:
 	$(eval ssl_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_ssl env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_ssl))
 	component=ssl make tag-container
 
 tag-utils:
 	$(eval utils_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_utils env | grep KOPANO_CORE_VERSION | cut -d'=' -f2 | cut -d- -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_utils | cut -d- -f1))
 	component=utils make tag-container
 
 tag-web:
 	$(eval web_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_web env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_web))
 	component=web make tag-container
 
 tag-webapp:
 	$(eval webapp_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_webapp env | grep KOPANO_WEBAPP_VERSION | cut -d'=' -f2 | cut -d+ -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_webapp | cut -d+ -f1))
 	component=webapp make tag-container
 
 tag-zpush:
 	$(eval zpush_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_zpush env | grep KOPANO_ZPUSH_VERSION | cut -d'=' -f2 | cut -d+ -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_zpush | cut -d+ -f1))
 	component=zpush make tag-container
 
 # Docker publish
