@@ -50,7 +50,6 @@ build: component ?= base
 build: ## Helper target to build a given image. Defaults to the "base" image.
 ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
-	docker pull  $(docker_repo)/kopano_$(component) || true
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build \
@@ -69,22 +68,14 @@ endif
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
 		--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
-		--cache-from $(docker_repo)/kopano_$(component) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-simple
 build-simple: component ?= ssl
 build-simple: ## Helper target to build a simplified image (no Kopano repo integration).
-ifdef TRAVIS
-	@echo "fetching previous build to warm up build cache (only on travis)"
-	docker pull  $(docker_repo)/kopano_$(component) || true
-	docker pull  $(docker_repo)/kopano_$(component):builder || true
-endif
 	docker build \
 		--build-arg VCS_REF=$(vcf_ref) \
-		--cache-from $(docker_repo)/kopano_$(component) \
-		--cache-from $(docker_repo)/kopano_$(component):builder \
 		--build-arg docker_repo=$(docker_repo) \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
@@ -111,7 +102,6 @@ endif
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
 		--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
-		--cache-from $(docker_repo)/kopano_$(component) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component):builder $(component)/
 		@echo $(docker_repo)/kopano_$(component):builder >> $(TAG_FILE)
