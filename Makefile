@@ -12,6 +12,7 @@ core_download_version := $(shell ./version.sh core)
 meet_download_version := $(shell ./version.sh meet)
 webapp_download_version := $(shell ./version.sh webapp)
 zpush_download_version := $(shell ./version.sh zpush)
+vcf_ref := $(shell git rev-parse --short HEAD)
 
 KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
 KOPANO_MEET_REPOSITORY_URL := file:/kopano/repo/meet
@@ -53,7 +54,7 @@ ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
@@ -81,7 +82,7 @@ ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--build-arg VCS_REF=$(vcf_ref) \
 		--cache-from $(docker_repo)/kopano_$(component) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		--build-arg docker_repo=$(docker_repo) \
@@ -95,7 +96,7 @@ ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build --target builder \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
