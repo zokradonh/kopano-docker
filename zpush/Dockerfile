@@ -22,8 +22,8 @@ ENV KOPANO_ZPUSH_REPOSITORY_URL=$KOPANO_ZPUSH_REPOSITORY_URL
 ENV KOPANO_ZPUSH_VERSION=$KOPANO_ZPUSH_VERSION
 
 LABEL maintainer=az@zok.xyz \
-    org.label-schema.name="Kopano core container" \
-    org.label-schema.description="Container for running applications out of Kopano Groupware Core" \
+    org.label-schema.name="Kopano Z-Push container" \
+    org.label-schema.description="Container for running Z-Push with Kopano Groupware Core" \
     org.label-schema.url="https://kopano.io" \
     org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
