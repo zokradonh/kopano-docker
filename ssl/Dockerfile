@@ -2,7 +2,7 @@ FROM alpine:3.9
 
 ARG VCS_REF
 
-ENV CODE_VERSION=1.0
+ENV CODE_VERSION=1.0.1
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano SSL container" \
