@@ -139,13 +139,16 @@ build-python:
 	component=python make build
 
 build-kdav:
+	docker pull composer:1.8
 	component=kdav make build-builder
 	component=kdav make build
 
 build-scheduler:
+	docker pull docker:18.09
 	component=scheduler make build-simple
 
 build-ssl:
+	docker pull alpine:3.9
 	component=ssl make build-simple
 
 build-utils:

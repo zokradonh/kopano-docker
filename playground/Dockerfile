@@ -1,4 +1,4 @@
-from alpine:3.8 as builder
+from alpine:3.9 as builder
 
 RUN apk add --no-cache \
         git make
