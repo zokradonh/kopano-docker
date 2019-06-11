@@ -110,7 +110,7 @@ build-base: ## Build new base image.
 	docker pull debian:stretch
 	component=base make build
 
-build-core: build-base
+build-core:
 	component=core make build
 
 build-konnect:
@@ -122,13 +122,13 @@ build-kwmserver:
 build-ldap:
 	component=ldap make build-simple
 
-build-ldap-demo: build-ldap
+build-ldap-demo:
 	component=ldap_demo make build-simple
 
-build-meet: build-base
+build-meet:
 	component=meet make build
 
-build-php: build-base
+build-php:
 	component=php make build
 
 build-playground:
@@ -148,13 +148,13 @@ build-scheduler:
 build-ssl:
 	component=ssl make build-simple
 
-build-utils: build-core
+build-utils:
 	component=utils make build
 
 build-web:
 	component=web make build-simple
 
-build-webapp: build-php
+build-webapp:
 	component=webapp make build
 
 build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
