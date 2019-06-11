@@ -307,7 +307,7 @@ publish-scheduler: tag-scheduler
 	component=scheduler make publish-container
 
 publish-ssl: tag-ssl
-	component=scheduler make publish-container
+	component=ssl make publish-container
 
 publish-utils: tag-utils
 	component=utils make publish-container
