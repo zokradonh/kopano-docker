@@ -265,57 +265,57 @@ publish-container: ## Helper target to push a given image to a registry. Default
 	docker push $(docker_repo)/kopano_$(component):${$(component)_version}
 	docker push $(docker_repo)/kopano_$(component):latest
 
-publish-base: build-base tag-base
+publish-base: tag-base
 	component=base make publish-container
 
-publish-core: build-core tag-core
+publish-core: tag-core
 	component=core make publish-container
 
-publish-konnect: build-konnect tag-konnect
+publish-konnect: tag-konnect
 	component=konnect make publish-container
 
-publish-kwmserver: build-kwmserver tag-kwmserver
+publish-kwmserver: tag-kwmserver
 	component=kwmserver make publish-container
 
-publish-ldap: build-ldap
+publish-ldap: tag-ldap
 	docker push $(docker_repo)/kopano_ldap:latest
 
-publish-ldap-demo: build-ldap-demo
+publish-ldap-demo: tag-ldap
 	docker push $(docker_repo)/kopano_ldap_demo:latest
 
-publish-meet: build-meet tag-meet
+publish-meet: tag-meet
 	component=meet make publish-container
 
-publish-php: build-php tag-php
+publish-php: tag-php
 	component=php make publish-container
 
-publish-playground: build-playground
+publish-playground:
 	docker push $(docker_repo)/kopano_playground:latest
 	docker push $(docker_repo)/kopano_playground:builder
 
-publish-python: build-python tag-python
+publish-python: tag-python
 	component=python make publish-container
 
-publish-kdav: build-kdav #tag-kdav
+publish-kdav: #tag-kdav
 	docker push $(docker_repo)/kopano_kdav:latest
 	docker push $(docker_repo)/kopano_kdav:builder
 
-publish-scheduler: build-scheduler tag-scheduler
+publish-scheduler: tag-scheduler
 	component=scheduler make publish-container
 
-publish-ssl: build-ssl tag-ssl
+publish-ssl: tag-ssl
 	component=scheduler make publish-container
 
-publish-utils: build-utils tag-utils
+publish-utils: tag-utils
 	component=utils make publish-container
 
-publish-web: build-web tag-web
+publish-web: tag-web
 	component=web make publish-container
 
-publish-webapp: build-webapp tag-webapp
+publish-webapp: tag-webapp
 	component=webapp make publish-container
 
-publish-zpush: build-zpush tag-zpush
+publish-zpush: tag-zpush
 	component=zpush make publish-container
 
 check-scripts:
