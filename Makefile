@@ -281,10 +281,10 @@ publish-kwmserver: tag-kwmserver
 	component=kwmserver make publish-container
 
 publish-ldap: tag-ldap
-	docker push $(docker_repo)/kopano_ldap:latest
+	component=ldap make publish-container
 
 publish-ldap-demo: tag-ldap
-	docker push $(docker_repo)/kopano_ldap_demo:latest
+	component=ldap_demo make publish-container
 
 publish-meet: tag-meet
 	component=meet make publish-container
