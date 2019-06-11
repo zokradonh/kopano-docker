@@ -12,6 +12,7 @@ core_download_version := $(shell ./version.sh core)
 meet_download_version := $(shell ./version.sh meet)
 webapp_download_version := $(shell ./version.sh webapp)
 zpush_download_version := $(shell ./version.sh zpush)
+vcf_ref := $(shell git rev-parse --short HEAD)
 
 KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
 KOPANO_MEET_REPOSITORY_URL := file:/kopano/repo/meet
@@ -49,10 +50,10 @@ build: component ?= base
 build: ## Helper target to build a given image. Defaults to the "base" image.
 ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
-	docker pull  $(docker_repo)/kopano_$(component) || true
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build \
+		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
@@ -67,23 +68,16 @@ endif
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
 		--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
-		--cache-from $(docker_repo)/kopano_$(component) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-simple
 build-simple: component ?= ssl
 build-simple: ## Helper target to build a simplified image (no Kopano repo integration).
-ifdef TRAVIS
-	@echo "fetching previous build to warm up build cache (only on travis)"
-	docker pull  $(docker_repo)/kopano_$(component) || true
-	docker pull  $(docker_repo)/kopano_$(component):builder || true
-endif
 	docker build \
-	--cache-from $(docker_repo)/kopano_$(component) \
-	--cache-from $(docker_repo)/kopano_$(component):builder \
-	--build-arg docker_repo=$(docker_repo) \
-	-t $(docker_repo)/kopano_$(component) $(component)/
+		--build-arg VCS_REF=$(vcf_ref) \
+		--build-arg docker_repo=$(docker_repo) \
+		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-builder
 build-builder: component ?= kdav
@@ -93,30 +87,30 @@ ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build --target builder \
-	--build-arg docker_repo=${docker_repo} \
-	--build-arg KOPANO_CORE_VERSION=${core_download_version} \
-	--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
-	--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
-	--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
-	--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
-	--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
-	--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
-	--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
-	--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
-	--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
-	--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
-	--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
-	--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
-	--cache-from $(docker_repo)/kopano_$(component) \
-	--cache-from $(docker_repo)/kopano_$(component):builder \
-	-t $(docker_repo)/kopano_$(component):builder $(component)/
-	@echo $(docker_repo)/kopano_$(component):builder >> $(TAG_FILE)
+		--build-arg VCS_REF=$(vcf_ref) \
+		--build-arg docker_repo=${docker_repo} \
+		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
+		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
+		--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+		--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
+		--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
+		--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
+		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
+		--build-arg ADDITIONAL_KOPANO_PACKAGES="$(ADDITIONAL_KOPANO_PACKAGES)" \
+		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
+		--cache-from $(docker_repo)/kopano_$(component):builder \
+		-t $(docker_repo)/kopano_$(component):builder $(component)/
+		@echo $(docker_repo)/kopano_$(component):builder >> $(TAG_FILE)
 
 build-base: ## Build new base image.
 	docker pull debian:stretch
 	component=base make build
 
-build-core: build-base
+build-core:
 	component=core make build
 
 build-konnect:
@@ -128,13 +122,13 @@ build-kwmserver:
 build-ldap:
 	component=ldap make build-simple
 
-build-ldap-demo: build-ldap
+build-ldap-demo:
 	component=ldap_demo make build-simple
 
-build-meet: build-base
+build-meet:
 	component=meet make build
 
-build-php: build-base
+build-php:
 	component=php make build
 
 build-playground:
@@ -145,22 +139,25 @@ build-python:
 	component=python make build
 
 build-kdav:
+	docker pull composer:1.8
 	component=kdav make build-builder
 	component=kdav make build
 
 build-scheduler:
+	docker pull docker:18.09
 	component=scheduler make build-simple
 
 build-ssl:
+	docker pull alpine:3.9
 	component=ssl make build-simple
 
-build-utils: build-core
+build-utils:
 	component=utils make build
 
 build-web:
 	component=web make build-simple
 
-build-webapp: build-php
+build-webapp:
 	component=webapp make build
 
 build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
@@ -187,74 +184,74 @@ tag-container: ## Helper target to tag a given image. Defaults to the base image
 
 tag-base:
 	$(eval base_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_base cat /kopano/buildversion))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_base))
 	component=base make tag-container
 
 tag-core:
 	$(eval core_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_core cat /kopano/buildversion | cut -d- -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_core | cut -d+ -f1))
 	component=core make tag-container
 
 tag-konnect:
 	$(eval konnect_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_konnect env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_konnect))
 	component=konnect make tag-container
 
 tag-kwmserver:
 	$(eval kwmserver_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_kwmserver env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_kwmserver))
 	component=kwmserver make tag-container
 
 tag-ldap:
 	$(eval ldap_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_ldap env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_ldap))
 	component=ldap make tag-container
 	$(eval ldap_demo_version := $(ldap_version))
 	component=ldap_demo make tag-container
 
 tag-meet:
 	$(eval meet_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_meet cat /kopano/buildversion | grep meet | cut -d- -f2 | cut -d+ -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_meet | cut -d+ -f1))
 	component=meet make tag-container
 
 tag-php:
 	$(eval php_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_php cat /kopano/buildversion | cut -d- -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_php | cut -d- -f1))
 	component=php make tag-container
 
 tag-python:
 	$(eval python_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_python cat /kopano/buildversion | cut -d- -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_python | cut -d- -f1))
 	component=python make tag-container
 
 tag-scheduler:
 	$(eval scheduler_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_scheduler env | grep SUPERCRONIC_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_scheduler))
 	component=scheduler make tag-container
 
 tag-ssl:
 	$(eval ssl_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_ssl env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_ssl))
 	component=ssl make tag-container
 
 tag-utils:
 	$(eval utils_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_utils cat /kopano/buildversion | cut -d- -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_utils | cut -d- -f1))
 	component=utils make tag-container
 
 tag-web:
 	$(eval web_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_web env | grep CODE_VERSION | cut -d'=' -f2))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_web))
 	component=web make tag-container
 
 tag-webapp:
 	$(eval webapp_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_webapp cat /kopano/buildversion | grep webapp | cut -d- -f2 | cut -d+ -f1))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_webapp | cut -d+ -f1))
 	component=webapp make tag-container
 
 tag-zpush:
 	$(eval zpush_version := \
-	$(shell docker run --rm $(docker_repo)/kopano_zpush cat /kopano/buildversion | tail -n 1 | grep -o -P '(?<=-).*(?=\+)'))
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_zpush | cut -d+ -f1))
 	component=zpush make tag-container
 
 # Docker publish
@@ -271,57 +268,57 @@ publish-container: ## Helper target to push a given image to a registry. Default
 	docker push $(docker_repo)/kopano_$(component):${$(component)_version}
 	docker push $(docker_repo)/kopano_$(component):latest
 
-publish-base: build-base tag-base
+publish-base: tag-base
 	component=base make publish-container
 
-publish-core: build-core tag-core
+publish-core: tag-core
 	component=core make publish-container
 
-publish-konnect: build-konnect tag-konnect
+publish-konnect: tag-konnect
 	component=konnect make publish-container
 
-publish-kwmserver: build-kwmserver tag-kwmserver
+publish-kwmserver: tag-kwmserver
 	component=kwmserver make publish-container
 
-publish-ldap: build-ldap
-	docker push $(docker_repo)/kopano_ldap:latest
+publish-ldap: tag-ldap
+	component=ldap make publish-container
 
-publish-ldap-demo: build-ldap-demo
-	docker push $(docker_repo)/kopano_ldap_demo:latest
+publish-ldap-demo: tag-ldap
+	component=ldap_demo make publish-container
 
-publish-meet: build-meet tag-meet
+publish-meet: tag-meet
 	component=meet make publish-container
 
-publish-php: build-php tag-php
+publish-php: tag-php
 	component=php make publish-container
 
-publish-playground: build-playground
+publish-playground:
 	docker push $(docker_repo)/kopano_playground:latest
 	docker push $(docker_repo)/kopano_playground:builder
 
-publish-python: build-python tag-python
+publish-python: tag-python
 	component=python make publish-container
 
-publish-kdav: build-kdav #tag-kdav
+publish-kdav: #tag-kdav
 	docker push $(docker_repo)/kopano_kdav:latest
 	docker push $(docker_repo)/kopano_kdav:builder
 
-publish-scheduler: build-scheduler tag-scheduler
+publish-scheduler: tag-scheduler
 	component=scheduler make publish-container
 
-publish-ssl: build-ssl tag-ssl
-	component=scheduler make publish-container
+publish-ssl: tag-ssl
+	component=ssl make publish-container
 
-publish-utils: build-utils tag-utils
+publish-utils: tag-utils
 	component=utils make publish-container
 
-publish-web: build-web tag-web
+publish-web: tag-web
 	component=web make publish-container
 
-publish-webapp: build-webapp tag-webapp
+publish-webapp: tag-webapp
 	component=webapp make publish-container
 
-publish-zpush: build-zpush tag-zpush
+publish-zpush: tag-zpush
 	component=zpush make publish-container
 
 check-scripts:

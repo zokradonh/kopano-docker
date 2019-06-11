@@ -1,24 +1,35 @@
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_base
 
-ARG DEBIAN_FRONTEND=noninteractive
-
+ARG VCS_REF
 ARG ADDITIONAL_KOPANO_PACKAGES=""
-ENV ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
-ENV DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES
-ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
-ENV KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL
-ARG KOPANO_ZPUSH_REPOSITORY_URL="http://repo.z-hub.io/z-push:/final/Debian_9.0/"
-ENV KOPANO_ZPUSH_REPOSITORY_URL=$KOPANO_ZPUSH_REPOSITORY_URL
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
-ENV KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS
-ARG KOPANO_CORE_VERSION=newest
-ENV KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION
-ARG KOPANO_ZPUSH_VERSION=newest
-ENV KOPANO_ZPUSH_VERSION=$KOPANO_ZPUSH_VERSION
 ARG RELEASE_KEY_DOWNLOAD=0
-ENV RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
+ARG DEBIAN_FRONTEND=noninteractive
+ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
+ARG KOPANO_CORE_VERSION=newest
+ARG KOPANO_ZPUSH_REPOSITORY_URL="http://repo.z-hub.io/z-push:/final/Debian_9.0/"
+ARG KOPANO_ZPUSH_VERSION=newest
+
+ENV \
+    ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES \
+    DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES \
+    KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
+    KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
+    KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
+    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD \
+    KOPANO_ZPUSH_REPOSITORY_URL=$KOPANO_ZPUSH_REPOSITORY_URL \
+    KOPANO_ZPUSH_VERSION=$KOPANO_ZPUSH_VERSION
+
+LABEL maintainer=az@zok.xyz \
+    org.label-schema.name="Kopano Z-Push container" \
+    org.label-schema.description="Container for running Z-Push with Kopano Groupware Core" \
+    org.label-schema.url="https://kopano.io" \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
+    org.label-schema.version=$KOPANO_ZPUSH_VERSION \
+    org.label-schema.schema-version="1.0"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -30,9 +41,6 @@ RUN \
         dl_and_package_community "core"; \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    # save kopano version
-    echo "core-${KOPANO_CORE_VERSION}" > /kopano/buildversion; \
-    echo "zpush-${KOPANO_ZPUSH_VERSION}" >> /kopano/buildversion; \
     # prepare z-push installation
     echo "deb ${KOPANO_ZPUSH_REPOSITORY_URL} /" > /etc/apt/sources.list.d/zpush.list && \
     curl -s -S -o - "${KOPANO_ZPUSH_REPOSITORY_URL}/Release.key" | apt-key add - && \
