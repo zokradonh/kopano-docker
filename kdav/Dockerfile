@@ -48,7 +48,7 @@ RUN \
         php7-mapi \
         php-xml \
         php-mbstring \
-	    php-zip \
+        php-zip \
         sqlite \
         php-sqlite3 \
         ca-certificates \

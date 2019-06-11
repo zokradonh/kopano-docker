@@ -12,7 +12,7 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.url="https://kopano.io" \
     org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
-	org.label-schema.version=$SUPERCRONIC_VERSION \
+    org.label-schema.version=$SUPERCRONIC_VERSION \
     org.label-schema.schema-version="1.0"
 
 RUN apk --no-cache add bash
