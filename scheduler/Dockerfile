@@ -2,8 +2,9 @@ FROM docker:18.09
 
 ARG VCS_REF
 
-ENV DOCKERIZE_VERSION v0.6.1
-ENV SUPERCRONIC_VERSION 0.1.9
+ENV \
+    DOCKERIZE_VERSION v0.6.1 \
+    SUPERCRONIC_VERSION 0.1.9
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano scheduler container" \

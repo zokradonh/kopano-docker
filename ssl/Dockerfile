@@ -2,7 +2,11 @@ FROM alpine:3.9
 
 ARG VCS_REF
 
-ENV CODE_VERSION=1.0.1
+ENV \
+    CODE_VERSION=1.0.1 \
+    PKI_ROOT /kopano/easypki \
+    PKI_ORGANIZATION Internal Kopano System \
+    PKI_COUNTRY DE
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano SSL container" \
@@ -15,10 +19,6 @@ LABEL maintainer=az@zok.xyz \
 
 RUN mkdir -p /kopano/easypki /kopano/ssl /kopano/ssl/clients
 WORKDIR /kopano/easypki
-
-ENV PKI_ROOT /kopano/easypki
-ENV PKI_ORGANIZATION Internal Kopano System
-ENV PKI_COUNTRY DE
 
 RUN apk add --no-cache \
     easypki \
