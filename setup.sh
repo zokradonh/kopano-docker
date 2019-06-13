@@ -32,7 +32,7 @@ plugin_menu() {
 docker_tag_search () {
 	image="$1"
 	results=$(reg tags "$image" 2> /dev/null)
-	echo "$results" | xargs -n1 | sort -ru | xargs
+	echo "$results" | xargs -n1 | sort --version-sort -ru | xargs
 }
 
 echo "Creating individual env files for containers (if they do not exist already)"
