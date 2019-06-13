@@ -28,7 +28,7 @@ docker_repo=${docker_repo:-zokradonh}
 docker_tag_search () {
 	image="$1"
 	results=$(reg tags "$image" 2> /dev/null)
-	echo "$results" | xargs -n1 | sort -ru
+	echo "$results" | xargs -n1 | sort --version-sort -ru
 }
 
 # function from https://stackoverflow.com/a/42790579/4754613
