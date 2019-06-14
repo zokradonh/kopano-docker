@@ -243,15 +243,9 @@ if [ ! -e ./.env ]; then
 
 	echo "${PRINT_SETUP_SUCCESS}"
 
-if [ ! -e ./docker-compose.override.yml ]; then
-	echo 'version: "3.5"' >> ./docker-compose.override.yml
-fi
-
 	cat <<EOF > "./.env"
 # please consult https://github.com/zokradonh/kopano-docker
 # for possible configuration values and their impact
-COMPOSE_FILE=docker-compose.yml:docker-compose.portmapping.yml:docker-compose.override.yml
-
 CORE_VERSION=$CORE_VERSION
 WEBAPP_VERSION=$WEBAPP_VERSION
 ZPUSH_VERSION=$ZPUSH_VERSION
@@ -320,9 +314,11 @@ KOPANOSPORT=237
 # Settings for test environments
 INSECURE=$INSECURE
 
+# Docker and docker-compose settings
 # Docker Repository to push to/pull from
 docker_repo=zokradonh
 COMPOSE_PROJECT_NAME=kopano
+COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml
 
 # Modify below to build a different version, than the kopano nightly release
 #KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/
@@ -341,6 +337,12 @@ ADDITIONAL_KOPANO_WEBAPP_PLUGINS=$ADDITIONAL_KOPANO_WEBAPP_PLUGINS
 
 EOF
 else
-	echo "config already exists, doing nothing"
-	echo "if you want to change the configuration, please edit .env directly"
+
+	if ! grep -q COMPOSE_FILE ./.env; then
+		echo "Adding COMPOSE_FILE setting to .env"
+		echo "COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml" >> ./.env
+	fi
+
+	echo ".env already exists with initial configuration"
+	echo "If you want to change the configuration, please edit .env directly"
 fi
