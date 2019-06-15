@@ -238,7 +238,6 @@ services:
   kopano_webapp:
     image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
     hostname: kopano_webapp
-    container_name: ${COMPOSE_PROJECT_NAME}_webapp
     depends_on:
       - kopano_server
     volumes:
