@@ -4,6 +4,8 @@ services:
   test:
     build:
       context: tests/startup-test
+      args:
+        docker_repo: ${docker_repo:-zokradonh}
     networks:
       - kopano-net
       - ldap-net
@@ -12,5 +14,6 @@ services:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
