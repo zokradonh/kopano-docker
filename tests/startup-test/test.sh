@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+set -e
 
 # waits for key events in various containers
 # e.g. kopano_server:236 signals succesful start of kopano-server process
@@ -23,4 +23,5 @@ dockerize \
 
 docker exec kopano_server kopano-admin -s
 docker exec kopano_server kopano-cli --sync
+docker exec kopano_zpush z-push-admin -a list
 docker exec kopano_zpush z-push-gabsync -a sync

@@ -349,7 +349,7 @@ test-ci: ## Test if all containers start up
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml build
 	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
 	docker-compose -f $(DOCKERCOMPOSE_FILE) ps
-	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml run test || (docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml down -v; exit 1)
+	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml run test || (docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml ps; exit 1)
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 
 test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
