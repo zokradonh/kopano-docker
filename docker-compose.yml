@@ -244,7 +244,7 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
-      # TODO move WebApp sessions into a dedicated volume
+      - kopanowebapp/:/var/lib/kopano-webapp/
     environment:
       - TZ=${TZ}
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
@@ -530,6 +530,7 @@ volumes:
   kopanodata:
   kopanossl:
   kopanosocket:
+  kopanowebapp:
   zpushstates:
   kdavstates:
 
