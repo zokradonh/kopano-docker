@@ -244,7 +244,7 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
-      - kopanowebapp/:/var/lib/kopano-webapp/tmp/session
+      - kopanowebapp/:/var/lib/kopano-webapp/
     environment:
       - TZ=${TZ}
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
