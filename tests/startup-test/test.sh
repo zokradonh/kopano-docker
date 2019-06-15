@@ -21,7 +21,7 @@ dockerize \
 	-wait tcp://kopano_zpush:80 \
 	-timeout 120s
 
-docker exec kopano_server kopano-admin -s
+docker exec kopano_server kopano-admin --sync
 docker exec kopano_server kopano-cli --sync
 docker exec kopano_zpush z-push-admin -a list
 docker exec kopano_zpush z-push-gabsync -a sync
