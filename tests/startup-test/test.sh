@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 # waits for key events in various containers
 # e.g. kopano_server:236 signals succesful start of kopano-server process
