@@ -344,15 +344,13 @@ test: ## Build and start new containers for testing (also deletes existing data 
 test-update-env: ## Recreate containers based on updated .env.
 	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
 
+.PHONY: test-ci
 test-ci: ## Test if all containers start up
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml build
-	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml up -d
-	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml ps
-	# TODO this just echos the exit code of the kopano_test container. if this is not 0 we should do something with it.
-	docker wait kopano_test_1
-	docker logs --tail 10 kopano_test_1
+	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
+	docker-compose -f $(DOCKERCOMPOSE_FILE) ps
+	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml run test || (docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml down -v; exit 1)
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
-	docker rm kopano_test_1
 
 test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'

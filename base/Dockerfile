@@ -9,7 +9,7 @@ ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG RELEASE_KEY_DOWNLOAD=0
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV BASE_VERSION=1.1.0
+ENV BASE_VERSION=1.2.0
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano base container" \
@@ -26,8 +26,6 @@ RUN mkdir -p /kopano/repo /kopano/data /kopano/helper /kopano/path
 WORKDIR /kopano/repo
 
 # install basics
-# TODO require python3 or python3-minimal?
-# TODO install apt keys if supported kopano (instead of in core, php, meet, ...)
 # hadolint ignore=DL3005
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -41,17 +39,21 @@ RUN apt-get update && \
         jq \
         locales \
         moreutils \
-        python3 \
+        python3-minimal \
         && \
-    rm -rf /var/cache/apt /var/lib/apt/lists/*
+    rm -rf /var/cache/apt /var/lib/apt/lists/*; \
+    # install apt key if supported kopano
+    if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
+        curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
+    fi
+
+ENV DOCKERIZE_VERSION v0.6.1
+RUN curl -L https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xzvf - -C /usr/local/bin
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8
-
-ENV DOCKERIZE_VERSION v0.6.1
-RUN curl -L https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xzvf - -C /usr/local/bin
 
 # get common utilities
 COPY create-kopano-repo.sh /kopano/helper/

@@ -38,10 +38,6 @@ RUN \
         dl_and_package_community "core"; \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    # install apt keys if supported kopano
-    if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
-        curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
-    fi; \
     # install
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \

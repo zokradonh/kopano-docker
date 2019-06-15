@@ -36,11 +36,8 @@ RUN \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
         dl_and_package_community "core"; \
     fi; \
+    # apt key has already been installed in base
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    # install apt key if supported kopano
-    if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
-        curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
-    fi; \
     # install
     apt-get update && \
     set -x && \

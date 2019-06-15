@@ -40,10 +40,6 @@ RUN \
         dl_and_package_community "meet"; \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_MEET_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    # install apt key if supported kopano
-    if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
-        curl -s -S -o - "${KOPANO_MEET_REPOSITORY_URL}/Release.key" | apt-key add -; \
-    fi; \
     # install
     apt-get update && \
     set -x && \
