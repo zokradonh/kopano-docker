@@ -1,4 +1,4 @@
-SHELL := /bin/bash # Use bash syntax
+SHELL := /bin/bash -e # Use bash syntax
 
 # if not run in travis, get docker_login and _pwd from file
 ifndef TRAVIS
@@ -344,13 +344,14 @@ test: ## Build and start new containers for testing (also deletes existing data 
 test-update-env: ## Recreate containers based on updated .env.
 	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
 
+.PHONY: test-ci
 test-ci: ## Test if all containers start up
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml build
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml up -d
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml ps
-	# TODO this just echos the exit code of the kopano_test container. if this is not 0 we should do something with it.
-	docker wait kopano_test_1
-	docker logs --tail 10 kopano_test_1
+	@test "$(shell docker wait kopano_test_1)" = "0" \
+    || { echo "Docker wait returned with error"; docker logs --tail 10 kopano_test_1; exit 1; } \
+	&& { echo "Docker wait finished succesfully"; }
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker rm kopano_test_1
 
