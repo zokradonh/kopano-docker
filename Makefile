@@ -1,4 +1,4 @@
-SHELL := /bin/bash -e # Use bash syntax
+SHELL := /bin/bash # Use bash syntax
 
 # if not run in travis, get docker_login and _pwd from file
 ifndef TRAVIS
