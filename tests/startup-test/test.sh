@@ -1,7 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+
+set -ex
+
 # waits for key events in various containers
 # e.g. kopano_server:236 signals succesful start of kopano-server process
-exec dockerize \
+dockerize \
 	-wait file://var/run/kopano/grapi/notify.sock \
 	-wait file://var/run/kopano/server.sock \
 	-wait http://kopano_konnect:8777/.well-known/openid-configuration \
@@ -17,3 +20,8 @@ exec dockerize \
 	-wait tcp://kopano_webapp:9080 \
 	-wait tcp://kopano_zpush:80 \
 	-timeout 120s
+
+#docker exec kopano_server kopano-cli --sync
+docker exec kopano_server kopano-admin -l
+docker exec kopano_zpush z-push-admin -a list
+docker exec kopano_zpush z-push-gabsync -a sync
