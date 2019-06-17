@@ -321,10 +321,11 @@ publish-webapp: tag-webapp
 publish-zpush: tag-zpush
 	component=zpush make publish-container
 
-check-scripts:
+lint:
 	grep -rIl '^#![[:blank:]]*/bin/\(bash\|sh\|zsh\)' \
 	--exclude-dir=.git --exclude=*.sw? \
 	| xargs shellcheck -x
+	git ls-files --exclude='*.yml' --ignored | xargs --max-lines=1 yamllint
 	# List files which name starts with 'Dockerfile'
 	# eg. Dockerfile, Dockerfile.build, etc.
 	git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint
