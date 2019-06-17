@@ -313,7 +313,6 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_kdav
     depends_on:
       - kopano_server
-    container_name: ${COMPOSE_PROJECT_NAME}_kdav
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
@@ -437,13 +436,12 @@ services:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
     command: wrapper.sh
     depends_on:
-      - kopano_server
+     - kopano_server
+     - kopano_ssl
+     - web
     volumes:
      - kopanossl/:/kopano/ssl
      - kopanosocket/:/run/kopano
-    depends_on:
-     - kopano_ssl
-     - web
     environment:
      - FQDN=${FQDN}
      - allow_client_guests=yes
