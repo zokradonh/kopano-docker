@@ -13,18 +13,18 @@ services:
       - FQDN=${FQDN?err}
     command: wrapper.sh
     cap_drop:
-     - ALL
-    cap_add: 
-     - NET_BIND_SERVICE
-     - CHOWN
-     - SETGID
-     - SETUID
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETGID
+      - SETUID
     volumes:
       - web:/.kweb
     networks:
       web-net:
         aliases:
-         - ${FQDNCLEANED?err}
+          - ${FQDNCLEANED?err}
 
   ldap:
     image: ${docker_repo:-zokradonh}/${LDAP_CONTAINER:-kopano_ldap_demo}:${LDAP_VERSION:-latest}
@@ -68,7 +68,7 @@ services:
     environment:
       - SSP_VERSION=1.3
       - LDAP_SERVER=ldap://ldap:389
-      - LDAP_BINDDN=cn=admin,${LDAP_BASE_DN} 
+      - LDAP_BINDDN=cn=admin,${LDAP_BASE_DN}
       - LDAP_BINDPASS=${LDAP_ADMIN_PASSWORD}
       - LDAP_BASE_SEARCH=${LDAP_BASE_DN}
       - MAIL_FROM=noreply@${LDAP_DOMAIN}
@@ -93,9 +93,9 @@ services:
     expose:
       - "80"
     networks:
-      - web-net # provide web-frontend
-      - ldap-net # access ldap user base and write passwords
-      - kopano-net # send mail directly to mailstack
+      - web-net     # provide web-frontend
+      - ldap-net    # access ldap user base and write passwords
+      - kopano-net  # send mail directly to mailstack
 
   mail:
     image: tvial/docker-mailserver:release-v6.1.0
@@ -149,8 +149,8 @@ services:
     networks:
       - kopano-net
       - ldap-net
-    #dns: 1.1.1.1 # using Google DNS can lead to lookup errors uncomment this option and 
-    # set to the ip of a trusted dns service (Cloudflare is given as an example). 
+    #dns: 1.1.1.1  # using Google DNS can lead to lookup errors uncomment this option and
+    # set to the ip of a trusted dns service (Cloudflare is given as an example).
     # See https://github.com/zokradonh/kopano-docker/issues/52 for more information.
     cap_add:
       - NET_ADMIN
@@ -176,7 +176,7 @@ services:
       retries: 4
     networks:
       - kopano-net
-  
+
   kopano_ssl:
     image: ${docker_repo:-zokradonh}/kopano_ssl:${SSL_VERSION:-latest}
     environment:
@@ -212,7 +212,7 @@ services:
       - KCCONF_SERVER_SERVER_SSL_CA_FILE=/kopano/ssl/ca.pem
       - KCCONF_SERVER_SERVER_NAME=Kopano
       - KCCONF_SERVER_SSLKEYS_PATH=/kopano/ssl/clients
-      - KCCONF_SERVER_PROXY_HEADER=* # delete line if webapp is not behind reverse proxy
+      - KCCONF_SERVER_PROXY_HEADER=*  # delete line if webapp is not behind reverse proxy
       - KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS=${POSTMASTER_ADDRESS}
       - KCCONF_LDAP_LDAP_URI=${LDAP_SERVER}
       - KCCONF_LDAP_LDAP_BIND_USER=${LDAP_BIND_DN}
@@ -436,64 +436,64 @@ services:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
     command: wrapper.sh
     depends_on:
-     - kopano_server
-     - kopano_ssl
-     - web
+      - kopano_server
+      - kopano_ssl
+      - web
     volumes:
-     - kopanossl/:/kopano/ssl
-     - kopanosocket/:/run/kopano
+      - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     environment:
-     - FQDN=${FQDN}
-     - allow_client_guests=yes
-     - allow_dynamic_client_registration=yes
+      - FQDN=${FQDN}
+      - allow_client_guests=yes
+      - allow_dynamic_client_registration=yes
     env_file:
-     - kopano_konnect.env
+      - kopano_konnect.env
     networks:
-     - kopano-net
-     - web-net
+      - kopano-net
+      - web-net
 
   kopano_playground:
     image: ${docker_repo:-zokradonh}/kopano_playground
     depends_on:
-     - kopano_kapi
-     - kopano_konnect
+      - kopano_kapi
+      - kopano_konnect
     networks:
-     - kopano-net
-     - web-net
+      - kopano-net
+      - web-net
 
   kopano_kwmserver:
     image: ${docker_repo:-zokradonh}/kopano_kwmserver:${KWM_VERSION:-latest}
     command: wrapper.sh
     depends_on:
-     - kopano_kapi
-     - kopano_konnect
+      - kopano_kapi
+      - kopano_konnect
     environment:
-     - INSECURE=${INSECURE}
-     - oidc_issuer_identifier=https://${FQDN}
-     - enable_guest_api=yes
-     - public_guest_access_regexp=^group/public/.*
+      - INSECURE=${INSECURE}
+      - oidc_issuer_identifier=https://${FQDN}
+      - enable_guest_api=yes
+      - public_guest_access_regexp=^group/public/.*
     env_file:
-     - kopano_kwmserver.env
+      - kopano_kwmserver.env
     volumes:
-     - kopanossl/:/kopano/ssl
+      - kopanossl/:/kopano/ssl
     networks:
-     - web-net
+      - web-net
 
   kopano_meet:
     image: ${docker_repo:-zokradonh}/kopano_meet:${MEET_VERSION:-latest}
     environment:
-     - SERVICE_TO_START=meet
-     - KCCONF_MEET_guests_enabled=true
-     - KCCONF_MEET_disableFullGAB=false
+      - SERVICE_TO_START=meet
+      - KCCONF_MEET_guests_enabled=true
+      - KCCONF_MEET_disableFullGAB=false
     env_file:
-     - kopano_meet.env
+      - kopano_meet.env
     depends_on:
-     - kopano_kapi
-     - kopano_konnect
-     - kopano_kwmserver
-     - web
+      - kopano_kapi
+      - kopano_konnect
+      - kopano_kwmserver
+      - web
     networks:
-     - web-net
+      - web-net
 
   kopano_scheduler:
     image: ${docker_repo:-zokradonh}/kopano_scheduler:${SCHEDULER_VERSION:-latest}
