@@ -436,9 +436,9 @@ services:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
     command: wrapper.sh
     depends_on:
-      - kopano_server
       - kopano_ssl
       - web
+      # to be useful Konnect also need a running kopano_server, but this dependency cannot be added here since this would be a circular dependency
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
