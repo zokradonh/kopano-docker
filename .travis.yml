@@ -19,7 +19,7 @@ before_install:
   - sudo chmod +rx /usr/local/bin/hadolint
   - sudo chmod +rx /usr/local/bin/docker-compose
   - sudo apt update && sudo apt install -y expect
-  - sudo pip install --upgrade pip && sudo pip install --user yamllint
+  - sudo pip install --upgrade pip && sudo pip install yamllint
 install:
   - make lint
   - "./test.exp"
