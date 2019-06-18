@@ -18,7 +18,8 @@ before_install:
   - sudo tar zxvf trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz -C /usr/local/bin trivy
   - sudo chmod +rx /usr/local/bin/hadolint
   - sudo chmod +rx /usr/local/bin/docker-compose
-  - sudo apt update && sudo apt install -y expect yamllint
+  - sudo apt update && sudo apt install -y expect
+  - sudo pip install --user yamllint
 install:
   - make lint
   - "./test.exp"
