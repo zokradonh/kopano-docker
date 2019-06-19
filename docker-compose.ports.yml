@@ -30,4 +30,3 @@ services:
   kopano_ical:
     ports:
       - "${ICALPORT:-8080}:8080"
-
