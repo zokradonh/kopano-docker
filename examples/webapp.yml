@@ -14,18 +14,18 @@ services:
       - FQDN=${FQDN}
     command: wrapper.sh
     cap_drop:
-     - ALL
+      - ALL
     cap_add:
-     - NET_BIND_SERVICE
-     - CHOWN
-     - SETGID
-     - SETUID
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETGID
+      - SETUID
     volumes:
       - web:/.kweb
     networks:
       web-net:
         aliases:
-         - ${FQDN}
+          - ${FQDN}
 
   kopano_webapp:
     image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}

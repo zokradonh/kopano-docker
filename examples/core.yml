@@ -38,7 +38,7 @@ services:
       retries: 4
     networks:
       - kopano-net
-  
+
   kopano_ssl:
     image: ${docker_repo:-zokradonh}/kopano_ssl
     container_name: kopano_ssl
