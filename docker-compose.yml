@@ -510,6 +510,7 @@ services:
       - CRON_KOPANOUSERS=10 * * * * docker exec kopano_server kopano-admin --sync
       - CRON_ZPUSHGAB=0 22 * * * docker exec kopano_zpush z-push-gabsync -a sync
       - CRONDELAYED_KBACKUP=30 1 * * * docker run --rm -it zokradonh/kopano_utils kopano-backup -h
+      - CRONDELAYED_SOFTDELETE=30 2 * * * docker run --rm -it zokradonh/kopano_utils kopano-admin --purge-softdelete 30
     env_file:
       - kopano_scheduler.env
     volumes:
