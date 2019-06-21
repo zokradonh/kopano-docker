@@ -105,7 +105,7 @@ Please check the individual web containers (kDAV, WebApp and Z-Push for individu
 
 ### How can I prevent e.g. `kopano-gateway` to be reachable from the network?
 
-The exposed ports of each container are defined in `docker-compose.ports.yml`. If you do not want to expose some of the containers in this mapping to the network it is recommended to copy this file and just remove all entries that you do not want to have exposed. Please make sure to ignore this new file in git when making future pull requests.
+The exposed ports of each container are defined in `docker-compose.ports.yml`. If you do not want to expose some of the containers in this mapping to the network it is recommended to copy this file to `docker-compose.override.yml`and just remove all entries that you do not want to have exposed.
 
 ### I want to use these Docker images outside of an evaluation environment. What do I need to adjust to make this possible?
 
