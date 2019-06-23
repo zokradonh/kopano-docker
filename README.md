@@ -44,7 +44,7 @@ The compose file itself is part of the git repository and should not be edited d
 
 #### Why is my compose override file ignored?
 
-This project uses the `COMPOSE_FILE` environment variable to allow users to override the ports exposed by each container (for example when using a different front facing proxy). When using a `docker-compose.override.yml` file make sure this is included in this variable in `.env`. For example like this:
+This project uses the `COMPOSE_FILE` environment variable to allow users to override the ports exposed by each container (for example when using a different front facing proxy). When using a `docker-compose.override.yml` file make sure this is included in this variable in the `.env` file. For example like this:
 
 ```
 COMPOSE_FILE=docker-compose.yml:docker-compose.portmapping.yml:docker-compose.override.yml
@@ -52,7 +52,7 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.portmapping.yml:docker-compose.ov
 
 #### I've pulled in the latest version, but now I cannot reach Kopano over the network any longer!
 
-This project switched to specifying `COMPOSE_FILE` in `.env` to allow users to easily disable individual ports exposed. Please rerun `setup.sh` to add this variable to your `.env` or add it manually.
+This project switched to specifying `COMPOSE_FILE` in `.env` to allow users to easily disable individual ports exposed. Please rerun `setup.sh` to add this variable to your `.env` file or add it manually.
 
 ### How to use a newer version than the one available from the Docker Hub?
 
@@ -105,7 +105,7 @@ Please check the individual web containers (kDAV, WebApp and Z-Push for individu
 
 ### How can I prevent e.g. `kopano-gateway` to be reachable from the network?
 
-The exposed ports of each container are defined in `docker-compose.ports.yml`. If you do not want to expose some of the containers in this mapping to the network it is recommended to copy this file to `docker-compose.override.yml`and just remove all entries that you do not want to have exposed.
+The exposed ports of each container are defined in `docker-compose.ports.yml`. If you do not want to expose some of the containers to the network, it is recommended to copy this file to `docker-compose.override.yml`and just remove all entries that you do not want to have exposed.
 
 ### I want to use these Docker images outside of an evaluation environment. What do I need to adjust to make this possible?
 
