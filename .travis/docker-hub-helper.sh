@@ -62,6 +62,22 @@ push_readme() {
     printf "Unable to push README to Docker Hub, response code: %s\n" "${code}"
     exit 1
   fi
+
+  local code
+  code=$(jq -n --arg msg "$(head -n 1 ${readme} | cut -d" " -f2-)" \
+    '{"registry":"registry-1.docker.io","description": $msg }' | \
+        curl -s -o /dev/null  -L -w "%{http_code}" \
+           https://cloud.docker.com/v2/repositories/"${image}"/ \
+           -d @- -X PATCH \
+           -H "Content-Type: application/json" \
+           -H "Authorization: JWT ${token}")
+
+  if [[ "${code}" = "200" ]]; then
+    printf "Successfully pushed description to Docker Hub"
+  else
+    printf "Unable to push description to Docker Hub, response code: %s\n" "${code}"
+    exit 1
+  fi
 }
 
 # Login into Docker repository
