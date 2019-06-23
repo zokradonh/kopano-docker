@@ -64,7 +64,7 @@ push_readme() {
   fi
 
   local code
-  code=$(jq -n --arg msg "$(head -n 1 ${readme} | cut -d" " -f2-)" \
+  code=$(jq -n --arg msg "$(head -n 1 "${readme}" | cut -d' ' -f2-)" \
     '{"registry":"registry-1.docker.io","description": $msg }' | \
         curl -s -o /dev/null  -L -w "%{http_code}" \
            https://cloud.docker.com/v2/repositories/"${image}"/ \
