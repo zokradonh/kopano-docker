@@ -18,11 +18,11 @@ docker_login=${docker_login:-""}
 docker_pwd=${docker_pwd:-""}
 
 if [ -z "$docker_login" ]; then
-  docker_login="$(cat ~/.docker-account-user)"
+  docker_login="$(<~/.docker-account-user)"
 fi
 
 if [ -z "$docker_pwd" ]; then
-  docker_pwd="$(cat ~/.docker-account-pwd)"
+  docker_pwd="$(<~/.docker-account-pwd)"
 fi
 
 image=${1:-""}
