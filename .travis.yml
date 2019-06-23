@@ -24,6 +24,8 @@ install:
   - make lint
   - "./test.exp"
   - make lint # rerun lint to see if output is different with .env in place
+  - echo "docker_repo=$docker_repo" >> .env
+  - echo "DOCKERREADME=yes" >> .env # add DOCKERREADME env var so that make publish also updates readme files on docker hub
   - travis_retry make build-all
 script:
   - make test-ci

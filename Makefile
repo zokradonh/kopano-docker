@@ -3,8 +3,8 @@ SHELL := /bin/bash # Use bash syntax
 # if not run in travis, get docker_login and _pwd from file
 ifndef TRAVIS
 	docker_repo := zokradonh
-	docker_login := `cat ~/.docker-account-user`
-	docker_pwd := `cat ~/.docker-account-pwd`
+	docker_login := $(shell cat ~/.docker-account-user)
+	docker_pwd := $(shell cat ~/.docker-account-pwd)
 endif
 
 base_download_version := $(shell ./version.sh core)
@@ -256,7 +256,7 @@ tag-zpush:
 
 # Docker publish
 repo-login: ## Login at hub.docker.com
-	@docker login -u $(docker_login) -p $(docker_pwd)
+	@echo $(docker_pwd) | docker login -u $(docker_login) --password-stdin
 
 .PHONY: publish
 publish: repo-login
@@ -267,6 +267,9 @@ publish-container: ## Helper target to push a given image to a registry. Default
 	@echo 'publish latest to $(docker_repo)/kopano_$(component)'
 	docker push $(docker_repo)/kopano_$(component):${$(component)_version}
 	docker push $(docker_repo)/kopano_$(component):latest
+ifdef DOCKERREADME
+	.travis/docker-hub-helper.sh $(component)
+endif
 
 publish-base: tag-base
 	component=base make publish-container
