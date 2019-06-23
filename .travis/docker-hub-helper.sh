@@ -65,7 +65,7 @@ push_readme() {
 }
 
 # Login into Docker repository
-echo "$docker_pwd" | docker login -u "$docker_login" --password-stdin
+#echo "$docker_pwd" | docker login -u "$docker_login" --password-stdin
 
 token=$(curl -s -X POST \
 -H "Content-Type: application/json" \
