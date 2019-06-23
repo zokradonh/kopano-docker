@@ -1,4 +1,5 @@
 #!/bin/bash
+# bash .travis/docker-hub-helper.sh base
 
 set -euo pipefail
 IFS=$'\n\t'
