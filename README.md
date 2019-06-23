@@ -5,7 +5,7 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 
 ## How to get started?
 
-- make sure that you are running a recent enought version of Docker and [Docker Compose](https://docs.docker.com/compose/install/)
+- make sure that you are running at least Docker 17.06.0 and [Docker Compose](https://docs.docker.com/compose/install/) 1.19.0.
 - clone this repository to your local disk
 - run `setup.sh`
   - this script will ask you a few questions about your environment.

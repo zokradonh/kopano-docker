@@ -1,5 +1,5 @@
 FROM docker:18.09.6
-ENV COMPOSE_VERSION "1.23.2"
+ENV COMPOSE_VERSION "1.19.0"
 ENV REG_VERSION "0.16.0"
 RUN apk add --no-cache bash curl expect make nano jq py-pip
 RUN pip install --no-cache-dir docker-compose==${COMPOSE_VERSION}
