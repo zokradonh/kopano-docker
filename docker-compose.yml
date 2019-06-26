@@ -298,6 +298,7 @@ services:
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
       - KCCONF_KAPID_INSECURE=${INSECURE}
+      - KONNECTURL=${KONNECTURL:-http://kopano_konnect:8777}
     env_file:
       - kopano_kapi.env
     networks:
@@ -474,6 +475,7 @@ services:
       - oidc_issuer_identifier=https://${FQDN}
       - enable_guest_api=yes
       - public_guest_access_regexp=^group/public/.*
+      - KONNECTURL=${KONNECTURL:-http://kopano_konnect:8777}
     env_file:
       - kopano_kwmserver.env
     volumes:

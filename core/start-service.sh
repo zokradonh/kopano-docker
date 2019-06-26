@@ -90,7 +90,7 @@ grapi)
 kapid)
 	dockerize \
 		-wait file://var/run/kopano/grapi/notify.sock \
-		-wait http://kopano_konnect:8777/.well-known/openid-configuration \
+		-wait $KONNECTURL/.well-known/openid-configuration \
 		-timeout 360s
 	LC_CTYPE=en_US.UTF-8
 	sed -i s/\ *=\ */=/g /etc/kopano/kapid.cfg

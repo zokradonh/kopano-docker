@@ -11,7 +11,7 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    vim nano man \
+    vim nano man less \
     kopano-backup \
     kopano-migration-imap \
     kopano-migration-pst \
