@@ -17,8 +17,10 @@ LABEL maintainer=az@zok.xyz \
 
 USER root
 
+
 ENV DOCKERIZE_VERSION v0.11.0
-RUN wget -O - https://github.com/powerman/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-`uname -s`-`uname -m` | install /dev/stdin /bin/dockerize
+# hadolint ignore=DL4006
+RUN wget -O - https://github.com/powerman/dockerize/releases/download/"$DOCKERIZE_VERSION"/dockerize-"$(uname -s)"-"$(uname -m)" | install /dev/stdin /bin/dockerize
 
 COPY wrapper.sh /usr/local/bin
 
