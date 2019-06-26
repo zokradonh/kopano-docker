@@ -71,6 +71,7 @@ export registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
 # originally I wanted to wait for $registration_conf, but I needed to precreate the file
 # so the konnect container (since the startup is running as nobody) can write to it.
 exec dockerize \
+	-skip-tls-verify \
 	-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
 	-timeout 360s \
 	/usr/local/bin/docker-entrypoint.sh serve \
