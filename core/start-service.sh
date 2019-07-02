@@ -55,7 +55,7 @@ server)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-server -F
+	/usr/sbin/kopano-server -F
 	;;
 dagent)
 	dockerize \
