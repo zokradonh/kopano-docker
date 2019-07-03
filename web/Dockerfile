@@ -15,6 +15,10 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.version=$CODE_VERSION \
     org.label-schema.schema-version="1.0"
 
+# TODO remove once https://stash.kopano.io/projects/KGOL/repos/kweb/pull-requests/18/overview is merged and released
+RUN apk add --update --no-cache \
+    mailcap
+
 ENV KWEBD_USER root
 ENV KWEBD_GROUP root
 # hadolint ignore=DL3002
