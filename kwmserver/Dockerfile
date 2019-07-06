@@ -17,9 +17,9 @@ LABEL maintainer=az@zok.xyz \
 
 USER root
 
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
 ENV DOCKERIZE_VERSION v0.11.0
-# hadolint ignore=DL4006
 RUN wget -O - https://github.com/powerman/dockerize/releases/download/"$DOCKERIZE_VERSION"/dockerize-"$(uname -s)"-"$(uname -m)" | install /dev/stdin /bin/dockerize
 
 COPY wrapper.sh /usr/local/bin
