@@ -24,7 +24,7 @@ The `docker-compose.yml` file by default pulls Docker containers from https://hu
 
 ## Troubleshooting
 
-If you are running into a problem please include the following issues in the description of your report;
+If you are running into a problem please include the following issues in the description of your report:
 
 - the error message produced when running `docker-compose up`
 - the output of `docker-compose ps`
@@ -32,7 +32,7 @@ If you are running into a problem please include the following issues in the des
 - the contents of your `.env`
 - the output of `docker-compose config`
 
-Please make sure to censore sensitive data (for example your real hostname or password to acconts) when posting these information publicly.
+Please make sure to remove sensitive data (for example your real hostname or passwords for accounts) when posting these information publicly.
 
 ## Updating
 
