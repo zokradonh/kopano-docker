@@ -34,6 +34,8 @@ If you are running into a problem please include the following issues in the des
 
 Please make sure to remove sensitive data (for example your real hostname or passwords for accounts) when posting these information publicly.
 
+If you have problems or questions about Kopano in general then either get in contact with the [Kopano support](https://kopano.com/support-info/) (if you have a valid subscription) or start a topic on the [Kopano forum](https://forum.kopano.io/).
+
 ## Updating
 
 The used `docker-compose.yml` is part of the git versioning. Which mean all changes in this repository will also be applied to your local data once you pull in the latest version. If you need to configure additional env variables, this can now be done in the additional env files (more details further below, for example for `kopano_server` this file is called `kopano_server.env`). If you only want to run a subset of containers it is recommended to create a copy of `docker-compose.yml` and specify your copy when running. e.g. like ´docker-compose -f my-setup.yml up -d´.
