@@ -22,6 +22,18 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 
 The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
 
+## Troubleshooting
+
+If you are running into a problem please include the following issues in the description of your report;
+
+- the error message produced when running `docker-compose up`
+- the output of `docker-compose ps`
+- for failed containers the output of `docker-compose logs $containername`
+- the contents of your `.env`
+- the output of `docker-compose config`
+
+Please make sure to censore sensitive data (for example your real hostname or password to acconts) when posting these information publicly.
+
 ## Updating
 
 The used `docker-compose.yml` is part of the git versioning. Which mean all changes in this repository will also be applied to your local data once you pull in the latest version. If you need to configure additional env variables, this can now be done in the additional env files (more details further below, for example for `kopano_server` this file is called `kopano_server.env`). If you only want to run a subset of containers it is recommended to create a copy of `docker-compose.yml` and specify your copy when running. e.g. like ´docker-compose -f my-setup.yml up -d´.
