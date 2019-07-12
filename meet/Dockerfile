@@ -43,7 +43,9 @@ RUN \
     # install
     apt-get update && \
     set -x && \
+    # TODO mime-support could be remove once its an official dependency of kopano-kwebd
     apt-get install --no-install-recommends -y \
+	mime-support \
         kopano-kwebd \
 	kopano-meet kopano-meet-webapp \
         ${ADDITIONAL_KOPANO_PACKAGES} \
