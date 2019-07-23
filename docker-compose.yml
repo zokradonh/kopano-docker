@@ -169,6 +169,14 @@ services:
     networks:
       - kopano-net
 
+  coturn:
+     image: instrumentisto/coturn:4.5
+     tmpfs:
+       - /var/lib/coturn
+     # when large port ranges are required, it is recommended to rather expose the container to the host directly
+     # https://github.com/instrumentisto/coturn-docker-image#why-so-many-ports-opened     
+     network_mode: "host"
+
   kopano_ssl:
     image: ${docker_repo:-zokradonh}/kopano_ssl:${SSL_VERSION:-latest}
     environment:
