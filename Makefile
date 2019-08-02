@@ -353,7 +353,11 @@ test-ci: ## Test if all containers start up
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml build
 	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
 	docker-compose -f $(DOCKERCOMPOSE_FILE) ps
-	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml run test || (docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml ps; exit 1)
+	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml run test || \
+		(docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml ps; \
+		docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop; \
+		docker rm kopano_test_run_1 2>/dev/null; \
+		exit 1)
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker ps --filter name=kopano_test* -aq | xargs docker rm -f
 
