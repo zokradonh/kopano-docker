@@ -44,7 +44,7 @@ services:
       - ldap-net
 
   mail:
-    image: tvial/docker-mailserver:release-v6.1.0
+    image: tvial/docker-mailserver:testing
     restart: unless-stopped
     hostname: mail
     domainname: ${LDAP_DOMAIN}
