@@ -82,7 +82,7 @@ services:
       - SASLAUTHD_MECHANISMS=ldap
       - POSTMASTER_ADDRESS=${POSTMASTER_ADDRESS}
       - SMTP_ONLY=1
-      - PERMIT_DOCKER=host
+      - PERMIT_DOCKER=network
       - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
       - POSTFIX_DAGENT=lmtp:kopano_dagent:2003
       - REPORT_RECIPIENT=1
