@@ -1,7 +1,7 @@
 FROM docker:18.09.6
 ENV COMPOSE_VERSION "1.19.0"
 ENV REG_VERSION "0.16.0"
-RUN apk add --no-cache bash curl coreutils expect make nano jq py-pip
+RUN apk add --no-cache bash curl coreutils git expect make nano jq py-pip
 RUN pip install --no-cache-dir docker-compose==${COMPOSE_VERSION}
 # the 0.16.0 release of reg has a bug that breaks loading tags from the docker hub.
 # issue is fixed in master, but not in a release.
