@@ -27,6 +27,12 @@ services:
       - OWNCLOUD_REDIS_ENABLED=true
       - OWNCLOUD_REDIS_HOST=oc_redis
       - OWNCLOUD_SUB_URL=/owncloud
+      - LDAP_SERVER=${LDAP_SERVER}
+      - LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
+      - LDAP_BIND_DN=${LDAP_BIND_DN}
+      - LDAP_BIND_PW=${LDAP_BIND_PW}
+      - LDAP_QUERY_FILTER_USER=${LDAP_QUERY_FILTER_USER}
+      - LDAP_QUERY_FILTER_GROUP=${LDAP_QUERY_FILTER_GROUP}
     healthcheck:
       test: ["CMD", "/usr/bin/healthcheck"]
       interval: 30s
@@ -38,6 +44,7 @@ services:
     networks:
       - web-net
       - owncloud-net
+      - ldap-net
 
   oc_db:
     image: webhippie/mariadb:latest

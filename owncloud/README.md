@@ -1,6 +1,6 @@
 # Running kopano-docker together with Owncloud
 
-To have a demo environment that runs both Kopano and Owncloud perform the following modifications:
+To have a demo environment that runs both Kopano and Owncloud perform the following modifications. This setup uses the official images from https://hub.docker.com/r/owncloud/server.
 
 1. Add the `owncloud.yml` to the `COMPOSE_FILE` variable in your `.env` file.
 
