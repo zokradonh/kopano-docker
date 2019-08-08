@@ -86,10 +86,10 @@ tag_question () {
 tag_question owncloud/server "${OWNCLOUD_VERSION:-latest}" "Owncloud"
 update_env_file OWNCLOUD_VERSION "$return_value"
 update_env_file OWNCLOUD_DB_USERNAME owncloud
-update_env_file OWNCLOUD_DB_PASSWORD $(random_string)
+update_env_file OWNCLOUD_DB_PASSWORD "$(random_string)"
 update_env_file OWNCLOUD_ADMIN_USERNAME admin
-update_env_file OWNCLOUD_ADMIN_PASSWORD $(random_string)
-update_env_file MARIADB_ROOT_PASSWORD $(random_string)
+update_env_file OWNCLOUD_ADMIN_PASSWORD "$(random_string)"
+update_env_file MARIADB_ROOT_PASSWORD "$(random_string)"
 
 if [ -e "$tmpfile" ]; then
 	rm "$tmpfile"
