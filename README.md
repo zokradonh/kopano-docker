@@ -154,3 +154,10 @@ The example `docker-compose.yml` uses the following components for the MTA (mail
 - https://github.com/tomav/docker-mailserver/
 - https://github.com/osixia/docker-openldap
 - https://github.com/osixia/docker-phpLDAPadmin
+
+## Further reading
+
+The following (blog) articles have been written about this project:
+
+- https://kopano.com/blog/building-docker-containers-for-kopano/
+- https://kopano.com/blog/using-docker-to-spin-up-a-kopano-environment/
