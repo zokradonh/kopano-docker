@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     environment:
       - EMAIL=${EMAIL:-off}
-      - FQDN=${FQDN?err}
+      - FQDN=${FQDNCLEANED?err}
     command: wrapper.sh
     cap_drop:
       - ALL
