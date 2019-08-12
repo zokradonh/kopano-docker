@@ -16,11 +16,11 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 RUN apk add --no-cache \
-	jq \
-	moreutils \
-	openssl \
-	py-pip \
-	&& pip install yq==2.7.2
+    jq \
+    moreutils \
+    openssl \
+    py-pip \
+    && pip install yq==2.7.2
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
