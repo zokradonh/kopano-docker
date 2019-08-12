@@ -16,7 +16,7 @@ KCCONF_SERVER_MYSQL_HOST=127.0.0.1
 |      |     |   |
 General prefix   |
        |     |   |
-       Name of the relevant configuration file (server.cfg in this case)
+        Name of the relevant configuration file (server.cfg in this case)
              |   |
              Name of the configuration option in the configuration file
                  |
