@@ -49,8 +49,6 @@ done
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions /tmp/webapp
 
-echo "Starting Apache"
-rm -f /run/apache2/apache2.pid
 set +u
 # cleaning up env variables
 unset "${!KCCONF_@}"
