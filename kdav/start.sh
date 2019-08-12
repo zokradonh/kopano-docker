@@ -23,7 +23,7 @@ if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
 else
 	echo "kDAV is using an ip connection"
 	sed -e "s#define([\"']MAPI_SERVER[\"'],\s*[\"']default:[\"'])#define('MAPI_SERVER', 'https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano')#" \
-	    -i /usr/share/kdav/config.php
+		-i /usr/share/kdav/config.php
 fi
 
 # change root uri to /kdav

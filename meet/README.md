@@ -21,5 +21,4 @@ General prefix   |
              Name of the configuration option in the configuration file
                  |
                  Value of the configuration option
-
 ```

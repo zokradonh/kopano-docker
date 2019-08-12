@@ -12,7 +12,7 @@ kcconf.configkopano({
         'server_listen': "*:236",
         'server_listen_tls': "*:237",
         'sync_gab_realtime': "no",
-	'softdelete_lifetime': "0",
+        'softdelete_lifetime': "0",
         'kcoidc_initialize_timeout': "360"
     }
 })

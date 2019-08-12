@@ -325,6 +325,7 @@ publish-zpush: tag-zpush
 	component=zpush make publish-container
 
 lint:
+	git ls-files | xargs --max-lines=1 eclint check
 	grep -rIl '^#![[:blank:]]*/bin/\(bash\|sh\|zsh\)' \
 	--exclude-dir=.git --exclude=*.sw? \
 	| xargs shellcheck -x
