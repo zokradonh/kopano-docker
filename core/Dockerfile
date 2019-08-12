@@ -43,7 +43,7 @@ RUN \
     set -x && \
     apt-get install --no-install-recommends -y \
         kopano-server-packages \
-	kopano-grapi kopano-kapid \
+        kopano-grapi kopano-kapid \
         ${ADDITIONAL_KOPANO_PACKAGES} \
         && \
     set +x && \
@@ -68,4 +68,4 @@ ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD [ "/kopano/start-service.sh" ]
 
 HEALTHCHECK --interval=5m --timeout=60s \
-	CMD /kopano/healthcheck.sh
+    CMD /kopano/healthcheck.sh
