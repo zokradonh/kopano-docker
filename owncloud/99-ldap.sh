@@ -6,7 +6,7 @@ occ app:enable user_ldap
 occ ldap:show-config
 
 if [[ "$(occ ldap:show-config)" == "" ]]; then
-    su -c "php occ ldap:create-empty-config" www-data
+	su -c "php occ ldap:create-empty-config" www-data
 fi
 
 occ ldap:set-config s01 ldapHost ${LDAP_SERVER}
@@ -22,6 +22,5 @@ occ ldap:set-config s01 ldapConfigurationActive 1
 cat << EOF >| /etc/cron.d/sync
 */10  *  *  *  * root /usr/bin/occ user:sync -m disable 'OCA\User_LDAP\User_Proxy'
 EOF
-
 
 true
