@@ -1,5 +1,6 @@
 sudo: required
 language: node_js
+dist: bionic
 env:
   global:
     - HADOLINT_VERSION=1.16.3
