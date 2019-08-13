@@ -464,7 +464,7 @@ services:
 
   kopano_grapi-explorer:
     image: kopano/grapi-explorer
-    restart: unless stopped
+    restart: unless-stopped
     depends_on:
       - kopano_kapi
       - kopano_konnect
