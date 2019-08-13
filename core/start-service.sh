@@ -88,6 +88,7 @@ grapi)
 	exec kopano-grapi serve
 	;;
 kapid)
+	# TODO -skip-tls-verify should probably be bound to `INSECURE=yes` (in .env)
 	dockerize \
 		-skip-tls-verify \
 		-wait file://var/run/kopano/grapi/notify.sock \

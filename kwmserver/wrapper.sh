@@ -65,11 +65,7 @@ if [ -n "$public_guest_access_regexp" ]; then
 	set -- "$@" --public-guest-access-regexp="$public_guest_access_regexp"
 fi
 
-# shellcheck disable=SC2034
-export registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
-
-# originally I wanted to wait for $registration_conf, but I needed to precreate the file
-# so the konnect container (since the startup is running as nobody) can write to it.
+# TODO -skip-tls-verify should probably be bound to `INSECURE=yes` (in .env)
 exec dockerize \
 	-skip-tls-verify \
 	-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
@@ -77,3 +73,4 @@ exec dockerize \
 	/usr/local/bin/docker-entrypoint.sh serve \
 	--registration-conf /kopano/ssl/konnectd-identifier-registration.yaml \
 	"$@"
+
