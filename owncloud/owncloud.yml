@@ -15,6 +15,7 @@ services:
       - oc_db
       - oc_redis
       - ldap
+      - web
     environment:
       - OWNCLOUD_DOMAIN=${FQDN}
       - OWNCLOUD_DB_TYPE=mysql
@@ -32,8 +33,6 @@ services:
       - LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
       - LDAP_BIND_DN=${LDAP_BIND_DN}
       - LDAP_BIND_PW=${LDAP_BIND_PW}
-      - LDAP_QUERY_FILTER_USER=${LDAP_QUERY_FILTER_USER}
-      - LDAP_QUERY_FILTER_GROUP=${LDAP_QUERY_FILTER_GROUP}
     healthcheck:
       test: ["CMD", "/usr/bin/healthcheck"]
       interval: 30s
