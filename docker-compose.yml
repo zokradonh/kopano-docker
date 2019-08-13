@@ -462,6 +462,16 @@ services:
       - kopano-net
       - web-net
 
+  kopano_grapi-explorer:
+    image: kopano/grapi-explorer
+    restart: unless stopped
+    depends_on:
+      - kopano_kapi
+      - kopano_konnect
+    networks:
+      - kopano-net
+      - web-net
+
   kopano_kwmserver:
     image: ${docker_repo:-zokradonh}/kopano_kwmserver:${KWM_VERSION:-latest}
     restart: unless-stopped
