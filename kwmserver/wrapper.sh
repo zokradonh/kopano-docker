@@ -73,4 +73,3 @@ exec dockerize \
 	/usr/local/bin/docker-entrypoint.sh serve \
 	--registration-conf /kopano/ssl/konnectd-identifier-registration.yaml \
 	"$@"
-
