@@ -468,6 +468,9 @@ services:
     depends_on:
       - kopano_kapi
       - kopano_konnect
+    environment:
+      - GRAPI_EXPLORER_ISS=https://${FQDN}
+      - GRAPI_EXPLORER_GRAPH_URL=https://${FQDN}
     networks:
       - kopano-net
       - web-net
