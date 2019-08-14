@@ -6,15 +6,6 @@ ARG CODE_VERSION
 
 ENV CODE_VERSION="${CODE_VERSION}"
 
-LABEL maintainer=az@zok.xyz \
-    org.label-schema.name="Kopano Konnect container" \
-    org.label-schema.description="Container for running Kopano Konnect" \
-    org.label-schema.url="https://kopano.io" \
-    org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
-    org.label-schema.version=$CODE_VERSION \
-    org.label-schema.schema-version="1.0"
-
 RUN apk add --no-cache \
     jq \
     moreutils \
@@ -29,3 +20,12 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 COPY --chown=nobody:nogroup konnectd-identifier-registration.yaml konnectd-identifier-scopes.yaml /etc/kopano/
 COPY wrapper.sh /usr/local/bin
+
+LABEL maintainer=az@zok.xyz \
+    org.label-schema.name="Kopano Konnect container" \
+    org.label-schema.description="Container for running Kopano Konnect" \
+    org.label-schema.url="https://kopano.io" \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
+    org.label-schema.version=$CODE_VERSION \
+    org.label-schema.schema-version="1.0"
