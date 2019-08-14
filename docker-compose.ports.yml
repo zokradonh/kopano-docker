@@ -30,7 +30,3 @@ services:
   kopano_ical:
     ports:
       - "${ICALPORT:-8080}:8080"
-
-  kopano_grapi-explorer:
-    ports:
-      - "${GRAPIEXPLORERPORT:-3000}:3000"

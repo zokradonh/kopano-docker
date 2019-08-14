@@ -1,0 +1,17 @@
+version: "3.5"
+
+services:
+  kopano_grapi-explorer:
+    image: kopano/grapi-explorer
+    restart: unless-stopped
+    depends_on:
+      - kopano_kapi
+      - kopano_konnect
+    environment:
+      - GRAPI_EXPLORER_ISS=https://${FQDN}
+      - GRAPI_EXPLORER_GRAPH_URL=https://${FQDN}
+    networks:
+      - kopano-net
+      - web-net
+    ports:
+      - "${GRAPIEXPLORERPORT:-3000}:3000"
