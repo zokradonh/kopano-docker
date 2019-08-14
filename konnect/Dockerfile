@@ -1,9 +1,7 @@
 ARG CODE_VERSION=0.24.0
 FROM kopano/konnectd:${CODE_VERSION}
 
-ARG VCS_REF
 ARG CODE_VERSION
-
 ENV CODE_VERSION="${CODE_VERSION}"
 
 RUN apk add --no-cache \
@@ -21,6 +19,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 COPY --chown=nobody:nogroup konnectd-identifier-registration.yaml konnectd-identifier-scopes.yaml /etc/kopano/
 COPY wrapper.sh /usr/local/bin
 
+ARG VCS_REF
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano Konnect container" \
     org.label-schema.description="Container for running Kopano Konnect" \
