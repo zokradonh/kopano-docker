@@ -9,7 +9,7 @@ services:
       - kopano_konnect
     environment:
       - GRAPI_EXPLORER_ISS=https://${FQDN}
-      - GRAPI_EXPLORER_GRAPH_URL=https://${FQDN}
+      - GRAPI_EXPLORER_GRAPH_URL=https://${FQDN}/api/gc
     networks:
       - kopano-net
       - web-net
