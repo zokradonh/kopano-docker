@@ -275,7 +275,6 @@ services:
       - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=grapi
-      - KCCONF_GRAPI_LOG_LEVEL=DEBUG
       - TZ=${TZ}
     env_file:
       - kopano_grapi.env
