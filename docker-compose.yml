@@ -486,8 +486,7 @@ services:
     restart: unless-stopped
     environment:
       - SERVICE_TO_START=meet
-      - KCCONF_MEET_guests_enabled=true
-      - KCCONF_MEET_disableFullGAB=false
+
     env_file:
       - kopano_meet.env
     depends_on:

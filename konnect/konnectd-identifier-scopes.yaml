@@ -3,6 +3,9 @@
 
 ---
 scopes:
+  kopano/gc:
+    description: "Kopano"
+
   kopano/kwm:
     description: "Access Kopano Meet"
 
@@ -11,4 +14,3 @@ scopes:
 
   kopano/pubs:
     description: "Access Kopano Pub/Sub"
-

@@ -1,4 +1,4 @@
-# Kopano Kwmserver image
+# Kopano Meet image
 
 [![](https://images.microbadger.com/badges/image/zokradonh/kopano_meet.svg)](https://microbadger.com/images/zokradonh/kopano_meet "Microbadger size/labels") [![](https://images.microbadger.com/badges/version/zokradonh/kopano_meet.svg)](https://microbadger.com/images/zokradonh/kopano_meet "Microbadger version")
 
