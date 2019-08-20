@@ -13,5 +13,3 @@ services:
     networks:
       - kopano-net
       - web-net
-    ports:
-      - "${GRAPIEXPLORERPORT:-3000}:3000"
