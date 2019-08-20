@@ -443,7 +443,6 @@ services:
       - kopanosocket/:/run/kopano
     environment:
       - FQDN=${FQDN}
-      - FQDNCLEANED=${FQDNCLEANED}
       - allow_client_guests=yes
       - allow_dynamic_client_registration=yes
     env_file:
