@@ -2,6 +2,7 @@
 
 set -e
 
+# TODO since this file is only used here, also generate it here.
 dockerize \
 	-wait file:///kopano/ssl/meet-kwmserver.pem \
 	-timeout 360s
