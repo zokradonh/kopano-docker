@@ -88,10 +88,18 @@ grapi)
 	exec kopano-grapi serve
 	;;
 kapid)
-	dockerize \
+	if [ "$KCCONF_KAPID_INSECURE" = "yes" ]; then
+		dockerize \
+		-skip-tls-verify \
 		-wait file://var/run/kopano/grapi/notify.sock \
-		-wait http://kopano_konnect:8777/.well-known/openid-configuration \
+		-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
 		-timeout 360s
+	else
+		dockerize \
+		-wait file://var/run/kopano/grapi/notify.sock \
+		-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
+		-timeout 360s
+	fi
 	LC_CTYPE=en_US.UTF-8
 	sed -i s/\ *=\ */=/g /etc/kopano/kapid.cfg
 	# shellcheck disable=SC2046

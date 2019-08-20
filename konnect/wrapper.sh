@@ -2,6 +2,7 @@
 
 set -e
 
+# TODO since this file is only used here, also generate it here.
 dockerize \
 	-wait file:///kopano/ssl/meet-kwmserver.pem \
 	-timeout 360s
@@ -29,8 +30,8 @@ fi
 dockerize \
 	-wait file:///kopano/ssl/konnectd-tokens-signing-key.pem \
 	-wait file:///kopano/ssl/konnectd-encryption.key \
-	-timeout 360s \
-	konnectd serve \
+	-timeout 360s
+konnectd serve \
 	--signing-private-key=/kopano/ssl/konnectd-tokens-signing-key.pem \
 	--encryption-secret=/kopano/ssl/konnectd-encryption.key \
 	--iss=https://"$FQDN" \
