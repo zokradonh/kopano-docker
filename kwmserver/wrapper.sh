@@ -65,11 +65,17 @@ if [ -n "$public_guest_access_regexp" ]; then
 	set -- "$@" --public-guest-access-regexp="$public_guest_access_regexp"
 fi
 
-# TODO -skip-tls-verify should probably be bound to `INSECURE=yes` (in .env)
-exec dockerize \
+if [ "$INSECURE" = "yes" ]; then
+	dockerize \
 	-skip-tls-verify \
 	-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
-	-timeout 360s \
-	/usr/local/bin/docker-entrypoint.sh serve \
+	-timeout 360s
+else
+	dockerize \
+	-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
+	-timeout 360s
+fi
+
+exec /usr/local/bin/docker-entrypoint.sh serve \
 	--registration-conf /kopano/ssl/konnectd-identifier-registration.yaml \
 	"$@"
