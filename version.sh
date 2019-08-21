@@ -23,6 +23,8 @@ if [ -e ./.env ]; then
 	cp ./.env "$tmpfile"
 	sed -i '/LDAP_QUERY_FILTER/s/^/#/g' "$tmpfile"
 	sed -i '/SASLAUTHD_LDAP_FILTER/s/^/#/g' "$tmpfile"
+	sed -i '/KCUNCOMMENT_LDAP_1/s/^/#/g' "$tmpfile"
+	sed -i '/KCCOMMENT_LDAP_1/s/^/#/g' "$tmpfile"
 	# shellcheck disable=SC1090
 	source "$tmpfile"
 else
