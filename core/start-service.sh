@@ -23,10 +23,6 @@ mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START"
 echo "Configure core service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/"$SERVICE_TO_START".py
 
-echo "Set ownership" | ts
-chown -R kopano:kopano /run /tmp
-chown kopano:kopano /kopano/data/ /kopano/data/attachments
-
 # ensure removed pid-file on unclean shutdowns and mounted volumes
 rm -f /var/run/kopano/"$SERVICE_TO_START".pid
 
