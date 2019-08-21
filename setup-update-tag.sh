@@ -3,6 +3,13 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+function finish {
+	if [ -e "$tmpfile" ]; then
+		rm "$tmpfile"
+	fi
+}
+trap finish EXIT
+
 if ! command -v reg > /dev/null; then
 	echo "Please install reg in order to run this script."
 	exit 1
@@ -19,6 +26,8 @@ tmpfile=$(mktemp /tmp/kopano-docker-env.XXXXXX)
 cp ./.env "$tmpfile"
 sed -i '/LDAP_QUERY_FILTER/s/^/#/g' "$tmpfile"
 sed -i '/SASLAUTHD_LDAP_FILTER/s/^/#/g' "$tmpfile"
+sed -i '/KCUNCOMMENT_LDAP_1/s/^/#/g' "$tmpfile"
+sed -i '/KCCOMMENT_LDAP_1/s/^/#/g' "$tmpfile"
 # shellcheck disable=SC1090
 source "$tmpfile"
 
@@ -112,7 +121,3 @@ update_env_file SSL_VERSION "$return_value"
 
 tag_question kopano_ldap "${LDAP_VERSION:-latest}" "LDAP container"
 update_env_file LDAP_VERSION "$return_value"
-
-if [ -e "$tmpfile" ]; then
-	rm "$tmpfile"
-fi
