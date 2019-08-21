@@ -282,8 +282,8 @@ SELF_SERVICE_PASSWORD_MIN_DIGIT=1
 SELF_SERVICE_PASSWORD_MIN_SPECIAL=1
 
 # switch the value of these two variables to use the activedirectory configuration
-KCUNCOMMENT_LDAP_1="!include /usr/share/kopano/ldap.openldap.cfg"
-KCCOMMENT_LDAP_1="!include /usr/share/kopano/ldap.active-directory.cfg"
+KCUNCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg
+KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.active-directory.cfg
 
 MYSQL_HOST=$MYSQL_HOST
 MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
