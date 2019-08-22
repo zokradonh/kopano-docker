@@ -282,8 +282,8 @@ SELF_SERVICE_PASSWORD_MIN_DIGIT=1
 SELF_SERVICE_PASSWORD_MIN_SPECIAL=1
 
 # switch the value of these two variables to use the activedirectory configuration
-KCUNCOMMENT_LDAP_1="!include /usr/share/kopano/ldap.openldap.cfg"
-KCCOMMENT_LDAP_1="!include /usr/share/kopano/ldap.active-directory.cfg"
+KCUNCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg
+KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.active-directory.cfg
 
 MYSQL_HOST=$MYSQL_HOST
 MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
@@ -333,8 +333,8 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml
 #DOWNLOAD_COMMUNITY_PACKAGES=0
 
 # Additional packages to install
-ADDITIONAL_KOPANO_PACKAGES=
-ADDITIONAL_KOPANO_WEBAPP_PLUGINS=$ADDITIONAL_KOPANO_WEBAPP_PLUGINS
+ADDITIONAL_KOPANO_PACKAGES=""
+ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
 
 EOF
 else

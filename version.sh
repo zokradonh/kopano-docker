@@ -4,6 +4,13 @@ if ! command -v jq > /dev/null; then
 	exit 1
 fi
 
+function finish {
+	if [ -e "$tmpfile" ]; then
+		rm "$tmpfile"
+	fi
+}
+trap finish EXIT
+
 source base/create-kopano-repo.sh
 
 component=${1:-core}
@@ -16,6 +23,8 @@ if [ -e ./.env ]; then
 	cp ./.env "$tmpfile"
 	sed -i '/LDAP_QUERY_FILTER/s/^/#/g' "$tmpfile"
 	sed -i '/SASLAUTHD_LDAP_FILTER/s/^/#/g' "$tmpfile"
+	sed -i '/KCUNCOMMENT_LDAP_1/s/^/#/g' "$tmpfile"
+	sed -i '/KCCOMMENT_LDAP_1/s/^/#/g' "$tmpfile"
 	# shellcheck disable=SC1090
 	source "$tmpfile"
 else
@@ -58,6 +67,3 @@ filename=$(h5ai_query "$component" "$distribution")
 currentVersion=$(version_from_filename "$filename")
 
 echo "$currentVersion"
-if [ -e "$tmpfile" ]; then
-	rm "$tmpfile"
-fi
