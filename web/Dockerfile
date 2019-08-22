@@ -5,6 +5,7 @@ ARG VCS_REF
 ARG CODE_VERSION
 
 ENV CODE_VERSION="${CODE_VERSION}"
+ENV DEFAULTREDIRECT="/webapp"
 
 COPY wrapper.sh /usr/local/bin
 COPY kweb.cfg /etc/kweb.cfg
