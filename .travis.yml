@@ -27,8 +27,10 @@ before_install:
   - sudo pip install --upgrade pip && sudo pip install yamllint
   - npm install -g eclint
 install:
+  - "./version.sh"
   - make lint
   - "./test.exp"
+  - "./version.sh"
   - make lint # rerun lint to see if output is different with .env in place
   - echo "docker_repo=$docker_repo" >> .env
   - echo "DOCKERREADME=yes" >> .env # add DOCKERREADME env var so that make publish also updates readme files on docker hub
