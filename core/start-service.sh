@@ -26,6 +26,9 @@ echo "Configure core service '$SERVICE_TO_START'" | ts
 # ensure removed pid-file on unclean shutdowns and mounted volumes
 rm -f /var/run/kopano/"$SERVICE_TO_START".pid
 
+echo "Set ownership" | ts
+chown kopano:kopano /kopano/data/ /kopano/data/attachments
+
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]; then
 	exec "$@"
