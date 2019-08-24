@@ -369,6 +369,7 @@ test-startup: ## Test if all containers start up
 .PHONY: test-goss
 test-goss: ## Test configuration of containers with goss
 	GOSS_FILES_PATH=core GOSS_FILE="goss_server.yaml" dcgoss run kopano_server
+	GOSS_FILES_PATH=core GOSS_FILE="goss_dagent.yaml" dcgoss run kopano_dagent
 	GOSS_FILES_PATH=webapp dcgoss run kopano_webapp
 
 test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
