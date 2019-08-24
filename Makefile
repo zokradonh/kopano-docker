@@ -350,7 +350,10 @@ test-update-env: ## Recreate containers based on updated .env.
 	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
 
 .PHONY: test-ci
-test-ci: ## Test if all containers start up
+test-ci: test-startup
+
+.PHONY: test-startup
+test-startup: ## Test if all containers start up
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml build
 	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
 	docker-compose -f $(DOCKERCOMPOSE_FILE) ps
@@ -361,6 +364,12 @@ test-ci: ## Test if all containers start up
 		exit 1)
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker ps --filter name=kopano_test* -aq | xargs docker rm -f
+
+# TODO this needs goss added to travis and dcgoss pulled from my own git repo
+.PHONY: test-goss
+test-goss: ## Test configuration of containers with goss
+	GOSS_FILES_PATH=core GOSS_FILE="goss_server.yaml" dcgoss run kopano_server
+	GOSS_FILES_PATH=webapp dcgoss run kopano_webapp
 
 test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'

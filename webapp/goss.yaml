@@ -1,0 +1,8 @@
+port:
+  tcp6:9080:
+    listening: true
+process:
+  kwebd:
+    running: true
+  php-fpm7.0:
+    running: true
