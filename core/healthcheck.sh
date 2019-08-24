@@ -1,13 +1,13 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 case "$SERVICE_TO_START" in
-server)
-	goss -g /goss/goss_server.yml validate
+server|dagent)
+	goss -g /goss/goss_$SERVICE_TO_START.yaml validate --format json_oneline
 	;;
-dagent)
-	goss -g /goss/goss_dagent.yml validate
+*)
+	echo "This service still needs a proper check"
 	;;
 esac
 
