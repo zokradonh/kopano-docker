@@ -368,8 +368,8 @@ test-startup: ## Test if all containers start up
 # TODO this needs goss added to travis and dcgoss pulled from my own git repo
 .PHONY: test-goss
 test-goss: ## Test configuration of containers with goss
-	GOSS_FILES_PATH=core/server dcgoss run kopano_server
-	GOSS_FILES_PATH=core/dagent dcgoss run kopano_dagent
+	GOSS_FILES_PATH=core/goss/server dcgoss run kopano_server
+	GOSS_FILES_PATH=core/goss/dagent dcgoss run kopano_dagent
 	GOSS_FILES_PATH=webapp dcgoss run kopano_webapp
 
 test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
