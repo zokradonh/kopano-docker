@@ -293,7 +293,7 @@ services:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
     environment:
-      - SERVICE_TO_START=kapid
+      - SERVICE_TO_START=kapi
       - TZ=${TZ}
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}

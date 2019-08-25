@@ -1,0 +1,9 @@
+file:
+  /var/run/kopano/search.sock:
+    exists: true
+    mode: "0700"
+    size: 0
+    owner: kopano
+    group: kopano
+    filetype: socket
+    contains: []

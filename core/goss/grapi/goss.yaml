@@ -1,0 +1,7 @@
+file:
+  /var/run/kopano/grapi:
+    exists: true
+    mode: "0755"
+    owner: kapi
+    group: kopano
+    filetype: directory
