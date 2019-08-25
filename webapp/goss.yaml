@@ -6,7 +6,4 @@ process:
 http:
   http://localhost:9080/webapp:
     status: 200
-    allow-insecure: false
-    no-follow-redirects: false
     timeout: 5000
-    body: []
