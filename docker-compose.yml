@@ -193,6 +193,7 @@ services:
     environment:
       - SERVICE_TO_START=server
       - TZ=${TZ}
+      - DEBUG=true
       - KCCONF_SERVER_COREDUMP_ENABLED=no
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
       - KCCONF_SERVER_MYSQL_PORT=3306
