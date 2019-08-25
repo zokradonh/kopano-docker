@@ -142,7 +142,7 @@ services:
     networks:
       - kopano-net
       - ldap-net
-    #dns: 1.1.1.1  # using Google DNS can lead to lookup errors uncomment this option and
+    # dns: 1.1.1.1  # using Google DNS can lead to lookup errors uncomment this option and
     # set to the ip of a trusted dns service (Cloudflare is given as an example).
     # See https://github.com/zokradonh/kopano-docker/issues/52 for more information.
     cap_add:
