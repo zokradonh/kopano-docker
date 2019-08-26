@@ -1,0 +1,4 @@
+tests:
+  /kopano/start-service.sh:
+    exit-code: 1
+    stderr: '/kopano/start-service.sh: line 7: DEBUG: unbound variable'
