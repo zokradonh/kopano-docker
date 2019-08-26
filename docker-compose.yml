@@ -296,6 +296,7 @@ services:
     environment:
       - SERVICE_TO_START=kapi
       - TZ=${TZ}
+      - DEBUG=false
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
       - KCCONF_KAPID_INSECURE=${INSECURE}
