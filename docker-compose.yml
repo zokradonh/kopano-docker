@@ -142,7 +142,7 @@ services:
     networks:
       - kopano-net
       - ldap-net
-    #dns: 1.1.1.1  # using Google DNS can lead to lookup errors uncomment this option and
+    # dns: 1.1.1.1  # using Google DNS can lead to lookup errors uncomment this option and
     # set to the ip of a trusted dns service (Cloudflare is given as an example).
     # See https://github.com/zokradonh/kopano-docker/issues/52 for more information.
     cap_add:
@@ -293,7 +293,7 @@ services:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
     environment:
-      - SERVICE_TO_START=kapid
+      - SERVICE_TO_START=kapi
       - TZ=${TZ}
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}

@@ -65,6 +65,7 @@ RUN \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
 COPY start.sh /kopano/start.sh
+COPY goss* /goss/
 
 ENV LANG en_US.UTF-8
 
@@ -72,3 +73,6 @@ WORKDIR /kopano/path
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD [ "/kopano/start.sh" ]
+
+HEALTHCHECK --interval=1m --timeout=10s \
+    CMD goss -g /goss/goss.yaml validate --format json_oneline

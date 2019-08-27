@@ -1,0 +1,33 @@
+file:
+  /kopano/data/attachments/0:
+    exists: true
+    mode: "0750"
+    owner: kopano
+    group: kopano
+    filetype: directory
+  /run/kopano/prio.sock:
+    exists: true
+    mode: "0660"
+    owner: kopano
+    group: kopano
+    filetype: socket
+  /run/kopano/server.pid:
+    exists: true
+    mode: "0644"
+    owner: kopano
+    group: kopano
+    filetype: file
+  /run/kopano/server.sock:
+    exists: true
+    mode: "0666"
+    owner: kopano
+    group: kopano
+    filetype: socket
+http:
+  http://localhost:236:
+    status: 405
+    timeout: 5000
+  https://localhost:237:
+    status: 405
+    allow-insecure: true
+    timeout: 5000

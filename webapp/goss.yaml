@@ -1,8 +1,9 @@
-port:
-  tcp6:9080:
-    listening: true
 process:
   kwebd:
     running: true
   php-fpm7.0:
     running: true
+http:
+  http://localhost:9080/webapp:
+    status: 200
+    timeout: 5000

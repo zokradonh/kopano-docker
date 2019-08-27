@@ -1,0 +1,11 @@
+port:
+  tcp6:236:
+    listening: true
+file:
+  /run/kopano/server.pid:
+    exists: true
+    mode: "0644"
+    owner: kopano
+    group: kopano
+    filetype: file
+

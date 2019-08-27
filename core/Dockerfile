@@ -59,7 +59,8 @@ ENV LANG=en_US.UTF-8
 
 ENV SERVICE_TO_START=server
 
-COPY defaultconfigs/ start-service.sh /kopano/
+COPY defaultconfigs/ start-service.sh healthcheck.sh /kopano/
+COPY goss/ /kopano/goss
 
 WORKDIR /kopano/path
 
@@ -67,5 +68,5 @@ ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 CMD [ "/kopano/start-service.sh" ]
 
-HEALTHCHECK --interval=5m --timeout=60s \
+HEALTHCHECK --interval=1m --timeout=10s \
     CMD /kopano/healthcheck.sh

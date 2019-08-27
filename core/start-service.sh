@@ -10,6 +10,7 @@ if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	exit 1
 fi
 
+# TODO this needs fixing as now apt update is always salled (since the value is at least "")
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"'); do
 	# shellcheck disable=SC2016 disable=SC2086
@@ -86,7 +87,7 @@ grapi)
 	unset "${!KCCONF_@}"
 	exec kopano-grapi serve
 	;;
-kapid)
+kapi)
 	if [ "$KCCONF_KAPID_INSECURE" = "yes" ]; then
 		dockerize \
 		-skip-tls-verify \
