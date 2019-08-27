@@ -193,7 +193,6 @@ services:
     environment:
       - SERVICE_TO_START=server
       - TZ=${TZ}
-      - DEBUG=false
       - KCCONF_SERVER_COREDUMP_ENABLED=no
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
       - KCCONF_SERVER_MYSQL_PORT=3306
@@ -296,7 +295,6 @@ services:
     environment:
       - SERVICE_TO_START=kapi
       - TZ=${TZ}
-      - DEBUG=false
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
       - KCCONF_KAPID_INSECURE=${INSECURE}
