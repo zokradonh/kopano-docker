@@ -13,8 +13,9 @@ source /kopano/start-helper.sh
 
 ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
 
+ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
-[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"'); do
+[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
 	# shellcheck disable=SC2016 disable=SC2086
 	if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
 		apt --assume-yes --no-upgrade install "$installpkg"
