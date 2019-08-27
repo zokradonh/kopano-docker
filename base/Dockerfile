@@ -9,7 +9,8 @@ ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG RELEASE_KEY_DOWNLOAD=0
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV BASE_VERSION=1.2.0
+ENV BASE_VERSION=1.2.1 \
+    DEBUG=""
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano base container" \

@@ -7,6 +7,7 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
+[ "$DEBUG" ] && set -x
 
 # shellcheck source=php/start-helper.sh
 source /kopano/start-helper.sh

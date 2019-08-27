@@ -6,6 +6,7 @@ KCCONF_SERVERPORT=${KCCONF_SERVERPORT:-236}
 ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
+[ "$DEBUG" ] && set -x
 
 php_cfg_gen() {
 	local cfg_file="$1"
