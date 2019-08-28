@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -eu
-set -x
 
 function create_user_and_database() {
 	local database=$1
