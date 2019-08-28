@@ -4,15 +4,16 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 KCCONF_SERVER_MYSQL_SOCKET=${KCCONF_SERVER_MYSQL_SOCKET:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
+[ "$DEBUG" ] && set -x
 
 if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	echo "Invalid service specified: $SERVICE_TO_START" | ts
 	exit 1
 fi
 
-# TODO this needs fixing as now apt update is always salled (since the value is at least "")
+ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
-[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"'); do
+[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
 	# shellcheck disable=SC2016 disable=SC2086
 	if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
 		apt --assume-yes --no-upgrade install "$installpkg"
