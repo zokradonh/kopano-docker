@@ -7,7 +7,7 @@ function create_user_and_database() {
 	local database=$1
 	echo "  Creating database '$database'"
 	echo "CREATE DATABASE IF NOT EXISTS ${database};" | "${mysql[@]}"
-	echo "GRANT ALL PRIVILEGES ON ${database}.* TO '${MYSQL_USER}'@'127.0.0.1';" | "${mysql[@]}"
+	echo "GRANT ALL PRIVILEGES ON ${database}.* TO '${MYSQL_USER}';" | "${mysql[@]}"
 }
 
 if [ -n "$MYSQL_ADDITIONAL_DATABASES" ]; then
