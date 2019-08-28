@@ -17,7 +17,7 @@ ENV \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
     KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
     RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD \
-    KCCONF_GRAPI_BACKEND="kopano"
+    GRAPI_BACKEND="kopano"
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano core container" \

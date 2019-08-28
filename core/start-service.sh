@@ -85,7 +85,7 @@ grapi)
 	mkdir -p "$socket_path"
 	chown -R kapi:kopano "$socket_path"
 	# TODO there could be a case where multiple backends are desired
-	case $KCCONF_GRAPI_BACKEND in
+	case $GRAPI_BACKEND in
 	ldap)
 		export LDAP_URI="${KCCONF_GRAPI_LDAP_URI}"
 		export LDAP_BASEDN="${KCCONF_GRAPI_LDAP_BASEDN}"
@@ -94,10 +94,9 @@ grapi)
 		export LDAP_BINDPW="${bindpw}"
 		;;
 	esac
-	set -- "$@" $KCCONF_GRAPI_BACKEND
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec kopano-grapi serve --backend="$@"
+	exec kopano-grapi serve --backend="$GRAPI_BACKEND"
 	;;
 kapi)
 	if [ "$KCCONF_KAPID_INSECURE" = "yes" ]; then
