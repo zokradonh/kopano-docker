@@ -24,7 +24,16 @@ echo "Updating $CONFIG_JSON"
 for setting in $(compgen -A variable KCCONF_MEET); do
 	setting2=${setting#KCCONF_MEET_}
 	# dots in setting2 need to be escaped to not be handled as separate entities in the json file
-	jq ".\"${setting2//_/\".\"}\" = ${!setting}" $CONFIG_JSON | sponge $CONFIG_JSON
+	case ${!setting} in
+		true|TRUE|false|FALSE)
+			jq ".\"${setting2//_/\".\"}\" = ${!setting}" $CONFIG_JSON | sponge $CONFIG_JSON
+			;;
+		*)
+			jq ".\"${setting2//_/\".\"}\" = \"${!setting}\"" $CONFIG_JSON | sponge $CONFIG_JSON
+			;;
+		esac
+
+	
 done
 
 # enable Kopano WebApp in the app switcher
