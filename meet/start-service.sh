@@ -32,8 +32,6 @@ for setting in $(compgen -A variable KCCONF_MEET); do
 			jq ".\"${setting2//_/\".\"}\" = \"${!setting}\"" $CONFIG_JSON | sponge $CONFIG_JSON
 			;;
 		esac
-
-	
 done
 
 # enable Kopano WebApp in the app switcher
