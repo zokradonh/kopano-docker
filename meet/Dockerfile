@@ -42,7 +42,6 @@ RUN \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_MEET_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # install
     apt-get update && \
-    set -x && \
     # TODO mime-support could be remove once its an official dependency of kopano-kwebd
     apt-get install --no-install-recommends -y \
         mime-support \
@@ -51,7 +50,6 @@ RUN \
         ${ADDITIONAL_KOPANO_PACKAGES} \
         && \
     cp /usr/share/doc/kopano-meet-webapp/config.json.in /usr/share/kopano-kweb/www/config/kopano/meet.json && \
-    set +x && \
     rm -rf /var/cache/apt /var/lib/apt/lists
 
 ENV KOPANO_LOCALE="de_DE.UTF-8"

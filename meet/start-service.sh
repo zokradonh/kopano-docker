@@ -3,6 +3,7 @@
 ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
+[ "$DEBUG" ] && set -x
 
 if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	echo "Invalid service specified: $SERVICE_TO_START" | ts
@@ -23,7 +24,7 @@ echo "Updating $CONFIG_JSON"
 for setting in $(compgen -A variable KCCONF_MEET); do
 	setting2=${setting#KCCONF_MEET_}
 	# dots in setting2 need to be escaped to not be handled as separate entities in the json file
-	jq ".\"${setting2//_/\".\"}\" = \"${!setting}\"" $CONFIG_JSON | sponge $CONFIG_JSON
+	jq ".\"${setting2//_/\".\"}\" = ${!setting}" $CONFIG_JSON | sponge $CONFIG_JSON
 done
 
 # enable Kopano WebApp in the app switcher
