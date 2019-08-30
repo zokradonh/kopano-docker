@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DEBUG=""
-tmpfile=""
+DEBUG=${DEBUG:-""}
+tmpfile=${tmpfile:-""}
 
 if ! command -v jq > /dev/null; then
 	echo "Please install jq in order to run this build script."
