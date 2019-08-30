@@ -1,0 +1,17 @@
+tests:
+  setup with existing .env:
+    command: ./setup.sh
+    exit-code: 1
+    stdout: |-
+      Creating individual env files for containers (if they do not exist already)
+      .env already exists with initial configuration
+      If you want to change the configuration, please edit .env directly
+  ./version.sh:
+    exit-code: 0
+    stdout: core-8.7.82.92.10e903a-Debian_9.0-amd64.tar.gz
+  ./version.sh webapp:
+    exit-code: 0
+    stdout: webapp-3.5.9.2405+1352.81240f1-Debian_9.0-all.tar.gz
+  ./version.sh zpush:
+    exit-code: 0
+    stdout: 2.5.1+0-0
