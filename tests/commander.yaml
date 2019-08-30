@@ -8,24 +8,26 @@ tests:
       If you want to change the configuration, please edit .env directly
   ./version.sh:
     exit-code: 0
+  ./version.sh core:
+    exit-code: 0
     stdout:
       not-contains:
-       - core-
-       - Debian
-       - amd64
-       - tar.gz
+        - core-
+        - Debian
+        - amd64
+        - tar.gz
   ./version.sh webapp:
     exit-code: 0
     stdout:
       not-contains:
-       - webapp-
-       - Debian
-       - amd64
-       - tar.gz
+        - webapp-
+        - Debian
+        - amd64
+        - tar.gz
   ./version.sh zpush:
     exit-code: 0
     stdout:
       not-contains:
-       - Debian
-       - amd64
-       - tar.gz
+        - Debian
+        - amd64
+        - tar.gz
