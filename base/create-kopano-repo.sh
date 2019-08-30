@@ -6,7 +6,7 @@ set -eu
 function urldecode { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 
 function version_from_filename {
-	echo "$1" | sed -r 's#[a-z]+-([0-9_.+]+)-.*#\1#'
+	echo "$1" | awk -F"-" '{print $2}'
 }
 
 function h5ai_query {

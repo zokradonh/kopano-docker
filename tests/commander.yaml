@@ -9,12 +9,23 @@ tests:
   ./version.sh:
     exit-code: 0
     stdout:
-      contains:
+      not-contains:
        - core-
+       - Debian
+       - amd64
+       - tar.gz
   ./version.sh webapp:
     exit-code: 0
     stdout:
-      contains:
+      not-contains:
        - webapp-
+       - Debian
+       - amd64
+       - tar.gz
   ./version.sh zpush:
     exit-code: 0
+    stdout:
+      not-contains:
+       - Debian
+       - amd64
+       - tar.gz
