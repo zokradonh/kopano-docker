@@ -6,6 +6,17 @@ ARG CODE_VERSION
 
 ENV CODE_VERSION="${CODE_VERSION}"
 ENV DEFAULTREDIRECT="/webapp"
+ENV KWEBD_DNS_KONNECT="kopano_konnet"
+ENV KWEBD_DNS_MEET="kopano_meet"
+ENV KWEBD_DNS_KAPI="kapi"
+ENV KWEBD_DNS_PLAYGROUND="kopano_playground"
+ENV KWEBD_DNS_KWMSERVER="kopano_kwmserver"
+ENV KWEBD_DNS_WEBAPP="kopano_webapp"
+ENV KWEBD_DNS_ZPUSH="kopano_zpush"
+ENV KWEBD_DNS_ICAL="kopano_ical"
+ENV KWEBD_DNS_KDAV="kopano_kdav"
+ENV KWEBD_DNS_GRAPI="kopano_grapi"
+ENV KWEBD_DNS_ICAL="kopano_ical"
 
 COPY wrapper.sh /usr/local/bin
 COPY kweb.cfg /etc/kweb.cfg
