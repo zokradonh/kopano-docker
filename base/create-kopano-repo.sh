@@ -13,11 +13,11 @@ function h5ai_query {
 	component=${1:-core}
 	distribution=${2:-Debian_9.0}
 	channel=${3:-community} # could either be community, supported or limited
-	branch=${4:-""} # could either be master/, pre-final/ or final/
+	branch=${4:-""} # could either be empty, "master/tarballs", "pre-final/tarballs" or "final/tarballs"
 
-	filename=$(curl -s -S -L -d "action=get&items%5Bhref%5D=%2F$channel%2F$component%3A%2F&items%5Bwhat%5D=1" -H \
-				"Accept: application/json" https://download.kopano.io/$channel/ | jq -r '.items[].href' | \
-				grep "$distribution-all\|$distribution-amd64" | sed "s#/$channel/$component:/##")
+	filename=$(curl -s -XPOST "https://download.kopano.io/$channel/?action=get&items\[href\]=/$channel/$component:/$branch&items\[what\]=1" | \
+			jq -r '.items[].href' | \
+			grep "$distribution-all\|$distribution-amd64" | sed "s#/$channel/$component:/##")
 
 	if [ -z "${filename// }" ]; then
 		echo "unknown component"
@@ -32,12 +32,14 @@ function dl_and_package_community {
 	# take component as first argument and fallback to core if none given
 	component=${1:-core}
 	distribution=${2:-Debian_9.0}
+	channel=${3:-community}
+	branch=${4:-""}
 
 	# query community server by h5ai API
-	filename=$(h5ai_query "$component" "$distribution")
+	filename=$(h5ai_query "$component" "$distribution" "$channel" "$branch")
 
 	# download & extract packages
-	curl -s -S -L -o "$filename" https://download.kopano.io/community/"$component":/"${filename}"
+	curl -s -S -L -o "$filename" https://download.kopano.io/"$channel"/"$component":/"${filename}"
 	tar xf "$filename"
 
 	# save buildversion
