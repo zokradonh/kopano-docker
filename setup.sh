@@ -347,4 +347,5 @@ else
 
 	echo ".env already exists with initial configuration"
 	echo "If you want to change the configuration, please edit .env directly"
+	exit 1
 fi
