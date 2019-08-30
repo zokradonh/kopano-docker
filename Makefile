@@ -379,6 +379,9 @@ test-goss: ## Test configuration of containers with goss
 	GOSS_FILES_PATH=core/goss/spooler dcgoss run kopano_spooler
 	GOSS_FILES_PATH=webapp dcgoss run kopano_webapp
 
+test-commander: ## Test scripts with commander
+	COMMANDER_FILES_PATH=core/commander/server dccommander run kopano_server
+
 test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 1 --severity CRITICAL --quiet --auto-refresh %'

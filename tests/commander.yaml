@@ -1,0 +1,33 @@
+tests:
+  setup with existing .env:
+    command: ./setup.sh
+    exit-code: 1
+    stdout: |-
+      Creating individual env files for containers (if they do not exist already)
+      .env already exists with initial configuration
+      If you want to change the configuration, please edit .env directly
+  ./version.sh:
+    exit-code: 0
+  ./version.sh core:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - core-
+        - Debian
+        - amd64
+        - tar.gz
+  ./version.sh webapp:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - webapp-
+        - Debian
+        - amd64
+        - tar.gz
+  ./version.sh zpush:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - Debian
+        - amd64
+        - tar.gz
