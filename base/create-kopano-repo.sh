@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -eu
-#set -x
+[ "$DEBUG" ] && set -x
 
 function urldecode { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 
@@ -12,10 +12,12 @@ function version_from_filename {
 function h5ai_query {
 	component=${1:-core}
 	distribution=${2:-Debian_9.0}
+	channel=${3:-community} # could either be community, supported or limited
+	branch=${4:-""} # could either be master/, pre-final/ or final/
 
-	filename=$(curl -s -S -L -d "action=get&items%5Bhref%5D=%2Fcommunity%2F$component%3A%2F&items%5Bwhat%5D=1" -H \
-				"Accept: application/json" https://download.kopano.io/community/ | jq -r '.items[].href' | \
-				grep "$distribution-all\|$distribution-amd64" | sed "s#/community/$component:/##")
+	filename=$(curl -s -S -L -d "action=get&items%5Bhref%5D=%2F$channel%2F$component%3A%2F&items%5Bwhat%5D=1" -H \
+				"Accept: application/json" https://download.kopano.io/$channel/ | jq -r '.items[].href' | \
+				grep "$distribution-all\|$distribution-amd64" | sed "s#/$channel/$component:/##")
 
 	if [ -z "${filename// }" ]; then
 		echo "unknown component"
