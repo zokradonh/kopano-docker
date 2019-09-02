@@ -96,7 +96,13 @@ grapi)
 	esac
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec kopano-grapi serve --backend="$GRAPI_BACKEND"
+	# the backend option is only available in more recent versions of grapi
+	grapiversion=$(dpkg-query --showformat='${Version}' --show kopano-grapi)
+	if dpkg --compare-versions "$grapiversion" "gt" "10.0.0"; then
+		exec kopano-grapi serve --backend="$GRAPI_BACKEND"
+	else
+		exec kopano-grapi serve
+	fi
 	;;
 kapi)
 	if [ "$KCCONF_KAPID_INSECURE" = "yes" ]; then
