@@ -1,3 +1,24 @@
+tests:
+  test run of config update script for core:
+    command: /usr/bin/python3 /kopano/server.py
+    exit-code: 0
+  config update kopano-server:
+    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/server.cfg
+    exit-code: 0
+    stdout:
+      contains:
+        - server_listen_tls = *:237
+  config update ldap ads:
+    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/ldap.cfg
+    exit-code: 0
+    stdout:
+      contains:
+        - #!include /usr/share/kopano/ldap.openldap.cfg
+        - !include /usr/share/kopano/ldap.active-directory.cfg
+    config:
+      env:
+        KCCOMMENT_LDAP_1: '!include /usr/share/kopano/ldap.openldap.cfg'
+        KCUNCOMMENT_LDAP_1: '!include /usr/share/kopano/ldap.active-directory.cfg'
 config:
   env:
     DEBUG: ${DEBUG}
@@ -29,8 +50,3 @@ config:
     KOPANO_USERSCRIPT_LOCALE: ${KOPANO_USERSCRIPT_LOCALE}
     LANG: ${LANG}
     SERVICE_TO_START: ${SERVICE_TO_START}
-
-tests:
-  /kopano/start-service.sh:
-    exit-code: 1
-    stderr: '/kopano/start-service.sh: line 7: DEBUG: unbound variable'
