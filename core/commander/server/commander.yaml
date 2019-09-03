@@ -13,12 +13,12 @@ tests:
     exit-code: 0
     stdout:
       contains:
-        - #!include /usr/share/kopano/ldap.openldap.cfg
-        - !include /usr/share/kopano/ldap.active-directory.cfg
+        - "#!include /usr/share/kopano/ldap.openldap.cfg"
+        - "!include /usr/share/kopano/ldap.active-directory.cfg"
     config:
       env:
-        KCCOMMENT_LDAP_1: '!include /usr/share/kopano/ldap.openldap.cfg'
-        KCUNCOMMENT_LDAP_1: '!include /usr/share/kopano/ldap.active-directory.cfg'
+        KCCOMMENT_LDAP_1: !include /usr/share/kopano/ldap.openldap.cfg
+        KCUNCOMMENT_LDAP_1: !include /usr/share/kopano/ldap.active-directory.cfg
 config:
   env:
     DEBUG: ${DEBUG}
