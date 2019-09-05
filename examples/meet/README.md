@@ -6,5 +6,7 @@ Check https://github.com/zokradonh/kopano-docker/blob/master/ldap_demo/README.md
 
 ## Instructions
 
-1. run `setup.sh` in the root directory of this project (just take the default value on questions that are not relevant to you, like mail domain and mysql server).
-2.
+1. run `setup.sh`
+2. check `.env` for any required customisation (port 443 already in use?)
+3. run `docker-compose up` to start
+4. navigate to https://your-domain to login to Kopano Meet
