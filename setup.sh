@@ -110,7 +110,7 @@ if [ ! -e ./.env ]; then
 		INSECURE="no"
 	fi
 
-	LDAP_BASE_DN=$(fqdn_to_dn "$FQDN")
+	LDAP_BASE_DN=$(fqdn_to_dn ${FQDN%:*})
 	value_default="$LDAP_BASE_DN"
 	read -r -p "Name of the BASE DN for LDAP [$value_default]: " new_value
 	LDAP_BASE_DN=${new_value:-$value_default}
@@ -164,7 +164,7 @@ if [ ! -e ./.env ]; then
 	read -r -p "Timezone to be used [$value_default]: " new_value
 	TZ=${new_value:-$value_default}
 
-	value_default="postmaster@$FQDN"
+	value_default="postmaster@${FQDN%:*}"
 	read -r -p "E-Mail Address displayed for the 'postmaster' [$value_default]: " new_value
 	POSTMASTER_ADDRESS=${new_value:-$value_default}
 
