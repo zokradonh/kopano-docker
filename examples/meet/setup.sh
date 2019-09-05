@@ -164,95 +164,11 @@ if [ ! -e ./.env ]; then
 	read -r -p "Timezone to be used [$value_default]: " new_value
 	TZ=${new_value:-$value_default}
 
-	value_default="postmaster@${FQDN%:*}"
-	read -r -p "E-Mail Address displayed for the 'postmaster' [$value_default]: " new_value
-	POSTMASTER_ADDRESS=${new_value:-$value_default}
-
-	value_default="db"
-	read -r -p "Name/Address of Database server (defaults to the bundled one) [$value_default]: " new_value
-	MYSQL_HOST=${new_value:-$value_default}
-
-	if [ "$MYSQL_HOST" != "$value_default" ]; then
-		# We don't need an admin password in case we don't use the bundled DB server
-		MYSQL_ROOT_PASSWORD=""
-
-		value_default="kopanoDbUser"
-		read -r -p "Username to connect to the database [$value_default]: " new_value
-		MYSQL_USER=${new_value:-$value_default}
-
-		value_default="kopanoDbPw"
-		read -r -p "Password to connect to the database [$value_default]: " new_value
-		MYSQL_PASSWORD=${new_value:-$value_default}
-
-		value_default="kopano"
-		read -r -p "Database to use for Kopano [$value_default]: " new_value
-		MYSQL_DATABASE=${new_value:-$value_default}
-
-		PRINT_SETUP_SUCCESS="$PRINT_SETUP_SUCCESS \n!! You have specified the DB server '${MYSQL_HOST}', don't forget to remove the bundled db service in docker-compose.yml\n"
-	else
-		MYSQL_USER="kopano"
-		MYSQL_DATABASE="kopano"
-		MYSQL_ROOT_PASSWORD=$(random_string)
-		MYSQL_PASSWORD=$(random_string)
-	fi
-
-	ADDITIONAL_KOPANO_WEBAPP_PLUGINS=""
-
-	prompt="Check language spell support (again to uncheck, ENTER when done): "
-	while lang_menu && read -rp "$prompt" num && [[ "$num" ]]; do
-		# shellcheck disable=SC2015
-		[[ "$num" != *[![:digit:]]* ]] &&
-		(( num > 0 && num <= ${#LANG_OPTIONS[@]} )) ||
-		{ msg="Invalid option: $num"; continue; }
-		((num--)); msg="${LANG_OPTIONS[num]} was ${lang_choices[num]:+un}checked"
-		[[ "${lang_choices[num]}" ]] && lang_choices[num]="" || lang_choices[num]="+"
-	done
-
-	KOPANO_SPELL_PLUGIN=""
-	KOPANO_SPELL_LANG_PLUGIN=""
-	for i in "${!LANG_OPTIONS[@]}"; do
-		[[ "${lang_choices[i]}" ]] && { KOPANO_SPELL_LANG_PLUGIN="${KOPANO_SPELL_LANG_PLUGIN} kopano-webapp-plugin-spell-${LANG_OPTIONS[i]}"; KOPANO_SPELL_PLUGIN="kopano-webapp-plugin-spell"; }
-	done
-
-	ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${KOPANO_SPELL_PLUGIN}${KOPANO_SPELL_LANG_PLUGIN}"
-
-	prompt="Check for additional plugins (again to uncheck, ENTER when done): "
-	while plugin_menu && read -rp "$prompt" num && [[ "$num" ]]; do
-		# shellcheck disable=SC2015
-		[[ "$num" != *[![:digit:]]* ]] &&
-		(( num > 0 && num <= ${#PLUGIN_OPTIONS[@]} )) ||
-		{ msg="Invalid option: $num"; continue; }
-		((num--)); msg="${PLUGIN_OPTIONS[num]} was ${plugin_choices[num]:+un}checked"
-		[[ "${plugin_choices[num]}" ]] && plugin_choices[num]="" || plugin_choices[num]="+"
-	done
-
-	KOPANO_WEBAPP_PLUGIN=""
-	for i in "${!PLUGIN_OPTIONS[@]}"; do
-		[[ "${plugin_choices[i]}" ]] && { KOPANO_WEBAPP_PLUGIN="${KOPANO_WEBAPP_PLUGIN} kopano-webapp-plugin-${PLUGIN_OPTIONS[i]}"; }
-	done
-
-	ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}${KOPANO_WEBAPP_PLUGIN}"
-
-	value_default="no"
-	read -r -p "Integrate WhatsApp into DeskApp yes/no [$value_default]: " new_value
-	WHATSAPPDESKAPP_BOOLEAN=${new_value:-$value_default}
-
-	if [ "${WHATSAPPDESKAPP_BOOLEAN}" == "yes" ]; then
-		ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} whatsapp4deskapp"
-	fi
-
 	echo "${PRINT_SETUP_SUCCESS}"
 
 	cat <<EOF > "./.env"
 # please consult https://github.com/zokradonh/kopano-docker
 # for possible configuration values and their impact
-CORE_VERSION=$CORE_VERSION
-WEBAPP_VERSION=$WEBAPP_VERSION
-ZPUSH_VERSION=$ZPUSH_VERSION
-KONNECT_VERSION=$KONNECT_VERSION
-KWM_VERSION=$KWM_VERSION
-MEET_VERSION=$MEET_VERSION
-KDAV_VERSION=$KDAV_VERSION
 
 LDAP_CONTAINER=$LDAP_CONTAINER
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
@@ -265,35 +181,6 @@ LDAP_BIND_DN=$LDAP_BIND_DN
 LDAP_BIND_PW=$LDAP_BIND_PW
 LDAP_SEARCH_BASE=$LDAP_SEARCH_BASE
 
-# LDAP query filters
-LDAP_QUERY_FILTER_USER=(&(kopanoAccount=1)(mail=%s))
-LDAP_QUERY_FILTER_GROUP=(&(objectclass=kopano-group)(mail=%s))
-LDAP_QUERY_FILTER_ALIAS=(&(kopanoAccount=1)(kopanoAliases=%s))
-LDAP_QUERY_FILTER_DOMAIN=(&(|(mail=*@%s)(kopanoAliases=*@%s)))
-SASLAUTHD_LDAP_FILTER=(&(kopanoAccount=1)(uid=%s))
-
-# LDAP user password self-service reset settings
-SELF_SERVICE_SECRETEKEY=$(random_string)
-SELF_SERVICE_PASSWORD_MIN_LENGTH=5
-SELF_SERVICE_PASSWORD_MAX_LENGTH=0
-SELF_SERVICE_PASSWORD_MIN_LOWERCASE=0
-SELF_SERVICE_PASSWORD_MIN_UPPERCASE=0
-SELF_SERVICE_PASSWORD_MIN_DIGIT=1
-SELF_SERVICE_PASSWORD_MIN_SPECIAL=1
-
-# switch the value of these two variables to use the activedirectory configuration
-KCUNCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg
-KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.active-directory.cfg
-
-MYSQL_HOST=$MYSQL_HOST
-MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
-MYSQL_USER=$MYSQL_USER
-MYSQL_PASSWORD=$MYSQL_PASSWORD
-MYSQL_DATABASE=$MYSQL_DATABASE
-
-KCCONF_SERVER_SERVER_NAME=Kopano
-
-POSTMASTER_ADDRESS=$POSTMASTER_ADDRESS
 TZ=$TZ
 
 # Defines how Kopano can be accessed from the outside world
@@ -304,14 +191,6 @@ EMAIL=$EMAIL
 CADDY=2015
 HTTP=80
 HTTPS=443
-LDAPPORT=389
-SMTPPORT=25
-SMTPSPORT=465
-MSAPORT=587
-IMAPPORT=143
-ICALPORT=8080
-KOPANOPORT=236
-KOPANOSPORT=237
 
 # Settings for test environments
 INSECURE=$INSECURE
@@ -320,31 +199,12 @@ INSECURE=$INSECURE
 # Docker Repository to push to/pull from
 docker_repo=zokradonh
 COMPOSE_PROJECT_NAME=kopano
-COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml
-
-# Modify below to build a different version, than the kopano nightly release
-#KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/
-#KOPANO_MEET_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/meet:/final/Debian_9.0/
-#KOPANO_WEBAPP_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/webapp:/final/Debian_9.0/
-#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/files:/final/Debian_9.0/
-#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/mdm:/final/Debian_9.0/
-#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/smime:/final/Debian_9.0/
-#KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_9.0/
-#RELEASE_KEY_DOWNLOAD=1
-#DOWNLOAD_COMMUNITY_PACKAGES=0
 
 # Additional packages to install
-ADDITIONAL_KOPANO_PACKAGES=""
-ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
+ADDITIONAL_KOPANO_PACKAGES=python3-grapi.backend.ldap
 
 EOF
 else
-
-	if ! grep -q COMPOSE_FILE ./.env; then
-		echo "Adding COMPOSE_FILE setting to .env"
-		echo "COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml" >> ./.env
-	fi
-
 	echo ".env already exists with initial configuration"
 	echo "If you want to change the configuration, please edit .env directly"
 	exit 1
