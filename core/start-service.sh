@@ -87,10 +87,10 @@ grapi)
 	# TODO there could be a case where multiple backends are desired
 	case $GRAPI_BACKEND in
 	ldap)
-		[ ! -z "$KCCONF_GRAPI_LDAP_URI" ] && export LDAP_URI="${KCCONF_GRAPI_LDAP_URI}"
-		[ ! -z "$KCCONF_GRAPI_LDAP_BASEDN" ] && export LDAP_BASEDN="${KCCONF_GRAPI_LDAP_BASEDN}"
-		[ ! -z "$KCCONF_GRAPI_LDAP_BINDDN" ] && export LDAP_BINDDN="${KCCONF_GRAPI_LDAP_BINDDN}"
-		if [ ! -z "$KCCONF_GRAPI_LDAP_BINDPW_FILE" ]; then
+		[ -n "$KCCONF_GRAPI_LDAP_URI" ] && export LDAP_URI="${KCCONF_GRAPI_LDAP_URI}"
+		[ -n "$KCCONF_GRAPI_LDAP_BASEDN" ] && export LDAP_BASEDN="${KCCONF_GRAPI_LDAP_BASEDN}"
+		[ -n "$KCCONF_GRAPI_LDAP_BINDDN" ] && export LDAP_BINDDN="${KCCONF_GRAPI_LDAP_BINDDN}"
+		if [ -n "$KCCONF_GRAPI_LDAP_BINDPW_FILE" ]; then
 			bindpw="$(cat "${KCCONF_GRAPI_LDAP_BINDPW_FILE}")"
 			export LDAP_BINDPW="${bindpw}"
 		fi
