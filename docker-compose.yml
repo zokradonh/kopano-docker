@@ -210,6 +210,9 @@ services:
       - zpushstates/:/var/lib/z-push/
     environment:
       - TZ=${TZ}
+      # Shared folders automatically assigned to all users in the format: [{"name":"<folder name>","id":"<kopano folder id>","type":"<type>","flags":"<flags>"},...]
+      # For more information on the parameters see the z-push-admin help for the addshared-action.
+      - ZPUSH_ADDITIONAL_FOLDERS=[]
     env_file:
       - kopano_zpush.env
     networks:

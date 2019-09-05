@@ -35,6 +35,41 @@ tests:
     stdout:
       contains:
         - "define('USERNAME', 'SYSTEM');"
+  start-service script (no additional folders):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
+    exit-code: 0
+    stdout:
+      contains:
+        - "  $additionalFolders = array(\n  );"
+      not-contains: # default entry
+        - "\t$additionalFolders = array("
+        - "\t);"
+  start-service script (empty additional folders):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
+    exit-code: 0
+    stdout:
+      contains:
+        - "  $additionalFolders = array(\n  );"
+      not-contains: # default entry
+        - "\t$additionalFolders = array("
+        - "\t);"
+    config:
+      env:
+        ZPUSH_ADDITIONAL_FOLDERS: "[]"
+  start-service script (set additional folders):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
+    exit-code: 0
+    stdout:
+      contains:
+        - "  $additionalFolders = array(\n    array('store' => \"SYSTEM\", 'folderrid' => \"42\", 'name' => \"Calendar\", 'type' => \"SYNC_FOLDER_TYPE_USER_APPOINTMENT\", 'flags' => \"4\"),\n    array('store' => \"SYSTEM\", 'folderrid' => \"21\", 'name' => \"Mail\", 'type' => \"SYNC_FOLDER_TYPE_USER_MAIL\", 'flags' => \"0\"),\n  );"
+      not-contains: # default entry
+        - "\t$additionalFolders = array("
+        - "\t);"
+    config:
+      env:
+        ZPUSH_ADDITIONAL_FOLDERS: "[{\"name\":\"Calendar\",\"id\":\"42\",\"type\":\"SYNC_FOLDER_TYPE_USER_APPOINTMENT\",\"flags\":\"4\"},{\"name\":\"Mail\",\"id\":\"21\",\"type\":\"SYNC_FOLDER_TYPE_USER_MAIL\",\"flags\":\"0\"}]"
+
+
 config:
   env:
     DEBUG: ${DEBUG}
