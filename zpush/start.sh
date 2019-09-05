@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# define default value for serverhostname and serverport if not passed into container
+# define default value for serverhostname, serverport, additional packages and shared folders  if not passed into container
 KCCONF_SERVERHOSTNAME=${KCCONF_SERVERHOSTNAME:-127.0.0.1}
 KCCONF_SERVERPORT=${KCCONF_SERVERPORT:-236}
 ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
+ZPUSH_ADDITIONAL_FOLDERS=${ZPUSH_ADDITIONAL_FOLDERS:-"[]"}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 [ "$DEBUG" ] && set -x
@@ -99,6 +100,15 @@ for setting in $(compgen -A variable KCCONF_ZPUSHGA2CONTACTS_); do
 	setting2=${setting#KCCONF_ZPUSHSQL_}
 	php_cfg_gen /etc/z-push/gab2contacts.conf.php "${setting2}" "${!setting}"
 done
+
+# configuring z-push shared folders
+perl -i -0pe 's/\$additionalFolders.*\);//s' /etc/z-push/z-push.conf.php
+echo -e "  \$additionalFolders = array(" >> /etc/z-push/z-push.conf.php
+echo "$ZPUSH_ADDITIONAL_FOLDERS" | jq -c '.[]' | while read -r folder; do
+	eval "$(echo "$folder" | jq -r '@sh "NAME=\(.name) ID=\(.id) TYPE=\(.type) FLAGS=\(.flags)"')"
+	echo -e "    array('store' => \"SYSTEM\", 'folderrid' => \"$ID\", 'name' => \"$NAME\", 'type' => \"$TYPE\", 'flags' => \"$FLAGS\")," >> /etc/z-push/z-push.conf.php
+done
+echo -e '  );' >> /etc/z-push/z-push.conf.php
 
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
