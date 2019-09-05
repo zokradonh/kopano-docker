@@ -10,81 +10,10 @@ random_string() {
 	hexdump -n 16 -v -e '/1 "%02X"' /dev/urandom
 }
 
-LANG_OPTIONS=("de-at" "de-ch" "de-de" "en" "en-gb" "es" "fr" "it" "nl" "pl-pl")
-PLUGIN_OPTIONS=("contactfax" "desktopnotifications" "filepreviewer" "files" "filesbackend-smb" "filesbackend-owncloud" "folderwidgets" "gmaps" "intranet" "mattermost" "mdm" "pimfolder" "quickitems" "smime" "titlecounter" "webappmanual" "zdeveloper")
-
-lang_menu() {
-	echo "Available options:"
-	for i in "${!LANG_OPTIONS[@]}"; do
-		printf "%3d%s) %s\n" $((i+1)) "${lang_choices[i]:- }" "${LANG_OPTIONS[i]}"
-	done
-	[[ "$msg" ]] && echo "$msg"; :
-}
-
-plugin_menu() {
-	echo "Available options:"
-	for i in "${!PLUGIN_OPTIONS[@]}"; do
-		printf "%3d%s) %s\n" $((i+1)) "${plugin_choices[i]:- }" "${PLUGIN_OPTIONS[i]}"
-	done
-	[[ "$msg" ]] && echo "$msg"; :
-}
-
-docker_tag_search () {
-	image="$1"
-	results=$(reg tags "$image" 2> /dev/null)
-	echo "$results" | xargs -n1 | sort --version-sort -ru | xargs
-}
-
-echo "Creating individual env files for containers (if they do not exist already)"
-for dockerenv in ldap password-self-service mail db kopano_ssl kopano_server kopano_webapp kopano_zpush kopano_grapi kopano_kapi kopano_dagent kopano_spooler kopano_gateway kopano_ical kopano_monitor kopano_scheduler kopano_search kopano_konnect kopano_kwmserver kopano_meet; do
-	touch ./"$dockerenv".env
-done
-
 if [ ! -e ./.env ]; then
 	PRINT_SETUP_SUCCESS=""
 
 	echo "Creating an .env file for you"
-
-	# if the optional https://github.com/genuinetools/reg is installed this will list available tags
-	if command -v reg > /dev/null; then
-		echo "Available tags in zokradonh/kopano_core/: $(docker_tag_search zokradonh/kopano_core)"
-	fi
-	value_default=latest
-	read -r -p "Which tag do you want to use for Kopano Core components? [$value_default]: " new_value
-	CORE_VERSION=${new_value:-$value_default}
-
-	if command -v reg > /dev/null; then
-		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_webapp/: $(docker_tag_search zokradonh/kopano_webapp)"
-	fi
-	value_default=latest
-	read -r -p "Which tag do you want to use for Kopano WebApp? [$value_default]: " new_value
-	WEBAPP_VERSION=${new_value:-$value_default}
-
-	if command -v reg > /dev/null; then
-		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_zpush/: $(docker_tag_search zokradonh/kopano_zpush)"
-	fi
-	value_default=latest
-	read -r -p "Which tag do you want to use for Z-Push? [$value_default]: " new_value
-	ZPUSH_VERSION=${new_value:-$value_default}
-
-	if command -v reg > /dev/null; then
-		echo "Available tags in https://hub.docker.com/r/zokradonh/kopano_konnect/: $(docker_tag_search zokradonh/kopano_konnect)"
-	fi
-	value_default=latest
-	read -r -p "Which tag do you want to use for Kopano Konnect? [$value_default]: " new_value
-	KONNECT_VERSION=${new_value:-$value_default}
-
-	value_default=latest
-	read -r -p "Which tag do you want to use for Kopano Kwmserver? [$value_default]: " new_value
-	KWM_VERSION=${new_value:-$value_default}
-
-	value_default=latest
-	read -r -p "Which tag do you want to use for Kopano Meet? [$value_default]: " new_value
-	MEET_VERSION=${new_value:-$value_default}
-
-	value_default=latest
-	read -r -p "Which tag do you want to use for Kopano kDAV? [$value_default]: " new_value
-	KDAV_VERSION=${new_value:-$value_default}
 
 	value_default="Kopano Demo"
 	read -r -p "Name of the Organisation for LDAP [$value_default]: " new_value
