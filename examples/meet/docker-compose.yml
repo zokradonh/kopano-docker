@@ -4,6 +4,10 @@ services:
   web:
     image: ${docker_repo:-zokradonh}/kopano_web:${KWEB_VERSION:-latest}
     restart: unless-stopped
+    ports:
+      - "${CADDY:-2015}:2015"
+      - "${HTTP:-80}:80"
+      - "${HTTPS:-443}:443"
     environment:
       - EMAIL=${EMAIL:-off}
       - FQDN=${FQDNCLEANED?err}
@@ -34,9 +38,7 @@ services:
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
       - LDAP_READONLY_USER=true
       - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_USER_PASSWORD}
-    env_file:
-      - ldap.env
-    command: "--loglevel info --copy-service"
+    command: "--copy-service"
     volumes:
       - ldap:/var/lib/ldap
       - slapd:/etc/ldap/slapd.d
@@ -48,8 +50,6 @@ services:
     environment:
       - FQDN=${FQDN}
       - PKI_COUNTRY=NL
-    env_file:
-      - kopano_ssl.env
     volumes:
       - kopanossl/:/kopano/ssl
 
@@ -57,15 +57,20 @@ services:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
-    depends_on:
-      - kopano_server
+    volumes:
+      - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
-    env_file:
-      - kopano_grapi.env
+      - ADDITIONAL_KOPANO_PACKAGES=python3-grapi.backend.ldap
+      - GRAPI_BACKEND=ldap
+      - LDAP_URI=${LDAP_SERVER}
+      - LDAP_BINDDN=${LDAP_BIND_DN}
+      - LDAP_BINDPW=${LDAP_BIND_PW}
+      - LDAP_BASEDN=${LDAP_SEARCH_BASE}
     networks:
       - kopano-net
+      - ldap-net
 
   kopano_kapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
@@ -76,14 +81,13 @@ services:
     volumes:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
+      - kopanosocket/:/run/kopano
     environment:
-      - SERVICE_TO_START=kapid
+      - SERVICE_TO_START=kapi
       - TZ=${TZ}
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
       - KCCONF_KAPID_INSECURE=${INSECURE}
-    env_file:
-      - kopano_kapi.env
     networks:
       - kopano-net
       - web-net
@@ -95,17 +99,27 @@ services:
     depends_on:
       - kopano_ssl
       - web
-      # to be useful Konnect also need a running kopano_server, but this dependency cannot be added here since this would be a circular dependency
     volumes:
       - kopanossl/:/kopano/ssl
     environment:
       - FQDN=${FQDN}
       - allow_client_guests=yes
       - allow_dynamic_client_registration=yes
-    env_file:
-      - kopano_konnect.env
+      - KONNECT_BACKEND=ldap
+      - LDAP_URI=${LDAP_SERVER}
+      - LDAP_BINDDN=${LDAP_BIND_DN}
+      - LDAP_BINDPW=${LDAP_BIND_PW}
+      - LDAP_BASEDN=${LDAP_SEARCH_BASE}
+      - LDAP_SCOPE=sub
+      - LDAP_LOGIN_ATTRIBUTE=uid
+      - LDAP_EMAIL_ATTRIBUTE=mail
+      - LDAP_NAME_ATTRIBUTE=cn
+      - LDAP_UUID_ATTRIBUTE=uidNumber
+      - LDAP_UUID_ATTRIBUTE_TYPE=text
+      - LDAP_FILTER=(objectClass=organizationalPerson)
     networks:
       - kopano-net
+      - ldap-net
       - web-net
 
   kopano_kwmserver:
@@ -120,8 +134,6 @@ services:
       - oidc_issuer_identifier=https://${FQDN}
       - enable_guest_api=yes
       - public_guest_access_regexp=^group/public/.*
-    env_file:
-      - kopano_kwmserver.env
     volumes:
       - kopanossl/:/kopano/ssl
     networks:
@@ -134,8 +146,7 @@ services:
       - SERVICE_TO_START=meet
       - KCCONF_MEET_disableFullGAB=false
       - KCCONF_MEET_guests_enabled=true
-    env_file:
-      - kopano_meet.env
+      - KCCONF_MEET_useIdentifiedUser=true
     depends_on:
       - kopano_kapi
       - kopano_konnect
@@ -150,6 +161,7 @@ volumes:
   slapd:
   kopanodata:
   kopanossl:
+  kopanosocket:
 
 networks:
   web-net:

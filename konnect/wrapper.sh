@@ -39,4 +39,4 @@ exec konnectd serve \
 	--iss=https://"$FQDN" \
 	--identifier-registration-conf /kopano/ssl/konnectd-identifier-registration.yaml \
 	--identifier-scopes-conf /etc/kopano/konnectd-identifier-scopes.yaml \
-	"$@" kc
+	"$@" "$KONNECT_BACKEND"
