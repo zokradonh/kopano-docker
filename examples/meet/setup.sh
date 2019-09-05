@@ -96,7 +96,7 @@ if [ ! -e ./.env ]; then
 	echo "${PRINT_SETUP_SUCCESS}"
 
 	cat <<EOF > "./.env"
-# please consult https://github.com/zokradonh/kopano-docker
+# please consult https://github.com/kopano-dev/kopano-docker
 # for possible configuration values and their impact
 
 LDAP_CONTAINER=$LDAP_CONTAINER
@@ -126,7 +126,7 @@ INSECURE=$INSECURE
 
 # Docker and docker-compose settings
 # Docker Repository to push to/pull from
-docker_repo=zokradonh
+docker_repo=kopano-dev
 COMPOSE_PROJECT_NAME=kopano
 
 # Additional packages to install
