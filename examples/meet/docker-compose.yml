@@ -7,6 +7,7 @@ services:
     environment:
       - EMAIL=${EMAIL:-off}
       - FQDN=${FQDNCLEANED?err}
+      - DEFAULTREDIRECT=/meet
     command: wrapper.sh
     cap_drop:
       - ALL
@@ -58,8 +59,6 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
     depends_on:
       - kopano_server
-    volumes:
-      - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
@@ -77,7 +76,6 @@ services:
     volumes:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
-      - kopanosocket/:/run/kopano
     environment:
       - SERVICE_TO_START=kapid
       - TZ=${TZ}
@@ -100,7 +98,6 @@ services:
       # to be useful Konnect also need a running kopano_server, but this dependency cannot be added here since this would be a circular dependency
     volumes:
       - kopanossl/:/kopano/ssl
-      - kopanosocket/:/run/kopano
     environment:
       - FQDN=${FQDN}
       - allow_client_guests=yes
@@ -151,16 +148,8 @@ volumes:
   web:
   ldap:
   slapd:
-  maildata:
-  mailstate:
-  mtaconfig:
-  mysql:
   kopanodata:
   kopanossl:
-  kopanosocket:
-  kopanowebapp:
-  zpushstates:
-  kdavstates:
 
 networks:
   web-net:
