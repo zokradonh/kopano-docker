@@ -92,7 +92,7 @@ if [ ! -e ./.env ]; then
 
 	value_default="kopano.demo"
 	read -r -p "FQDN to be used (for reverse proxy).
-	Tipp: use port 2015 in case port 443 is already in use on the system.
+	Hint: use port 2015 in case port 443 is already in use on the system.
 	[$value_default]: " new_value
 	FQDN=${new_value:-$value_default}
 
@@ -110,7 +110,7 @@ if [ ! -e ./.env ]; then
 		INSECURE="no"
 	fi
 
-	LDAP_BASE_DN=$(fqdn_to_dn "$FQDN")
+	LDAP_BASE_DN=$(fqdn_to_dn "${FQDN%:*}")
 	value_default="$LDAP_BASE_DN"
 	read -r -p "Name of the BASE DN for LDAP [$value_default]: " new_value
 	LDAP_BASE_DN=${new_value:-$value_default}
@@ -164,7 +164,7 @@ if [ ! -e ./.env ]; then
 	read -r -p "Timezone to be used [$value_default]: " new_value
 	TZ=${new_value:-$value_default}
 
-	value_default="postmaster@$FQDN"
+	value_default="postmaster@${FQDN%:*}"
 	read -r -p "E-Mail Address displayed for the 'postmaster' [$value_default]: " new_value
 	POSTMASTER_ADDRESS=${new_value:-$value_default}
 
@@ -256,7 +256,7 @@ KDAV_VERSION=$KDAV_VERSION
 
 LDAP_CONTAINER=$LDAP_CONTAINER
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
-LDAP_DOMAIN=$FQDN
+LDAP_DOMAIN=${FQDN%:*}
 LDAP_BASE_DN=$LDAP_BASE_DN
 LDAP_SERVER=$LDAP_SERVER
 LDAP_ADMIN_PASSWORD=$LDAP_ADMIN_PASSWORD

@@ -87,11 +87,13 @@ grapi)
 	# TODO there could be a case where multiple backends are desired
 	case $GRAPI_BACKEND in
 	ldap)
-		export LDAP_URI="${KCCONF_GRAPI_LDAP_URI}"
-		export LDAP_BASEDN="${KCCONF_GRAPI_LDAP_BASEDN}"
-		export LDAP_BINDDN="${KCCONF_GRAPI_LDAP_BINDDN}"
-		bindpw="$(cat "${KCCONF_GRAPI_LDAP_BINDPW_FILE}")"
-		export LDAP_BINDPW="${bindpw}"
+		[ -n "$KCCONF_GRAPI_LDAP_URI" ] && export LDAP_URI="${KCCONF_GRAPI_LDAP_URI}"
+		[ -n "$KCCONF_GRAPI_LDAP_BASEDN" ] && export LDAP_BASEDN="${KCCONF_GRAPI_LDAP_BASEDN}"
+		[ -n "$KCCONF_GRAPI_LDAP_BINDDN" ] && export LDAP_BINDDN="${KCCONF_GRAPI_LDAP_BINDDN}"
+		if [ -n "$KCCONF_GRAPI_LDAP_BINDPW_FILE" ]; then
+			bindpw="$(cat "${KCCONF_GRAPI_LDAP_BINDPW_FILE}")"
+			export LDAP_BINDPW="${bindpw}"
+		fi
 		;;
 	esac
 	# cleaning up env variables

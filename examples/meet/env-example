@@ -1,0 +1,34 @@
+# please consult https://github.com/zokradonh/kopano-docker
+# for possible configuration values and their impact
+
+LDAP_ORGANISATION="Kopano Demo"
+LDAP_DOMAIN=kopano.demo
+LDAP_BASE_DN=dc=kopano,dc=demo
+LDAP_SERVER=ldap://ldap:389
+LDAP_ADMIN_PASSWORD=adminpassword
+LDAP_READONLY_USER_PASSWORD=readonlypassword
+LDAP_BIND_DN=cn=readonly,dc=kopano,dc=demo
+LDAP_BIND_PW=readonlypassword
+LDAP_SEARCH_BASE=dc=kopano,dc=demo
+
+TZ=Europe/Berlin
+
+# Defines how Kopano can be accessed from the outside world
+FQDN=kopano.demo
+FQDNCLEANED=kopano.demo
+DEFAULTREDIRECT=/meet
+EMAIL=self_signed
+CADDY=2015
+HTTP=1080
+HTTPS=10443
+
+# Settings for test environments
+INSECURE=yes
+
+# Docker and docker-compose settings
+# Docker Repository to push to/pull from
+docker_repo=zokradonh
+COMPOSE_PROJECT_NAME=kopano
+
+# Additional packages to install
+ADDITIONAL_KOPANO_PACKAGES=python3-grapi.backend.ldap
