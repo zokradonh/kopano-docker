@@ -99,6 +99,21 @@ if [ ! -e ./.env ]; then
 # please consult https://github.com/kopano-dev/kopano-docker
 # for possible configuration values and their impact
 
+# Access to the Kopano Turn service can be requested at https://portal.kopano.com/content/turn-server-access-request
+TURN_USER=
+TURN_PASSWORD=
+
+# Defines how Kopano can be accessed from the outside world
+FQDN=$FQDN
+FQDNCLEANED=${FQDN%:*}
+DEFAULTREDIRECT=/webapp
+EMAIL=$EMAIL
+CADDY=2015
+HTTP=80
+HTTPS=443
+
+TZ=$TZ
+
 LDAP_CONTAINER=$LDAP_CONTAINER
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
 LDAP_DOMAIN=${FQDN%:*}
@@ -110,23 +125,12 @@ LDAP_BIND_DN=$LDAP_BIND_DN
 LDAP_BIND_PW=$LDAP_BIND_PW
 LDAP_SEARCH_BASE=$LDAP_SEARCH_BASE
 
-TZ=$TZ
-
-# Defines how Kopano can be accessed from the outside world
-FQDN=$FQDN
-FQDNCLEANED=${FQDN%:*}
-DEFAULTREDIRECT=/webapp
-EMAIL=$EMAIL
-CADDY=2015
-HTTP=80
-HTTPS=443
-
 # Settings for test environments
 INSECURE=$INSECURE
 
 # Docker and docker-compose settings
 # Docker Repository to push to/pull from
-docker_repo=kopano-dev
+docker_repo=kopano
 COMPOSE_PROJECT_NAME=kopano
 
 # Additional packages to install

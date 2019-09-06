@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   web:
-    image: ${docker_repo:-kopano-dev}/kopano_web:${KWEB_VERSION:-latest}
+    image: ${docker_repo:-kopano}/kopano_web:${KWEB_VERSION:-latest}
     restart: unless-stopped
     ports:
       - "${CADDY:-2015}:2015"
@@ -28,7 +28,7 @@ services:
           - ${FQDNCLEANED?err}
 
   ldap:
-    image: ${docker_repo:-kopano-dev}/${LDAP_CONTAINER:-kopano_ldap_demo}:${LDAP_VERSION:-latest}
+    image: ${docker_repo:-kopano}/${LDAP_CONTAINER:-kopano_ldap_demo}:${LDAP_VERSION:-latest}
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_ldap
     environment:
@@ -38,7 +38,7 @@ services:
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
       - LDAP_READONLY_USER=true
       - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_USER_PASSWORD}
-    command: "--copy-service"
+    command: "--loglevel info --copy-service"
     volumes:
       - ldap:/var/lib/ldap
       - slapd:/etc/ldap/slapd.d
@@ -46,7 +46,7 @@ services:
       - ldap-net
 
   kopano_ssl:
-    image: ${docker_repo:-kopano-dev}/kopano_ssl:${SSL_VERSION:-latest}
+    image: ${docker_repo:-kopano}/kopano_ssl:${SSL_VERSION:-latest}
     environment:
       - FQDN=${FQDN}
       - PKI_COUNTRY=NL
@@ -54,7 +54,7 @@ services:
       - kopanossl/:/kopano/ssl
 
   kopano_grapi:
-    image: ${docker_repo:-kopano-dev}/kopano_core:${CORE_VERSION:-latest}
+    image: ${docker_repo:-kopano}/kopano_core:${CORE_VERSION:-latest}
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
     volumes:
@@ -73,7 +73,7 @@ services:
       - ldap-net
 
   kopano_kapi:
-    image: ${docker_repo:-kopano-dev}/kopano_core:${CORE_VERSION:-latest}
+    image: ${docker_repo:-kopano}/kopano_core:${CORE_VERSION:-latest}
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_kapi
     depends_on:
@@ -93,7 +93,7 @@ services:
       - web-net
 
   kopano_konnect:
-    image: ${docker_repo:-kopano-dev}/kopano_konnect:${KONNECT_VERSION:-latest}
+    image: ${docker_repo:-kopano}/kopano_konnect:${KONNECT_VERSION:-latest}
     restart: unless-stopped
     command: wrapper.sh
     depends_on:
@@ -123,7 +123,7 @@ services:
       - web-net
 
   kopano_kwmserver:
-    image: ${docker_repo:-kopano-dev}/kopano_kwmserver:${KWM_VERSION:-latest}
+    image: ${docker_repo:-kopano}/kopano_kwmserver:${KWM_VERSION:-latest}
     restart: unless-stopped
     command: wrapper.sh
     depends_on:
@@ -134,13 +134,15 @@ services:
       - oidc_issuer_identifier=https://${FQDN}
       - enable_guest_api=yes
       - public_guest_access_regexp=^group/public/.*
+      - turn_service_credentials_user=${TURN_USER}
+      - turn_service_credentials_password=${TURN_PASSWORD}
     volumes:
       - kopanossl/:/kopano/ssl
     networks:
       - web-net
 
   kopano_meet:
-    image: ${docker_repo:-kopano-dev}/kopano_meet:${MEET_VERSION:-latest}
+    image: ${docker_repo:-kopano}/kopano_meet:${MEET_VERSION:-latest}
     restart: unless-stopped
     environment:
       - SERVICE_TO_START=meet
