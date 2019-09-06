@@ -3,13 +3,6 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-function finish {
-	if [ -e "$tmpfile" ]; then
-		rm "$tmpfile"
-	fi
-}
-trap finish EXIT
-
 if ! command -v reg > /dev/null; then
 	echo "Please install reg in order to run this script."
 	exit 1
@@ -19,6 +12,13 @@ if [ ! -e ./.env ]; then
 	echo "please run setup.sh first"
 	exit 1
 fi
+
+function finish {
+	if [ -e "$tmpfile" ]; then
+		rm "$tmpfile"
+	fi
+}
+trap finish EXIT
 
 # this is a kind of ugly hack to be able to source the env file
 # this is sadly needed since postfix in https://github.com/tomav/docker-mailserver/ cannot deal with quoted values
