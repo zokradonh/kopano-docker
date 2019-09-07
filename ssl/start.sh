@@ -66,14 +66,6 @@ touch /kopano/ssl/konnectd-identifier-registration.yaml
 # chown to the numerical representation of nobody/nogroup
 chown 65534:65534 /kopano/ssl/konnectd-identifier-registration.yaml
 
-eckey="/kopano/ssl/meet-kwmserver.pem"
-if [ ! -f $eckey ]; then
-	echo "Creating ec key for Meet..."
-	openssl ec -in $ecparam -out $eckey.tmp >/dev/null 2>&1
-	chown 65534:65534 $eckey.tmp
-	mv $eckey.tmp $eckey
-fi
-
 echo "SSL certs:"
 ls -l /kopano/ssl/*.*
 
