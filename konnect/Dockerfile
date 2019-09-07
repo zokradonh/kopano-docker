@@ -5,6 +5,7 @@ ARG VCS_REF
 ARG CODE_VERSION
 
 ENV CODE_VERSION="${CODE_VERSION}" \
+    DEBUG="" \
     FQDN=localhost \
     KONNECT_BACKEND="kc" \
     signing_private_key=/etc/kopano/konnectd-signing-private-key.pem \
@@ -21,6 +22,7 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.version=$CODE_VERSION \
     org.label-schema.schema-version="1.0"
 
+# TODO use docker multistage for pip install yq https://pythonspeed.com/articles/multi-stage-docker-python/
 RUN apk add --no-cache \
     jq \
     moreutils \

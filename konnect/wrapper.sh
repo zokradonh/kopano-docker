@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -eu
 [ "$DEBUG" ] && set -x
 
 # Key generation for Meet guest mode
@@ -26,9 +26,7 @@ if [ -e /etc/kopano/konnectd.cfg ]; then
 	. /etc/kopano/konnectd.cfg
 fi
 
-if [ -z "$oidc_issuer_identifier" ]; then
-	oidc_issuer_identifier="https://$FQDN"
-fi
+oidc_issuer_identifier=${oidc_issuer_identifier:-https://$FQDN}
 set -- "$@" --iss="$oidc_issuer_identifier"
 echo "Entrypoint: Issuer url (--iss): $oidc_issuer_identifier"
 
@@ -49,12 +47,12 @@ if [ "$allow_dynamic_client_registration" = "yes" ]; then
 fi
 
 dockerize \
-	-wait file://"$signing_private_key" \
-	-wait file://"$encryption_secret_key" \
+	-wait file://"${signing_private_key:?}" \
+	-wait file://"${encryption_secret_key:?}" \
 	-timeout 360s
 exec konnectd serve \
-	--signing-private-key="$signing_private_key" \
-	--encryption-secret="$encryption_secret_key" \
-	--identifier-registration-conf "$identifier_registration_conf" \
-	--identifier-scopes-conf "$identifier_scopes_conf" \
+	--signing-private-key="${signing_private_key:?}" \
+	--encryption-secret="${encryption_secret_key:?}" \
+	--identifier-registration-conf "${identifier_registration_conf:?}" \
+	--identifier-scopes-conf "${identifier_scopes_conf:?}" \
 	"$@" "$KONNECT_BACKEND"
