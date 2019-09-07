@@ -6,7 +6,9 @@ ARG CODE_VERSION
 
 ENV CODE_VERSION="${CODE_VERSION}" \
     FQDN=localhost \
-    KONNECT_BACKEND="kc"
+    KONNECT_BACKEND="kc" \
+    signing_private_key=/etc/kopano/konnectd-signing-private-key.pem \
+    encryption_secret_key=/etc/kopano/konnectd-encryption-secret.key
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano Konnect container" \
