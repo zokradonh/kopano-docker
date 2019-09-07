@@ -4,8 +4,9 @@ FROM kopano/konnectd:${CODE_VERSION}
 ARG VCS_REF
 ARG CODE_VERSION
 
-ENV CODE_VERSION="${CODE_VERSION}"
-ENV KONNECT_BACKEND="kc"
+ENV CODE_VERSION="${CODE_VERSION}" \
+    FQDN=localhost \
+    KONNECT_BACKEND="kc"
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano Konnect container" \
