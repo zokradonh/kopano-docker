@@ -48,7 +48,6 @@ if [ "$allow_dynamic_client_registration" = "yes" ]; then
 	set -- "$@" "--allow-dynamic-client-registration"
 fi
 
-
 dockerize \
 	-wait file://"$signing_private_key" \
 	-wait file://"$encryption_secret_key" \
@@ -56,6 +55,6 @@ dockerize \
 exec konnectd serve \
 	--signing-private-key="$signing_private_key" \
 	--encryption-secret="$encryption_secret_key" \
-	--identifier-registration-conf /kopano/ssl/konnectd-identifier-registration.yaml \
-	--identifier-scopes-conf /etc/kopano/konnectd-identifier-scopes.yaml \
+	--identifier-registration-conf "$identifier_registration_conf" \
+	--identifier-scopes-conf "$identifier_scopes_conf" \
 	"$@" "$KONNECT_BACKEND"
