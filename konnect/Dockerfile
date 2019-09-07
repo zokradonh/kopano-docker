@@ -23,6 +23,7 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 # TODO use docker multistage for pip install yq https://pythonspeed.com/articles/multi-stage-docker-python/
+# TODO moreutils (required for sponge) bloats the image quite a bit
 RUN apk add --no-cache \
     jq \
     moreutils \
