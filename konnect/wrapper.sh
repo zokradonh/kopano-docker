@@ -1,11 +1,17 @@
 #!/bin/sh
 
 set -e
+[ "$DEBUG" ] && set -x
+
+# Key generation for Meet guest mode
+ecparam="/tmp/ecparam.pem"
+echo "Creating ec param key for Meet..."
+openssl ecparam -name prime256v1 -genkey -noout -out $ecparam.tmp >/dev/null 2>&1
+mv $ecparam.tmp $ecparam
 
 eckey="/tmp/meet-kwmserver.pem"
 echo "Creating ec key for Meet..."
 openssl ec -in $ecparam -out $eckey.tmp >/dev/null 2>&1
-chown 65534:65534 $eckey.tmp
 mv $eckey.tmp $eckey
 
 konnectd utils jwk-from-pem --use sig /tmp/meet-kwmserver.pem > /tmp/jwk-meet.json
