@@ -2,7 +2,7 @@ FROM alpine:3.9
 
 ARG VCS_REF
 
-ENV CODE_VERSION=1.0.1 \
+ENV CODE_VERSION=1.1.0 \
     PKI_ROOT=/kopano/easypki \
     PKI_ORGANIZATION="Internal Kopano System" \
     PKI_COUNTRY=DE

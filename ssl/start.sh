@@ -7,6 +7,12 @@ set -euo pipefail
 # clean out any potential port numbers
 FQDN=${FQDN%:*}
 
+# create files so that konnect can write to it
+touch /kopano/ssl/konnectd-identifier-registration.yaml /kopano/ssl/ecparam.pem /kopano/ssl/meet-kwmserver.pem
+# chown to the numerical representation of nobody/nogroup
+chown 65534:65534 /kopano/ssl/konnectd-identifier-registration.yaml /kopano/ssl/ecparam.pem /kopano/ssl/meet-kwmserver.pem
+
+
 if [ ! -f /kopano/ssl/ca.pem ]; then
 	# https://github.com/google/easypki
 	echo "Creating CA certificate..."
@@ -52,11 +58,6 @@ if [ ! -f $secretkey ]; then
 	openssl rand -out $secretkey.tmp -hex 64
 	mv $secretkey.tmp $secretkey
 fi
-
-# create registration.yml so that konnect can write to it
-touch /kopano/ssl/konnectd-identifier-registration.yaml
-# chown to the numerical representation of nobody/nogroup
-chown 65534:65534 /kopano/ssl/konnectd-identifier-registration.yaml
 
 echo "SSL certs:"
 ls -l /kopano/ssl/*.*
