@@ -1,4 +1,11 @@
 ARG CODE_VERSION=0.28.0
+
+FROM golang:1.13.0-alpine3.10 as builder-sponge
+
+RUN apk add --no-cache git
+RUN go get -d -v github.com/go-moreutils/sponge
+RUN go install -v github.com/go-moreutils/sponge
+
 FROM kopano/konnectd:${CODE_VERSION}
 
 ARG VCS_REF
@@ -25,13 +32,13 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 # TODO use docker multistage for pip install yq https://pythonspeed.com/articles/multi-stage-docker-python/
-# TODO moreutils (required for sponge) bloats the image quite a bit
 RUN apk add --no-cache \
     jq \
-    moreutils \
     openssl \
     py-pip \
     && pip install yq==2.7.2
+
+COPY --from=builder-sponge /go/bin/sponge /usr/local/bin
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
