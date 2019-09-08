@@ -444,6 +444,8 @@ services:
       - kopanosocket/:/run/kopano
     environment:
       - FQDN=${FQDN}
+      - ecparam=/kopano/ssl/ecparam.pem
+      - eckey=/kopano/ssl/meet-kwmserver.pem
       - signing_private_key=/kopano/ssl/konnectd-tokens-signing-key.pem
       - encryption_secret_key=/kopano/ssl/konnectd-encryption.key
       - identifier_registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml

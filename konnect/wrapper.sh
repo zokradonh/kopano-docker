@@ -3,21 +3,18 @@
 set -eu
 [ "$DEBUG" ] && set -x
 
-ecparam="/kopano/ssl/ecparam.pem"
-eckey="/kopano/ssl/meet-kwmserver.pem"
-
 dockerize \
-	-wait file:///kopano/ssl/ecparam.pem \
-	-wait file:///kopano/ssl/meet-kwmserver.pem \
+	-wait file://$ecparam \
+	-wait file://$eckey \
 	-timeout 360s
 
 # Key generation for Meet guest mode
-if [ -s $ecparam ]; then
+if [ ! -s $ecparam ]; then
 	echo "Creating ec param key for Meet..."
 	openssl ecparam -name prime256v1 -genkey -noout -out $ecparam >/dev/null 2>&1
 fi
 
-if [ -s $eckey ]; then
+if [ ! -s $eckey ]; then
 	echo "Creating ec key for Meet..."
 	openssl ec -in $ecparam -out $eckey >/dev/null 2>&1
 fi
