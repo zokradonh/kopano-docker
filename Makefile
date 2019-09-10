@@ -338,6 +338,7 @@ lint:
 
 .PHONY: clean
 clean:
+	docker ps --filter name=kopano_test* -aq | xargs docker rm -f || true
 	docker-compose -f $(DOCKERCOMPOSE_FILE) down -v --remove-orphans || true
 
 .PHONY: test
@@ -362,7 +363,7 @@ test-startup: ## Test if all containers start up
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml run test || \
 		(docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml ps; \
 		docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop; \
-		docker rm kopano_test_run_1 2>/dev/null; \
+		docker ps --filter name=kopano_test* -aq | xargs docker rm -f; \
 		exit 1)
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker ps --filter name=kopano_test* -aq | xargs docker rm -f
