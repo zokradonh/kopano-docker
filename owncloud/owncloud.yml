@@ -1,0 +1,87 @@
+# based on https://github.com/owncloud/docs/blob/4a04cd16a10a853bfab630e8a6450f722ac6ea86/modules/admin_manual/examples/installation/docker/docker-compose.yml
+version: "3.5"
+
+volumes:
+  oc_files:
+  oc_mysql:
+  oc_backup:
+  oc_redis:
+
+services:
+  owncloud:
+    image: owncloud/server:${OWNCLOUD_VERSION:-latest}
+    restart: always
+    depends_on:
+      - oc_db
+      - oc_redis
+      - ldap
+      - web
+    environment:
+      - OWNCLOUD_DOMAIN=${FQDN}
+      - OWNCLOUD_DB_TYPE=mysql
+      - OWNCLOUD_DB_NAME=owncloud
+      - OWNCLOUD_DB_USERNAME=${OWNCLOUD_DB_USERNAME}
+      - OWNCLOUD_DB_PASSWORD=${OWNCLOUD_DB_PASSWORD}
+      - OWNCLOUD_DB_HOST=oc_db
+      - OWNCLOUD_ADMIN_USERNAME=${OWNCLOUD_ADMIN_USERNAME}
+      - OWNCLOUD_ADMIN_PASSWORD=${OWNCLOUD_ADMIN_PASSWORD}
+      - OWNCLOUD_MYSQL_UTF8MB4=true
+      - OWNCLOUD_REDIS_ENABLED=true
+      - OWNCLOUD_REDIS_HOST=oc_redis
+      - OWNCLOUD_SUB_URL=/owncloud
+      - LDAP_SERVER=${LDAP_SERVER}
+      - LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
+      - LDAP_BIND_DN=${LDAP_BIND_DN}
+      - LDAP_BIND_PW=${LDAP_BIND_PW}
+    healthcheck:
+      test: ["CMD", "/usr/bin/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - oc_files:/mnt/data
+      - ./owncloud/99-ldap.sh:/etc/owncloud.d/99-ldap.sh
+    networks:
+      - web-net
+      - owncloud-net
+      - ldap-net
+
+  oc_db:
+    image: webhippie/mariadb:latest
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USERNAME=${OWNCLOUD_DB_USERNAME}
+      - MARIADB_PASSWORD=${OWNCLOUD_DB_PASSWORD}
+      - MARIADB_DATABASE=owncloud
+      - MARIADB_MAX_ALLOWED_PACKET=128M
+      - MARIADB_INNODB_LOG_FILE_SIZE=64M
+    healthcheck:
+      test: ["CMD", "/usr/bin/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - oc_mysql:/var/lib/mysql
+      - oc_backup:/var/lib/backup
+    networks:
+      - owncloud-net
+
+  oc_redis:
+    image: webhippie/redis:latest
+    restart: always
+    environment:
+      - REDIS_DATABASES=1
+    healthcheck:
+      test: ["CMD", "/usr/bin/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - oc_redis:/var/lib/redis
+    networks:
+      - owncloud-net
+
+networks:
+  owncloud-net:
+    driver: bridge
