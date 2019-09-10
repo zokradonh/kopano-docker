@@ -10,12 +10,12 @@ RUN mv kapi/examples/* /web/kapi-playground
 WORKDIR /web/kapi-playground
 RUN rm Makefile && ln -s oidc-client-example.html index.html
 
-from halverneus/static-file-server:v1.5.2
+FROM halverneus/static-file-server:v1.5.2
 
 ARG VCS_REF
 ARG CODE_VERSION
 
-env PORT 8888
+ENV PORT 8888
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano Playground" \
