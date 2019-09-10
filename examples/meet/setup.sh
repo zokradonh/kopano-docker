@@ -64,7 +64,7 @@ if [ ! -e ./.env ]; then
 		read -r -p "LDAP bind password to be used [$value_default]: " new_value
 		LDAP_BIND_PW=${new_value:-$value_default}
 
-		PRINT_SETUP_SUCCESS="$PRINT_SETUP_SUCCESS \n!! You have specified the LDAP server '${LDAP_SERVER}', don't forget to remove the bundled ldap and ldap-admin services in docker-compose.yml\n"
+		PRINT_SETUP_SUCCESS="$PRINT_SETUP_SUCCESS !! You have specified the LDAP server '${LDAP_SERVER}', don't forget to remove the bundled ldap service in docker-compose.yml !!"
 	else
 		value_default="yes"
 		read -r -p "Use bundled LDAP with demo users? yes/no [$value_default]: " new_value
