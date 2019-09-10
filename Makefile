@@ -362,6 +362,7 @@ test-startup: ## Test if all containers start up
 	docker-compose -f $(DOCKERCOMPOSE_FILE) ps
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml run test || \
 		(docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml ps; \
+		docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml logs -t --tail=20; \
 		docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop; \
 		docker ps --filter name=kopano_test* -aq | xargs docker rm -f; \
 		exit 1)
