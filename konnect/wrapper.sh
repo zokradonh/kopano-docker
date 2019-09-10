@@ -3,23 +3,26 @@
 set -eu
 [ "$DEBUG" ] && set -x
 
+ecparam="${ecparam:?}"
+eckey="${eckey:?}"
+
 dockerize \
-	-wait file://$ecparam \
-	-wait file://$eckey \
+	-wait file://"$ecparam" \
+	-wait file://"$eckey" \
 	-timeout 360s
 
 # Key generation for Meet guest mode
-if [ ! -s $ecparam ]; then
+if [ ! -s "$ecparam" ]; then
 	echo "Creating ec param key for Meet..."
-	openssl ecparam -name prime256v1 -genkey -noout -out $ecparam >/dev/null 2>&1
+	openssl ecparam -name prime256v1 -genkey -noout -out "$ecparam" >/dev/null 2>&1
 fi
 
-if [ ! -s $eckey ]; then
+if [ ! -s "$eckey" ]; then
 	echo "Creating ec key for Meet..."
-	openssl ec -in $ecparam -out $eckey >/dev/null 2>&1
+	openssl ec -in "$ecparam" -out "$eckey" >/dev/null 2>&1
 fi
 
-konnectd utils jwk-from-pem --use sig $eckey > /tmp/jwk-meet.json
+konnectd utils jwk-from-pem --use sig "$eckey" > /tmp/jwk-meet.json
 CONFIG_JSON=/etc/kopano/konnectd-identifier-registration.yaml
 #yq -y ".clients += [{\"id\": \"grapi-explorer.js\", \"name\": \"Grapi Explorer\", \"application_type\": \"web\", \"trusted\": true, \"insecure\": true, \"redirect_uris\": [\"http://$FQDNCLEANED:3000/\"]}]" $CONFIG_JSON | sponge $CONFIG_JSON
 yq -y ".clients += [{\"id\": \"kpop-https://$FQDN/meet/\", \"name\": \"Kopano Meet\", \"application_type\": \"web\", \"trusted\": true, \"redirect_uris\": [\"https://$FQDN/meet/\"], \"trusted_scopes\": [\"konnect/guestok\", \"kopano/kwm\"], \"jwks\": {\"keys\": [{\"kty\": $(jq .kty /tmp/jwk-meet.json), \"use\": $(jq .use /tmp/jwk-meet.json), \"crv\": $(jq .crv /tmp/jwk-meet.json), \"d\": $(jq .d /tmp/jwk-meet.json), \"kid\": $(jq .kid /tmp/jwk-meet.json), \"x\": $(jq .x /tmp/jwk-meet.json), \"y\": $(jq .y /tmp/jwk-meet.json)}]},\"request_object_signing_alg\": \"ES256\"}]" $CONFIG_JSON | sponge $CONFIG_JSON
