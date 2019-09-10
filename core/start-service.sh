@@ -144,7 +144,13 @@ search)
 	sleep 5
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/bin/python3 /usr/sbin/kopano-search -F
+	# with commit 702bb3fccb3 search does not need -F any longer
+	searchversion=$(dpkg-query --showformat='${Version}' --show kopano-search)
+	if dpkg --compare-versions "$searchversion" "gt" "8.7.82.165"; then
+		exec /usr/sbin/kopano-search
+	else
+		exec /usr/bin/python3 /usr/sbin/kopano-search -F
+	fi
 	;;
 spooler)
 	dockerize \
