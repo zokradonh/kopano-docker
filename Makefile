@@ -384,6 +384,7 @@ test-goss: ## Test configuration of containers with goss
 	GOSS_FILES_PATH=webapp dcgoss run kopano_webapp
 
 test-commander: ## Test scripts with commander
+	commander test tests/commander.yaml
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=core/commander/server dccommander run kopano_server
 
 test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
