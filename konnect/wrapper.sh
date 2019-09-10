@@ -3,12 +3,9 @@
 set -eu
 [ "$DEBUG" ] && set -x
 
-ecparam="${ecparam:?}"
-eckey="${eckey:?}"
-
 dockerize \
-	-wait file://"$ecparam" \
-	-wait file://"$eckey" \
+	-wait file://"${ecparam:?}" \
+	-wait file://"${eckey:?}" \
 	-timeout 360s
 
 # Key generation for Meet guest mode
@@ -39,18 +36,15 @@ oidc_issuer_identifier=${oidc_issuer_identifier:-https://$FQDN}
 set -- "$@" --iss="$oidc_issuer_identifier"
 echo "Entrypoint: Issuer url (--iss): $oidc_issuer_identifier"
 
-# shellcheck disable=SC2154
-if [ -n "$log_level" ]; then
+if [ -n "${log_level:-}" ]; then
 	set -- "$@" --log-level="$log_level"
 fi
 
-# shellcheck disable=SC2154
-if [ "$allow_client_guests" = "yes" ]; then
+if [ "${allow_client_guests:-}" = "yes" ]; then
 	set -- "$@" "--allow-client-guests"
 fi
 
-# shellcheck disable=SC2154
-if [ "$allow_dynamic_client_registration" = "yes" ]; then
+if [ "${allow_dynamic_client_registration:-}" = "yes" ]; then
 	echo "Entrypoint: Allowing dynamic client registration"
 	set -- "$@" "--allow-dynamic-client-registration"
 fi
