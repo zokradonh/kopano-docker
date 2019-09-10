@@ -434,7 +434,6 @@ services:
   kopano_konnect:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
     restart: unless-stopped
-    command: wrapper.sh
     depends_on:
       - kopano_ssl
       - web
@@ -444,6 +443,12 @@ services:
       - kopanosocket/:/run/kopano
     environment:
       - FQDN=${FQDN}
+      - ecparam=/kopano/ssl/ecparam.pem
+      - eckey=/kopano/ssl/meet-kwmserver.pem
+      - signing_private_key=/kopano/ssl/konnectd-tokens-signing-key.pem
+      - encryption_secret_key=/kopano/ssl/konnectd-encryption.key
+      - identifier_registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
+      - identifier_scopes_conf=/etc/kopano/konnectd-identifier-scopes.yaml
       - allow_client_guests=yes
       - allow_dynamic_client_registration=yes
     env_file:

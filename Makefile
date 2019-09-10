@@ -70,6 +70,7 @@ endif
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS=$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component) $(component)/
+	@echo "The image is $(shell docker image inspect $(docker_repo)/kopano_$(component) --format='{{.Size}}') bytes"
 
 .PHONY: build-simple
 build-simple: component ?= ssl
@@ -78,6 +79,8 @@ build-simple: ## Helper target to build a simplified image (no Kopano repo integ
 		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=$(docker_repo) \
 		-t $(docker_repo)/kopano_$(component) $(component)/
+	@echo "The image is $(shell docker image inspect $(docker_repo)/kopano_$(component) --format='{{.Size}}') bytes"
+
 
 .PHONY: build-builder
 build-builder: component ?= kdav
@@ -104,7 +107,6 @@ endif
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS)" \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component):builder $(component)/
-		@echo $(docker_repo)/kopano_$(component):builder >> $(TAG_FILE)
 
 build-base: ## Build new base image.
 	docker pull debian:stretch
@@ -336,6 +338,7 @@ lint:
 
 .PHONY: clean
 clean:
+	docker ps --filter name=kopano_test* -aq | xargs docker rm -f || true
 	docker-compose -f $(DOCKERCOMPOSE_FILE) down -v --remove-orphans || true
 
 .PHONY: test
@@ -359,8 +362,9 @@ test-startup: ## Test if all containers start up
 	docker-compose -f $(DOCKERCOMPOSE_FILE) ps
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml run test || \
 		(docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml ps; \
+		docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml logs -t --tail=20; \
 		docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop; \
-		docker rm kopano_test_run_1 2>/dev/null; \
+		docker ps --filter name=kopano_test* -aq | xargs docker rm -f; \
 		exit 1)
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker ps --filter name=kopano_test* -aq | xargs docker rm -f

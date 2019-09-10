@@ -4,8 +4,16 @@ FROM kopano/konnectd:${CODE_VERSION}
 ARG VCS_REF
 ARG CODE_VERSION
 
-ENV CODE_VERSION="${CODE_VERSION}"
-ENV KONNECT_BACKEND="kc"
+ENV CODE_VERSION="${CODE_VERSION}" \
+    DEBUG="" \
+    FQDN=localhost \
+    KONNECT_BACKEND="kc" \
+    ecparam=/etc/kopano/ecparam.pem \
+    eckey=/etc/kopano/meet-kwmserver.pem \
+    signing_private_key=/etc/kopano/konnectd-signing-private-key.pem \
+    encryption_secret_key=/etc/kopano/konnectd-encryption-secret.key \
+    identifier_registration_conf=/etc/kopano/konnectd-identifier-registration.yaml \
+    identifier_scopes_conf=/etc/kopano/konnectd-identifier-scopes.yaml
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano Konnect container" \
@@ -16,6 +24,8 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.version=$CODE_VERSION \
     org.label-schema.schema-version="1.0"
 
+# TODO use docker multistage for pip install yq https://pythonspeed.com/articles/multi-stage-docker-python/
+# TODO moreutils (required for sponge) bloats the image quite a bit
 RUN apk add --no-cache \
     jq \
     moreutils \
@@ -30,3 +40,5 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 COPY --chown=nobody:nogroup konnectd-identifier-registration.yaml konnectd-identifier-scopes.yaml /etc/kopano/
 COPY wrapper.sh /usr/local/bin
+
+ENTRYPOINT ["wrapper.sh"]
