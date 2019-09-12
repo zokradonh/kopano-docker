@@ -115,11 +115,11 @@ The built image includes your subscription key! Do not push this image to any pu
 
 This project includes a few automated tests that can be run to ensure that containers start up and are operational.
 
-The startup test can be executed by calling `make test-startup`. It spins up all containers and checks if they listen on their expected interfaces afterwards and executs some commands.
+The startup test can be executed by calling `make test-startup`. It spins up all containers and checks if they listen on their expected interfaces afterwards and executes some commands that should succeed on a succesful deployment.
 
 A more detailed test can be executed by calling `make test-goss`. This uses [Goss](https://github.com/aelsabbahy/goss) and its helper [dcgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dcgoss) to validate the container configuration at runtime. These tests have not been implemented for all containers yet, but as an upside the same validation is used as part of the container healtcheck. Contributions are welcome!
 
-Testing the startup scripts of the containers is still a work in progress. When running `make test-commander` then [Commander](https://github.com/SimonBaeumer/commander) will be used to test output of the `version.sh` script and the container startup scripts.
+Testing the startup scripts of the containers is still a work in progress. When running `make test-commander` [Commander](https://github.com/SimonBaeumer/commander) will be used to test output of the `version.sh` script and some of the container startup scripts.
 
 ### What if I want to use a different front facing proxy than the one in docker-compose? Or just some part of the compose file?
 
