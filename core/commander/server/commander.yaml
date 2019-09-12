@@ -1,4 +1,54 @@
 tests:
-  /kopano/start-service.sh:
-    exit-code: 1
-    stderr: '/kopano/start-service.sh: line 7: DEBUG: unbound variable'
+  test run of config update script for core:
+    command: /usr/bin/python3 /kopano/server.py
+    exit-code: 0
+  config update kopano-server:
+    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/server.cfg /etc/kopano/ldap.cfg
+    exit-code: 0
+    stdout:
+      contains:
+        - server_listen_tls = *:237
+        - "!include /usr/share/kopano/ldap.openldap.cfg"
+        - "#!include /usr/share/kopano/ldap.active-directory.cfg"
+  config update ldap ads:
+    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/ldap.cfg
+    exit-code: 0
+    stdout:
+      contains:
+        - "#!include /usr/share/kopano/ldap.openldap.cfg"
+        - "!include /usr/share/kopano/ldap.active-directory.cfg"
+    config:
+      env:
+        KCCOMMENT_LDAP_1: "!include /usr/share/kopano/ldap.openldap.cfg"
+        KCUNCOMMENT_LDAP_1: "!include /usr/share/kopano/ldap.active-directory.cfg"
+config:
+  env:
+    DEBUG: ${DEBUG}
+    GRAPI_BACKEND: ${GRAPI_BACKEND}
+    KCCOMMENT_LDAP_1: ${KCCOMMENT_LDAP_1}
+    KCCONF_LDAP_LDAP_BIND_PASSWD: ${KCCONF_LDAP_LDAP_BIND_PASSWD}
+    KCCONF_LDAP_LDAP_BIND_USER: ${KCCONF_LDAP_LDAP_BIND_USER}
+    KCCONF_LDAP_LDAP_SEARCH_BASE: ${KCCONF_LDAP_LDAP_SEARCH_BASE}
+    KCCONF_LDAP_LDAP_URI: ${KCCONF_LDAP_LDAP_URI}
+    KCCONF_SERVER_COREDUMP_ENABLED: ${KCCONF_SERVER_COREDUMP_ENABLED}
+    KCCONF_SERVER_ENABLE_SSO: ${KCCONF_SERVER_ENABLE_SSO}
+    KCCONF_SERVER_HIDE_EVERYONE: ${KCCONF_SERVER_HIDE_EVERYONE}
+    KCCONF_SERVER_KCOIDC_INSECURE_SKIP_VERIFY: ${KCCONF_SERVER_KCOIDC_INSECURE_SKIP_VERIFY}
+    KCCONF_SERVER_KCOIDC_ISSUER_IDENTIFIER: ${KCCONF_SERVER_KCOIDC_ISSUER_IDENTIFIER}
+    KCCONF_SERVER_LOG_LEVEL: ${KCCONF_SERVER_LOG_LEVEL0
+    KCCONF_SERVER_MYSQL_DATABASE: ${KCCONF_SERVER_MYSQL_DATABASE}
+    KCCONF_SERVER_MYSQL_HOST: ${KCCONF_SERVER_MYSQL_HOST}
+    KCCONF_SERVER_MYSQL_PASSWORD: ${KCCONF_SERVER_MYSQL_PASSWORD}
+    KCCONF_SERVER_MYSQL_PORT: ${KCCONF_SERVER_MYSQL_PORT}
+    KCCONF_SERVER_MYSQL_USER: ${KCCONF_SERVER_MYSQL_USER}
+    KCCONF_SERVER_PROXY_HEADER: ${KCCONF_SERVER_PROXY_HEADER}
+    KCCONF_SERVER_SERVER_NAME: ${KCCONF_SERVER_SERVER_NAME}
+    KCCONF_SERVER_SERVER_SSL_CA_FILE: ${KCCONF_SERVER_SERVER_SSL_CA_FILE}
+    KCCONF_SERVER_SERVER_SSL_KEY_FILE: ${KCCONF_SERVER_SERVER_SSL_KEY_FILE}
+    KCCONF_SERVER_SSLKEYS_PATH: ${KCCONF_SERVER_SSLKEYS_PATH}
+    KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS: ${KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS}
+    KCUNCOMMENT_LDAP_1: ${KCUNCOMMENT_LDAP_1}
+    KOPANO_LOCALE: ${KOPANO_LOCALE}
+    KOPANO_USERSCRIPT_LOCALE: ${KOPANO_USERSCRIPT_LOCALE}
+    LANG: ${LANG}
+    SERVICE_TO_START: ${SERVICE_TO_START}
