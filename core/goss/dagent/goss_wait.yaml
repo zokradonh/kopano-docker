@@ -1,0 +1,6 @@
+port:
+  tcp6:2003:
+    listening: true
+process:
+  kopano-dagent:
+    running: true
