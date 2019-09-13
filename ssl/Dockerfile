@@ -8,6 +8,9 @@ ENV CODE_VERSION=1.1.0 \
     PKI_ORGANIZATION="Internal Kopano System" \
     PKI_COUNTRY=DE
 
+ENV CONFIGPATH="/kopano/step/config/ca.json"
+ENV PWDPATH="/kopano/step/secret/password"
+
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano SSL container" \
     org.label-schema.description="Helper Container for carrying out ssl related activities for the Kopano stack." \
@@ -18,6 +21,9 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 RUN mkdir -p /kopano/easypki /kopano/ssl /kopano/ssl/clients
+
+# step WIP
+RUN mkdir -p /kopano/step /kopano/step/secret/
 
 RUN wget https://github.com/smallstep/cli/releases/download/v"$STEP_VERSION"/step_"$STEP_VERSION"_linux_amd64.tar.gz \
     && tar --strip-components=2 -C /usr/local/bin -xzvf step_"$STEP_VERSION"_linux_amd64.tar.gz step_0.12.0/bin/step \

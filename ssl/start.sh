@@ -12,6 +12,12 @@ touch /kopano/ssl/konnectd-identifier-registration.yaml /kopano/ssl/ecparam.pem 
 # chown to the numerical representation of nobody/nogroup
 chown 65534:65534 /kopano/ssl/konnectd-identifier-registration.yaml /kopano/ssl/ecparam.pem /kopano/ssl/meet-kwmserver.pem
 
+# TODO create random password for ca in file
+if [ ! -f $PWDPATH ]; then
+	openssl rand -out $PWDPATH -base64 32
+fi
+
+#step ca init --pki --name="Kopano PKI" --password-file=ca-pass
 
 if [ ! -f /kopano/ssl/ca.pem ]; then
 	# https://github.com/google/easypki
