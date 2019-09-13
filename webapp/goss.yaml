@@ -1,3 +1,28 @@
+file:
+  /run/sessions:
+    exists: true
+    mode: "0755"
+    size: 4096
+    owner: www-data
+    group: www-data
+    filetype: directory
+    contains: []
+  /usr/lib/php/20151012/mapi.so:
+    exists: true
+    mode: "0644"
+    size: 311200
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /var/lib/kopano-webapp/tmp:
+    exists: true
+    mode: "0755"
+    size: 4096
+    owner: www-data
+    group: www-data
+    filetype: directory
+    contains: []
 process:
   kwebd:
     running: true
@@ -6,4 +31,7 @@ process:
 http:
   http://localhost:9080/webapp:
     status: 200
+    allow-insecure: false
+    no-follow-redirects: false
     timeout: 5000
+    body: []

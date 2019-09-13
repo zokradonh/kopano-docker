@@ -1,0 +1,9 @@
+command:
+  kill -SIGUSR2 $(pidof supercronic):
+    exit-status: 0
+    stdout: []
+    stderr: []
+    timeout: 10000
+process:
+  supercronic:
+    running: true

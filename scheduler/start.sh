@@ -34,4 +34,5 @@ for cronvar in ${!CRON_*}; do
 	$croncommand
 done
 
-exec supercronic /etc/crontab
+supercronic -test /etc/crontab
+exec supercronic -debug /etc/crontab
