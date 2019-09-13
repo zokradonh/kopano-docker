@@ -150,7 +150,7 @@ build-scheduler:
 	component=scheduler make build-simple
 
 build-ssl:
-	docker pull alpine:3.9
+	docker pull alpine:3.10
 	component=ssl make build-simple
 
 build-utils:
