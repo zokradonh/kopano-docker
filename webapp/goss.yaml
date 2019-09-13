@@ -29,7 +29,7 @@ process:
   php-fpm7.0:
     running: true
 http:
-  http://localhost:9080/webapp:
+  http://localhost:9080/status:
     status: 200
     allow-insecure: false
     no-follow-redirects: false
