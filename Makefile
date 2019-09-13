@@ -381,6 +381,8 @@ test-goss: ## Test configuration of containers with goss
 	GOSS_FILES_PATH=core/goss/monitor dcgoss run kopano_monitor
 	GOSS_FILES_PATH=core/goss/search dcgoss run kopano_search
 	GOSS_FILES_PATH=core/goss/spooler dcgoss run kopano_spooler
+	GOSS_FILES_PATH=meet dcgoss run kopano_meet
+	GOSS_FILES_PATH=scheduler dcgoss run kopano_scheduler
 	GOSS_FILES_PATH=webapp dcgoss run kopano_webapp
 
 test-commander: ## Test scripts with commander
