@@ -11,7 +11,7 @@ env:
     - DOCKER_COMPOSE_VERSION=1.23.2
     - TRIVY_VERSION=0.1.1
     - GOSS_VERSION=0.3.7
-    - COMMANDER_VERSION=1.2.0
+    - COMMANDER_VERSION=1.2.1
 services:
   - docker
 before_install:
