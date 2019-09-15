@@ -386,6 +386,7 @@ services:
       - KCCONF_MONITOR_LOG_LEVEL=3
       - KCCONF_MONITOR_LOG_TIMESTAMP=0
       - TZ=${TZ}
+      - KCCONF_MONITOR_SERVER_SOCKET=/kopano/sockets/server.sock
     env_file:
       - kopano_monitor.env
     networks:
@@ -412,6 +413,7 @@ services:
       - KCCONF_SEARCH_LOG_TIMESTAMP=0
       - KCCONF_SEARCH_INDEX_PATH=/kopano/data/search/
       - TZ=${TZ}
+      - KCCONF_SEARCH_SERVER_SOCKET=/kopano/sockets/server.sock
     env_file:
       - kopano_search.env
     networks:
