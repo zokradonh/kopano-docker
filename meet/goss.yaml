@@ -2,7 +2,6 @@ file:
   /usr/share/kopano-kweb/www/config/kopano/meet.json:
     exists: true
     mode: "0644"
-    size: 241
     owner: root
     group: root
     filetype: file

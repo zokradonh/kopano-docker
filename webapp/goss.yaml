@@ -10,7 +10,6 @@ file:
   /usr/lib/php/20151012/mapi.so:
     exists: true
     mode: "0644"
-    size: 311200
     owner: root
     group: root
     filetype: file

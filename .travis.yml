@@ -41,8 +41,8 @@ install:
   - echo "docker_repo=$docker_repo" >> .env
   - echo "DOCKERREADME=yes" >> .env # add DOCKERREADME env var so that make publish also updates readme files on docker hub
   - echo "KCCONF_SERVER_SURVEYCLIENT_INTERVAL=0" >> kopano_server.env
-  - echo "KOPANO_SURVEYCLIENT_ENABLED=false" >> kopano_kwmserver.env
   - echo "KOPANO_SURVEYCLIENT_ENABLED=false" >> kopano_konnect.env
+  - echo "KOPANO_SURVEYCLIENT_ENABLED=false" >> kopano_kwmserver.env
   - travis_retry make build-all
 script:
   - make test-ci
