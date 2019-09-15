@@ -17,7 +17,8 @@ if [ ! -f $PWDPATH ]; then
 	openssl rand -out $PWDPATH -base64 32
 fi
 
-#step ca init --pki --name="Kopano PKI" --password-file=ca-pass
+#step ca init --pki --name="Internal Kopano CA" --provisioner "Kopano Docker" --password-file=$PWDPATH
+step ca init --name="Internal Kopano CA" --provisioner "Kopano Docker" --password-file=$PWDPATH
 
 if [ ! -f /kopano/ssl/ca.pem ]; then
 	# https://github.com/google/easypki
