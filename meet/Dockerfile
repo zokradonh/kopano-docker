@@ -57,4 +57,9 @@ ENV KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8"
 ENV LANG=en_US.UTF-8
 
 COPY defaultconfigs/ start-service.sh /kopano/
+COPY goss.yaml /goss/
 CMD [ "/kopano/start-service.sh" ]
+
+HEALTHCHECK --interval=1m --timeout=10s \
+    CMD goss -g /goss/goss.yaml validate --format json_oneline
+
