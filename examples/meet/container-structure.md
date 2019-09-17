@@ -19,12 +19,12 @@
 
 ## kopano_grapi
 
-- groupware backend for the Kopano RestAPI
+- groupware backend of the Kopano RestAPI
 - connects to LDAP to provide a global addressbook to users
 
 ## kopano_kapi
 
-- http endpoint for the Kopano RestAPI
+- http endpoint of the Kopano RestAPI
 - stores recent calls for the user in a key value stores (queried over Rest)
 
 ## kopano_konnect
