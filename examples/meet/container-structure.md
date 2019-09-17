@@ -1,0 +1,41 @@
+# How the containers connect to each other
+
+## web
+
+- external entry point for users accessing Kopano Meet
+    - reverse proxy for kopano_kapi, kopano_konnect, kopano_kwmserver and kopano_meet 
+- can retrieve ssl certificate from Lets Encrypt
+- redirects all requests to /meet
+
+## ldap
+
+- (optional) bundles OpenLDAP service
+- Konnect and Grapi are using it
+
+## kopano_ssl
+
+- helper container to generate ssl certificates for internal usage
+- will create required files and then stop
+
+## kopano_grapi
+
+- groupware backend for the Kopano RestAPI
+- connects to LDAP to provide a global addressbook to users
+
+## kopano_kapi
+
+- http endpoint for the Kopano RestAPI
+- stores recent calls for the user in a key value stores (queried over Rest)
+
+## kopano_konnect
+
+- authentification component (OpenID Connect) for Meet
+- connects to the LDAP backend to verify user logins via bind
+
+## kopano_kwmserver
+
+- WebRTC signalling server
+
+## kopano_meet
+
+- provides the Meet web application/frontend
