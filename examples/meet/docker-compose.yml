@@ -95,7 +95,6 @@ services:
   kopano_konnect:
     image: ${docker_repo:-kopano}/kopano_konnect:${KONNECT_VERSION:-latest}
     restart: unless-stopped
-    command: wrapper.sh
     depends_on:
       - kopano_ssl
       - web
