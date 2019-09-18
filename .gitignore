@@ -3,6 +3,7 @@
 !.travis.yml
 .travis/config.yml
 data/*
+dive.log
 .env
 *.env
 docker-compose.override.yml
