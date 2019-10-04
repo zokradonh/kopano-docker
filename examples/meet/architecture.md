@@ -1,4 +1,4 @@
-# How the containers connect to each other
+# Architecture Overview
 
 ## web
 
@@ -6,6 +6,7 @@
     - reverse proxy for kopano_kapi, kopano_konnect, kopano_kwmserver and kopano_meet 
 - can retrieve ssl certificate from Lets Encrypt
 - redirects all requests to /meet
+- recommended to use as it makes web configuration easy and secure (manual configuration will be tendious and potentially less secure)
 
 ## ldap
 

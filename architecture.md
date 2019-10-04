@@ -1,4 +1,4 @@
-# Architecture Overiew
+# Architecture Overview
 
 Aka "How do the containers connect/relate/interact with each other?"
 
@@ -88,7 +88,7 @@ Aka "How do the containers connect/relate/interact with each other?"
 ## kopano_konnect
 
 - authentification component (OpenID Connect)
-- requires for apps interacting with the RestAPI (e.g. Kopano Meet)
+- required for apps interacting with the Kopano RestAPI (e.g. Kopano Meet)
 
 ## kopano_kwmserver
 
