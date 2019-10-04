@@ -1,11 +1,14 @@
-# How the containers connect to each other
+# Architecture Overiew
+
+Aka "How do the containers connect/relate/interact with each other?"
 
 ## web
 
-- external entry point for users accessing Kopano Meet
+- external entry point for users accessing Kopano
     - reverse proxy for containers exposing a web interface 
-- can retrieve ssl certificate from Lets Encrypt
-- redirects all requests to /webapp
+- can retrieve ssl certificate from Let's Encrypt
+- redirects all requests to /webapp by default
+- recommended to use as it makes web configuration easy and secure (manual configuration will be tendious and potentially less secure)
 
 ## ldap
 
@@ -15,11 +18,10 @@
 ## ldap-admin and password-self-service
 
 - optional containers to manage users in ldap and let users change their password
-- will in the future be moved into their own file https://github.com/zokradonh/kopano-docker/issues/244
 
 ## mail
 
-- mta stack with anti spam and anti virus
+- MTA stack with anti-spam and anti-virus
 - connects against the ldap to verify users
 
 ## db
@@ -69,15 +71,15 @@
 
 ## kopano_gateway
 
-- provides Pop3 and Imap access for users
+- provides Pop3 and IMAP access for users
 
 ## kopano_ical
 
-- provides ical and CalDAV access for users (will be replaced with kdav in the future)
+- provides iCAL and CalDAV access for users (will be replaced with KDav in the future)
 
 ## kopano_monitor
 
-- monitors mailbox usage and sends quota mails
+- monitors mailbox usage and sends quota mails (by directly delivering a mail into the users inbox)
 
 ## kopano_search
 
@@ -85,12 +87,8 @@
 
 ## kopano_konnect
 
-- authentification component (OpenID Connect) for Meet
-
-## kopano_playground
-
-- web interface to explore OpenID flows and the Kopano RestAPI
-- will move into a dedicated file in the future https://github.com/zokradonh/kopano-docker/issues/245
+- authentification component (OpenID Connect)
+- requires for apps interacting with the RestAPI (e.g. Kopano Meet)
 
 ## kopano_kwmserver
 

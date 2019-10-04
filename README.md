@@ -18,6 +18,8 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
   - if you want to modify the ldap content you can access the ldap-admin web frontend by using the `cn=admin,` appending the `LDAP_BASE_DN` env var as the login dn and `LDAP_ADMIN_PASSWORD` as the password
   - lookup kopano documentation on how to manage users using the ldap interface: https://documentation.kopano.io/kopanocore_administrator_manual/user_management.html#user-management-from-openldap
 
+If you want to get an impression how the containers interact/relate with each other have a look at the [architecture](architecture.md) description.
+
 **Note:** There have been reports about the ldap demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image. 
 
 The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
