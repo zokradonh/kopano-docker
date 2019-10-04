@@ -14,6 +14,8 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 - after startup has succeeded you can access the Kopano WebApp by going to `https://kopano.demo/webapp`
 - there are already some users created in the demo ldap. These users all have a password that is identical to the username, e.g. the password for `user1` user `user1`.
 
+If you want to get an impression how the containers interact/relate with each other have a look at the [architecture](architecture.md) description.
+
 **Note:** There have been reports about the ldap demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image. 
 
 The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
