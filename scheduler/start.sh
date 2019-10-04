@@ -25,7 +25,7 @@ dockerize \
 	-timeout 360s
 
 echo "Creating public store"
-docker exec kopano_server kopano-storeadm -h default: -P || true
+docker exec kopano_server kopano-storeadm -h file://kopano/sockets/server.sock -P || true
 
 echo "Running sheduled cron jobs once"
 for cronvar in ${!CRON_*}; do
