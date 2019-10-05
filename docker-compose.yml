@@ -305,6 +305,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - KCCONF_SPOOLER_SERVER_SOCKET=/kopano/sockets/server.sock
       - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_LOG_TIMESTAMP=0
       - KCCONF_SPOOLER_SMTP_SERVER=mail
