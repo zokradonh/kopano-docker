@@ -7,7 +7,7 @@ fqdn_to_dn() {
 }
 
 random_string() {
-	hexdump -n 16 -v -e '/1 "%02X"' /dev/urandom
+	LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c32
 }
 
 LANG_OPTIONS=("de-at" "de-ch" "de-de" "en" "en-gb" "es" "fr" "it" "nl" "pl-pl")
