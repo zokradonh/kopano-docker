@@ -29,7 +29,7 @@ plugin_menu() {
 	[[ "$msg" ]] && echo "$msg"; :
 }
 
-docker_tag_search () {
+docker_tag_search() {
 	image="$1"
 	results=$(reg tags "$image" 2> /dev/null)
 	echo "$results" | xargs -n1 | sort --version-sort -ru | xargs
@@ -152,6 +152,11 @@ if [ ! -e ./.env ]; then
 		LDAP_BIND_DN="cn=readonly,$LDAP_BASE_DN"
 		LDAP_BIND_PW=$(random_string)
 	fi
+
+	# TODO get locale from system
+	value_default_"en_US.UTF-8"
+	read -r -p "Language to be used for new mailoboxes (needs to be available as a locale in the container) [$value_default]: " new_value
+	MAILBOXLANG=${new_value:-$value_default}
 
 	if [ -f /etc/timezone ]; then
 		value_default=$(cat /etc/timezone)
@@ -294,6 +299,7 @@ MYSQL_DATABASE=$MYSQL_DATABASE
 KCCONF_SERVER_SERVER_NAME=Kopano
 
 POSTMASTER_ADDRESS=$POSTMASTER_ADDRESS
+MAILBOXLANG=$MAILBOXLANG
 TZ=$TZ
 
 # Defines how Kopano can be accessed from the outside world
