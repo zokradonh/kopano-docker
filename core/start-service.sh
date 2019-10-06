@@ -42,6 +42,26 @@ fi
 # start regular service
 case "$SERVICE_TO_START" in
 server)
+	# get locales from env
+	sed --regexp-extended --expression='
+
+		1  {
+			i\
+# This file lists locales that you wish to have built. You can find a list\
+# of valid supported locales at /usr/share/i18n/SUPPORTED, and you can add\
+# user defined locales to /usr/local/share/i18n/SUPPORTED. If you change\
+# this file, you need to rerun locale-gen.\
+\
+
+
+			}
+
+		/^(en_US|nl_NL|de_DE)(_[[:upper:]]+)?(\.UTF-8)?(@[^[:space:]]+)?[[:space:]]+UTF-8$/!   s/^/# /
+	' /usr/share/i18n/SUPPORTED >  /etc/locale.gen
+	# make sure that en_US is always there
+	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+	dpkg-reconfigure --frontend=noninteractive locales
+
 	# determine db connection mode (unix vs. network socket)
 	if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
 		DB_CONN="file://$KCCONF_SERVER_MYSQL_SOCKET"
