@@ -397,6 +397,7 @@ test-commander: ## Test scripts with commander
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=core/commander/spooler dccommander run kopano_spooler
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=webapp dccommander run kopano_webapp
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=zpush dccommander run kopano_zpush
+	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=scheduler dccommander run kopano_scheduler
 	# this test will fail if you are not on a whitelisted ip
 	commander test tests/commander-supported.yaml || true
 

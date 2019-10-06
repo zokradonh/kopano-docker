@@ -1,0 +1,27 @@
+tests:
+  #sync user list:
+  #  command: docker exec kopano_server kopano-admin --sync
+  #  exit-code: 0
+  #  stdout:  Users and groups synchronized.
+  check storeadm help:
+    command: docker exec kopano_server kopano-storeadm -?
+    exit-code: 0
+  # This is probably better done with a small python script to list folders of a user
+  #check mailbox language:
+  #  command: docker exec kopano_server kopano-storeadm -M
+  #  exit-code: 0
+  #  stdout:
+  #    contains:
+  #      - Inbox
+  rename mailbox folders of user1:
+    #command: docker exec kopano_server kopano-storeadm -D -n user1 && docker exec kopano_server kopano-storeadm -C -l de_DE -n user1
+    command: docker exec kopano_server env KCCONF_ADMIN_DEFAULT_STORE_LOCALE=de_DE.UTF-8 /usr/bin/python3 /kopano/server.py && docker exec kopano_server kopano-storeadm -Y -n user1
+    exit-code: 0
+    stderr:
+      contains:
+        - The -l option was not specified; "de_DE.UTF-8" will be used as language
+        - Posteingang
+        - Entwürfe
+config:
+  env:
+    PATH: ${PATH}
