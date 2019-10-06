@@ -61,8 +61,6 @@ RUN \
     cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ && \
     gzip -d -f /etc/kopano/*.gz
 
-ENV KOPANO_LOCALE="de_DE.UTF-8"
-ENV KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8"
 ENV LANG=en_US.UTF-8
 
 ENV SERVICE_TO_START=server
