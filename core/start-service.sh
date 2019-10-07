@@ -43,6 +43,7 @@ fi
 case "$SERVICE_TO_START" in
 server)
 	# get locales from env
+	# shellcheck disable=SC1004
 	sed --regexp-extended --expression='
 
 		1  {
