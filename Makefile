@@ -113,7 +113,7 @@ endif
 		-t $(docker_repo)/kopano_$(component):builder $(component)/
 
 build-base: ## Build new base image.
-	docker pull debian:stretch
+	docker pull debian:buster
 	component=base make build
 
 build-core:

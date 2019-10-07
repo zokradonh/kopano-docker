@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:buster
 
 ARG VCS_REF
 ARG ADDITIONAL_KOPANO_PACKAGES=""
