@@ -70,6 +70,7 @@ endif
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS=$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component) $(component)/
+	docker image inspect $(docker_repo)/kopano_$(component) --format='{{.Size}}'
 	echo "The image is $(shell docker image inspect $(docker_repo)/kopano_$(component) --format='{{.Size}}') bytes"
 
 .PHONY: build-simple
@@ -79,6 +80,7 @@ build-simple: ## Helper target to build a simplified image (no Kopano repo integ
 		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=$(docker_repo) \
 		-t $(docker_repo)/kopano_$(component) $(component)/
+	docker image inspect $(docker_repo)/kopano_$(component) --format='{{.Size}}'
 	echo "The image is $(shell docker image inspect $(docker_repo)/kopano_$(component) --format='{{.Size}}') bytes"
 
 
