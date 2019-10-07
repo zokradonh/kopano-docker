@@ -154,7 +154,7 @@ if [ ! -e ./.env ]; then
 	fi
 
 	# TODO get locale from system
-	value_default_"en_US.UTF-8"
+	value_default="en_US.UTF-8"
 	read -r -p "Language to be used for new mailoboxes (needs to be available as a locale in the container) [$value_default]: " new_value
 	MAILBOXLANG=${new_value:-$value_default}
 
