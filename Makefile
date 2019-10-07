@@ -1,8 +1,8 @@
 SHELL := /bin/bash # Use bash syntax
 
+docker_repo := zokradonh
 # if not run in travis, get docker_login and _pwd from file
 ifndef TRAVIS
-	docker_repo := zokradonh
 	docker_login := $(shell cat ~/.docker-account-user)
 	docker_pwd := $(shell cat ~/.docker-account-pwd)
 endif
@@ -70,7 +70,6 @@ endif
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS=$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component) $(component)/
-	@echo "The image is $(shell docker image inspect $(docker_repo)/kopano_$(component) --format='{{.Size}}') bytes"
 
 .PHONY: build-simple
 build-simple: component ?= ssl
@@ -79,8 +78,6 @@ build-simple: ## Helper target to build a simplified image (no Kopano repo integ
 		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=$(docker_repo) \
 		-t $(docker_repo)/kopano_$(component) $(component)/
-	@echo "The image is $(shell docker image inspect $(docker_repo)/kopano_$(component) --format='{{.Size}}') bytes"
-
 
 .PHONY: build-builder
 build-builder: component ?= kdav
