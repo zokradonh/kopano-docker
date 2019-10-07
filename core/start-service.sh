@@ -56,7 +56,7 @@ server)
 
 			}
 
-		/^(en_US|nl_NL|de_DE)(_[[:upper:]]+)?(\.UTF-8)?(@[^[:space:]]+)?[[:space:]]+UTF-8$/!   s/^/# /
+		/^('"$MAILBOXLANG"')(_[[:upper:]]+)?(\.UTF-8)?(@[^[:space:]]+)?[[:space:]]+UTF-8$/!   s/^/# /
 	' /usr/share/i18n/SUPPORTED >  /etc/locale.gen
 	# make sure that en_US is always there
 	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
