@@ -1,8 +1,8 @@
 SHELL := /bin/bash # Use bash syntax
 
+docker_repo := zokradonh
 # if not run in travis, get docker_login and _pwd from file
 ifndef TRAVIS
-	docker_repo := zokradonh
 	docker_login := $(shell cat ~/.docker-account-user)
 	docker_pwd := $(shell cat ~/.docker-account-pwd)
 endif
