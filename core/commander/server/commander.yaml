@@ -2,6 +2,24 @@ tests:
   start-service script:
     command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
     exit-code: 0
+  start-service script (installing new package):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
+    exit-code: 0
+    stdout:
+      contains:
+        - "Setting up nano"
+    config:
+      env:
+        ADDITIONAL_KOPANO_PACKAGES: "nano"
+  start-service script (installing existing package):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
+    exit-code: 0
+    stdout:
+      contains:
+        - "INFO: kopano-server is already installed"
+    config:
+      env:
+        ADDITIONAL_KOPANO_PACKAGES: "kopano-server"
   generate configuration for kopano-server:
     command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/server.cfg
     exit-code: 0
@@ -64,3 +82,4 @@ config:
     KOPANO_USERSCRIPT_LOCALE: ${KOPANO_USERSCRIPT_LOCALE}
     LANG: ${LANG}
     SERVICE_TO_START: ${SERVICE_TO_START}
+    PATH: ${PATH}
