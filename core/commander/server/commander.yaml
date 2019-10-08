@@ -1,4 +1,7 @@
 tests:
+  startup test:
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
+    exit-code: 0
   test run of config update script for core:
     command: /usr/bin/python3 /kopano/server.py
     exit-code: 0
