@@ -386,6 +386,7 @@ test-commander: ## Test scripts with commander
 	commander test tests/commander.yaml
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=core/commander/server dccommander run kopano_server
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=core/commander/spooler dccommander run kopano_spooler
+	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=webapp dccommander run kopano_webapp
 
 test-security: ## Scan containers with Trivy for known security risks (not part of CI workflow for now).
 	cat $(TAG_FILE) | xargs -I % sh -c 'trivy --exit-code 0 --severity HIGH --quiet --auto-refresh %'
