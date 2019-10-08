@@ -2,6 +2,9 @@ tests:
   start-service script:
     command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
     exit-code: 0
+    stdout:
+      not-contains:
+        - "Reading package lists..."
   start-service script (installing new package):
     command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
     exit-code: 0
