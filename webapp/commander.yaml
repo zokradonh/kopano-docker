@@ -23,7 +23,16 @@ tests:
     config:
       env:
         ADDITIONAL_KOPANO_PACKAGES: "kopano-webapp"
-  start-service script (installing webapp mdm plugin):
+  start-service script (webapp configuration):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/kopano/webapp/config.php
+    exit-code: 0
+    stdout:
+      contains:
+        - "define('OIDC_CLIENT_ID', 'webapp');"
+    config:
+      env:
+        KCCONF_WEBAPP_OIDC_CLIENT_ID: "webapp"
+  start-service script (installing & configuring webapp mdm plugin):
     command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/kopano/webapp/config-mdm.php
     exit-code: 0
     stdout:
