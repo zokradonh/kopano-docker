@@ -1,0 +1,52 @@
+tests:
+  start-service script:
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh"
+    exit-code: 0
+    stdout:
+      not-contains:
+        - "Reading package lists..."
+  start-service script (installing new package):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh"
+    exit-code: 0
+    stdout:
+      contains:
+        - "Setting up nano"
+    config:
+      env:
+        ADDITIONAL_KOPANO_PACKAGES: "nano"
+  start-service script (installing existing package):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh"
+    exit-code: 0
+    stdout:
+      contains:
+        - "INFO: kopano-webapp is already installed"
+    config:
+      env:
+        ADDITIONAL_KOPANO_PACKAGES: "kopano-webapp"
+  start-service script (webapp configuration):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/kopano/webapp/config.php
+    exit-code: 0
+    stdout:
+      contains:
+        - "define('OIDC_CLIENT_ID', 'webapp');"
+    config:
+      env:
+        KCCONF_WEBAPP_OIDC_CLIENT_ID: "webapp"
+  start-service script (installing & configuring webapp mdm plugin):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/kopano/webapp/config-mdm.php
+    exit-code: 0
+    stdout:
+      contains:
+        - "define('PLUGIN_MDM_USER_DEFAULT_ENABLE_MDM', true);"
+    config:
+      env:
+        ADDITIONAL_KOPANO_WEBAPP_PLUGINS: "kopano-webapp-plugin-mdm"
+        KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_USER_DEFAULT_ENABLE_MDM: "true"
+config:
+  env:
+    DEBUG: ${DEBUG}
+    KCCONF_WEBAPP_OIDC_ISS: ${KCCONF_WEBAPP_OIDC_ISS}
+    KCCONF_WEBAPP_OIDC_CLIENT_ID: ${KCCONF_WEBAPP_OIDC_CLIENT_ID} 
+    LANG: ${LANG}
+    PATH: ${PATH}
+    TZ: ${TZ}

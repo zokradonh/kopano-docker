@@ -1,22 +1,55 @@
 tests:
-  test run of config update script for core:
-    command: /usr/bin/python3 /kopano/server.py
+  start-service script:
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
     exit-code: 0
-  config update kopano-server:
-    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/server.cfg /etc/kopano/ldap.cfg
+    stdout:
+      not-contains:
+        - "Reading package lists..."
+  start-service script (installing new package):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
+    exit-code: 0
+    stdout:
+      contains:
+        - "Setting up nano"
+    config:
+      env:
+        ADDITIONAL_KOPANO_PACKAGES: "nano"
+  start-service script (installing existing package):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
+    exit-code: 0
+    stdout:
+      contains:
+        - "INFO: kopano-server is already installed"
+    config:
+      env:
+        ADDITIONAL_KOPANO_PACKAGES: "kopano-server"
+  generate configuration for kopano-server:
+    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/server.cfg
     exit-code: 0
     stdout:
       contains:
         - server_listen_tls = *:237
+        - server_ssl_key_file = /kopano/ssl/kopano_server.pem
+      not-contains:
+        - #server_listen_tls = *:237
+  generate ldap configuration openLDAP (default):
+    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/ldap.cfg
+    exit-code: 0
+    stdout:
+      contains:
         - "!include /usr/share/kopano/ldap.openldap.cfg"
         - "#!include /usr/share/kopano/ldap.active-directory.cfg"
-  config update ldap ads:
+      not-contains:
+        - "#!include /usr/share/kopano/ldap.openldap.cfg"
+  generate ldap configuration for ADS:
     command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/ldap.cfg
     exit-code: 0
     stdout:
       contains:
         - "#!include /usr/share/kopano/ldap.openldap.cfg"
         - "!include /usr/share/kopano/ldap.active-directory.cfg"
+      not-contains:
+        - "#!include /usr/share/kopano/ldap.active-directory.cfg"
     config:
       env:
         KCCOMMENT_LDAP_1: "!include /usr/share/kopano/ldap.openldap.cfg"
@@ -48,7 +81,6 @@ config:
     KCCONF_SERVER_SSLKEYS_PATH: ${KCCONF_SERVER_SSLKEYS_PATH}
     KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS: ${KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS}
     KCUNCOMMENT_LDAP_1: ${KCUNCOMMENT_LDAP_1}
-    KOPANO_LOCALE: ${KOPANO_LOCALE}
-    KOPANO_USERSCRIPT_LOCALE: ${KOPANO_USERSCRIPT_LOCALE}
     LANG: ${LANG}
     SERVICE_TO_START: ${SERVICE_TO_START}
+    PATH: ${PATH}
