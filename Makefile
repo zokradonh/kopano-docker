@@ -12,7 +12,7 @@ core_download_version := $(shell ./version.sh core)
 meet_download_version := $(shell ./version.sh meet)
 webapp_download_version := $(shell ./version.sh webapp)
 zpush_download_version := $(shell ./version.sh zpush)
-vcf_ref := $(shell git rev-parse --short HEAD)
+vcs_ref := $(shell git rev-parse --short HEAD)
 
 KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
 KOPANO_MEET_REPOSITORY_URL := file:/kopano/repo/meet
@@ -53,7 +53,7 @@ ifdef TRAVIS
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
 	docker build \
-		--build-arg VCS_REF=$(vcf_ref) \
+		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
@@ -69,14 +69,16 @@ endif
 		--build-arg ADDITIONAL_KOPANO_PACKAGES=$(ADDITIONAL_KOPANO_PACKAGES) \
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS=$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
+		--cache-from $(docker_repo)/kopano_$(component):latest \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-simple
 build-simple: component ?= ssl
 build-simple: ## Helper target to build a simplified image (no Kopano repo integration).
 	docker build \
-		--build-arg VCS_REF=$(vcf_ref) \
+		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=$(docker_repo) \
+		--cache-from $(docker_repo)/kopano_$(component):latest
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-builder
