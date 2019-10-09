@@ -13,15 +13,22 @@ tests:
   #  stdout:
   #    contains:
   #      - Inbox
-  rename mailbox folders of user1:
+  rename mailbox folders of user1: # this needs a running kopano-server can can therefore not be executed in that container directly
     #command: docker exec kopano_server kopano-storeadm -D -n user1 && docker exec kopano_server kopano-storeadm -C -l de_DE -n user1
-    command: docker exec kopano_server env KCCONF_ADMIN_DEFAULT_STORE_LOCALE=de_DE.UTF-8 /usr/bin/python3 /kopano/server.py && docker exec kopano_server kopano-storeadm -Y -n user1
+    command: docker exec kopano_server env KCCONF_ADMIN_DEFAULT_STORE_LOCALE=de_DE.UTF-8 /usr/bin/python3 /kopano/server.py && docker exec kopano_server kopano-storeadm -Y -n user23
     exit-code: 0
     stderr:
       contains:
         - The -l option was not specified; "de_DE.UTF-8" will be used as language
         - Posteingang
         - Entwürfe
+  check default mailbox language:
+    command: docker exec kopano_server /usr/local/bin/show-folders.py --user user10
+    exit-code: 1
+    stdout:
+      contains:
+        - "Inbox"
+        - "Drafts"
 config:
   env:
     PATH: ${PATH}
