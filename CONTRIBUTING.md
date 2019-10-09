@@ -5,5 +5,6 @@ email, or any other method with the owners of this repository before making a ch
 
 Please see https://github.com/zokradonh/kopano-docker/blob/master/README.md#when-building-my-own-containers-how-can-i-make-sure-my-build-works-as-expected for testing remakrs
 
-Speeding up testing rebuilds:
-- `make vcs_ref=invalid build-web`
+To speed up testing rebuilds you can override the git hash that is passed as a build argument.
+
+Example: `make vcs_ref=invalid build-web` or `make vcs_ref=invalid build-all`
