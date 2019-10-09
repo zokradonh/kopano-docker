@@ -47,3 +47,8 @@ See https://documentation.kopano.io/kopanocore_administrator_manual/configure_kc
 - kopano-server is configured to listen on the ports 236 (plain) and 237 (https)
 - kopano-ical is configured to listen on the port 8080, but the web container is also configured to proxy access to http(s)://FQDN/caldav to kopano-ical
 - kopano-gateway is configured to listen on IMAP traffic on port 143. Pop3 is deactivated by default but whould be listening on port 110. Pop3s and IMAPs are currently not configured. (see https://github.com/zokradonh/kopano-docker/issues/16 for more details).
+
+# Reminder for reload debugging
+
+docker top kopano_server
+docker-compose kill -s SIGHUP kopano_serve

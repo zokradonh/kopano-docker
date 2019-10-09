@@ -11,6 +11,9 @@ if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	exit 1
 fi
 
+# start reload helper in the background
+/usr/local/bin/reload-service.sh &
+
 ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
@@ -38,6 +41,13 @@ if [ $# -gt 0 ]; then
 	exec "$@"
 	exit
 fi
+
+trap "echo TERM" TERM
+trap "echo HUP" HUP
+trap "echo INT" INT
+trap "echo QUIT" QUIT
+trap "echo USR1; sleep 2; exit 0" USR1
+trap "echo USR2" USR2
 
 # start regular service
 case "$SERVICE_TO_START" in
