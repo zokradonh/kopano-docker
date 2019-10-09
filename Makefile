@@ -78,7 +78,7 @@ build-simple: ## Helper target to build a simplified image (no Kopano repo integ
 	docker build \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=$(docker_repo) \
-		--cache-from $(docker_repo)/kopano_$(component):latest
+		--cache-from $(docker_repo)/kopano_$(component):latest \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-builder
