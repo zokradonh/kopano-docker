@@ -59,8 +59,9 @@ server)
 
 		/^('"$KCCONF_ADMIN_DEFAULT_STORE_LOCALE"')(_[[:upper:]]+)?(\.UTF-8)?(@[^[:space:]]+)?[[:space:]]+UTF-8$/!   s/^/# /
 	' /usr/share/i18n/SUPPORTED >  /etc/locale.gen
-	# make sure that en_US is always there
+	# make sure that en_US and de_DE are always there
 	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+	sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
 	dpkg-reconfigure --frontend=noninteractive locales
 
 	# determine db connection mode (unix vs. network socket)
