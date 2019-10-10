@@ -23,7 +23,7 @@ tests:
   #      - Posteingang
   #      - Entwürfe
   check default mailbox language: # this needs a running kopano-server can can therefore not be executed in that container directly
-    command: docker exec kopano_server /usr/local/bin/show-folders.py --user user10
+    command: "docker exec kopano_server /usr/local/bin/show-folders.py --user user10"
     exit-code: 0
     stdout:
       contains:
