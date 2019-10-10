@@ -50,8 +50,8 @@ def main():
 
     if not  options.user and not options.public:
         print('Please use\n' \
-              '%s --user <username>  or\n' \
-              '%s --public' % (sys.argv[0], sys.argv[0]))
+            '%s --user <username>  or\n' \
+            '%s --public' % (sys.argv[0], sys.argv[0]))
         sys.exit(1)
     if options.user:
         user = kopano.server(options).user(options.user)
