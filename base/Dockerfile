@@ -40,6 +40,7 @@ RUN apt-get update && \
         curl \
         dumb-init \
         gpg \
+        gpg-agent \
         jq \
         locales \
         moreutils \

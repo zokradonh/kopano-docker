@@ -9,7 +9,7 @@ ARG RELEASE_KEY_DOWNLOAD=0
 ARG DEBIAN_FRONTEND=noninteractive
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_ZPUSH_REPOSITORY_URL="http://repo.z-hub.io/z-push:/final/Debian_9.0/"
+ARG KOPANO_ZPUSH_REPOSITORY_URL="http://repo.z-hub.io/z-push:/final/Debian_10/"
 ARG KOPANO_ZPUSH_VERSION=newest
 
 ENV \
@@ -33,13 +33,8 @@ LABEL maintainer=az@zok.xyz \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# install Kopano WebApp and refresh ca-certificates
+# install Z-Push
 RUN \
-    # community download and package as apt source repository
-    . /kopano/helper/create-kopano-repo.sh && \
-    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "core"; \
-    fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # prepare z-push installation
     echo "deb ${KOPANO_ZPUSH_REPOSITORY_URL} /" > /etc/apt/sources.list.d/zpush.list && \
@@ -50,7 +45,7 @@ RUN \
     # TODO set IGNORE_FIXSTATES_ON_UPGRADE https://jira.z-hub.io/browse/ZP-1164
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
-        libapache2-mod-php7.0 \
+        libapache2-mod-php7.3 \
         crudini \
         z-push-kopano \
         z-push-config-apache \
@@ -81,10 +76,10 @@ RUN \
     echo "Listen 80" > /etc/apache2/ports.conf && \
     # configure mod_php
     a2enmod rewrite && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP upload_max_filesize 500M && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP post_max_size 500M && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP max_input_vars 1800 && \
-    crudini --set /etc/php/7.0/apache2/php.ini Session session.save_path /run/sessions && \
+    crudini --set /etc/php/7.3/apache2/php.ini PHP upload_max_filesize 500M && \
+    crudini --set /etc/php/7.3/apache2/php.ini PHP post_max_size 500M && \
+    crudini --set /etc/php/7.3/apache2/php.ini PHP max_input_vars 1800 && \
+    crudini --set /etc/php/7.3/apache2/php.ini Session session.save_path /run/sessions && \
     # configure z-push
     mkdir -p /var/lib/z-push /var/log/z-push && \
     chown www-data:www-data /var/lib/z-push /var/log/z-push
