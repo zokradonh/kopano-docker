@@ -32,17 +32,10 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
     org.label-schema.schema-version="1.0"
 
-# install Kopano kDAV and refresh ca-certificates
+# install Kopano kDAV
 RUN \
-    # community download and package as apt source repository
-    . /kopano/helper/create-kopano-repo.sh && \
-    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "core"; \
-    fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     set -x && \
-    #apt-get update && apt-get -s -o Debug::pkgProblemResolver=yes install php7-mapi && \
-    apt-get update && apt-get -s -o Debug::pkgProblemResolver=yes install libkcutil0 && \
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
         libapache2-mod-php7.3 \
@@ -53,8 +46,6 @@ RUN \
         php-zip \
         sqlite \
         php-sqlite3 \
-        ca-certificates \
-        git \
         unzip \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists/*

@@ -31,15 +31,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # hadolint ignore=SC2129
 RUN \
-    # community download and package as apt source repository
-    . /kopano/helper/create-kopano-repo.sh && \
-    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "core"; \
-    fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # install
     set -x && \
-    #apt-get update && apt-get -s -o Debug::pkgProblemResolver=yes install libical2 \
     apt-get update && apt-get install -y --no-install-recommends \
         python3-kopano \
         ${ADDITIONAL_KOPANO_PACKAGES} \

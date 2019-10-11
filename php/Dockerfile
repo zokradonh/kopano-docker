@@ -32,11 +32,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # add install common php dependencies
 # hadolint ignore=SC2129
 RUN \
-    # community download and package as apt source repository
-    . /kopano/helper/create-kopano-repo.sh && \
-    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "core" "Debian_10"; \
-    fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # install
     set -x && \
