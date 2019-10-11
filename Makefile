@@ -176,9 +176,9 @@ tag-container: component ?= base
 tag-container: ## Helper target to tag a given image. Defaults to the base image.
 	@echo 'create tag $($(component)_version)'
 	docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):${$(component)_version}
-	version=$($(component)_version); while [[ $$version == *.* ]]; do \
+	@version=$($(component)_version); while [[ $$version == *.* ]]; do \
 		version=$${version%.*} ; \
-		echo docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):$$version ; \
+		docker tag $(docker_repo)/kopano_$(component) $(docker_repo)/kopano_$(component):$$version ; \
 	done
 	@echo $(docker_repo)/kopano_$(component):${$(component)_version} >> $(TAG_FILE)
 	@echo 'create tag latest'
@@ -270,6 +270,10 @@ publish-container: component ?= base
 publish-container: ## Helper target to push a given image to a registry. Defaults to the base image.
 	@echo 'publish latest to $(docker_repo)/kopano_$(component)'
 	docker push $(docker_repo)/kopano_$(component):${$(component)_version}
+	@version=$($(component)_version); while [[ $$version == *.* ]]; do \
+		version=$${version%.*} ; \
+		docker push $(docker_repo)/kopano_$(component):$$version ; \
+	done
 	docker push $(docker_repo)/kopano_$(component):latest
 ifdef DOCKERREADME
 	.travis/docker-hub-helper.sh $(component)
