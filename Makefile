@@ -144,8 +144,8 @@ build-playground:
 	component=playground make build-builder
 	component=playground make build-simple
 
-build-python:
-	component=python make build
+#build-python:
+#	component=python make build
 
 build-kdav:
 	docker pull composer:1.9

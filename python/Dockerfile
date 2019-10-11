@@ -39,6 +39,7 @@ RUN \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # install
     set -x && \
+    #apt-get update && apt-get -s -o Debug::pkgProblemResolver=yes install libical2 \
     apt-get update && apt-get install -y --no-install-recommends \
         python3-kopano \
         ${ADDITIONAL_KOPANO_PACKAGES} \
