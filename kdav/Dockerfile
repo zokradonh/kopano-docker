@@ -41,9 +41,11 @@ RUN \
     fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     set -x && \
+    #apt-get update && apt-get -s -o Debug::pkgProblemResolver=yes install php7-mapi && \
+    apt-get update && apt-get -s -o Debug::pkgProblemResolver=yes install libkcutil0 && \
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
-        libapache2-mod-php7.0 \
+        libapache2-mod-php7.3 \
         crudini \
         php7-mapi \
         php-xml \
@@ -70,10 +72,10 @@ RUN \
     echo "Listen 80" > /etc/apache2/ports.conf && \
     # configure mod_php
     a2enmod rewrite && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP upload_max_filesize 500M && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP post_max_size 500M && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP max_input_vars 1800 && \
-    crudini --set /etc/php/7.0/apache2/php.ini Session session.save_path /run/sessions && \
+    crudini --set /etc/php/7.3/apache2/php.ini PHP upload_max_filesize 500M && \
+    crudini --set /etc/php/7.3/apache2/php.ini PHP post_max_size 500M && \
+    crudini --set /etc/php/7.3/apache2/php.ini PHP max_input_vars 1800 && \
+    crudini --set /etc/php/7.3/apache2/php.ini Session session.save_path /run/sessions && \
     mkdir -p /var/lib/kopano/kdav && \
     chown www-data:www-data /var/lib/kopano/kdav && \
     mkdir -p /var/log/kdav && \
