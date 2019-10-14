@@ -18,6 +18,8 @@ services:
       - SETUID
     volumes:
       - web:/.kweb
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     networks:
       web-net:
         aliases:
@@ -175,6 +177,8 @@ services:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
 
   kopano_webapp:
     image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
@@ -228,6 +232,8 @@ services:
     volumes:
       - kopanosocket/:/run/kopano
       - kopanograpi/:/var/lib/kopano-grapi
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     environment:
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
@@ -249,6 +255,8 @@ services:
       - kopanodata/:/kopano/data
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     environment:
       - SERVICE_TO_START=kapi
       - TZ=${TZ}
@@ -286,6 +294,8 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     environment:
       - SERVICE_TO_START=dagent
       - TZ=${TZ}
@@ -307,6 +317,8 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     environment:
       - SERVICE_TO_START=spooler
       - TZ=${TZ}
@@ -326,6 +338,8 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     environment:
       - SERVICE_TO_START=gateway
       - TZ=${TZ}
@@ -344,6 +358,8 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     environment:
       - SERVICE_TO_START=ical
       - TZ=${TZ}
@@ -362,6 +378,8 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     environment:
       - SERVICE_TO_START=monitor
       - TZ=${TZ}
@@ -380,6 +398,8 @@ services:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
       - kopanodata/:/kopano/data
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     environment:
       - SERVICE_TO_START=search
       - TZ=${TZ}
@@ -398,6 +418,8 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     environment:
       - FQDN=${FQDN}
       - ecparam=/kopano/ssl/ecparam.pem
@@ -430,6 +452,8 @@ services:
       - kopano_kwmserver.env
     volumes:
       - kopanossl/:/kopano/ssl
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
 
