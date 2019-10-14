@@ -1,4 +1,8 @@
 #!/bin/bash
+
+DEBUG=${DEBUG:-""}
+tmpfile=${tmpfile:-""}
+
 if ! command -v jq > /dev/null; then
 	echo "Please install jq in order to run this build script."
 	exit 1
@@ -15,6 +19,8 @@ source base/create-kopano-repo.sh
 
 component=${1:-core}
 distribution=${2:-Debian_9.0}
+channel=${3:-community}
+branch=${4:-""}
 
 if [ -e ./.env ]; then
 	# this is a kind of ugly hack to be able to source the env file
@@ -62,7 +68,7 @@ kdav)
 esac
 
 # query community server by h5ai API
-filename=$(h5ai_query "$component" "$distribution")
+filename=$(h5ai_query "$component" "$distribution" "$channel" "$branch")
 
 currentVersion=$(version_from_filename "$filename")
 

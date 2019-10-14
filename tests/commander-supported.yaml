@@ -1,0 +1,37 @@
+tests:
+  ./version.sh core Debian_9.0 supported final/tarballs/:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - core-
+        - Debian
+        - amd64
+        - tar.gz
+        - tarballs
+  ./version.sh core Debian_9.0 supported pre-final/tarballs/:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - core-
+        - Debian
+        - amd64
+        - tar.gz
+        - tarballs
+  ./version.sh core Debian_9.0 supported master/tarballs/:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - core-
+        - Debian
+        - amd64
+        - tar.gz
+        - tarballs
+  ./version.sh webapp Debian_9.0 supported final/tarballs/:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - webapp-
+        - Debian
+        - amd64
+        - tar.gz
+        - tarballs
