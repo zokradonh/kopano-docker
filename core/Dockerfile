@@ -26,8 +26,6 @@ ENV \
     KCCONF_GRAPI_LDAP_BINDDN="" \
     KCCONF_GRAPI_LDAP_BINDPW_FILE=""
 
-ENV DEBUG=true
-
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano core container" \
     org.label-schema.description="Container for running applications out of Kopano Groupware Core" \
