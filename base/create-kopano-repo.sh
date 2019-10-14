@@ -6,7 +6,7 @@ set -eu
 function urldecode { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 
 function version_from_filename {
-	echo $(basename "$1") | awk -F"-" '{print $2}'
+	basename "$1" | awk -F"-" '{print $2}'
 }
 
 function h5ai_query {
