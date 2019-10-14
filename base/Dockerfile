@@ -79,9 +79,12 @@ COPY kcconf.py /kopano/
 SHELL [ "/bin/bash", "-c"]
 
 ONBUILD ARG DOWNLOAD_COMMUNITY_PACKAGES=1
+ONBUILD ARG DOWNLOAD_DISTRIBUTION="Debian_10"
+ONBUILD ARG DOWNLOAD_CHANNEL="community"
+ONBUILD ARG DOWNLOAD_BRANCH=""
 ONBUILD RUN \
     # community download and package as apt source repository
     . /kopano/helper/create-kopano-repo.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "core" "Debian_10"; \
-    fi;
+        dl_and_package_community "core" "$DOWNLOAD_DISTRIBUTION" "$DOWNLOAD_CHANNEL" "$DOWNLOAD_BRANCH"; \
+    fi
