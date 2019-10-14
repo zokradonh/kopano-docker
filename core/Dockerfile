@@ -23,6 +23,8 @@ ENV \
     KCCONF_GRAPI_LDAP_BINDDN="" \
     KCCONF_GRAPI_LDAP_BINDPW_FILE=""
 
+ENV DEBUG=true
+
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano core container" \
     org.label-schema.description="Container for running applications out of Kopano Groupware Core" \
@@ -39,7 +41,8 @@ RUN \
     # community download and package as apt source repository
     . /kopano/helper/create-kopano-repo.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "core"; \
+        #dl_and_package_community "core" "Debian_9.0" "supported" "final/tarballs/"; \
+        dl_and_package_community "core" "Debian_9.0"; \
     fi; \
     # apt key has already been installed in base
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \

@@ -13,7 +13,7 @@ function h5ai_query {
 	component=${1:-core}
 	distribution=${2:-Debian_9.0}
 	channel=${3:-community} # could either be community, supported or limited
-	branch=${4:-""} # could either be empty, "master/tarballs", "pre-final/tarballs" or "final/tarballs"
+	branch=${4:-""} # could either be empty, "master/tarballs/", "pre-final/tarballs/" or "final/tarballs/"
 
 	filename=$(curl -s -XPOST "https://download.kopano.io/$channel/?action=get&items\[href\]=/$channel/$component:/$branch&items\[what\]=1" | \
 			jq -r '.items[].href' | \
@@ -39,17 +39,17 @@ function dl_and_package_community {
 	filename=$(h5ai_query "$component" "$distribution" "$channel" "$branch")
 
 	# download & extract packages
-	curl -s -S -L -o "$filename" https://download.kopano.io/"$channel"/"$component":/"${filename}"
-	tar xf "$filename"
+	curl -s -S -L -o $(basename "$filename") https://download.kopano.io/"$channel"/"$component":/"${filename}"
+	tar xf $(basename "$filename")
 
 	# save buildversion
 	currentVersion=$(version_from_filename "$filename")
 	echo "$component-$currentVersion" >> /kopano/buildversion
 
 	# save disk space
-	rm "$filename"
-
-	mv "${filename%.tar.gz}" "$component"
+	rm $(basename "$filename")
+	ls
+	mv $(basename "$filename") "$component"
 
 	# prepare directory to be apt source
 	cd "$component"
