@@ -13,6 +13,9 @@ ARG KOPANO_CORE_VERSION=newest
 ENV \
     ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES \
     DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES \
+    DOWNLOAD_DISTRIBUTION="Debian_9.0" \
+    DOWNLOAD_CHANNEL="community" \
+    DOWNLOAD_BRANCH="" \
     KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
     KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
@@ -41,8 +44,7 @@ RUN \
     # community download and package as apt source repository
     . /kopano/helper/create-kopano-repo.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        #dl_and_package_community "core" "Debian_9.0" "supported" "final/tarballs/"; \
-        dl_and_package_community "core" "Debian_9.0"; \
+        dl_and_package_community "core" "$DOWNLOAD_DISTRIBUTION" "$DOWNLOAD_CHANNEL" "$DOWNLOAD_BRANCH"; \
     fi; \
     # apt key has already been installed in base
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
