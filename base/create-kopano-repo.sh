@@ -37,19 +37,20 @@ function dl_and_package_community {
 
 	# query community server by h5ai API
 	filename=$(h5ai_query "$component" "$distribution" "$channel" "$branch")
+	filename2=$(basename "$filename")
 
 	# download & extract packages
-	curl -s -S -L -o $(basename "$filename") https://download.kopano.io/"$channel"/"$component":/"${filename}"
-	tar xf $(basename "$filename")
+	curl -s -S -L -o "$filename2" https://download.kopano.io/"$channel"/"$component":/"${filename}"
+	tar xf "$filename2"
 
 	# save buildversion
 	currentVersion=$(version_from_filename "$filename")
 	echo "$component-$currentVersion" >> /kopano/buildversion
 
 	# save disk space
-	rm $(basename "$filename")
-	ls
-	mv $(basename "$filename") "$component"
+	rm "$filename2"
+
+	mv "${filename2%.tar.gz}" "$component"
 
 	# prepare directory to be apt source
 	cd "$component"
