@@ -164,6 +164,7 @@ services:
       - KCCONF_SERVER_ENABLE_SSO=yes
       - KCCONF_SERVER_KCOIDC_ISSUER_IDENTIFIER=https://${FQDN}
       - KCCONF_SERVER_KCOIDC_INSECURE_SKIP_VERIFY=${INSECURE}
+      - KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${MAILBOXLANG:-en_US.UTF-8}
     env_file:
       - kopano_server.env
     networks:
