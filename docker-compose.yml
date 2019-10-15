@@ -36,7 +36,7 @@ services:
       - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_USER_PASSWORD}
     env_file:
       - ldap.env
-    command: "--loglevel info --copy-service"
+    command: "--loglevel debug --copy-service"
     volumes:
       - ldap:/var/lib/ldap
       - slapd:/etc/ldap/slapd.d

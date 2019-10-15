@@ -46,15 +46,15 @@ objectClass: organizationalUnit
 objectClass: top
 ou: resources
 
-dn: ou=servers,{{ LDAP_DOMAIN }}
+dn: ou=servers,{{ LDAP_BASE_DN }}
 objectClass: organizationalUnit
 objectClass: top
 ou: servers
 
-dn: cn=kopano_server_node_1,ou=servers,{{ LDAP_BASE_DN }}
-cn: kopano_server_node_1
+dn: cn=kopano_server,ou=servers,{{ LDAP_BASE_DN }}
+cn: kopano_server
 description: Node 1 in a multi server setup
-ipHostNumber: kopano_server_node_1
+ipHostNumber: kopano_server
 objectClass: device
 objectClass: ipHost
 objectClass: kopano-server
@@ -65,10 +65,10 @@ kopanoHttpPort: 236
 kopanoSslPort: 237
 
 # the kopanoFilePath below should be a different file than for node 2 (e.g. on a different volume)
-dn: cn=kopano_server_node_2,ou=servers,{{ LDAP_BASE_DN }}
-cn: kopano_server_node_2
+dn: cn=kopano_server_2,ou=servers,{{ LDAP_BASE_DN }}
+cn: kopano_server_2
 description: Node 2 in a multi server setup
-ipHostNumber: kopano_server_node_2
+ipHostNumber: kopano_server_2
 objectClass: device
 objectClass: ipHost
 objectClass: kopano-server
@@ -571,7 +571,7 @@ jpegphoto:: /9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQO
  1FFAF1W2KoAC8Z3Zxnn8PQCraT+ZbvGpbJwy8HHHPP60UUAdj8G9RW0lutEY7YZma6tVJ+42B5k
  f4cMPbPpXqe31zRRWUlqAgH4UEfU0UVIhhFG386KKBhtox7UUUwDbTdtFFACbaKKKQH/2Q==
 physicalDeliveryOfficeName: Munich
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user5, users, {{ LDAP_DOMAIN }}
 dn: uid=user5,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1006,7 +1006,7 @@ jpegphoto:: /9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQO
  V6l/CKKKqGxU9yFmNRMeaKKtEEMvA4qvMcKKKKAK0hrPuHNFFAjI1HO1juOcVyurOwZACfvCiik
  DOm0V2a0jcnmq3i47bE+6UUU2M4nwkgL7u+etFFFCIluf//Z
 physicalDeliveryOfficeName: Urk
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # user6, users, {{ LDAP_DOMAIN }}
 dn: uid=user6,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1034,7 +1034,7 @@ l: Nieuw-Schoonebeek
 postalCode: 9704BF
 street: Mettering 960
 secretary: uid=user7,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user7, users, {{ LDAP_DOMAIN }}
 dn: uid=user7,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1063,7 +1063,7 @@ postalCode: 57621
 street: Monika-Werner-Strasse 88
 secretary: uid=user8,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
 physicalDeliveryOfficeName: Barcelona
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # user8, users, {{ LDAP_DOMAIN }}
 dn: uid=user8,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1091,7 +1091,7 @@ l: Koudum
 postalCode: 7263 YB
 street: Arieweg 464
 secretary: uid=user9,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user9, users, {{ LDAP_DOMAIN }}
 dn: uid=user9,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1120,7 +1120,7 @@ l: Vriescheloo
 postalCode: 1984 GB
 street: Haileysteeg 758
 secretary: uid=user10,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # user10, users, {{ LDAP_DOMAIN }}
 dn: uid=user10,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1148,7 +1148,7 @@ telephoneNumber: 088 9637134
 labeledURI: http://www.van.org/
 title: Patent examiner
 secretary: uid=user11,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user11, users, {{ LDAP_DOMAIN }}
 dn: uid=user11,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1840,7 +1840,7 @@ title: Education administrator
 l: Burgerveen
 postalCode: 3343RP
 secretary: uid=user12,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # user12, users, {{ LDAP_DOMAIN }}
 dn: uid=user12,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1869,7 +1869,7 @@ labeledURI: http://groettner.com/
 title: Clinical cytogeneticist
 l: Eisenberg
 postalCode: 48453
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user13, users, {{ LDAP_DOMAIN }}
 dn: uid=user13,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1898,7 +1898,7 @@ title: Dramatherapist
 l: West Tatyanna
 postalCode: CV66 3NT
 secretary: uid=user14,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # user14, users, {{ LDAP_DOMAIN }}
 dn: uid=user14,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1927,7 +1927,7 @@ telephoneNumber: 0587440322
 labeledURI: http://www.hermann.com/
 title: Occupational psychologist
 secretary: uid=user15,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user15, users, {{ LDAP_DOMAIN }}
 dn: uid=user15,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1955,7 +1955,7 @@ mobile: +44(0)1706147107
 telephoneNumber: 02296 80513
 labeledURI: http://kirlin.com/
 title: Training and development officer
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # user16, users, {{ LDAP_DOMAIN }}
 dn: uid=user16,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -1984,7 +1984,7 @@ title: Social worker
 l: Geithain
 postalCode: 41858
 secretary: uid=user17,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user17, users, {{ LDAP_DOMAIN }}
 dn: uid=user17,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -2012,7 +2012,7 @@ mobile: 02894 67296
 telephoneNumber: +49(0)3335177743
 labeledURI: http://bonbach.com/
 title: Medical secretary
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # user18, users, {{ LDAP_DOMAIN }}
 dn: uid=user18,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -2041,7 +2041,7 @@ title: Exhibition designer
 l: Dinkelsbuhl
 postalCode: 70320
 secretary: uid=user19,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user19, users, {{ LDAP_DOMAIN }}
 dn: uid=user19,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -2069,7 +2069,7 @@ labeledURI: http://will.net/
 title: Agricultural consultant
 l: South Marquiseshire
 postalCode: ML13 2RQ
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # beamer, resources, {{ LDAP_DOMAIN }}
 dn: uid=beamer,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -2090,7 +2090,7 @@ homeDirectory: /home/beamer
 sn: beamer
 uid: beamer
 mail: beamer@{{ LDAP_DOMAIN }}
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # trainingroom, resources, {{ LDAP_DOMAIN }}
 dn: uid=trainingroom,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -2111,7 +2111,7 @@ kopanoResourceType: Room
 kopanoSharedStoreOnly: 1
 userPassword:: dHJhaW5pbmdyb29t
 mail: trainingroom@{{ LDAP_DOMAIN }}
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # sharedbox, resources, {{ LDAP_DOMAIN }}
 dn: uid=sharedbox,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -2131,7 +2131,7 @@ kopanoAccount: 1
 kopanoResourceCapacity: 1
 mail: sharedbox@{{ LDAP_DOMAIN }}
 kopanoSharedStoreOnly: 1
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # sales, groups, {{ LDAP_DOMAIN }}
 dn: cn=sales,ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -2756,7 +2756,7 @@ jpegphoto:: /9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQO
  GdqgHHQ0UVRz3u7liNkdjHIRwuVbFWdMvGtLxDIxMT/ACk+lFFZtJ6HqYevOlONWDs0/wBTqt3p
  RmiiuM/V4u6uIxqMtRRQMYWooopAf//Z
 physicalDeliveryOfficeName: Mumbai
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # user3, users, {{ LDAP_DOMAIN }}
 dn: uid=user3,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -3252,7 +3252,7 @@ jpegphoto:: /9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQO
  AhsLYNX4X6UUUMdy7E1WYztPFFFQWaUJ3JVa6jxRRTJbKY4apGPy0UUhGdO/wA1RbxRRQO5LE/z
  CuktZBHCCT2oooQ2Mk1BQ3B/WiiigR//2Q==
 physicalDeliveryOfficeName: Delft
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user1, users, {{ LDAP_DOMAIN }}
 dn: uid=user1,ou=users,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -4061,7 +4061,7 @@ jpegphoto:: /9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQO
 physicalDeliveryOfficeName: Kopenhagen
 kopanoQuotaOverride: 1
 kopanoQuotaHard: 1200000000
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # distributionlist, groups, {{ LDAP_DOMAIN }}
 dn: cn=distributionlist,ou=groups,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -4213,7 +4213,7 @@ postalCode: 13145
 secretary: uid=user21,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
 kopanoAdmin: 0
 cn: Niko Liebelt & Co
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user21, users, {{ LDAP_DOMAIN }}
 dn: uid=user21,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
@@ -4240,7 +4240,7 @@ labeledURI: http://rice-schmidt.com/
 title: Engineer, water
 l: East Colonel
 postalCode: WN7R 3AB
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # user22, users, {{ LDAP_DOMAIN }}
 dn: uid=user22,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
@@ -4268,7 +4268,7 @@ l: Neuss
 postalCode: 56933
 secretary: uid=user23,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
 userPassword:: e0NSWVBUfXNUNDd4VE5IUTh5U2c=
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
 
 # user23, users, {{ LDAP_DOMAIN }}
 dn: uid=user23,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
@@ -4298,7 +4298,7 @@ l: Opeinde
 postalCode: 5557CV
 secretary: uid=user1,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
 kopanoSendAsPrivilege: 22
-kopanoUserServer: kopano_server_node_2
+kopanoUserServer: kopano_server_2
 
 # group1, groups, {{ LDAP_DOMAIN }}
 dn: cn=group1,ou=groups,ou=CompanyB,{{ LDAP_BASE_DN }}
@@ -4335,4 +4335,4 @@ userPassword:: bWVldGluZ3Jvb20z
 sn: meetingroom3
 uidNumber: 20055
 uid: meetingroom3
-kopanoUserServer: kopano_server_node_1
+kopanoUserServer: kopano_server
