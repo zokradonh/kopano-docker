@@ -42,6 +42,8 @@ fi
 # start regular service
 case "$SERVICE_TO_START" in
 server)
+	# TODO this could check if the desired locale already exists before calling sed
+	KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${KCCONF_ADMIN_DEFAULT_STORE_LOCALE:-"en_US.UTF-8"}
 	# get locales from env
 	# shellcheck disable=SC1004
 	sed --regexp-extended --expression='

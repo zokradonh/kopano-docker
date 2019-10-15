@@ -54,6 +54,59 @@ tests:
       env:
         KCCOMMENT_LDAP_1: "!include /usr/share/kopano/ldap.openldap.cfg"
         KCUNCOMMENT_LDAP_1: "!include /usr/share/kopano/ldap.active-directory.cfg"
+  start-service script default locale:
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh && locale -a"
+    exit-code: 0
+    stdout:
+      contains:
+        - C
+        - C.UTF-8
+        - de_DE.utf8
+        - en_US.utf8
+        - POSIX
+  start-service script dutch locale:
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh && locale -a"
+    exit-code: 0
+    stdout:
+      contains:
+        - C
+        - C.UTF-8
+        - de_DE.utf8
+        - en_US.utf8
+        - nl_NL.utf8
+        - POSIX
+    config:
+      env:
+        KCCONF_ADMIN_DEFAULT_STORE_LOCALE: "nl_NL.UTF-8"
+  start-service script dutch locale (short):
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh && locale -a"
+    exit-code: 0
+    stdout:
+      contains:
+        - C
+        - C.UTF-8
+        - de_DE.utf8
+        - en_US.utf8
+        - nl_NL.utf8
+        - POSIX
+    config:
+      env:
+        KCCONF_ADMIN_DEFAULT_STORE_LOCALE: "nl_NL"
+  start-service script unknown locale:
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh && locale -a"
+    exit-code: 0
+    stdout:
+      contains:
+        - C
+        - C.UTF-8
+        - de_DE.utf8
+        - en_US.utf8
+        - POSIX
+      not-contains:
+        - abc
+    config:
+      env:
+        KCCONF_ADMIN_DEFAULT_STORE_LOCALE: "abc"
 config:
   env:
     DEBUG: ${DEBUG}
