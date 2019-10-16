@@ -11,7 +11,7 @@ KCCONF_SERVER_ENABLE_HOSTED_KOPANO=YES
 KCCONF_LDAP_LDAP_COMPANY_TYPE_ATTRIBUTE_VALUE=kopano-company
 ```
 
-Additionally the ldap tree is also prepared for multi server installations (also referred to as "distributed"), where multiple `kopano-server` processes share the total amount of mailboxes (controlled through a manual mapping in LDAP).
+Additionally the ldap tree is also prepared for multiserver installations (also referred to as "distributed"), where multiple `kopano-server` processes share the total amount of mailboxes (controlled through a manual mapping in LDAP). See ../examples/kopano-multiserver for more information.
 
 ```
 $ docker-compose -f examples/kopano-multiserver.yml up
