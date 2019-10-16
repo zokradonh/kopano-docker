@@ -4,33 +4,11 @@ language: node_js
 
 node_js:
   - stable
-
-env:
-  global:
-    - HADOLINT_VERSION=1.17.1
-    - DOCKER_COMPOSE_VERSION=1.23.2
-    - TRIVY_VERSION=0.1.1
-    - GOSS_VERSION=0.3.7
-    - COMMANDER_VERSION=1.2.1
 services:
   - docker
 before_install:
-  - sudo curl -L https://github.com/hadolint/hadolint/releases/download/v$HADOLINT_VERSION/hadolint-$(uname -s)-$(uname -m) -o /usr/local/bin/hadolint
-  - sudo rm /usr/local/bin/docker-compose
-  - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-  - wget https://github.com/knqyf263/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
-  - sudo tar zxvf trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz -C /usr/local/bin trivy
-  - sudo curl -L https://github.com/aelsabbahy/goss/releases/download/v$GOSS_VERSION/goss-linux-amd64 -o /usr/local/bin/goss
-  - sudo curl -L https://raw.githubusercontent.com/fbartels/goss/dcgoss-v2/extras/dcgoss/dcgoss -o /usr/local/bin/dcgoss
-  - sudo curl -L https://github.com/SimonBaeumer/commander/releases/download/v$COMMANDER_VERSION/commander-linux-amd64 -o /usr/local/bin/commander
-  - sudo chmod +rx /usr/local/bin/hadolint
-  - sudo chmod +rx /usr/local/bin/docker-compose
-  - sudo chmod +rx /usr/local/bin/goss
-  - sudo chmod +rx /usr/local/bin/dcgoss
-  - sudo chmod +rx /usr/local/bin/commander
-  - sudo apt update && sudo apt install -y expect
-  - sudo pip install --upgrade pip && sudo pip install yamllint
-  - npm install -g eclint
+  - sudo rm /usr/local/bin/docker-compose # remove pre-installed docker-compose (too old)
+  - bash .ci/setup-tools.sh
 install:
   - "./version.sh"
   - make lint
