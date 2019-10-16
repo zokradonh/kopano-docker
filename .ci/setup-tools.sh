@@ -10,12 +10,12 @@ GOSS_VERSION=0.3.7
 COMMANDER_VERSION=1.2.1
 
 if ! command -v hadolint > /dev/null; then
-	sudo curl -L https://github.com/hadolint/hadolint/releases/download/v$HADOLINT_VERSION/hadolint-$(uname -s)-$(uname -m) -o /usr/local/bin/hadolint
+	sudo curl -L "https://github.com/hadolint/hadolint/releases/download/v$HADOLINT_VERSION/hadolint-$(uname -s)-$(uname -m)" -o /usr/local/bin/hadolint
 	sudo chmod +rx /usr/local/bin/hadolint
 fi
 
 if ! command -v docker-compose > /dev/null; then
-	sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+	sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 	sudo chmod +rx /usr/local/bin/docker-compose
 fi
 
@@ -26,7 +26,7 @@ fi
 
 if ! command -v goss > /dev/null; then
 	sudo curl -L https://github.com/aelsabbahy/goss/releases/download/v$GOSS_VERSION/goss-linux-amd64 -o /usr/local/bin/goss
-    sudo chmod +rx /usr/local/bin/goss	
+	sudo chmod +rx /usr/local/bin/goss	
 fi
 
 if ! command -v dcgoss > /dev/null; then
@@ -40,18 +40,18 @@ if ! command -v commander > /dev/null; then
 fi
 
 if ! command -v commander > /dev/null; then
-    sudo curl -L https://raw.githubusercontent.com/fbartels/dccommander/master/dccommander -o /usr/local/bin/dccommander
-    sudo chmod +rx /usr/local/bin/commander
+	sudo curl -L https://raw.githubusercontent.com/fbartels/dccommander/master/dccommander -o /usr/local/bin/dccommander
+	sudo chmod +rx /usr/local/bin/commander
 fi
 
 if ! command -v expect > /dev/null; then
-    sudo apt update && sudo apt install -y expect
+	sudo apt update && sudo apt install -y expect
 fi
 
 if ! command -v yamllint > /dev/null; then
-    sudo pip install --upgrade pip && sudo pip install yamllint
+	sudo pip install --upgrade pip && sudo pip install yamllint
 fi
 
 if ! command -v eclint > /dev/null; then
-    sudo npm install -g eclint
+	sudo npm install -g eclint
 fi
