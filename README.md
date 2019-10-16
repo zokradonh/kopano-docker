@@ -86,7 +86,7 @@ Instead of using the internal scheduler one can also just use an existing schedu
 
 This project also makes it possible to build Docker images based on the official Kopano releases. For this the following section needs to be modified in `.env`:
 
-```
+```bash
 # Docker Repository to push to/pull from
 docker_repo=zokradonh
 COMPOSE_PROJECT_NAME=kopano
@@ -101,6 +101,7 @@ COMPOSE_PROJECT_NAME=kopano
 #RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
 ```
+
 Just uncomment the last four lines and insert your Kopano subscription key where it currently says `REPLACE-ME`. Once this is done a `make build-all` will rebuild the images based on the latest available Kopano release (don't forget to `make tag-core` and `make tag-webapp` your images after building them).
 
 If you are running a private Docker Registry then you may also change `docker_repo` to reference your internal registry.
@@ -111,13 +112,7 @@ The built image includes your subscription key! Do not push this image to any pu
 
 ### When building my own containers, how can I make sure my build works as expected?
 
-This project includes a few automated tests that can be run to ensure that containers start up and are operational.
-
-The startup test can be executed by calling `make test-startup`. It spins up all containers and checks if they listen on their expected interfaces afterwards and executes some commands that should succeed on a succesful deployment.
-
-A more detailed test can be executed by calling `make test-goss`. This uses [Goss](https://github.com/aelsabbahy/goss) and its helper [dcgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dcgoss) to validate the container configuration at runtime. These tests have not been implemented for all containers yet, but as an upside the same validation is used as part of the container healtcheck. Contributions are welcome!
-
-Testing the startup scripts of the containers is still a work in progress. When running `make test-commander` [Commander](https://github.com/SimonBaeumer/commander) will be used to test output of the `version.sh` script and some of the container startup scripts.
+Please check the [contributing information](CONTRIBUTING.md).
 
 ### What if I want to use a different front facing proxy than the one in docker-compose? Or just some part of the compose file?
 
