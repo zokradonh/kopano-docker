@@ -31,7 +31,7 @@ services:
       - KCCONF_SERVER_MYSQL_DATABASE=${MYSQL_DATABASE}2
       - KCCONF_SERVER_MYSQL_USER=${MYSQL_USER}
       - KCCONF_SERVER_MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kopano_server.pem
+      - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kopano_server_2.pem
       - KCCONF_SERVER_SERVER_SSL_CA_FILE=/kopano/ssl/ca.pem
       - KCCONF_SERVER_SERVER_NAME=kopano_server_2
       - KCCONF_SERVER_SSLKEYS_PATH=/kopano/ssl/clients
