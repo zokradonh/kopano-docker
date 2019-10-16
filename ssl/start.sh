@@ -21,7 +21,7 @@ if [ ! -f /kopano/ssl/ca.pem ]; then
 	cp /kopano/easypki/internalca/certs/internalca.crt /kopano/ssl/ca.pem.tmp
 	mv /kopano/ssl/ca.pem.tmp /kopano/ssl/ca.pem
 
-	for s in kopano_server kopano_dagent kopano_monitor kopano_search kopano_spooler kopano_webapp; do
+	for s in kopano_server kopano_dagent kopano_monitor kopano_search kopano_spooler kopano_webapp admin; do
 		if [ ! -f /kopano/ssl/$s.pem ]; then
 			echo "Creating $s certificate..."
 			easypki create --ca-name internalca --organizational-unit $s --expire 3650 --dns $s --dns "$FQDN" $s
