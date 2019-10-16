@@ -26,7 +26,7 @@ fi
 
 if ! command -v goss > /dev/null; then
 	sudo curl -L https://github.com/aelsabbahy/goss/releases/download/v$GOSS_VERSION/goss-linux-amd64 -o /usr/local/bin/goss
-	sudo chmod +rx /usr/local/bin/goss	
+	sudo chmod +rx /usr/local/bin/goss
 fi
 
 if ! command -v dcgoss > /dev/null; then
@@ -53,5 +53,5 @@ if ! command -v yamllint > /dev/null; then
 fi
 
 if ! command -v eclint > /dev/null; then
-	sudo npm install -g eclint
+	npm install -g eclint
 fi
