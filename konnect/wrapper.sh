@@ -52,6 +52,10 @@ if [ "${allow_dynamic_client_registration:-}" = "yes" ]; then
 	set -- "$@" "--allow-dynamic-client-registration"
 fi
 
+if [ -n "${uri-base-path:-}" ]; then
+	set -- "$@" --uri-base-path="$uri-base-path"
+fi
+
 dockerize \
 	-wait file://"${signing_private_key:?}" \
 	-wait file://"${encryption_secret_key:?}" \
