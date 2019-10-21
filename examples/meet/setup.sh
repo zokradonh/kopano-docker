@@ -106,7 +106,7 @@ TURN_PASSWORD=
 # Defines how Kopano can be accessed from the outside world
 FQDN=$FQDN
 FQDNCLEANED=${FQDN%:*}
-DEFAULTREDIRECT=/webapp
+DEFAULTREDIRECT=/meet
 EMAIL=$EMAIL
 CADDY=2015
 HTTP=80
