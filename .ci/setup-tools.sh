@@ -49,21 +49,18 @@ if ! command -v expect > /dev/null; then
 fi
 
 if ! command -v pip > /dev/null; then
-	read -rp 'Install pip? [y/*] ' INSTALLQ
-	if [[ $INSTALLQ == "y" ]]; then
-		sudo apt install -y python3-pip
-		if ! command -v yamllint > /dev/null; then
-			sudo pip install --upgrade pip && sudo pip install yamllint
-		fi
-	fi
+	sudo apt install -y python-pip
+fi
+
+if ! command -v yamllint > /dev/null; then
+	sudo pip install --upgrade pip && sudo pip install yamllint
 fi
 
 if ! command -v npm > /dev/null; then
-	read -rp 'Install npm? [y/*] ' INSTALLQ
-	if [[ $INSTALLQ == "y" ]]; then
-		ssudo apt install -j nodejs
-		if ! command -v eclint > /dev/null; then
-			npm install -g eclint
-		fi
-	fi
+	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+	sudo apt install -y nodejs
+fi
+
+if ! command -v eclint > /dev/null; then
+	npm install -g eclint
 fi
