@@ -59,6 +59,7 @@ fi
 if ! command -v npm > /dev/null; then
 	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 	sudo apt install -y nodejs
+	npm config set prefix ~
 fi
 
 if ! command -v eclint > /dev/null; then
