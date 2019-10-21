@@ -9,14 +9,14 @@ TRIVY_VERSION=0.1.1
 GOSS_VERSION=0.3.7
 COMMANDER_VERSION=1.2.1
 
-progname=$(basename $0)
-tempdir=$(mktemp -d /tmp/$progname.XXXXXX)
+progname=$(basename "$0")
+tempdir=$(mktemp -d "/tmp/$progname.XXXXXX")
 function cleanup() {
-	rm -rf $tempdir
+	rm -rf "$tempdir"
 }
 trap cleanup INT EXIT
 
-cd $tempdir
+cd "$tempdir"
 
 if ! command -v hadolint > /dev/null; then
 	sudo curl -L "https://github.com/hadolint/hadolint/releases/download/v$HADOLINT_VERSION/hadolint-$(uname -s)-$(uname -m)" -o /usr/local/bin/hadolint
