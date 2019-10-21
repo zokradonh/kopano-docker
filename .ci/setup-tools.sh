@@ -39,19 +39,31 @@ if ! command -v commander > /dev/null; then
 	sudo chmod +rx /usr/local/bin/commander
 fi
 
-if ! command -v commander > /dev/null; then
+if ! command -v dccommander > /dev/null; then
 	sudo curl -L https://raw.githubusercontent.com/fbartels/dccommander/master/dccommander -o /usr/local/bin/dccommander
-	sudo chmod +rx /usr/local/bin/commander
+	sudo chmod +rx /usr/local/bin/dccommander
 fi
 
 if ! command -v expect > /dev/null; then
 	sudo apt update && sudo apt install -y expect
 fi
 
-if ! command -v yamllint > /dev/null; then
-	sudo pip install --upgrade pip && sudo pip install yamllint
+if ! command -v pip > /dev/null; then
+	read -rp 'Install pip? [y/*] ' INSTALLQ
+	if [[ $INSTALLQ == "y" ]]; then
+		sudo apt install -y python3-pip
+		if ! command -v yamllint > /dev/null; then
+			sudo pip install --upgrade pip && sudo pip install yamllint
+		fi
+	fi
 fi
 
-if ! command -v eclint > /dev/null; then
-	npm install -g eclint
+if ! command -v npm > /dev/null; then
+	read -rp 'Install npm? [y/*] ' INSTALLQ
+	if [[ $INSTALLQ == "y" ]]; then
+		ssudo apt install -j nodejs
+		if ! command -v eclint > /dev/null; then
+			npm install -g eclint
+		fi
+	fi
 fi
