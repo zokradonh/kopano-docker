@@ -11,7 +11,7 @@ dockerize \
 	-wait tcp://"${KCCONF_SERVER_MYSQL_HOST}":3306 \
 	-wait tcp://kopano_dagent:2003 \
 	-wait tcp://kopano_gateway:143 \
-	-wait tco://kopano_ical:8080 \
+	-wait tcp://kopano_ical:8080 \
 	-wait tcp://kopano_kwmserver:8778 \
 	-wait http://kopano_meet:9080/meet \
 	-wait tcp://kopano_server:236 \
