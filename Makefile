@@ -374,8 +374,6 @@ test-startup: ## Test if all containers start up
 		exit 1)
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml stop 2>/dev/null
 	docker ps --filter name=kopano_test* -aq | xargs docker rm -f
-	# temporary addition
-	GOSS_FILES_PATH=core/goss/server dcgoss run kopano_server
 
 .PHONY: test-startup-meet-demo
 test-startup-meet-demo: ## Test if the Meet demo setup starts up
