@@ -4,11 +4,11 @@ The Grapi Explorer is a fork of the Microsoft Graph Explorer, which has been mod
 
 ## How to use the Grapi Explorer?
 
- 1. Add the `grapi-explorer.yml` to the `COMPOSE_FILE` variable in your `.env` file.
+1. Add the `grapi-explorer.yml` to the `COMPOSE_FILE` variable in your `.env` file.
 
- Example:
+Example:
 ```
 COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:grapi-explorer/grapi-explorer.yml
 ```
 
- 2. Run `docker-compose up -d` and you will find the grapi-explorer at `https://your-fqdn/grapi-explorer/`.
+2. Run `docker-compose up -d` and you will find the grapi-explorer at `https://your-fqdn/grapi-explorer/`.

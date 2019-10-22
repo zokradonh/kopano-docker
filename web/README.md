@@ -7,7 +7,8 @@ Reverse Proxy to securely and with as less configuration effort as possible expo
 In its default configuration this container will redirect requests to the root of the domain (so for example when opening https://kopano.demo/ in a browser) to https://kopano.demo/webapp. To redirect to a different path the environment variable `DEFAULTREDIRECT` needs to be configured.
 
 Example:
-```
+
+```bash
 # the following value needs to be added to .env
 DEFAULTREDIRECT=/meet
 ```

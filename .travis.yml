@@ -24,6 +24,8 @@ install:
   - travis_retry make build-all
 script:
   - make test-ci
+  - docker-compose down -v
+  - make test-startup-meet-demo
 deploy:
   - provider: script
     script: make publish

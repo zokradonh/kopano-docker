@@ -4,18 +4,17 @@ Helper container for systems where build requirements (bash, curl, docker-compos
 
 Run the following command to enter the "build environment" (command may need to be run with `sudo` to work with the `docker` command):
 
-```
+```bash
 $ ./run.sh
 This script may need to be run as root to be able to use docker/docker-compose through it.
 bash-4.4$
-
 ```
 
 (the first time it will take a moment before the bash prompt is displayed, since the container is built locally first)
 
 Afterwards you can execute the `setup.sh` script, modify `.env` to your liking and run any make commands:
 
-```
+```bash
 bash-4.4# ./setup.sh
 Creating an .env file for you
 Which tag do you want to use for Kopano Core components? [latest]:
@@ -29,7 +28,7 @@ LDAP server to be used (defaults to the bundled OpenLDAP) [ldap://ldap:389]:
 Timezone to be used [Europe/Berlin.]:
 E-Mail Address displayed for the 'postmaster' [postmaster@kopano.demo]:
 Name/Address of Database server (defaults to the bundled one) [db]:
-Avaliable options:
+Available options:
   1 ) de-at
   2 ) de-ch
   3 ) de-de
@@ -41,7 +40,7 @@ Avaliable options:
   9 ) nl
  10 ) pl-pl
 Check language spell support (again to uncheck, ENTER when done):
-Avaliable options:
+Available options:
   1 ) contactfax
   2 ) desktopnotifications
   3 ) filepreviewer

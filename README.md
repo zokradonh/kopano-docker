@@ -12,11 +12,11 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
   - If you are just interested in the demo environment you can accept the default values by pressing `Enter` on each question
 - now run `docker-compose up` and you will see how the remaining Docker images are pulled and then everything is started
 - after startup has succeeded you can access the Kopano WebApp by going to `https://kopano.demo/webapp`
-- there are already some users created in the demo ldap. These users all have a password that is identical to the username, e.g. the password for `user1` user `user1`.
+- there are already some users created in the demo LDAP. These users all have a password that is identical to the username, e.g. the password for `user1` user `user1`.
 
-If you want to get an impression how the containers interact/relate with each other have a look at the [architecture](architecture.md) description.
+If you want to get an impression how the containers interact/relate with each other have a look at the [architecture](ARCHITECTURE.md) description.
 
-**Note:** There have been reports about the ldap demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image. 
+**Note:** There have been reports about the LDAP demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image. 
 
 The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
 
@@ -40,13 +40,13 @@ The used `docker-compose.yml` is part of the git versioning. Which mean all chan
 
 ## Is this project also interesting for me when I already have a (non-Docker) Kopano environment?
 
-Yes, indeed. You could for example use this to easily try out newer Kopano WebApp or Z-Push releases, without touching your production environment. Through the `zokradonh/kopano_core` image you could even try out newer version of e.g. `kopano-gateway` without jumping into a dependecy mess in your production environment.
+Yes, indeed. You could for example use this to easily try out newer Kopano WebApp or Z-Push releases, without touching your production environment. Through the `zokradonh/kopano_core` image you could even try out newer version of e.g. `kopano-gateway` without jumping into a dependency mess in your production environment.
 
-And last but not least this project also offers a `zokradonh/kopano_utils` image to easily run tools such as `kopano-backup`, `kopano-migration-pst`, `kopano-migration-imap` and all the other utilities that are bundles with Kopano. See [below](#some-more-commands-for-those-unfamilar-with-docker-compose) to see how to run `zokradonh/kopano_utils`.
+And last but not least this project also offers a `zokradonh/kopano_utils` image to easily run tools such as `kopano-backup`, `kopano-migration-pst`, `kopano-migration-imap` and all the other utilities that are bundles with Kopano. See [below](#some-more-commands-for-those-unfamiliar-with-docker-compose) to see how to run `zokradonh/kopano_utils`.
 
 ### Additional configuration / Need to adjust any values after the initial run of `setup.sh`?
 
-If you want to modify some of the values from the `setup.sh` run you can simply edit `.env` in your favourite editor. Repeated runs of `setup.sh` will neither modify `docker-compose.yml` nor `.env`. In the ´.env´ file you will also find some given defaults like ldap query filters and the local ports for the reverse proxy.
+If you want to modify some of the values from the `setup.sh` run you can simply edit `.env` in your favorite editor. Repeated runs of `setup.sh` will neither modify `docker-compose.yml` nor `.env`. In the ´.env´ file you will also find some given defaults like LDAP query filters and the local ports for the reverse proxy.
 
 Additionally a dedicated env file is created for each container (at least where that would make sense). The env file has the container name as part of the file name. For example for the `kopano_server` container the filename is named `kopano_server.env`. These additional env files are auto created when running `setup.sh`.
 
@@ -76,7 +76,7 @@ To be able to easily go back to a previous version you can also "tag" you Docker
 
 ### Recurring tasks and maintenance tasks within Kopano
 
-There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external ldap tree). For convinience this project includes a "scheduler" container that will take care of this and that can be dynamically configured through env variables.
+There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external LDAP tree). For convenience this project includes a "scheduler" container that will take care of this and that can be dynamically configured through env variables.
 
 Please check the `README.md` of the scheduler image for further instructions.
 
@@ -126,19 +126,19 @@ The exposed ports of each container are defined in `docker-compose.ports.yml`. I
 
 ### I want to use these Docker images outside of an evaluation environment. What do I need to adjust to make this possible?
 
-To get a quick impression of Kopano this git repository bundles a locally build ldap image with some example users. When using the docker-compose.yml in a production environment make sure to:
+To get a quick impression of Kopano this git repository bundles a locally build LDAP image with some example users. When using the docker-compose.yml in a production environment make sure to:
 
-- either remove `ldap-demo/bootstrap/ldif/demo-users.ldif` from the locally built ldap image or completely remove the local ldap from the compose file
-- adapt ldap queries in .env to match you actual ldap server and users
+- either remove `ldap-demo/bootstrap/ldif/demo-users.ldif` from the locally built LDAP image or completely remove the local LDAP from the compose file
+- adapt LDAP queries in .env to match you actual LDAP server and users
 - all additional configuration of the Kopano components should be specified in the compose file and **not within the running container**
 
 #### Can I combine these Docker images with my existing environment?
 
-Yes, that is certainly a possibillity. Within the `examples/` directory you can find some ready to run examples that can be run in the following way:
+Yes, that is certainly a possibility. Within the `examples/` directory you can find some ready to run examples that can be run in the following way:
 
 - `docker-compose -f examples/webapp.yml up -d`
 
-### Some more commands for those unfamilar with docker-compose
+### Some more commands for those unfamiliar with docker-compose
 
 - Start ``docker-compose-yml`` file in the background: `docker-compose up -d`
 - Get a status overview of the running containers: `docker-compose ps`

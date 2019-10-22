@@ -5,8 +5,9 @@ import kcconf
 kcconf.configkopano({
     r"/etc/kopano/ical.cfg":
     {
+        'ical_listen': "0.0.0.0:8080",
         'log_file': "-",
-        'log_level': "4"
+        'log_level': "3"
     }
 })
 

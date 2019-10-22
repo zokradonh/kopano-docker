@@ -10,7 +10,7 @@ Attachment location can be configured by setting the environment variable `KCCON
 
 All configuration can be adjusted dynamically through environment variables. 
 
-```
+```bash
 KCCONF_SERVER_MYSQL_HOST=127.0.0.1
 ^      ^     ^   ^
 |      |     |   |
@@ -24,19 +24,20 @@ General prefix   |
 ```
 
 Examples:
+
 - specify `KCCONF_SERVER_MYSQL_HOST` for `mysql_host` setting in `server.cfg`
 - specify `KCCONF_LDAP_LDAP_SEARCH_BASE` to set `ldap_search_base` in `ldap.cfg`
 
 Additionally it is possible to comment specific options in/out with `KCCOMMENT_filenameWithoutExtension_anystring=searchline`  
 e.g. `KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg`
 
-For coredumps on crashes kopano-server requires the fs.suid_dumpable sysctl to contain the value 2, not 0.
+For core dumps on crashes kopano-server requires the `fs.suid_dumpable sysctl` to contain the value 2, not 0.
 
 It is recommended to sync the user list before the first login of a user. With the bundled ´docker-compose.yml´ the ´kopano_scheduler´ container will take care of this. Alternatively `kopano-cli --list-users` could be run once after initial install in the kopano_server container.
 
 Example:
 
-`docker-compose exec kserver kopano-cli --list-users`
+`docker-compose exec kopano_server kopano-cli --list-users`
 
 Depending on the overall performance of the system and the amount of user the first execution of this command will take a moment before it produces any output. This is since this command kicks off the mailbox creation for the users.
 
@@ -46,4 +47,4 @@ See https://documentation.kopano.io/kopanocore_administrator_manual/configure_kc
 
 - kopano-server is configured to listen on the ports 236 (plain) and 237 (https)
 - kopano-ical is configured to listen on the port 8080, but the web container is also configured to proxy access to http(s)://FQDN/caldav to kopano-ical
-- kopano-gateway is configured to listen on IMAP traffic on port 143. Pop3 is deactivated by default but whould be listening on port 110. Pop3s and IMAPs are currently not configured. (see https://github.com/zokradonh/kopano-docker/issues/16 for more details).
+- kopano-gateway is configured to listen on IMAP traffic on port 143. Pop3 is deactivated by default but would be listening on port 110. Pop3s and IMAPs are currently not configured. (see https://github.com/zokradonh/kopano-docker/issues/16 for more details).

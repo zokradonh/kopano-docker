@@ -9,6 +9,15 @@ TRIVY_VERSION=0.1.1
 GOSS_VERSION=0.3.7
 COMMANDER_VERSION=1.2.1
 
+progname=$(basename "$0")
+tempdir=$(mktemp -d "/tmp/$progname.XXXXXX")
+function cleanup() {
+	rm -rf "$tempdir"
+}
+trap cleanup INT EXIT
+
+cd "$tempdir"
+
 if ! command -v hadolint > /dev/null; then
 	sudo curl -L "https://github.com/hadolint/hadolint/releases/download/v$HADOLINT_VERSION/hadolint-$(uname -s)-$(uname -m)" -o /usr/local/bin/hadolint
 	sudo chmod +rx /usr/local/bin/hadolint
@@ -39,17 +48,27 @@ if ! command -v commander > /dev/null; then
 	sudo chmod +rx /usr/local/bin/commander
 fi
 
-if ! command -v commander > /dev/null; then
+if ! command -v dccommander > /dev/null; then
 	sudo curl -L https://raw.githubusercontent.com/fbartels/dccommander/master/dccommander -o /usr/local/bin/dccommander
-	sudo chmod +rx /usr/local/bin/commander
+	sudo chmod +rx /usr/local/bin/dccommander
 fi
 
 if ! command -v expect > /dev/null; then
 	sudo apt update && sudo apt install -y expect
 fi
 
+if ! command -v pip > /dev/null; then
+	sudo apt install -y python-pip
+fi
+
 if ! command -v yamllint > /dev/null; then
 	sudo pip install --upgrade pip && sudo pip install yamllint
+fi
+
+if ! command -v npm > /dev/null; then
+	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+	sudo apt install -y nodejs
+	npm config set prefix ~
 fi
 
 if ! command -v eclint > /dev/null; then

@@ -13,7 +13,7 @@ dockerize \
 	-wait tcp://kopano_gateway:143 \
 	-wait tcp://kopano_ical:8080 \
 	-wait tcp://kopano_kwmserver:8778 \
-	-wait tcp://kopano_meet:9080 \
+	-wait http://kopano_meet:9080/meet \
 	-wait tcp://kopano_server:236 \
 	-wait tcp://kopano_server:237 \
 	-wait tcp://web:2015 \
