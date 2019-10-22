@@ -14,7 +14,7 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 - after startup has succeeded you can access the Kopano WebApp by going to `https://kopano.demo/webapp`
 - there are already some users created in the demo LDAP. These users all have a password that is identical to the username, e.g. the password for `user1` user `user1`.
 
-If you want to get an impression how the containers interact/relate with each other have a look at the [architecture](architecture.md) description.
+If you want to get an impression how the containers interact/relate with each other have a look at the [architecture](ARCHITECTURE.md) description.
 
 **Note:** There have been reports about the LDAP demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image. 
 

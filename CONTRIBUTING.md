@@ -4,7 +4,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 ## General architecture of containers
 
-To get an impression how the containers interact/relate with each other have a look at the [architecture](architecture.md) description.
+To get an impression how the containers interact/relate with each other have a look at the [architecture](ARCHITECTURE.md) description.
 
 ## Testing
 

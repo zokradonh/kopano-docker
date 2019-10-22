@@ -8,7 +8,7 @@ Aka "How do the containers connect/relate/interact with each other?"
   - reverse proxy for containers exposing a web interface
 - can retrieve ssl certificate from Let's Encrypt
 - redirects all requests to /webapp by default
-- recommended to use as it makes web configuration easy and secure (manual configuration will be difficult and potentially less secure)
+- recommended to use as it makes web configuration easy and secure (manual configuration will be tedious and potentially less secure)
 
 ## ldap
 
