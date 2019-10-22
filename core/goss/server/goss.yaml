@@ -1,7 +1,7 @@
 file:
-  /kopano/data/attachments/0:
+  /kopano/data/attachments/:
     exists: true
-    mode: "0750"
+    mode: "0755"
     owner: kopano
     group: kopano
     filetype: directory
