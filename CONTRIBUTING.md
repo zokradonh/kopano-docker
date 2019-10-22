@@ -2,6 +2,10 @@
 
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
 
+## General architecture of containers
+
+To get an impression how the containers interact/relate with each other have a look at the [architecture](architecture.md) description.
+
 ## Testing
 
 This project includes a few automated tests that can be run to ensure that containers start up and are operational. Required tools for testing can be installed by executing `bash .ci/setup-tools.sh`.
