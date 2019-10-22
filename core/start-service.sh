@@ -80,7 +80,7 @@ server)
 	# pre populate database
 	coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server)
 	if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
-		echo kopano-dbadm populate
+		kopano-dbadm populate
 	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"

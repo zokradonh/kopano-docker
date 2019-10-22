@@ -76,7 +76,7 @@ To be able to easily go back to a previous version you can also "tag" you Docker
 
 ### Recurring tasks and maintenance tasks within Kopano
 
-There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external LDAP tree). For convinience this project includes a "scheduler" container that will take care of this and that can be dynamically configured through env variables.
+There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external LDAP tree). For convenience this project includes a "scheduler" container that will take care of this and that can be dynamically configured through env variables.
 
 Please check the `README.md` of the scheduler image for further instructions.
 
