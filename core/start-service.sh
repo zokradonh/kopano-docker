@@ -77,7 +77,7 @@ server)
 		-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
 		-wait "$DB_CONN" \
 		-timeout 360s
-	# prepolulate database
+	# pre populate database
 	coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server)
 	if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
 		kopano-dbadm populate
