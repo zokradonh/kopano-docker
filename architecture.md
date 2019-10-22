@@ -5,10 +5,10 @@ Aka "How do the containers connect/relate/interact with each other?"
 ## web
 
 - external entry point for users accessing Kopano
-    - reverse proxy for containers exposing a web interface 
+  - reverse proxy for containers exposing a web interface
 - can retrieve ssl certificate from Let's Encrypt
 - redirects all requests to /webapp by default
-- recommended to use as it makes web configuration easy and secure (manual configuration will be tendious and potentially less secure)
+- recommended to use as it makes web configuration easy and secure (manual configuration will be difficult and potentially less secure)
 
 ## ldap
 
@@ -87,7 +87,7 @@ Aka "How do the containers connect/relate/interact with each other?"
 
 ## kopano_konnect
 
-- authentification component (OpenID Connect)
+- authentication component (OpenID Connect)
 - required for apps interacting with the Kopano RestAPI (e.g. Kopano Meet)
 
 ## kopano_kwmserver

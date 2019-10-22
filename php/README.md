@@ -10,7 +10,7 @@ Any additional configuration should be done through environment variables and no
 
 Examples of env variables:
 
-```
+```bash
 KCCONF_WEBAPP_CLIENT_TIMEOUT=3600
 ^      ^      ^              ^
 |      |      |              |

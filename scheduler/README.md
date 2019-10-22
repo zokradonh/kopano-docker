@@ -6,7 +6,7 @@ Service to carry out repeating tasks within the Kopano environment. Takes care o
 
 ## Recurring tasks and maintenance tasks within Kopano
 
-There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external ldap tree). For convinience this project includes a "scheduler" container that will take care of this and that can be dynamically configured through env variables.
+There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external ldap tree). For convenience this project includes a "scheduler" container that will take care of this and that can be dynamically configured through env variables.
 
 The container knows two kinds of cron jobs (the crontab syntax is used for actual jobs):
 
