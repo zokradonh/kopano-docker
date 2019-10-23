@@ -127,7 +127,6 @@ grapi)
 		fi
 		;;
 	esac
-	# TODO use binscript? https://stash.kopano.io/projects/KC/repos/grapi/pull-requests/50/diff#scripts/kopano-grapi.binscript
 	sed s/\ *=\ */=/g /etc/kopano/grapi.cfg > /tmp/grapi-env
 	# shellcheck disable=SC2046
 	export $(grep -v '^#' /tmp/grapi-env | xargs -d '\n')
