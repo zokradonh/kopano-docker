@@ -1,7 +1,10 @@
 tests:
   test sending mail:
-    command:  apt update && apt install -y swaks netbase && dockerize -wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":25 -timeout 1080s swaks --to user1@kopano.demo --server $KCCONF_SPOOLER_SMTP_SERVER
+    command:  apt update && apt install -y swaks netbase && dockerize -wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":25 -timeout 1080s && swaks --to user1@kopano.demo --server $KCCONF_SPOOLER_SMTP_SERVER
     exit-code: 0
+    stdout:
+      contains:
+        - "250 2.0.0 Ok: queued as"
 
 config:
   env:
