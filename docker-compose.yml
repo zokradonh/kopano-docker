@@ -230,6 +230,7 @@ services:
     environment:
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
+      - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=false
     env_file:
       - kopano_grapi.env
     networks:

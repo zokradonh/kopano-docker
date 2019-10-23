@@ -128,6 +128,9 @@ grapi)
 		;;
 	esac
 	# TODO use binscript? https://stash.kopano.io/projects/KC/repos/grapi/pull-requests/50/diff#scripts/kopano-grapi.binscript
+	sed s/\ *=\ */=/g /etc/kopano/grapi.cfg > /tmp/grapi-env
+	# shellcheck disable=SC2046
+	export $(grep -v '^#' /tmp/grapi-env | xargs -d '\n')
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	# the backend option is only available in more recent versions of grapi
@@ -152,9 +155,9 @@ kapi)
 		-timeout 360s
 	fi
 	LC_CTYPE=en_US.UTF-8
-	sed -i s/\ *=\ */=/g /etc/kopano/kapid.cfg
+	sed s/\ *=\ */=/g /etc/kopano/kapid.cfg > /tmp/kapid-env
 	# shellcheck disable=SC2046
-	export $(grep -v '^#' /etc/kopano/kapid.cfg | xargs -d '\n')
+	export $(grep -v '^#' /tmp/kapid-env | xargs -d '\n')
 	kopano-kapid setup
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
