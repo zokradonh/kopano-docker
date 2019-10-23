@@ -1,7 +1,20 @@
 file:
+  /var/lib/kopano-grapi:
+    exists: true
+    mode: "0755"
+    size: 4096
+    owner: kapi
+    group: kopano
+    filetype: directory
   /var/run/kopano/grapi:
     exists: true
     mode: "0755"
     owner: kapi
     group: kopano
     filetype: directory
+mount:
+  /var/lib/kopano-grapi:
+    exists: true
+    opts:
+    - rw
+    - relatime

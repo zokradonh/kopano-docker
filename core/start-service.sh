@@ -31,7 +31,8 @@ echo "Configure core service '$SERVICE_TO_START'" | ts
 rm -f /var/run/kopano/"$SERVICE_TO_START".pid
 
 echo "Set ownership" | ts
-chown kopano:kopano /kopano/data/ /kopano/data/attachments
+chown kopano:kopano /kopano/data/ /kopano/data/attachments 
+chown kapi:kopano /var/lib/kopano-grapi
 
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]; then
