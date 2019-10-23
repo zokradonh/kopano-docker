@@ -23,11 +23,14 @@ file:
     owner: kopano
     group: kopano
     filetype: socket
+process:
+  kopano-server:
+    running: true
 http:
   http://localhost:236:
     status: 405
     timeout: 5000
   https://localhost:237:
     status: 405
-    allow-insecure: true
+    allow-insecure: true 
     timeout: 5000
