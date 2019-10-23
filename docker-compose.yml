@@ -227,6 +227,7 @@ services:
       - kopano_server
     volumes:
       - kopanosocket/:/run/kopano
+      - kopanograpi/:/var/lib/kopano-grapi
     environment:
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
@@ -478,6 +479,7 @@ volumes:
   mtaconfig:
   mysql:
   kopanodata:
+  kopanograpi:
   kopanossl:
   kopanosocket:
   kopanowebapp:
