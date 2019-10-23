@@ -22,7 +22,7 @@ ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 	fi
 done
 
-mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano
+mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano /var/lib/kopano-grapi
 
 echo "Configure core service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/"$SERVICE_TO_START".py
