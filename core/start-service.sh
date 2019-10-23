@@ -127,6 +127,7 @@ grapi)
 		fi
 		;;
 	esac
+	# TODO use binscript? https://stash.kopano.io/projects/KC/repos/grapi/pull-requests/50/diff#scripts/kopano-grapi.binscript
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	# the backend option is only available in more recent versions of grapi
