@@ -12,7 +12,7 @@ before_install:
 install:
   - "./version.sh"
   - make lint
-  - "./test.exp"
+  - "./tests/test.exp"
   - "./version.sh"
   - commander test tests/commander.yaml
   - make lint # rerun lint to see if output is different with .env in place
