@@ -409,6 +409,7 @@ test-commander: ## Test scripts with commander
 	commander test tests/commander.yaml
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=core/commander/server dccommander run kopano_server
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=core/commander/spooler dccommander run kopano_spooler
+	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=core/commander/grapi dccommander run kopano_grapi
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=webapp dccommander run kopano_webapp
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=zpush dccommander run kopano_zpush
 	COMMANDER_OPTS="--concurrent 1" COMMANDER_FILES_PATH=scheduler dccommander run kopano_scheduler

@@ -1,0 +1,17 @@
+tests:
+  start-service script:
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh && env"
+    exit-code: 0
+    stdout:
+      contains:
+        - enable_experimental_endpoints=true
+    config:
+      env:
+        KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS: true
+config:
+  env:
+    DEBUG: ${DEBUG}
+    GRAPI_BACKEND: ${GRAPI_BACKEND}
+    LANG: ${LANG}
+    SERVICE_TO_START: ${SERVICE_TO_START}
+    PATH: ${PATH}

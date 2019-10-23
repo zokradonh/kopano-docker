@@ -22,7 +22,7 @@ ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 	fi
 done
 
-mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano
+mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano /var/lib/kopano-grapi
 
 echo "Configure core service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/"$SERVICE_TO_START".py
@@ -31,7 +31,8 @@ echo "Configure core service '$SERVICE_TO_START'" | ts
 rm -f /var/run/kopano/"$SERVICE_TO_START".pid
 
 echo "Set ownership" | ts
-chown kopano:kopano /kopano/data/ /kopano/data/attachments
+chown kopano:kopano /kopano/data/ /kopano/data/attachments 
+chown kapi:kopano /var/lib/kopano-grapi
 
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]; then
@@ -127,6 +128,9 @@ grapi)
 		fi
 		;;
 	esac
+	sed s/\ *=\ */=/g /etc/kopano/grapi.cfg > /tmp/grapi-env
+	# shellcheck disable=SC2046
+	export $(grep -v '^#' /tmp/grapi-env | xargs -d '\n')
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	# the backend option is only available in more recent versions of grapi
@@ -151,9 +155,9 @@ kapi)
 		-timeout 360s
 	fi
 	LC_CTYPE=en_US.UTF-8
-	sed -i s/\ *=\ */=/g /etc/kopano/kapid.cfg
+	sed s/\ *=\ */=/g /etc/kopano/kapid.cfg > /tmp/kapid-env
 	# shellcheck disable=SC2046
-	export $(grep -v '^#' /etc/kopano/kapid.cfg | xargs -d '\n')
+	export $(grep -v '^#' /tmp/kapid-env | xargs -d '\n')
 	kopano-kapid setup
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
