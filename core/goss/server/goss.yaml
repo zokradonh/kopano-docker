@@ -23,6 +23,9 @@ file:
     owner: kopano
     group: kopano
     filetype: socket
+process:
+  kopano-server:
+    running: true
 http:
   http://localhost:236:
     status: 405
