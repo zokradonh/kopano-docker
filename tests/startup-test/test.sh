@@ -21,6 +21,9 @@ dockerize \
 	-wait tcp://kopano_zpush:80 \
 	-timeout 120s
 
+# until goss is part of the general testsuite check goss for kopano-server here as well
+docker exec kopano_server goss -g /kopano/goss/server/goss.yaml validate
+
 # make sure the public store exists
 docker exec kopano_server kopano-storeadm -h default: -P || true
 

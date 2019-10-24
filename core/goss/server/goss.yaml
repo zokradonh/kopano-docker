@@ -32,5 +32,5 @@ http:
     timeout: 5000
   https://localhost:237:
     status: 405
-    allow-insecure: true 
+    allow-insecure: true
     timeout: 5000
