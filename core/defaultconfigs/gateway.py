@@ -5,6 +5,7 @@ import kcconf
 kcconf.configkopano({
     r"/etc/kopano/gateway.cfg":
     {
+        'imap_listen': "0.0.0.0:143",
         'log_file': "-",
         'log_level': "3",
         'tmp_path': "/tmp/gateway/"

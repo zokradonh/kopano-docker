@@ -5,6 +5,7 @@ import kcconf
 kcconf.configkopano({
     r"/etc/kopano/dagent.cfg":
     {
+        'lmtp_listen': "0.0.0.0:2003",
         'log_file': "-",
         'log_level': "4",
         'tmp_path': "/tmp/dagent/"
