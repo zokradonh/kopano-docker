@@ -6,8 +6,14 @@ tests:
       contains:
         - "Inbox"
         - "Drafts"
+  check if store exists:
+    command: "docker exec kopano_server kopano-admin --details user10"
+    exit-code: 0
+    stdout:
+      not-contains:
+        - "WARNING: Unable to get user store entry id. User possibly has no store."
   check mailbox language german: # this needs a running kopano-server can can therefore not be executed in that container directly
-    command: "docker exec kopano-storeadm -D user 11; docker exec kopano_server kopano-storeadm -C -l de_DE -n user11; docker exec kopano_server show-folders.py --user user11"
+    command: "docker exec kopano_server kopano-storeadm -D user 11; docker exec kopano_server kopano-storeadm -C -l de_DE -n user11; docker exec kopano_server show-folders.py --user user11"
     exit-code: 0
     stdout:
       not-contains:
