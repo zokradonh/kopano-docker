@@ -61,7 +61,7 @@ tests:
     exit-code: 0
     stdout:
       contains:
-        - "  $additionalFolders = array(\n    array('store' => \"SYSTEM\", 'folderrid' => \"42\", 'name' => \"Calendar\", 'type' => \"SYNC_FOLDER_TYPE_USER_APPOINTMENT\", 'flags' => \"4\"),\n    array('store' => \"SYSTEM\", 'folderrid' => \"21\", 'name' => \"Mail\", 'type' => \"SYNC_FOLDER_TYPE_USER_MAIL\", 'flags' => \"0\"),\n  );"
+        - "  $additionalFolders = array(\n    array('store' => \"SYSTEM\", 'folderid' => \"42\", 'name' => \"Calendar\", 'type' => SYNC_FOLDER_TYPE_USER_APPOINTMENT, 'flags' => 4),\n    array('store' => \"SYSTEM\", 'folderid' => \"21\", 'name' => \"Mail\", 'type' => SYNC_FOLDER_TYPE_USER_MAIL, 'flags' => 0),\n  );"
       not-contains: # default entry
         - "\t$additionalFolders = array("
         - "\t);"
