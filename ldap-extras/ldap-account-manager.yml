@@ -1,11 +1,32 @@
+# Depends on https://github.com/LDAPAccountManager/lam/pull/76
 version: "3.5"
 
 services:
   ldap-account-manager:
-    image: ldapaccountmanager/lam:6.9
+    image: ldapaccountmanager/lam:latest
     restart: unless-stopped
+    #ports:
+    #  - "8080:80"
     depends_on:
       - ldap
+      - web
+    volumes:
+      - lametc/:/etc/ldap-account-manager
+      - lamconfig/:/var/lib/ldap-account-manager/config
+      - lamsession/:/var/lib/ldap-account-manager/sess
+    environment:
+      - LAM_PASSWORD=${LDAP_ADMIN_PASSWORD}
+      - LAM_LANG=en_US
+      - LAM_TIMEZONE=Europe/Berlin
+      - LDAP_SERVER=${LDAP_SERVER}
+      - LDAP_DOMAIN=${LDAP_DOMAIN}
+      - LDAP_BASE_DN=${LDAP_BASE_DN}
+      - ADMIN_USER=cn=admin,${LDAP_BASE_DN}
+      #- DEBUG=true
     networks:
       - ldap-net
       - web-net
+volumes:
+  lametc:
+  lamconfig:
+  lamsession:
