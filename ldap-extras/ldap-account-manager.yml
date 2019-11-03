@@ -1,0 +1,11 @@
+version: "3.5"
+
+services:
+  ldap-account-manager:
+    image: ldapaccountmanager/lam:6.9
+    restart: unless-stopped
+    depends_on:
+      - ldap
+    networks:
+      - ldap-net
+      - web-net
