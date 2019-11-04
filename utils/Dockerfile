@@ -11,10 +11,18 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    vim nano man less \
+    git \
+    iputils-ping \
     kopano-backup \
     kopano-migration-imap \
     kopano-migration-pst \
+    ldap-utils \
+    less \
+    lsof \
+    man \
+    nano \
+    net-tools \
+    vim \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
