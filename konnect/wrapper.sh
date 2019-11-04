@@ -52,8 +52,8 @@ if [ "${allow_dynamic_client_registration:-}" = "yes" ]; then
 	set -- "$@" "--allow-dynamic-client-registration"
 fi
 
-if [ -n "${uri-base-path:-}" ]; then
-	set -- "$@" --uri-base-path="$uri-base-path"
+if [ -n "${uri_base_path:-}" ]; then
+	set -- "$@" --uri-base-path="$uri_base_path"
 fi
 
 dockerize \
