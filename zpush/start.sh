@@ -106,7 +106,7 @@ perl -i -0pe 's/\$additionalFolders.*\);//s' /etc/z-push/z-push.conf.php
 echo -e "  \$additionalFolders = array(" >> /etc/z-push/z-push.conf.php
 echo "$ZPUSH_ADDITIONAL_FOLDERS" | jq -c '.[]' | while read -r folder; do
 	eval "$(echo "$folder" | jq -r '@sh "NAME=\(.name) ID=\(.id) TYPE=\(.type) FLAGS=\(.flags)"')"
-	echo -e "    array('store' => \"SYSTEM\", 'folderrid' => \"$ID\", 'name' => \"$NAME\", 'type' => \"$TYPE\", 'flags' => \"$FLAGS\")," >> /etc/z-push/z-push.conf.php
+	echo -e "    array('store' => \"SYSTEM\", 'folderid' => \"$ID\", 'name' => \"$NAME\", 'type' => $TYPE, 'flags' => $FLAGS)," >> /etc/z-push/z-push.conf.php
 done
 echo -e '  );' >> /etc/z-push/z-push.conf.php
 
