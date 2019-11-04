@@ -7,10 +7,11 @@ ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG RELEASE_KEY_DOWNLOAD=0
-ARG DEBIAN_FRONTEND=noninteractive
 
-ENV BASE_VERSION=1.2.1 \
-    DEBUG=""
+ENV \
+    BASE_VERSION=1.3.0 \
+    DEBUG="" \
+    DEBIAN_FRONTEND=noninteractive
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano base container" \
@@ -27,9 +28,7 @@ RUN mkdir -p /kopano/repo /kopano/data /kopano/helper /kopano/path
 WORKDIR /kopano/repo
 
 # install basics
-# hadolint ignore=DL3005
 RUN apt-get update && \
-    apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
         apt-transport-https \
         apt-utils \
