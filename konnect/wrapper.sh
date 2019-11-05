@@ -62,7 +62,7 @@ fi
 
 # read password from file (UCS requirement)
 if [ -n "$LDAP_BINDPW_FILE" ]; then
-	bindpw="$(cat "${BINDPW_FILE}")"
+	bindpw="$(cat "${LDAP_BINDPW_FILE}")"
 	export LDAP_BINDPW="${bindpw}"
 fi
 
