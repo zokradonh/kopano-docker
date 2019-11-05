@@ -60,6 +60,12 @@ if [ "$insecure" = "yes" ]; then
 	set -- "$@" "--insecure"
 fi
 
+# read password from file (UCS requirement)
+if [ -n "$LDAP_BINDPW_FILE" ]; then
+	bindpw="$(cat "${BINDPW_FILE}")"
+	export LDAP_BINDPW="${bindpw}"
+fi
+
 dockerize \
 	-wait file://"${signing_private_key:?}" \
 	-wait file://"${encryption_secret_key:?}" \
