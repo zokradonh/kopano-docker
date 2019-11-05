@@ -56,7 +56,7 @@ if [ -n "${uri_base_path:-}" ]; then
 	set -- "$@" --uri-base-path="$uri_base_path"
 fi
 
-if [ "$insecure" = "yes" ]; then
+if [ "${insecure:-}" = "yes" ]; then
 	set -- "$@" "--insecure"
 fi
 
