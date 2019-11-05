@@ -56,6 +56,10 @@ if [ -n "${uri_base_path:-}" ]; then
 	set -- "$@" --uri-base-path="$uri_base_path"
 fi
 
+if [ "$insecure" = "yes" ]; then
+	set -- "$@" "--insecure"
+fi
+
 dockerize \
 	-wait file://"${signing_private_key:?}" \
 	-wait file://"${encryption_secret_key:?}" \
