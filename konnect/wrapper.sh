@@ -61,7 +61,7 @@ if [ "${insecure:-}" = "yes" ]; then
 fi
 
 # read password from file (UCS requirement)
-if [ -n "$LDAP_BINDPW_FILE" ]; then
+if [ -n "${LDAP_BINDPW_FILE:-}" ]; then
 	bindpw="$(cat "${LDAP_BINDPW_FILE}")"
 	export LDAP_BINDPW="${bindpw}"
 fi
