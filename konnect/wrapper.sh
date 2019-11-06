@@ -36,9 +36,9 @@ cat <<EOT >> $CONFIG_JSON
 authorities:
   - name: ucs-konnect
     default: yes
-    iss: https://ucs-sso.kopano.intranet
+    iss: $external_oidc_url
     client_id: kopano-meet
-    client_secret: konnect
+    client_secret: $external_oidc_clientsecret
     authority_type: oidc
     discover: true
     response_type: id_token
