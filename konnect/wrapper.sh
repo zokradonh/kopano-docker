@@ -32,7 +32,7 @@ fi
 if [ "${external_oidc_provider:-}" = "yes" ]; then
 	echo "Patching identifier registration for external OIDC provider"
 	CONFIG_JSON=/etc/kopano/konnectd-identifier-registration.yaml
-cat <<EOT >> $CONFIGJSON
+cat <<EOT >> $CONFIG_JSON
 authorities:
   - name: ucs-konnect
     default: yes
