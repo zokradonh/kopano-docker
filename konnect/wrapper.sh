@@ -40,10 +40,12 @@ set -- "$@" --iss="$oidc_issuer_identifier"
 echo "Entrypoint: Issuer url (--iss): $oidc_issuer_identifier"
 
 if [ -n "${log_level:-}" ]; then
+	echo "Entrypoint: Setting logging to $log_level"
 	set -- "$@" --log-level="$log_level"
 fi
 
 if [ "${allow_client_guests:-}" = "yes" ]; then
+	echo "Entrypoint: Allowing guest login"
 	set -- "$@" "--allow-client-guests"
 fi
 
@@ -53,10 +55,12 @@ if [ "${allow_dynamic_client_registration:-}" = "yes" ]; then
 fi
 
 if [ -n "${uri_base_path:-}" ]; then
+	echo "Entrypoint: Setting base-path to $uri_base_path"
 	set -- "$@" --uri-base-path="$uri_base_path"
 fi
 
 if [ "${insecure:-}" = "yes" ]; then
+	echo "Entrypoint: running Konnect in insecure mode"
 	set -- "$@" "--insecure"
 fi
 
