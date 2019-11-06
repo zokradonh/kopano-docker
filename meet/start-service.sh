@@ -39,7 +39,7 @@ jq '.apps += {"enabled": ["kopano-konnect"]}' $CONFIG_JSON | sponge $CONFIG_JSON
 
 # enable Kopano WebApp in the app grid (enabled by default)
 # TODO how to only update the array?
-if [ "${KCCONF_MEET_GRID_WEBAPP:-yes}" = "yes" ]; then
+if [ "${GRID_WEBAPP:-yes}" = "yes" ]; then
 	jq '.apps += {"enabled": ["kopano-webapp", "kopano-konnect"]}' $CONFIG_JSON | sponge $CONFIG_JSON
 fi
 

@@ -29,6 +29,11 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 	yq -y . $CONFIG_JSON | sponge /kopano/ssl/konnectd-identifier-registration.yaml
 fi
 
+if [ "${external_oidc_provider:-}" = "yes" ]; then
+	# TODO needs FQDN of OIDC and client secret
+	yq -y ".authorities += [{name: ucs-konnect, default: yes, iss: 'https://ucs-sso.kopano.intranet', client_id: konnect, client_secret: konnect, authority_type: oidc, discover: true, response_type: id_token, insecure: true, identity_claim_name: sub, scopes: [openid, profile, email]}]}" $CONFIG_JSON | sponge $CONFIG_JSON
+fi
+
 # source additional configuration from Konnect cfg (potentially overwrites env vars)
 if [ -e /etc/kopano/konnectd.cfg ]; then
 	# shellcheck disable=SC1091
