@@ -54,6 +54,11 @@ RUN \
         kopano-grapi kopano-kapid \
         ${ADDITIONAL_KOPANO_PACKAGES} \
         && \
+    coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server) && \
+    if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then \
+        apt-get install --no-install-recommends -y \
+            python3-grapi.backend.ldap; \
+    fi; \
     set +x && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
     touch /etc/kopano/admin.cfg && \
