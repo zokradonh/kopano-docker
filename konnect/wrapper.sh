@@ -41,7 +41,6 @@ authorities:
     client_secret: $external_oidc_clientsecret
     authority_type: oidc
     response_type: id_token
-    identity_claim_name: uid
     scopes:
       - openid
       - profile
