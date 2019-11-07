@@ -42,7 +42,6 @@ authorities:
     authority_type: oidc
     discover: true
     response_type: id_token
-    insecure: true
     identity_claim_name: sub
     scopes:
       - openid
