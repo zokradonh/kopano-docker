@@ -1,0 +1,21 @@
+tests:
+  normal startup:
+    command: /commander/test-helper.sh && wrapper.sh
+    exit-code: 0
+
+config:
+  env:
+    PATH: ${PATH}
+    eckey: ${eckey}
+    allow_client_guests: ${allow_client_guests}
+    ecparam: ${ecparam} 
+    signing_private_key: ${signing_private_key}
+    KONNECT_BACKEND: ${KONNECT_BACKEND}
+    FQDN: ${FQDN}
+    identifier_registration_conf: ${identifier_registration_conf}
+    encryption_secret_key: ${encryption_secret_key}
+    identifier_scopes_conf: ${identifier_scopes_conf}
+    allow_dynamic_client_registration: ${allow_dynamic_client_registration}
+    DEBUG: ${DEBUG}
+    LANG: ${LANG}
+
