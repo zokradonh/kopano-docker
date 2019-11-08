@@ -30,4 +30,4 @@ indent_style = space
 
 # TODO skip ident_style for the konnect wrapper for the moment
 [konnect/wrapper.sh]
-ident_style = none
+indent_style = none
