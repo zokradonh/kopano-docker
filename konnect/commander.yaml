@@ -2,7 +2,12 @@ tests:
   normal startup:
     command: /commander/test-helper.sh && wrapper.sh
     exit-code: 0
-
+    stdout:
+      contains:
+        - "Entrypoint: Allowing guest login"
+        - "--allow-client-guests"
+        - "Entrypoint: Allowing dynamic client registration"
+        - "--allow-dynamic-client-registration"
 config:
   env:
     PATH: ${PATH}
