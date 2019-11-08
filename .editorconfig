@@ -27,7 +27,3 @@ indent_size = 4
 
 [*.ldif]
 indent_style = space
-
-# TODO skip ident_style for the konnect wrapper for the moment
-[konnect/wrapper.sh]
-indent_style = none
