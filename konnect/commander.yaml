@@ -9,7 +9,7 @@ tests:
         - "Entrypoint: Allowing dynamic client registration"
         - "--allow-dynamic-client-registration"
   guests disabled:
-    command: /commander/test-helper.sh && wrapper.sh && cat $identifier_registration_conf
+    command: /commander/test-helper.sh && wrapper.sh && yq . $identifier_registration_conf
     stdout:
       not-contains:
         - "--allow-client-guests"
@@ -18,10 +18,10 @@ tests:
       env:
         allow_client_guests: no
   external oidc provider:
-    command: /commander/test-helper.sh && wrapper.sh && cat $identifier_registration_conf
+    command: /commander/test-helper.sh && wrapper.sh && yq . $identifier_registration_conf
     stdout:
       contains:
-        - "authorities:"
+        - '"authorities": ['
     config:
       env:
         external_oidc_provider: yes
