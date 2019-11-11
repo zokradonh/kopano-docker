@@ -25,6 +25,11 @@ tests:
     config:
       env:
         external_oidc_provider: yes
+  identifier scopes:
+    command: /commander/test-helper.sh && wrapper.sh && yq . $identifier_scopes_conf
+    stdout:
+      contains:
+        - '"description": "Access Kopano Meet"'
 config:
   env:
     PATH: ${PATH}
