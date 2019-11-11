@@ -34,8 +34,14 @@ for setting in $(compgen -A variable KCCONF_MEET); do
 		esac
 done
 
-# enable Kopano WebApp in the app switcher
-jq '.apps += {"enabled": ["kopano-webapp"]}' $CONFIG_JSON | sponge $CONFIG_JSON
+# enable Kopano Konnect in the app grid
+jq '.apps += {"enabled": ["kopano-konnect"]}' $CONFIG_JSON | sponge $CONFIG_JSON
+
+# enable Kopano WebApp in the app grid (enabled by default)
+# TODO how to only update the array?
+if [ "${GRID_WEBAPP:-yes}" = "yes" ]; then
+	jq '.apps += {"enabled": ["kopano-webapp", "kopano-konnect"]}' $CONFIG_JSON | sponge $CONFIG_JSON
+fi
 
 #cat $CONFIG_JSON
 

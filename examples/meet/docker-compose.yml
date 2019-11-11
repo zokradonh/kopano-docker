@@ -154,6 +154,7 @@ services:
       - KCCONF_MEET_disableFullGAB=false
       - KCCONF_MEET_guests_enabled=true
       - KCCONF_MEET_useIdentifiedUser=true
+      - KCCONF_MEET_GRID_WEBAPP=no
     depends_on:
       - kopano_kapi
       - kopano_konnect

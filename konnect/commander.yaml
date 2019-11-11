@@ -1,0 +1,43 @@
+tests:
+  normal startup:
+    command: /commander/test-helper.sh && wrapper.sh
+    exit-code: 0
+    stdout:
+      contains:
+        - "Entrypoint: Allowing guest login"
+        - "--allow-client-guests"
+        - "Entrypoint: Allowing dynamic client registration"
+        - "--allow-dynamic-client-registration"
+  guests disabled:
+    command: /commander/test-helper.sh && wrapper.sh && yq . $identifier_registration_conf
+    stdout:
+      not-contains:
+        - "--allow-client-guests"
+        - "kpop-https://$FQDN/meet/"
+    config:
+      env:
+        allow_client_guests: no
+  external oidc provider:
+    command: /commander/test-helper.sh && wrapper.sh && yq . $identifier_registration_conf
+    stdout:
+      contains:
+        - '"authorities": ['
+    config:
+      env:
+        external_oidc_provider: yes
+config:
+  env:
+    PATH: ${PATH}
+    eckey: ${eckey}
+    allow_client_guests: ${allow_client_guests}
+    ecparam: ${ecparam} 
+    signing_private_key: ${signing_private_key}
+    KONNECT_BACKEND: ${KONNECT_BACKEND}
+    FQDN: ${FQDN}
+    identifier_registration_conf: ${identifier_registration_conf}
+    encryption_secret_key: ${encryption_secret_key}
+    identifier_scopes_conf: ${identifier_scopes_conf}
+    allow_dynamic_client_registration: ${allow_dynamic_client_registration}
+    DEBUG: ${DEBUG}
+    LANG: ${LANG}
+
