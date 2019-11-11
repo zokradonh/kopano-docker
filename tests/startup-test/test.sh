@@ -27,6 +27,7 @@ docker exec kopano_server goss -g /kopano/goss/server/goss.yaml validate
 # make sure the public store exists
 docker exec kopano_server kopano-storeadm -h default: -P || true
 
+docker exec kopano_server kopano-admin --sync
 docker exec kopano_server kopano-cli --list-users
 docker exec kopano_server kopano-admin -l
 docker exec kopano_zpush z-push-admin -a list
