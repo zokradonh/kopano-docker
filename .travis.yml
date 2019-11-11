@@ -28,7 +28,9 @@ script:
   - make test-startup-meet-demo
 deploy:
   - provider: script
-    script: make publish
+    script:
+      - echo "docker_repo=$docker_repo" >> .env
+      - make publish
     on:
       branch: master
 #cache: # uncomment to not load/upload trivy files each time
