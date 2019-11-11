@@ -1,5 +1,4 @@
-# The UCS Meet app needs a new Konnect release
-ARG CODE_VERSION=0.25.3
+ARG CODE_VERSION=0.26.0
 FROM kopano/konnectd:${CODE_VERSION}
 
 ARG VCS_REF
