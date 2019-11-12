@@ -24,7 +24,7 @@ occ ldap:set-config s01 ldapLoginFilter "(&(|(objectclass=kopano-user))(uid=%uid
 occ ldap:set-config s01 ldapGroupFilter "(&(|(objectclass=kopano-group)))"
 occ ldap:set-config s01 ldapEmailAttribute "mail"
 occ ldap:set-config s01 ldapExpertUUIDUserAttr "entryuuid"
-occ ldap:set-config s01 ldapUserDisplayName "uid"
+occ ldap:set-config s01 ldapUserDisplayName "cn"
 occ ldap:set-config s01 ldapUserFilter "(|(objectclass=posixAccount))"
 occ ldap:set-config s01 ldapConfigurationActive 1
 
