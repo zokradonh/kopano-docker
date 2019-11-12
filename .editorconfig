@@ -27,3 +27,9 @@ indent_size = 4
 
 [*.ldif]
 indent_style = space
+
+[*.json]
+indent_style = space
+
+[*.php]
+indent_style = space
