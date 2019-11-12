@@ -10,9 +10,9 @@ Example:
 COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:owncloud/owncloud.yml
 ```
 
-2. run `owncloud.sh` to create the required runtime variables in your `.env` file.
+2. change into the owncloud folder and run `owncloud.sh` to create the required runtime variables in your `.env` file.
 
-3. run `docker-compose up -d` and you will be able to log into `https://your-fqdn/owncloud`.
+3. change back into the root of the checkout and run `docker-compose up -d` and you will be able to log into `https://your-fqdn/owncloud`.
 
 ## Further tweaks
 

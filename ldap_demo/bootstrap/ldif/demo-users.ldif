@@ -4281,6 +4281,7 @@ objectClass: kopano-user
 uidNumber: 23
 userPassword:: dXNlcjIz
 kopanoAccount: 1
+kopanoAdmin: 1
 uid: user23
 mail: user23@{{ LDAP_DOMAIN }}
 kopanoAliases: Katarina@{{ LDAP_DOMAIN }}

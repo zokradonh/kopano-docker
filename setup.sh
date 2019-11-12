@@ -92,7 +92,7 @@ if [ ! -e ./.env ]; then
 
 	value_default="kopano.demo"
 	read -r -p "FQDN to be used (for reverse proxy).
-	Hint: use port 2015 in case port 443 is already in use on the system.
+	Hint: use $value_default:2015 (with your actual FQDN) in case port 443 is already in use on the system (it has to be 443 or 2015, other ports will not work).
 	[$value_default]: " new_value
 	FQDN=${new_value:-$value_default}
 

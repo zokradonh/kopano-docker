@@ -22,6 +22,10 @@ occ ldap:set-config s01 ldapBase ${LDAP_SEARCH_BASE}
 occ ldap:set-config s01 ldapUserFilter "(|(objectclass=kopano-user))"
 occ ldap:set-config s01 ldapLoginFilter "(&(|(objectclass=kopano-user))(uid=%uid))"
 occ ldap:set-config s01 ldapGroupFilter "(&(|(objectclass=kopano-group)))"
+occ ldap:set-config s01 ldapEmailAttribute "mail"
+occ ldap:set-config s01 ldapExpertUUIDUserAttr "entryuuid"
+occ ldap:set-config s01 ldapUserDisplayName "cn"
+occ ldap:set-config s01 ldapUserFilter "(|(objectclass=posixAccount))"
 occ ldap:set-config s01 ldapConfigurationActive 1
 
 /usr/bin/occ user:sync -m disable "OCA\User_LDAP\User_Proxy"
