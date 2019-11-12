@@ -4,7 +4,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 if ! command -v reg > /dev/null; then
-	echo "Please install reg to list available tags."
+	echo "Please install reg to list available tags. You can only press enter when being asked for a tag."
 fi
 
 if [ ! -e ../.env ]; then
@@ -32,7 +32,7 @@ random_string() {
 	hexdump -n 16 -v -e '/1 "%02X"' /dev/urandom
 }
 
-docker_tag_search () {
+docker_tag_search() {
 	image="$1"
 	results=$(reg tags "$image" 2> /dev/null)
 	echo "$results" | xargs -n1 | sort --version-sort -ru
@@ -62,7 +62,7 @@ selectWithDefault() {
 	[[ -n $index ]] && printf %s "${@: index:1}"
 }
 
-update_env_file () {
+update_env_file() {
 	varname="$1"
 	varvalue="$2"
 	if ! grep -q "$varname" ../.env; then
@@ -72,7 +72,7 @@ update_env_file () {
 	fi
 }
 
-tag_question () {
+tag_question() {
 	containername="$1"
 	value_default="$2"
 	description="$3"
