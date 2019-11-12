@@ -2,7 +2,7 @@ version: "3.5"
 services:
   web:
     volumes:
-      - ./web/kweb-calendar.cfg:/etc/kweb.cfg
+      - ./web/kweb-calendar.cfg:/etc/kweb-extras/kweb-calendar.cfg
       - ./kopano-calendar-0.20.0/:/usr/share/kopano-calendar/
       - ./kopano-calendar-0.20.0/config.json.in:/var/www/api/config/v1/kopano/calendar/config.json
   kopano_grapi:
