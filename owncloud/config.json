@@ -1,0 +1,29 @@
+{
+	"server" : "https://kopano.demo:2015/owncloud/",
+	"theme": "owncloud",
+	"version": "0.1.0",
+	"openIdConnect": {
+	  "authority": "https://kopano.demo:2015/",
+	  "client_id": "owncloud",
+	  "client_secret": "owncloud",
+	  "response_type": "id_token token",
+	  "scope": "openid profile email"
+	},
+	"apps" : [
+	  "files"
+	],
+	"menu": {
+	  "items": [
+		{
+		  "name": "Kopano Meet",
+		  "url": "https://kopano.demo:2015/meet",
+		  "iconMaterial": "hearing"
+		},
+		{
+		  "name": "Kopano Webapp",
+		  "url": "https://kopano.demo:2015/webapp/",
+		  "iconMaterial": "transform"
+		}
+	  ]
+	}
+  }

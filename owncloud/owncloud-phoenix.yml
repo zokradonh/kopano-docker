@@ -1,0 +1,8 @@
+version: "3.5"
+services:
+  owncloud:
+    volumes:
+      - ./owncloud/openidconnect/:/mnt/data/apps/openidconnect/
+      - ./owncloud/phoenix/:/mnt/data/apps/phoenix/
+      - ./owncloud/konnectd.config.php:/mnt/data/config/konnectd.config.php
+      - ./owncloud/config.json:/mnt/data/apps/phoenix/config.json
