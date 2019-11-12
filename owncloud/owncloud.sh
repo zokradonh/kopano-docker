@@ -4,8 +4,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 if ! command -v reg > /dev/null; then
-	echo "Please install reg in order to run this script."
-	exit 1
+	echo "Please install reg to list available tags."
 fi
 
 if [ ! -e ../.env ]; then
