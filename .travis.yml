@@ -27,9 +27,9 @@ script:
   - docker-compose down -v
   - make test-startup-meet-demo
 deploy:
+  - skip_cleanup: true
   - provider: script
     script:
-      - echo "docker_repo=$docker_repo" >> .env
       - make publish
     on:
       branch: master
