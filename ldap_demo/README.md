@@ -17,4 +17,4 @@ Additionally the ldap tree is also prepared for multiserver installations (also 
 $ docker-compose -f examples/kopano-multiserver.yml up
 ```
 
-Demo users created in the demo ldap all have a password that is identical to the username, e.g. the password for `user1` user `user1`.
+Demo users created in the demo ldap all have a password that is identical to the username, e.g. the password for `user1` user `user1`. The user `user23 is setup to be an admin within Kopano.`
