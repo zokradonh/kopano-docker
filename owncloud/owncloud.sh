@@ -93,6 +93,8 @@ update_env_file OWNCLOUD_ADMIN_USERNAME admin
 update_env_file OWNCLOUD_ADMIN_PASSWORD "$(random_string)"
 update_env_file MARIADB_ROOT_PASSWORD "$(random_string)"
 
+echo "Setup complete"
+
 if [ -e "$tmpfile" ]; then
 	rm "$tmpfile"
 fi
