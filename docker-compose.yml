@@ -231,6 +231,7 @@ services:
     environment:
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
+      - KCCONF_GRAPI_INSECURE=${INSECURE}
       - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=no
     env_file:
       - kopano_grapi.env
