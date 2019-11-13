@@ -1,3 +1,6 @@
+# This is for the moment only for testing purposes. Starts owncloud with the phoenix ui (available from /files) and the owncloud openid component (not yet public).
+# Both parts need to be extracted into the owncloud directory
+# TODO when this is final, these parts should be part of the owncloud docker image (maybe just need to be enabled as apps)
 version: "3.5"
 services:
   owncloud:
