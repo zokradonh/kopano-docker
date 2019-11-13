@@ -1,8 +1,16 @@
+# This is for the moment only for testing purposes. Starts owncloud with the phoenix ui (available from /files) and the owncloud openid component (not yet public).
+# Both parts need to be extracted into the owncloud directory
+# TODO when this is final, these parts should be part of the owncloud docker image (maybe just need to be enabled as apps)
 version: "3.5"
 services:
   owncloud:
     volumes:
+      - ./owncloud/99-oidc.sh:/etc/owncloud.d/99-oidc.sh
       - ./owncloud/openidconnect/:/mnt/data/apps/openidconnect/
-      - ./owncloud/phoenix/:/mnt/data/apps/phoenix/
       - ./owncloud/konnectd.config.php:/mnt/data/config/konnectd.config.php
+      - ./owncloud/phoenix/:/mnt/data/apps/phoenix/
       - ./owncloud/config.json:/mnt/data/apps/phoenix/config.json
+  web:
+    volumes:
+      - ./owncloud/phoenix/:/var/www/files/
+      - ./owncloud/config.json:/var/www/files/config.json
