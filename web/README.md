@@ -13,6 +13,10 @@ Example:
 DEFAULTREDIRECT=/meet
 ```
 
+## Serving additional files
+
+Kweb in the Web container can easily be extended to serve static content. By default it will serve all content that has been copied into `/var/www/`. To extend the built in configuration file just add an additional file into `/etc/kweb-extras/`. Kweb is using the [Caddyfile syntax](https://caddyserver.com/v1/docs/caddyfile).
+
 ## Information needed when not running your own reverse proxy
 
 The `kopano_webapp` container is accessible on port 9080 and serves the WebApp on `/webapp`.
