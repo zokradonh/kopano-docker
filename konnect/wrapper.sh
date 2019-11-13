@@ -77,6 +77,11 @@ if [ "${insecure:-}" = "yes" ]; then
 	set -- "$@" "--insecure"
 fi
 
+# Support additional args provided via environment.
+if [ -n "${ARGS:-}" ]; then
+	set -- "$@" "${ARGS}"
+fi
+
 # read password from file (UCS requirement)
 if [ -n "${LDAP_BINDPW_FILE:-}" ]; then
 	bindpw="$(cat "${LDAP_BINDPW_FILE}")"
