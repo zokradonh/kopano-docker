@@ -7,7 +7,8 @@
     "client_id": "owncloud",
     "client_secret": "owncloud",
     "response_type": "id_token token",
-    "scope": "openid profile email"
+    "scope": "openid profile email",
+    "automaticSilentRenew": true
   },
   "apps": [
     "files"
