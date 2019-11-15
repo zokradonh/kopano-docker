@@ -31,3 +31,24 @@ tests:
         - Debian
         - amd64
         - tar.gz
+  ./version.sh mdm:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - Debian
+        - amd64
+        - tar.gz
+  ./version.sh files:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - Debian
+        - amd64
+        - tar.gz
+  ./version.sh smime:
+    exit-code: 0
+    stdout:
+      not-contains:
+        - Debian
+        - amd64
+        - tar.gz
