@@ -17,3 +17,16 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
+  ldap:
+    tmpfs:
+      - /var/lib/ldap
+      - /etc/ldap/slapd.d
+  db:
+    tmpfs:
+      - /var/lib/mysql
+  kopano_server:
+    tmpfs:
+      - /kopano/data
+  kopano_search:
+    tmpfs:
+      - /kopano/data
