@@ -30,6 +30,11 @@ tests:
     stdout:
       contains:
         - '"description": "Access Kopano Meet"'
+  identifier registration in /etc/kopano:
+    command: /commander/test-helper.sh && wrapper.sh && yq . $identifier_registration_conf
+    config:
+      env:
+        identifier_registration_conf: /etc/kopano/konnectd-identifier-registration.yaml
 config:
   env:
     PATH: ${PATH}
