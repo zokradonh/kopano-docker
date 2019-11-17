@@ -24,19 +24,24 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.version=$CODE_VERSION \
     org.label-schema.schema-version="1.0"
 
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+
 # TODO use docker multistage for pip install yq https://pythonspeed.com/articles/multi-stage-docker-python/
 # TODO moreutils (required for sponge) bloats the image quite a bit
 RUN apk add --no-cache \
     jq \
     moreutils \
-    openssl \
-    py-pip \
-    && pip install yq==2.7.2
+    openssl
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+ENV YQ_VERSION 2.4.1
+RUN wget -O - https://github.com/mikefarah/yq/releases/download/"$YQ_VERSION"/yq_linux_amd64 \
+    | install /dev/stdin /usr/local/bin/yq && \
+    yq --version
 
 COPY --chown=nobody:nogroup konnectd-identifier-registration.yaml konnectd-identifier-scopes.yaml /etc/kopano/
 COPY wrapper.sh /usr/local/bin
