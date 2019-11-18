@@ -3,8 +3,8 @@ services:
   web:
     volumes:
       - ./calendar/kweb-calendar.cfg:/etc/kweb-extras/kweb-calendar.cfg
-      - ./kopano-calendar-0.20.0/:/usr/share/kopano-calendar/
-      - ./kopano-calendar-0.20.0/config.json.in:/var/www/api/config/v1/kopano/calendar/config.json
+      - ./calendar/kopano-calendar-0.20.0/:/usr/share/kopano-calendar/
+      - ./calendar/kopano-calendar-0.20.0/config.json.in:/var/www/api/config/v1/kopano/calendar/config.json
   kopano_grapi:
     environment:
       - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=yes

@@ -8,4 +8,4 @@ dive.log
 *.env
 docker-compose.override.yml
 build.tags
-kopano-calendar-*/
+calendar/kopano-calendar-*/
