@@ -40,6 +40,11 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
+# services need to be aware of the machine-id
+dockerize \
+	-wait file:///etc/machine-id \
+	-wait file:///var/lib/dbus/machine-id
+
 # start regular service
 case "$SERVICE_TO_START" in
 server)
@@ -89,7 +94,7 @@ server)
 	;;
 dagent)
 	dockerize \
-		-wait file://var/run/kopano/server.sock \
+		-wait file:///var/run/kopano/server.sock \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -145,12 +150,12 @@ kapi)
 	if [ "$KCCONF_KAPID_INSECURE" = "yes" ]; then
 		dockerize \
 		-skip-tls-verify \
-		-wait file://var/run/kopano/grapi/notify.sock \
+		-wait file:///var/run/kopano/grapi/notify.sock \
 		-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
 		-timeout 360s
 	else
 		dockerize \
-		-wait file://var/run/kopano/grapi/notify.sock \
+		-wait file:///var/run/kopano/grapi/notify.sock \
 		-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
 		-timeout 360s
 	fi
@@ -165,7 +170,7 @@ kapi)
 	;;
 monitor)
 	dockerize \
-		-wait file://var/run/kopano/server.sock \
+		-wait file:///var/run/kopano/server.sock \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -173,7 +178,7 @@ monitor)
 	;;
 search)
 	dockerize \
-		-wait file://var/run/kopano/server.sock \
+		-wait file:///var/run/kopano/server.sock \
 		-timeout 360s
 	# give kopano-server a moment to settler before starting search
 	sleep 5
@@ -189,7 +194,7 @@ search)
 	;;
 spooler)
 	dockerize \
-		-wait file://var/run/kopano/server.sock \
+		-wait file:///var/run/kopano/server.sock \
 		-wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":25 \
 		-timeout 1080s
 	# cleaning up env variables

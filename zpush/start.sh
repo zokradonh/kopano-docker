@@ -113,6 +113,11 @@ echo -e '  );' >> /etc/z-push/z-push.conf.php
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
 
+# services need to be aware of the machine-id
+dockerize \
+	-wait file:///etc/machine-id \
+	-wait file:///var/lib/dbus/machine-id
+
 echo "Activate z-push log rerouting"
 touch /var/log/z-push/{z-push.log,z-push-error.log,autodiscover.log,autodiscover-error.log}
 chown -R www-data:www-data /var/log/z-push

@@ -34,6 +34,11 @@ sed -e "s#define('DAV_ROOT_URI', '/');#define('DAV_ROOT_URI', '/kdav/');#" -i /u
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
 
+# services need to be aware of the machine-id
+dockerize \
+	-wait file:///etc/machine-id \
+	-wait file:///var/lib/dbus/machine-id
+
 touch /var/log/kdav/kdav.log
 touch /var/log/kdav/kdav-error.log
 chown www-data:www-data /var/log/kdav/kdav.log /var/log/kdav/kdav-error.log

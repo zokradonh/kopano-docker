@@ -88,9 +88,12 @@ if [ -n "${LDAP_BINDPW_FILE:-}" ]; then
 	export LDAP_BINDPW="${bindpw}"
 fi
 
+# services need to be aware of the machine-id
 dockerize \
 	-wait file://"${signing_private_key:?}" \
 	-wait file://"${encryption_secret_key:?}" \
+	-wait file:///etc/machine-id \
+	-wait file:///var/lib/dbus/machine-id
 	-timeout 360s
 exec konnectd serve \
 	--signing-private-key="${signing_private_key:?}" \
