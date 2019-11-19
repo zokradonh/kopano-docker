@@ -171,8 +171,8 @@ services:
       - kopano_kwmserver
       - web
     volumes:
-     - /etc/machine-id:/etc/machine-id
-     - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
 
