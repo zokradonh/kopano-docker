@@ -22,6 +22,11 @@ ENV KWEBD_DNS_KDAV="kopano_kdav"
 ENV KWEBD_DNS_GRAPI="kopano_grapi"
 ENV KWEBD_DNS_ICAL="kopano_ical"
 
+ENV DOCKERIZE_VERSION v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
 COPY wrapper.sh /usr/local/bin
 COPY kweb.cfg /etc/kweb.cfg
 

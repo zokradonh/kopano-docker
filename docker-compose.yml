@@ -187,6 +187,8 @@ services:
     depends_on:
       - kopano_server
     volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
       - kopanowebapp/:/var/lib/kopano-webapp/
@@ -209,6 +211,8 @@ services:
     depends_on:
       - kopano_server
     volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
       - zpushstates/:/var/lib/z-push/
@@ -277,6 +281,8 @@ services:
     depends_on:
       - kopano_server
     volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
       - kdavstates/:/var/lib/kopano/kdav
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
@@ -471,6 +477,9 @@ services:
       - kopano_konnect
       - kopano_kwmserver
       - web
+    volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
 
