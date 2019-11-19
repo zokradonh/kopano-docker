@@ -9,18 +9,20 @@ services:
       - "${HTTP:-80}:80"
       - "${HTTPS:-443}:443"
     environment:
+      - DEFAULTREDIRECT=/meet
       - EMAIL=${EMAIL:-off}
       - FQDN=${FQDNCLEANED?err}
-      - DEFAULTREDIRECT=/meet
     command: wrapper.sh
     cap_drop:
       - ALL
     cap_add:
-      - NET_BIND_SERVICE
       - CHOWN
+      - NET_BIND_SERVICE
       - SETGID
       - SETUID
     volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
       - web:/.kweb
     networks:
       web-net:
@@ -32,12 +34,12 @@ services:
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_ldap
     environment:
-      - LDAP_ORGANISATION=${LDAP_ORGANISATION}
-      - LDAP_DOMAIN=${LDAP_DOMAIN}
-      - LDAP_BASE_DN=${LDAP_BASE_DN}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
-      - LDAP_READONLY_USER=true
+      - LDAP_BASE_DN=${LDAP_BASE_DN}
+      - LDAP_DOMAIN=${LDAP_DOMAIN}
+      - LDAP_ORGANISATION=${LDAP_ORGANISATION}
       - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_USER_PASSWORD}
+      - LDAP_READONLY_USER=true
     command: "--loglevel info --copy-service"
     volumes:
       - ldap:/var/lib/ldap
@@ -58,16 +60,18 @@ services:
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
     volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
     environment:
-      - SERVICE_TO_START=grapi
-      - TZ=${TZ}
       - ADDITIONAL_KOPANO_PACKAGES=python3-grapi.backend.ldap
       - GRAPI_BACKEND=ldap
-      - LDAP_URI=${LDAP_SERVER}
+      - LDAP_BASEDN=${LDAP_SEARCH_BASE}
       - LDAP_BINDDN=${LDAP_BIND_DN}
       - LDAP_BINDPW=${LDAP_BIND_PW}
-      - LDAP_BASEDN=${LDAP_SEARCH_BASE}
+      - LDAP_URI=${LDAP_SERVER}
+      - SERVICE_TO_START=grapi
+      - TZ=${TZ}
     networks:
       - kopano-net
       - ldap-net
@@ -79,15 +83,17 @@ services:
     depends_on:
       - kopano_grapi
     volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
       - kopanodata/:/kopano/data
-      - kopanossl/:/kopano/ssl
       - kopanosocket/:/run/kopano
+      - kopanossl/:/kopano/ssl
     environment:
-      - SERVICE_TO_START=kapi
-      - TZ=${TZ}
+      - KCCONF_KAPID_INSECURE=${INSECURE}
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
-      - KCCONF_KAPID_INSECURE=${INSECURE}
+      - SERVICE_TO_START=kapi
+      - TZ=${TZ}
     networks:
       - kopano-net
       - web-net
@@ -99,29 +105,31 @@ services:
       - kopano_ssl
       - web
     volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
     environment:
-      - FQDN=${FQDN}
-      - ecparam=/kopano/ssl/ecparam.pem
-      - eckey=/kopano/ssl/meet-kwmserver.pem
-      - signing_private_key=/kopano/ssl/konnectd-tokens-signing-key.pem
-      - encryption_secret_key=/kopano/ssl/konnectd-encryption.key
-      - identifier_registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
-      - identifier_scopes_conf=/etc/kopano/konnectd-identifier-scopes.yaml
       - allow_client_guests=yes
       - allow_dynamic_client_registration=yes
+      - eckey=/kopano/ssl/meet-kwmserver.pem
+      - ecparam=/kopano/ssl/ecparam.pem
+      - encryption_secret_key=/kopano/ssl/konnectd-encryption.key
+      - FQDN=${FQDN}
+      - identifier_registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
+      - identifier_scopes_conf=/etc/kopano/konnectd-identifier-scopes.yaml
       - KONNECT_BACKEND=ldap
-      - LDAP_URI=${LDAP_SERVER}
+      - LDAP_BASEDN=${LDAP_SEARCH_BASE}
       - LDAP_BINDDN=${LDAP_BIND_DN}
       - LDAP_BINDPW=${LDAP_BIND_PW}
-      - LDAP_BASEDN=${LDAP_SEARCH_BASE}
-      - LDAP_SCOPE=sub
-      - LDAP_LOGIN_ATTRIBUTE=uid
       - LDAP_EMAIL_ATTRIBUTE=mail
-      - LDAP_NAME_ATTRIBUTE=cn
-      - LDAP_UUID_ATTRIBUTE=uidNumber
-      - LDAP_UUID_ATTRIBUTE_TYPE=text
       - LDAP_FILTER=(objectClass=organizationalPerson)
+      - LDAP_LOGIN_ATTRIBUTE=uid
+      - LDAP_NAME_ATTRIBUTE=cn
+      - LDAP_SCOPE=sub
+      - LDAP_URI=${LDAP_SERVER}
+      - LDAP_UUID_ATTRIBUTE_TYPE=text
+      - LDAP_UUID_ATTRIBUTE=uidNumber
+      - signing_private_key=/kopano/ssl/konnectd-tokens-signing-key.pem
     networks:
       - kopano-net
       - ldap-net
@@ -135,13 +143,15 @@ services:
       - kopano_kapi
       - kopano_konnect
     environment:
+      - enable_guest_api=yes
       - INSECURE=${INSECURE}
       - oidc_issuer_identifier=https://${FQDN}
-      - enable_guest_api=yes
       - public_guest_access_regexp=^group/public/.*
-      - turn_service_credentials_user=${TURN_USER}
       - turn_service_credentials_password=${TURN_PASSWORD}
+      - turn_service_credentials_user=${TURN_USER}
     volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
     networks:
       - web-net
@@ -150,30 +160,33 @@ services:
     image: ${docker_repo:-kopano}/kopano_meet:${MEET_VERSION:-latest}
     restart: unless-stopped
     environment:
-      - SERVICE_TO_START=meet
       - KCCONF_MEET_disableFullGAB=false
+      - KCCONF_MEET_GRID_WEBAPP=no
       - KCCONF_MEET_guests_enabled=true
       - KCCONF_MEET_useIdentifiedUser=true
-      - KCCONF_MEET_GRID_WEBAPP=no
+      - SERVICE_TO_START=meet
     depends_on:
       - kopano_kapi
       - kopano_konnect
       - kopano_kwmserver
       - web
+    volumes:
+     - /etc/machine-id:/etc/machine-id
+     - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
 
 volumes:
-  web:
+  kopanodata:
+  kopanosocket:
+  kopanossl:
   ldap:
   slapd:
-  kopanodata:
-  kopanossl:
-  kopanosocket:
+  web:
 
 networks:
-  web-net:
   kopano-net:
     driver: bridge
   ldap-net:
     driver: bridge
+  web-net:

@@ -11,9 +11,13 @@ services:
       - ldap-net
       - web-net
     volumes:
-      - kopanodata/:/kopano/data
-      - kopanossl/:/kopano/ssl
-      - kopanosocket/:/run/kopano
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - kopanodata/:/kopano/data
+      - kopanosocket/:/run/kopano
+      - kopanossl/:/kopano/ssl
     environment:
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
+  ldap:
+    tmpfs:
+      - /var/lib/ldap
+      - /etc/ldap/slapd.d
