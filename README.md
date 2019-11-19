@@ -128,9 +128,11 @@ The exposed ports of each container are defined in `docker-compose.ports.yml`. I
 
 To get a quick impression of Kopano this git repository bundles a locally build LDAP image with some example users. When using the docker-compose.yml in a production environment make sure to:
 
-- either remove `ldap-demo/bootstrap/ldif/demo-users.ldif` from the locally built LDAP image or completely remove the local LDAP from the compose file
+- switch to the non-demo ldap tree or completely remove the local LDAP from the compose file
 - adapt LDAP queries in .env to match you actual LDAP server and users
-- all additional configuration of the Kopano components should be specified in the compose file and **not within the running container**
+- all additional configuration of the Kopano components should be specified in the compose file/the env file/an override and **not within the running container**
+- make sure that there is a unique machine-id for your deployment
+  - the default setup mounts the file from the host, if your host is running multiple installations of Kopano make sure to generate a unique value for each installation.
 
 #### Can I combine these Docker images with my existing environment?
 
