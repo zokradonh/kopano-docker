@@ -43,12 +43,17 @@ if [ "${GRID_WEBAPP:-yes}" = "yes" ]; then
 	jq '.apps += {"enabled": ["kopano-webapp", "kopano-konnect"]}' $CONFIG_JSON | sponge $CONFIG_JSON
 fi
 
-#cat $CONFIG_JSON
-
 sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
+# always disable tls
 export tls=no
 # shellcheck disable=SC2046
 export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
+
+# services need to be aware of the machine-id
+dockerize \
+	-wait file:///etc/machine-id \
+	-wait file:///var/lib/dbus/machine-id
+
 # cleaning up env variables
 unset "${!KCCONF_@}"
 exec kopano-kwebd serve

@@ -76,6 +76,11 @@ else
 	-timeout 360s
 fi
 
+# services need to be aware of the machine-id
+dockerize \
+	-wait file:///etc/machine-id \
+	-wait file:///var/lib/dbus/machine-id
+
 exec /usr/local/bin/docker-entrypoint.sh serve \
 	--registration-conf /kopano/ssl/konnectd-identifier-registration.yaml \
 	"$@"
