@@ -3,11 +3,12 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-HADOLINT_VERSION=1.17.1
-DOCKER_COMPOSE_VERSION=1.23.2
-TRIVY_VERSION=0.1.1
-GOSS_VERSION=0.3.7
 COMMANDER_VERSION=1.2.1
+DOCKER_COMPOSE_VERSION=1.23.2
+GOSS_VERSION=0.3.7
+HADOLINT_VERSION=1.17.1
+REG_VERSION=0.16.1
+TRIVY_VERSION=0.1.1
 
 progname=$(basename "$0")
 tempdir=$(mktemp -d "/tmp/$progname.XXXXXX")
@@ -51,6 +52,11 @@ fi
 if ! command -v dccommander > /dev/null; then
 	sudo curl -L https://raw.githubusercontent.com/fbartels/dccommander/master/dccommander -o /usr/local/bin/dccommander
 	sudo chmod +rx /usr/local/bin/dccommander
+fi
+
+if ! command -v reg  > /dev/null; then
+	sudo curl -L https://github.com/genuinetools/reg/releases/download/v$REG_VERSION/reg-linux-amd64 -o /usr/local/bin/reg
+	sudo chmod +rx /usr/local/bin/reg
 fi
 
 if ! command -v expect > /dev/null; then

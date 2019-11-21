@@ -114,6 +114,9 @@ build-base: ## Build new base image.
 build-core:
 	component=core make build
 
+build-helper:
+	component=build make build-simple
+
 build-konnect:
 	component=konnect make build-simple
 
@@ -284,6 +287,9 @@ publish-base: tag-base
 
 publish-core: tag-core
 	component=core make publish-container
+
+publish-helper:
+	docker push $(docker_repo)/kopano_build:latest
 
 publish-konnect: tag-konnect
 	component=konnect make publish-container
