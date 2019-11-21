@@ -5,11 +5,12 @@ fi
 
 cd "$(dirname "$0")" || exit
 
-docker build .
+docker pull zokradonh/kopano_build:latest || true
+docker build --cache-from zokradonh/kopano_build:latest .
 
 docker run \
 	--rm -it \
 	-u "$(id -u)":"$(id -g)" \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v "$(pwd)"/..:/kopano-docker/ \
-	"$(docker build -q .)" "$@"
+	"$(docker build --cache-from zokradonh/kopano_build:latest -q .)" "$@"
