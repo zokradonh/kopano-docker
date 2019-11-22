@@ -9,23 +9,24 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
-dockerize \
-	-wait file://"${ecparam:?}" \
-	-wait file://"${eckey:?}" \
-	-timeout 360s
-
-# Key generation for Meet guest mode
-if [ ! -s "$ecparam" ]; then
-	echo "Creating ec param key for Meet..."
-	openssl ecparam -name prime256v1 -genkey -noout -out "$ecparam" >/dev/null 2>&1
-fi
-
-if [ ! -s "$eckey" ]; then
-	echo "Creating ec key for Meet..."
-	openssl ec -in "$ecparam" -out "$eckey" >/dev/null 2>&1
-fi
-
 if [ "${allow_client_guests:-}" = "yes" ]; then
+	# TODO this should be simplified so that ecparam and eckey are only required if the is no jwk-meet.json yet
+	dockerize \
+		-wait file://"${ecparam:?}" \
+		-wait file://"${eckey:?}" \
+		-timeout 360s
+
+	# Key generation for Meet guest mode
+	if [ ! -s "$ecparam" ]; then
+		echo "Creating ec param key for Meet..."
+		openssl ecparam -name prime256v1 -genkey -noout -out "$ecparam" >/dev/null 2>&1
+	fi
+
+	if [ ! -s "$eckey" ]; then
+		echo "Creating ec private key for Meet..."
+		openssl ec -in "$ecparam" -out "$eckey" >/dev/null 2>&1
+	fi
+
 	echo "Patching identifier registration for use of the Meet guest mode"
 	/usr/local/bin/konnectd utils jwk-from-pem --use sig "$eckey" > /tmp/jwk-meet.json
 	CONFIG_JSON=/etc/kopano/konnectd-identifier-registration.yaml
