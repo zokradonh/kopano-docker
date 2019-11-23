@@ -12,10 +12,20 @@ fi
 if [ "${allow_client_guests:-}" = "yes" ]; then
 	# TODO try to create the file if it does not yet exist, how to combine with the below dockerize check?
 	# TODO this should be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
-	dockerize \
-		-wait file://"${ecparam:?}" \
-		-wait file://"${eckey:?}" \
-		-timeout 360s
+
+	if ! >> "${ecparam:?}"; then
+		# ecparam can not be created in this container, wait for external creation
+		dockerize \
+			-wait file://"$ecparam" \
+			timeout 360s
+	fi
+
+	if ! >> "${eckey:?}"; then
+		# eckey can not be created in this container, wait for external creation
+		dockerize \
+			-wait file://"$eckey" \
+			timeout 360s
+	fi
 
 	# Key generation for Meet guest mode
 	if [ ! -s "$ecparam" ]; then
