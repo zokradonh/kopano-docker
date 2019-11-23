@@ -9,9 +9,29 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
+DEFAULT_SIGNING_PRIVATE_KEY_FILE=/etc/kopano/konnectd-signing-private-key.pem
+DEFAULT_VALIDATION_KEYS_PATH=/etc/kopano/konnectkeys
+DEFAULT_ENCRYPTION_SECRET_KEY_FILE=/etc/kopano/konnectd-encryption-secret.key
+if [ -n "${signing_private_key:-}" ] && [ ! -e "${DEFAULT_SIGNING_PRIVATE_KEY_FILE}" ]; then
+	if [ -z "${signing_method:-}" ] || [ "$signing_method" = "PS256" ] || [ "$signing_method" = "RS256" ]; then
+		mkdir -p "${DEFAULT_VALIDATION_KEYS_PATH}"
+		rnd=$(RANDFILE=/tmp/.rnd openssl rand -hex 2)
+		key="${DEFAULT_VALIDATION_KEYS_PATH}/konnect-$(date +%Y%m%d)-${rnd}.pem"
+		>&2	echo "setup: creating new RSA private key at ${key} ..."
+		RANDFILE=/tmp/.rnd openssl genpkey -algorithm RSA -out "${key}" -pkeyopt rsa_keygen_bits:4096 -pkeyopt rsa_keygen_pubexp:65537
+		if [ -f "${key}" ]; then
+			ln -sn "${key}" "${DEFAULT_SIGNING_PRIVATE_KEY_FILE}" || true
+		fi
+	fi
+fi
+
+if [ -n "${encryption_secret_key:-}" ] && [ ! -f "${DEFAULT_ENCRYPTION_SECRET_KEY_FILE}" ]; then
+	>&2	echo "setup: creating new secret key at ${DEFAULT_ENCRYPTION_SECRET_KEY_FILE} ..."
+	RANDFILE=/tmp/.rnd openssl rand -out "${DEFAULT_ENCRYPTION_SECRET_KEY_FILE}" 32
+fi
+
 if [ "${allow_client_guests:-}" = "yes" ]; then
-	# TODO try to create the file if it does not yet exist, how to combine with the below dockerize check?
-	# TODO this should be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
+	# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
 
 	if ! true >> "${ecparam:?}"; then
 		# ecparam can not be created in this container, wait for external creation
@@ -29,12 +49,12 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 
 	# Key generation for Meet guest mode
 	if [ ! -s "$ecparam" ]; then
-		echo "Creating ec param key for Meet..."
+		echo "Creating ec param key for Meet guest mode ..."
 		openssl ecparam -name prime256v1 -genkey -noout -out "$ecparam" >/dev/null 2>&1
 	fi
 
 	if [ ! -s "$eckey" ]; then
-		echo "Creating ec private key for Meet..."
+		echo "Creating ec private key for Meet guest mode..."
 		openssl ec -in "$ecparam" -out "$eckey" >/dev/null 2>&1
 	fi
 
@@ -102,14 +122,12 @@ fi
 
 # services need to be aware of the machine-id
 dockerize \
-	-wait file://"${signing_private_key:?}" \
-	-wait file://"${encryption_secret_key:?}" \
 	-wait file:///etc/machine-id \
 	-wait file:///var/lib/dbus/machine-id \
 	-timeout 360s
 exec konnectd serve \
-	--signing-private-key="${signing_private_key:?}" \
-	--encryption-secret="${encryption_secret_key:?}" \
+	--signing-private-key="$signing_private_key" \
+	--encryption-secret="$encryption_secret_key" \
 	--identifier-registration-conf "${identifier_registration_conf:?}" \
 	--identifier-scopes-conf "${identifier_scopes_conf:?}" \
 	"$@" "$KONNECT_BACKEND"
