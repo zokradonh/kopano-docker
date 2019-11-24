@@ -9,38 +9,39 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
-DEFAULT_SIGNING_PRIVATE_KEY_FILE=/etc/kopano/konnectd-signing-private-key.pem
-DEFAULT_VALIDATION_KEYS_PATH=/etc/kopano/konnectkeys
-DEFAULT_ENCRYPTION_SECRET_KEY_FILE=/etc/kopano/konnectd-encryption-secret.key
-if [ -n "${signing_private_key:-}" ] && [ ! -e "${DEFAULT_SIGNING_PRIVATE_KEY_FILE}" ]; then
-	if [ -z "${signing_method:-}" ] || [ "$signing_method" = "PS256" ] || [ "$signing_method" = "RS256" ]; then
-		mkdir -p "${DEFAULT_VALIDATION_KEYS_PATH}"
+
+signing_private_key=${signing_private_key:-"/etc/kopano/konnectd-signing-private-key.pem"}
+validation_keys_path=${validation_keys_path:-"/etc/kopano/konnectkeys"}
+if [ ! -e "${signing_private_key}" ]; then
+		mkdir -p "${validation_keys_path}"
 		rnd=$(RANDFILE=/tmp/.rnd openssl rand -hex 2)
-		key="${DEFAULT_VALIDATION_KEYS_PATH}/konnect-$(date +%Y%m%d)-${rnd}.pem"
+		key="${validation_keys_path}/konnect-$(date +%Y%m%d)-${rnd}.pem"
 		>&2	echo "setup: creating new RSA private key at ${key} ..."
 		RANDFILE=/tmp/.rnd openssl genpkey -algorithm RSA -out "${key}" -pkeyopt rsa_keygen_bits:4096 -pkeyopt rsa_keygen_pubexp:65537
 		if [ -f "${key}" ]; then
-			ln -sn "${key}" "${DEFAULT_SIGNING_PRIVATE_KEY_FILE}" || true
+			ln -sn "${key}" "${signing_private_key}" || true
 		fi
-	fi
 fi
 
-if [ -n "${encryption_secret_key:-}" ] && [ ! -f "${DEFAULT_ENCRYPTION_SECRET_KEY_FILE}" ]; then
-	>&2	echo "setup: creating new secret key at ${DEFAULT_ENCRYPTION_SECRET_KEY_FILE} ..."
-	RANDFILE=/tmp/.rnd openssl rand -out "${DEFAULT_ENCRYPTION_SECRET_KEY_FILE}" 32
+encryption_secret_key=${encryption_secret_key:-"/etc/kopano/konnectd-encryption-secret.key"}
+if [ ! -f "${encryption_secret_key}" ]; then
+	>&2	echo "setup: creating new secret key at ${encryption_secret_key} ..."
+	RANDFILE=/tmp/.rnd openssl rand -out "${encryption_secret_key}" 32
 fi
 
 if [ "${allow_client_guests:-}" = "yes" ]; then
 	# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
 
-	if ! true >> "${ecparam:?}"; then
+	ecparam=${ecparam:-/etc/kopano/ecparam.pem}
+	if ! true >> "$ecparam"; then
 		# ecparam can not be created in this container, wait for external creation
 		dockerize \
 			-wait file://"$ecparam" \
 			timeout 360s
 	fi
 
-	if ! true >> "${eckey:?}"; then
+	eckey=${eckey:-/etc/kopano/meet-kwmserver.pem}
+	if ! true >> "$eckey"; then
 		# eckey can not be created in this container, wait for external creation
 		dockerize \
 			-wait file://"$eckey" \
