@@ -26,7 +26,7 @@ if [ -f "${signing_private_key}" ] && [ ! -s "${signing_private_key}" ]; then
 		>&2	echo "setup: creating new RSA private key at ${key} ..."
 		RANDFILE=/tmp/.rnd openssl genpkey -algorithm RSA -out "${key}" -pkeyopt rsa_keygen_bits:4096 -pkeyopt rsa_keygen_pubexp:65537
 		if [ -f "${key}" ]; then
-			rm $signing_private_key
+			rm "$signing_private_key"
 			ln -sn "${key}" "${signing_private_key}"
 		fi
 fi
