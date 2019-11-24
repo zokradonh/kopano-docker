@@ -436,6 +436,7 @@ services:
       - identifier_registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
       - identifier_scopes_conf=/etc/kopano/konnectd-identifier-scopes.yaml
       - signing_private_key=/kopano/ssl/konnectd-tokens-signing-key.pem
+      - validation_keys_path=/kopano/ssl/konnectkeys
     env_file:
       - kopano_konnect.env
     networks:

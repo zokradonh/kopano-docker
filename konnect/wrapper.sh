@@ -9,22 +9,37 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
-
 signing_private_key=${signing_private_key:-"/etc/kopano/konnectd-signing-private-key.pem"}
 validation_keys_path=${validation_keys_path:-"/etc/kopano/konnectkeys"}
-if [ ! -e "${signing_private_key}" ]; then
+
+if ! true >> "$signing_private_key"; then
+	# file can not be created in this container, wait for external creation
+	dockerize \
+		-wait file://"$signing_private_key" \
+		timeout 360s
+fi
+
+if [ -f "${signing_private_key}" ] && [ ! -s "${signing_private_key}" ]; then
 		mkdir -p "${validation_keys_path}"
 		rnd=$(RANDFILE=/tmp/.rnd openssl rand -hex 2)
 		key="${validation_keys_path}/konnect-$(date +%Y%m%d)-${rnd}.pem"
 		>&2	echo "setup: creating new RSA private key at ${key} ..."
 		RANDFILE=/tmp/.rnd openssl genpkey -algorithm RSA -out "${key}" -pkeyopt rsa_keygen_bits:4096 -pkeyopt rsa_keygen_pubexp:65537
 		if [ -f "${key}" ]; then
-			ln -sn "${key}" "${signing_private_key}" || true
+			rm $signing_private_key
+			ln -sn "${key}" "${signing_private_key}"
 		fi
 fi
 
 encryption_secret_key=${encryption_secret_key:-"/etc/kopano/konnectd-encryption-secret.key"}
-if [ ! -f "${encryption_secret_key}" ]; then
+if ! true >> "$encryption_secret_key"; then
+	# file can not be created in this container, wait for external creation
+	dockerize \
+		-wait file://"$encryption_secret_key" \
+		timeout 360s
+fi
+
+if [ -f "${encryption_secret_key}" ] && [ ! -s "${encryption_secret_key}" ]; then
 	>&2	echo "setup: creating new secret key at ${encryption_secret_key} ..."
 	RANDFILE=/tmp/.rnd openssl rand -out "${encryption_secret_key}" 32
 fi
