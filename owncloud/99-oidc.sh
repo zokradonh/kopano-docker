@@ -8,8 +8,8 @@ occ app:enable openidconnect
 
 TODAY=$(date)
 cat <<EOF >/mnt/data/config/konnectd.config.php
-// Generated on $TODAY
 <?php
+// Generated on $TODAY
 \$CONFIG = [
 	'loglevel' => 0,
 	'debug' => true,
