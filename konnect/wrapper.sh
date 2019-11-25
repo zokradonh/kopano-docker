@@ -14,8 +14,8 @@ fi
 signing_private_key=${signing_private_key:-"/etc/kopano/konnectd-signing-private-key.pem"}
 validation_keys_path=${validation_keys_path:-"/etc/kopano/konnectkeys"}
 
-if [ ! >> "$signing_private_key" ] ; then
-	# file can not be created in this container, wait for external creation
+# file can not be created in this container, wait for external creation
+if [ ! >> "$signing_private_key" ]; then
 	dockerize \
 		-wait file://"$signing_private_key" \
 		-timeout "$DOCKERIZE_TIMEOUT"
