@@ -16,7 +16,7 @@ if ! true >> "$signing_private_key"; then
 	# file can not be created in this container, wait for external creation
 	dockerize \
 		-wait file://"$signing_private_key" \
-		timeout 360s
+		-timeout 360s
 fi
 
 if [ -f "${signing_private_key}" ] && [ ! -s "${signing_private_key}" ]; then
@@ -36,7 +36,7 @@ if ! true >> "$encryption_secret_key"; then
 	# file can not be created in this container, wait for external creation
 	dockerize \
 		-wait file://"$encryption_secret_key" \
-		timeout 360s
+		-timeout 360s
 fi
 
 if [ -f "${encryption_secret_key}" ] && [ ! -s "${encryption_secret_key}" ]; then
@@ -52,7 +52,7 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 		# ecparam can not be created in this container, wait for external creation
 		dockerize \
 			-wait file://"$ecparam" \
-			timeout 360s
+			-timeout 360s
 	fi
 
 	eckey=${eckey:-/etc/kopano/meet-kwmserver.pem}
@@ -60,7 +60,7 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 		# eckey can not be created in this container, wait for external creation
 		dockerize \
 			-wait file://"$eckey" \
-			timeout 360s
+			-timeout 360s
 	fi
 
 	# Key generation for Meet guest mode
