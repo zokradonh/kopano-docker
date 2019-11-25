@@ -3,6 +3,8 @@
 set -eu
 [ "$DEBUG" ] && set -x
 
+DOCKERIZE_TIMEOUT=${DOCKERIZE_TIMEOUT:-360s}
+
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]; then
 	exec "$@"
@@ -12,11 +14,11 @@ fi
 signing_private_key=${signing_private_key:-"/etc/kopano/konnectd-signing-private-key.pem"}
 validation_keys_path=${validation_keys_path:-"/etc/kopano/konnectkeys"}
 
-if ! true >> "$signing_private_key"; then
+if [ ! >> "$signing_private_key" ] ; then
 	# file can not be created in this container, wait for external creation
 	dockerize \
 		-wait file://"$signing_private_key" \
-		-timeout 360s
+		-timeout "$DOCKERIZE_TIMEOUT"
 fi
 
 if [ -f "${signing_private_key}" ] && [ ! -s "${signing_private_key}" ]; then
@@ -32,11 +34,11 @@ if [ -f "${signing_private_key}" ] && [ ! -s "${signing_private_key}" ]; then
 fi
 
 encryption_secret_key=${encryption_secret_key:-"/etc/kopano/konnectd-encryption-secret.key"}
-if ! true >> "$encryption_secret_key"; then
+if [ ! >> "$encryption_secret_key" ]; then
 	# file can not be created in this container, wait for external creation
 	dockerize \
 		-wait file://"$encryption_secret_key" \
-		-timeout 360s
+		-timeout "$DOCKERIZE_TIMEOUT"
 fi
 
 if [ -f "${encryption_secret_key}" ] && [ ! -s "${encryption_secret_key}" ]; then
@@ -48,19 +50,19 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 	# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
 
 	ecparam=${ecparam:-/etc/kopano/ecparam.pem}
-	if ! true >> "$ecparam"; then
+	if [ ! >> "$ecparam" ]; then
 		# ecparam can not be created in this container, wait for external creation
 		dockerize \
 			-wait file://"$ecparam" \
-			-timeout 360s
+			-timeout "$DOCKERIZE_TIMEOUT"
 	fi
 
 	eckey=${eckey:-/etc/kopano/meet-kwmserver.pem}
-	if ! true >> "$eckey"; then
+	if [ ! >> "$eckey" ]; then
 		# eckey can not be created in this container, wait for external creation
 		dockerize \
 			-wait file://"$eckey" \
-			-timeout 360s
+			-timeout "$DOCKERIZE_TIMEOUT"
 	fi
 
 	# Key generation for Meet guest mode
@@ -140,7 +142,7 @@ fi
 dockerize \
 	-wait file:///etc/machine-id \
 	-wait file:///var/lib/dbus/machine-id \
-	-timeout 360s
+	-timeout "$DOCKERIZE_TIMEOUT"
 exec konnectd serve \
 	--signing-private-key="$signing_private_key" \
 	--encryption-secret="$encryption_secret_key" \
