@@ -34,7 +34,7 @@ if [ -f "${signing_private_key}" ] && [ ! -s "${signing_private_key}" ]; then
 fi
 
 encryption_secret_key=${encryption_secret_key:-"/etc/kopano/konnectd-encryption-secret.key"}
-if ! >> "$encryption_secret_key"; then
+if ! true >> "$encryption_secret_key"; then
 	# file can not be created in this container, wait for external creation
 	dockerize \
 		-wait file://"$encryption_secret_key" \
@@ -50,7 +50,7 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 	# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
 
 	ecparam=${ecparam:-/etc/kopano/ecparam.pem}
-	if ! >> "$ecparam"; then
+	if ! true >> "$ecparam"; then
 		# ecparam can not be created in this container, wait for external creation
 		dockerize \
 			-wait file://"$ecparam" \
@@ -58,7 +58,7 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 	fi
 
 	eckey=${eckey:-/etc/kopano/meet-kwmserver.pem}
-	if ! >> "$eckey"; then
+	if ! true >> "$eckey"; then
 		# eckey can not be created in this container, wait for external creation
 		dockerize \
 			-wait file://"$eckey" \
