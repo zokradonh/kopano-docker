@@ -2,6 +2,8 @@
 
 ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 KCCONF_SERVER_MYSQL_SOCKET=${KCCONF_SERVER_MYSQL_SOCKET:-""}
+DISABLE_CHECKS=${DISABLE_CHECKS:-false}
+DISABLE_CONFIG_CHANGES=${DISABLE_CONFIG_CHANGES:-false}
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 [ "$DEBUG" ] && set -x
@@ -24,8 +26,10 @@ done
 
 mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano /var/lib/kopano-grapi
 
-echo "Configure core service '$SERVICE_TO_START'" | ts
-/usr/bin/python3 /kopano/"$SERVICE_TO_START".py
+if [ "${DISABLE_CONFIG_CHANGES}" == false ]; then
+	echo "Configure core service '$SERVICE_TO_START'" | ts
+	/usr/bin/python3 /kopano/"$SERVICE_TO_START".py
+fi
 
 # ensure removed pid-file on unclean shutdowns and mounted volumes
 rm -f /var/run/kopano/"$SERVICE_TO_START".pid
@@ -41,10 +45,11 @@ if [ $# -gt 0 ]; then
 fi
 
 # services need to be aware of the machine-id
-dockerize \
-	-wait file:///etc/machine-id \
-	-wait file:///var/lib/dbus/machine-id
-
+if [[ "$DISABLE_CHECKS" == false  ]]; then
+	dockerize \
+		-wait file:///etc/machine-id \
+		-wait file:///var/lib/dbus/machine-id
+fi
 # start regular service
 case "$SERVICE_TO_START" in
 server)
@@ -78,11 +83,13 @@ server)
 	else
 		DB_CONN="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
 	fi
-	dockerize \
-		-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
-		-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
-		-wait "$DB_CONN" \
-		-timeout 360s
+	if [[ "$DISABLE_CHECKS" == false ]]; then
+		dockerize \
+			-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
+			-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
+			-wait "$DB_CONN" \
+			-timeout 360s
+	fi
 	# pre populate database
 	coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server)
 	if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
