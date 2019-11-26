@@ -4,6 +4,7 @@ via environment variables"""
 import re
 import os
 import os.path
+import sys
 
 def configkopano(configs):
     """ Changes configuration files according to configs typically returned from parseenvironmentvariables(..)"""
@@ -34,9 +35,13 @@ def configkopano(configs):
                     contents = re.sub(r"^\s*#?\s*{}\s*=.*".format(key), r"{} = {}".format(key, newvalue), contents, 0, re.MULTILINE)
 
         # save new configuration
-        with open(filename, "w") as f:
-            f.write(contents)
-        f.close()
+        try:
+            with open(filename, "w") as f:
+                f.write(contents)
+            f.close()
+        except (OSError, PermissionError):
+            print("Can't open {}, ignoring file changes".format(filename))
+
 
 def parseenvironmentvariables(prependingpath):
     """ Parse all environment variables starting with KCCONF_, KCCOMMENT_ and KCUNCOMMENT_ and
