@@ -36,12 +36,24 @@ tests:
       env:
         identifier_registration_conf: /etc/kopano/konnectd-identifier-registration.yaml
   no write permissions for certificates:
-    command: /commander/test-helper.sh && touch $encryption_secret_key && chmod ugo-rwx $encryption_secret_key && wrapper.sh
+    command: /commander/test-helper.sh && wrapper.sh
     exit-code: 1
+    stderr:
+      contains:
+        - "can't create /root/sign.key: Permission denied"
+        - 'Timeout after 1s waiting on dependencies to become available: [file:///root/sign.key]'
     config:
       env:
-        encryption_secret_key: /root/enc-secret.key
         signing_private_key: /root/sign.key
+        DOCKERIZE_TIMEOUT: 1s
+  certificate creation in container:
+    command: /commander/test-helper.sh && wrapper.sh
+    stderr:
+      contains:
+        - "setup: creating new RSA private key at"
+    config:
+      env:
+        signing_private_key: /tmp/sign.key
         DOCKERIZE_TIMEOUT: 1s
 config:
   env:
