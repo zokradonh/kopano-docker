@@ -3,28 +3,76 @@
 set -eu
 [ "$DEBUG" ] && set -x
 
+DOCKERIZE_TIMEOUT=${DOCKERIZE_TIMEOUT:-360s}
+
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]; then
 	exec "$@"
 	exit
 fi
 
-if [ "${allow_client_guests:-}" = "yes" ]; then
-	# TODO try to create the file if it does not yet exist, how to combine with the below dockerize check?
-	# TODO this should be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
+signing_private_key=${signing_private_key:-"/etc/kopano/konnectd-signing-private-key.pem"}
+validation_keys_path=${validation_keys_path:-"/etc/kopano/konnectkeys"}
+
+if ! true >> "$signing_private_key"; then
+	# file can not be created in this container, wait for external creation
 	dockerize \
-		-wait file://"${ecparam:?}" \
-		-wait file://"${eckey:?}" \
-		-timeout 360s
+		-wait file://"$signing_private_key" \
+		-timeout "$DOCKERIZE_TIMEOUT"
+fi
+
+if [ -f "${signing_private_key}" ] && [ ! -s "${signing_private_key}" ]; then
+		mkdir -p "${validation_keys_path}"
+		rnd=$(RANDFILE=/tmp/.rnd openssl rand -hex 2)
+		key="${validation_keys_path}/konnect-$(date +%Y%m%d)-${rnd}.pem"
+		>&2	echo "setup: creating new RSA private key at ${key} ..."
+		RANDFILE=/tmp/.rnd openssl genpkey -algorithm RSA -out "${key}" -pkeyopt rsa_keygen_bits:4096 -pkeyopt rsa_keygen_pubexp:65537
+		if [ -f "${key}" ]; then
+			rm "$signing_private_key"
+			ln -sn "${key}" "${signing_private_key}"
+		fi
+fi
+
+encryption_secret_key=${encryption_secret_key:-"/etc/kopano/konnectd-encryption-secret.key"}
+if ! true >> "$encryption_secret_key"; then
+	# file can not be created in this container, wait for external creation
+	dockerize \
+		-wait file://"$encryption_secret_key" \
+		-timeout "$DOCKERIZE_TIMEOUT"
+fi
+
+if [ -f "${encryption_secret_key}" ] && [ ! -s "${encryption_secret_key}" ]; then
+	>&2	echo "setup: creating new secret key at ${encryption_secret_key} ..."
+	RANDFILE=/tmp/.rnd openssl rand -out "${encryption_secret_key}" 32
+fi
+
+if [ "${allow_client_guests:-}" = "yes" ]; then
+	# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
+
+	ecparam=${ecparam:-/etc/kopano/ecparam.pem}
+	if ! true >> "$ecparam"; then
+		# ecparam can not be created in this container, wait for external creation
+		dockerize \
+			-wait file://"$ecparam" \
+			-timeout "$DOCKERIZE_TIMEOUT"
+	fi
+
+	eckey=${eckey:-/etc/kopano/meet-kwmserver.pem}
+	if ! true >> "$eckey"; then
+		# eckey can not be created in this container, wait for external creation
+		dockerize \
+			-wait file://"$eckey" \
+			-timeout "$DOCKERIZE_TIMEOUT"
+	fi
 
 	# Key generation for Meet guest mode
 	if [ ! -s "$ecparam" ]; then
-		echo "Creating ec param key for Meet..."
+		echo "Creating ec param key for Meet guest mode ..."
 		openssl ecparam -name prime256v1 -genkey -noout -out "$ecparam" >/dev/null 2>&1
 	fi
 
 	if [ ! -s "$eckey" ]; then
-		echo "Creating ec private key for Meet..."
+		echo "Creating ec private key for Meet guest mode..."
 		openssl ec -in "$ecparam" -out "$eckey" >/dev/null 2>&1
 	fi
 
@@ -92,14 +140,12 @@ fi
 
 # services need to be aware of the machine-id
 dockerize \
-	-wait file://"${signing_private_key:?}" \
-	-wait file://"${encryption_secret_key:?}" \
 	-wait file:///etc/machine-id \
 	-wait file:///var/lib/dbus/machine-id \
-	-timeout 360s
+	-timeout "$DOCKERIZE_TIMEOUT"
 exec konnectd serve \
-	--signing-private-key="${signing_private_key:?}" \
-	--encryption-secret="${encryption_secret_key:?}" \
+	--signing-private-key="$signing_private_key" \
+	--encryption-secret="$encryption_secret_key" \
 	--identifier-registration-conf "${identifier_registration_conf:?}" \
 	--identifier-scopes-conf "${identifier_scopes_conf:?}" \
 	"$@" "$KONNECT_BACKEND"

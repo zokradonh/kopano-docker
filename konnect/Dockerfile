@@ -41,4 +41,6 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 COPY --chown=nobody:nogroup konnectd-identifier-registration.yaml konnectd-identifier-scopes.yaml /etc/kopano/
 COPY wrapper.sh /usr/local/bin
 
+USER nobody
+
 ENTRYPOINT ["wrapper.sh"]
