@@ -4,6 +4,13 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 KCCONF_SERVER_MYSQL_SOCKET=${KCCONF_SERVER_MYSQL_SOCKET:-""}
 DISABLE_CHECKS=${DISABLE_CHECKS:-false}
 DISABLE_CONFIG_CHANGES=${DISABLE_CONFIG_CHANGES:-false}
+SPOOLER_SERVER_SOCKET=${KCCONF_SPOOLER_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
+DAGENT_SERVER_SOCKET=${KCCONF_DAGENT_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
+SEARCH_SERVER_SOCKET=${KCCONF_SEARCH_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
+MONITOR_SERVER_SOCKET=${KCCONF_MONITOR_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
+GATEWAY_SERVER_SOCKET=${KCCONF_GATEWAY_SERVER_SOCKET:-"tcp://kopano_server:236"}
+ICAL_SERVER_SOCKET=${KCCONF_ICAL_SERVER_SOCKET:-"tcp://kopano_server:236"}
+
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 [ "$DEBUG" ] && set -x
@@ -76,14 +83,15 @@ server)
 	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 	sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
 	dpkg-reconfigure --frontend=noninteractive locales
-
-	# determine db connection mode (unix vs. network socket)
-	if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
-		DB_CONN="file://$KCCONF_SERVER_MYSQL_SOCKET"
-	else
-		DB_CONN="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
-	fi
+	
 	if [[ "$DISABLE_CHECKS" == false ]]; then
+		# determine db connection mode (unix vs. network socket)
+		if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
+			DB_CONN="file://$KCCONF_SERVER_MYSQL_SOCKET"
+		else
+			DB_CONN="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
+		fi
+	
 		dockerize \
 			-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
 			-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
@@ -100,24 +108,33 @@ server)
 	exec /usr/sbin/kopano-server -F
 	;;
 dagent)
+	if [[ "$DAGENT_SERVER_SOCKET"  =~ ^http.* ]]; then
+		DAGENT_SERVER_SOCKET=$(sed 's/.*\/\//tcp:\/\//' <<< "$DAGENT_SERVER_SOCKET")
+	fi
 	dockerize \
-		-wait file:///var/run/kopano/server.sock \
+		-wait "$DAGENT_SERVER_SOCKET" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec /usr/sbin/kopano-dagent -l
 	;;
 gateway)
+	if [[ "$GATEWAY_SERVER_SOCKET"  =~ ^http.* ]]; then
+		GATEWAY_SERVER_SOCKET=$(sed 's/.*\/\//tcp:\/\//' <<< "$GATEWAY_SERVER_SOCKET")
+	fi
 	dockerize \
-		-wait tcp://kopano_server:236 \
+		-wait "$GATEWAY_SERVER_SOCKET" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec /usr/sbin/kopano-gateway -F
 	;;
 ical)
+	if [[ "$ICAL_SERVER_SOCKET"  =~ ^http.* ]]; then
+		ICAL_SERVER_SOCKET=$(sed 's/.*\/\//tcp:\/\//' <<< "$ICAL_SERVER_SOCKET")
+	fi
 	dockerize \
-		-wait tcp://kopano_server:236 \
+		-wait "$ICAL_SERVER_SOCKET" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -176,16 +193,22 @@ kapi)
 	exec kopano-kapid serve --log-timestamp=false
 	;;
 monitor)
+	if [[ "$MONITOR_SERVER_SOCKET"  =~ ^http.* ]]; then
+		MONITOR_SERVER_SOCKET=$(sed 's/.*\/\//tcp:\/\//' <<< "$MONITOR_SERVER_SOCKET")
+	fi
 	dockerize \
-		-wait file:///var/run/kopano/server.sock \
+		-wait "$MONITOR_SERVER_SOCKET" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec /usr/sbin/kopano-monitor -F
 	;;
 search)
+	if [[ "$SEARCH_SERVER_SOCKET"  =~ ^http.* ]]; then
+		SEARCH_SERVER_SOCKET=$(sed 's/.*\/\//tcp:\/\//' <<< "$SEARCH_SERVER_SOCKET")
+	fi
 	dockerize \
-		-wait file:///var/run/kopano/server.sock \
+		-wait "$SEARCH_SERVER_SOCKET" \
 		-timeout 360s
 	# give kopano-server a moment to settler before starting search
 	sleep 5
@@ -200,8 +223,11 @@ search)
 	fi
 	;;
 spooler)
+	if [[ "$SPOOLER_SERVER_SOCKET"  =~ ^http.* ]]; then
+		SPOOLER_SERVER_SOCKET=$(sed 's/.*\/\//tcp:\/\//' <<< "$SPOOLER_SERVER_SOCKET")
+	fi
 	dockerize \
-		-wait file:///var/run/kopano/server.sock \
+		-wait "$SPOOLER_SERVER_SOCKET" \
 		-wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":25 \
 		-timeout 1080s
 	# cleaning up env variables
