@@ -125,15 +125,15 @@ tests:
     config:
       env:
         KCCONF_SERVER_LOG_LEVEL: "0x0000006"
-        DISABLE_CONFIG_CHANGES: ¨true"
+        DISABLE_CONFIG_CHANGES: "true"
   # TODO this needs an extension to dcommander to pass tests/test-container.yml as an additional file
-  start-service script write protected server.cfg:
-    command: chattr +i /etc/kopano/server.cfg;  bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"; chattr +i /etc/kopano/server.cfg
-    exit-code: 0
-    stderr:
-      contains:
-        - Can't open
-        - ignoring file changes
+  #start-service script write protected server.cfg:
+  #  command: chattr +i /etc/kopano/server.cfg; bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"; chattr +i /etc/kopano/server.cfg
+  #  exit-code: 0
+  #  stderr:
+  #    contains:
+  #      - Can't open
+  #      - ignoring file changes
 config:
   env:
     DEBUG: ${DEBUG}
