@@ -25,8 +25,8 @@ services:
     tmpfs:
       - /var/lib/mysql
   kopano_server:
-    tmpfs:
-      - /kopano/data
+    cap_add:
+      - LINUX_IMMUTABLE
   kopano_search:
     tmpfs:
       - /kopano/data
