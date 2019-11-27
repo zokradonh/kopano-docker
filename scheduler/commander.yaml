@@ -19,14 +19,14 @@ tests:
       not-contains:
         - "Inbox"
         - "Drafts"
-  test renaming of folders:
-    command: docker exec kopano_server env KCCONF_ADMIN_DEFAULT_STORE_LOCALE=de_DE.UTF-8 /usr/bin/python3 /kopano/server.py && docker exec kopano_server kopano-storeadm -Y -n user12
-    exit-code: 0
-    stderr:
-      contains:
-        - The -l option was not specified; "de_DE.UTF-8" will be used as language
-        - Posteingang
-        - Entwürfe
+#  test renaming of folders:
+#    command: docker exec kopano_server env KCCONF_ADMIN_DEFAULT_STORE_LOCALE=de_DE.UTF-8 /usr/bin/python3 /kopano/server.py && docker exec kopano_server kopano-storeadm -Y -n user12
+#    exit-code: 0
+#    stderr:
+#      contains:
+#        - The -l option was not specified; "de_DE.UTF-8" will be used as language
+#        - Posteingang
+#        - Entwürfe
 config:
   env:
     PATH: ${PATH}

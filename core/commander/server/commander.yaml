@@ -28,7 +28,7 @@ tests:
     exit-code: 0
     stdout:
       contains:
-        - server_listen_tls = *:237
+        - server_listen_tls = 0.0.0.0:237
         - server_ssl_key_file = /kopano/ssl/kopano_server.pem
       not-contains:
         - #server_listen_tls = *:237
@@ -107,6 +107,33 @@ tests:
     config:
       env:
         KCCONF_ADMIN_DEFAULT_STORE_LOCALE: "abc"
+  start-service script no dockerize:
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
+    exit-code: 0
+    stdout:
+      not-contains:
+        - dockerize
+    config:
+      env:
+        DISABLE_CHECKS: "true"
+  start-service script no config updates:
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"; grep log_level /etc/kopano/server.cfg
+    exit-code: 0
+    stdout:
+      not-contains:
+        - log_level = 0x0000006
+    config:
+      env:
+        KCCONF_SERVER_LOG_LEVEL: "0x0000006"
+        DISABLE_CONFIG_CHANGES: ¨true"
+  # TODO this needs an extension to dcommander to pass tests/test-container.yml as an additional file
+  start-service script write protected server.cfg:
+    command: chattr +i /etc/kopano/server.cfg;  bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"; chattr +i /etc/kopano/server.cfg
+    exit-code: 0
+    stderr:
+      contains:
+        - Can't open
+        - ignoring file changes
 config:
   env:
     DEBUG: ${DEBUG}
