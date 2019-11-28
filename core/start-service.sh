@@ -13,6 +13,7 @@ KCCONF_ICAL_SERVER_SOCKET=${KCCONF_ICAL_SERVER_SOCKET:-"tcp://kopano_server:236"
 KCCONF_MONITOR_SERVER_SOCKET=${KCCONF_MONITOR_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
 KCCONF_SEARCH_SERVER_SOCKET=${KCCONF_SEARCH_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
 KCCONF_SPOOLER_SERVER_SOCKET=${KCCONF_SPOOLER_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
+KOPANO_CON=${KOPANO_CON:-"file:///var/run/kopano/server.sock"}
 
 if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	echo "Invalid service specified: $SERVICE_TO_START" | ts
