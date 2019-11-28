@@ -1,12 +1,19 @@
 #!/bin/bash
 
+set -eu # unset variables are errors & non-zero return values exit the whole script
+[ "$DEBUG" ] && set -x
+
 ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 KCCONF_SERVER_MYSQL_SOCKET=${KCCONF_SERVER_MYSQL_SOCKET:-""}
 DISABLE_CHECKS=${DISABLE_CHECKS:-false}
 DISABLE_CONFIG_CHANGES=${DISABLE_CONFIG_CHANGES:-false}
-
-set -eu # unset variables are errors & non-zero return values exit the whole script
-[ "$DEBUG" ] && set -x
+KCCONF_DAGENT_SERVER_SOCKET=${KCCONF_DAGENT_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
+KCCONF_GATEWAY_SERVER_SOCKET=${KCCONF_GATEWAY_SERVER_SOCKET:-"tcp://kopano_server:236"}
+KCCONF_ICAL_SERVER_SOCKET=${KCCONF_ICAL_SERVER_SOCKET:-"tcp://kopano_server:236"}
+KCCONF_MONITOR_SERVER_SOCKET=${KCCONF_MONITOR_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
+KCCONF_SEARCH_SERVER_SOCKET=${KCCONF_SEARCH_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
+KCCONF_SPOOLER_SERVER_SOCKET=${KCCONF_SPOOLER_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
+KOPANO_CON=${KOPANO_CON:-"file:///var/run/kopano/server.sock"}
 
 if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	echo "Invalid service specified: $SERVICE_TO_START" | ts
@@ -35,7 +42,7 @@ fi
 rm -f /var/run/kopano/"$SERVICE_TO_START".pid
 
 echo "Set ownership" | ts
-chown kopano:kopano /kopano/data/ /kopano/data/attachments 
+chown kopano:kopano /kopano/data/ /kopano/data/attachments
 chown kapi:kopano /var/lib/kopano-grapi
 
 # allow helper commands given by "docker-compose run"
@@ -50,6 +57,32 @@ if [[ "$DISABLE_CHECKS" == false  ]]; then
 		-wait file:///etc/machine-id \
 		-wait file:///var/lib/dbus/machine-id
 fi
+
+# put specified socket into KOPANO_CON variable to ease checks further down
+case "$SERVICE_TO_START" in
+dagent)
+	KOPANO_CON="$KCCONF_DAGENT_SERVER_SOCKET"
+	;;
+gateway)
+	KOPANO_CON="$KCCONF_GATEWAY_SERVER_SOCKET"
+	;;
+ical)
+	KOPANO_CON="$KCCONF_ICAL_SERVER_SOCKET"
+	;;
+monitor)
+	KOPANO_CON="$KCCONF_MONITOR_SERVER_SOCKET"
+	;;
+search)
+	KOPANO_CON="$KCCONF_SEARCH_SERVER_SOCKET"
+	;;
+spooler)
+	KOPANO_CON="$KCCONF_SPOOLER_SERVER_SOCKET"
+	;;
+esac
+if [[ "$KOPANO_CON"  =~ ^http.* ]]; then
+	KOPANO_CON=$(sed 's/.*\/\//tcp:\/\//' <<< "$KOPANO_CON")
+fi
+
 # start regular service
 case "$SERVICE_TO_START" in
 server)
@@ -77,17 +110,18 @@ server)
 	sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
 	dpkg-reconfigure --frontend=noninteractive locales
 
-	# determine db connection mode (unix vs. network socket)
-	if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
-		DB_CONN="file://$KCCONF_SERVER_MYSQL_SOCKET"
-	else
-		DB_CONN="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
-	fi
 	if [[ "$DISABLE_CHECKS" == false ]]; then
+		# determine db connection mode (unix vs. network socket)
+		if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
+			DB_CON="file://$KCCONF_SERVER_MYSQL_SOCKET"
+		else
+			DB_CON="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
+		fi
+
 		dockerize \
 			-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
 			-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
-			-wait "$DB_CONN" \
+			-wait "$DB_CON" \
 			-timeout 360s
 	fi
 	# pre populate database
@@ -101,7 +135,7 @@ server)
 	;;
 dagent)
 	dockerize \
-		-wait file:///var/run/kopano/server.sock \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -109,7 +143,7 @@ dagent)
 	;;
 gateway)
 	dockerize \
-		-wait tcp://kopano_server:236 \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -117,7 +151,7 @@ gateway)
 	;;
 ical)
 	dockerize \
-		-wait tcp://kopano_server:236 \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -177,7 +211,7 @@ kapi)
 	;;
 monitor)
 	dockerize \
-		-wait file:///var/run/kopano/server.sock \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -185,7 +219,7 @@ monitor)
 	;;
 search)
 	dockerize \
-		-wait file:///var/run/kopano/server.sock \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# give kopano-server a moment to settler before starting search
 	sleep 5
@@ -201,7 +235,7 @@ search)
 	;;
 spooler)
 	dockerize \
-		-wait file:///var/run/kopano/server.sock \
+		-wait "$KOPANO_CON" \
 		-wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":25 \
 		-timeout 1080s
 	# cleaning up env variables
