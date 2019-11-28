@@ -57,29 +57,29 @@ if [[ "$DISABLE_CHECKS" == false  ]]; then
 		-wait file:///var/lib/dbus/machine-id
 fi
 
-# put specified socket into KOPANO_CONN variable to ease checks further down
+# put specified socket into KOPANO_CON variable to ease checks further down
 case "$SERVICE_TO_START" in
 dagent)
-	KOPANO_CONN="$KCCONF_DAGENT_SERVER_SOCKET"
+	KOPANO_CON="$KCCONF_DAGENT_SERVER_SOCKET"
 	;;
 gateway)
-	KOPANO_CONN="$KCCONF_GATEWAY_SERVER_SOCKET"
+	KOPANO_CON="$KCCONF_GATEWAY_SERVER_SOCKET"
 	;;
 ical)
-	KOPANO_CONN="$KCCONF_ICAL_SERVER_SOCKET"
+	KOPANO_CON="$KCCONF_ICAL_SERVER_SOCKET"
 	;;
 monitor)
-	KOPANO_CONN="$KCCONF_MONITOR_SERVER_SOCKET"
+	KOPANO_CON="$KCCONF_MONITOR_SERVER_SOCKET"
 	;;
 search)
-	KOPANO_CONN="$KCCONF_SEARCH_SERVER_SOCKET"
+	KOPANO_CON="$KCCONF_SEARCH_SERVER_SOCKET"
 	;;
 spooler)
-	KOPANO_CONN="$KCCONF_SPOOLER_SERVER_SOCKET"
+	KOPANO_CON="$KCCONF_SPOOLER_SERVER_SOCKET"
 	;;
 esac
-if [[ "$KOPANO_CONN"  =~ ^http.* ]]; then
-	KOPANO_CONN=$(sed 's/.*\/\//tcp:\/\//' <<< "$KOPANO_CONN")
+if [[ "$KOPANO_CON"  =~ ^http.* ]]; then
+	KOPANO_CON=$(sed 's/.*\/\//tcp:\/\//' <<< "$KOPANO_CON")
 fi
 
 # start regular service
@@ -112,15 +112,15 @@ server)
 	if [[ "$DISABLE_CHECKS" == false ]]; then
 		# determine db connection mode (unix vs. network socket)
 		if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
-			DB_CONN="file://$KCCONF_SERVER_MYSQL_SOCKET"
+			DB_CON="file://$KCCONF_SERVER_MYSQL_SOCKET"
 		else
-			DB_CONN="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
+			DB_CON="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
 		fi
 
 		dockerize \
 			-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
 			-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
-			-wait "$DB_CONN" \
+			-wait "$DB_CON" \
 			-timeout 360s
 	fi
 	# pre populate database
@@ -134,7 +134,7 @@ server)
 	;;
 dagent)
 	dockerize \
-		-wait "$KOPANO_CONN" \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -142,7 +142,7 @@ dagent)
 	;;
 gateway)
 	dockerize \
-		-wait "$KOPANO_CONN" \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -150,7 +150,7 @@ gateway)
 	;;
 ical)
 	dockerize \
-		-wait "$KOPANO_CONN" \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -210,7 +210,7 @@ kapi)
 	;;
 monitor)
 	dockerize \
-		-wait "$KOPANO_CONN" \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
@@ -218,7 +218,7 @@ monitor)
 	;;
 search)
 	dockerize \
-		-wait "$KOPANO_CONN" \
+		-wait "$KOPANO_CON" \
 		-timeout 360s
 	# give kopano-server a moment to settler before starting search
 	sleep 5
@@ -234,7 +234,7 @@ search)
 	;;
 spooler)
 	dockerize \
-		-wait "$KOPANO_CONN" \
+		-wait "$KOPANO_CON" \
 		-wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":25 \
 		-timeout 1080s
 	# cleaning up env variables
