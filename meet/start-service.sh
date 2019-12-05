@@ -34,13 +34,21 @@ for setting in $(compgen -A variable KCCONF_MEET); do
 		esac
 done
 
+# Populate app grid
+# Note: if below variables are set to "no" kpop will fall back to its default behaviour and show all known apps.
 # enable Kopano Konnect in the app grid
-jq '.apps += {"enabled": ["kopano-konnect"]}' $CONFIG_JSON | sponge $CONFIG_JSON
+if [ "${GRID_KONNECT:-yes}" = "yes" ]; then
+	jq '.apps.enabled += ["kopano-konnect"]' $CONFIG_JSON | sponge $CONFIG_JSON
+fi
 
-# enable Kopano WebApp in the app grid (enabled by default)
-# TODO how to only update the array?
+# enable Kopano Meet in the app grid
+if [ "${GRID_MEET:-yes}" = "yes" ]; then
+	jq '.apps.enabled += ["kopano-meet"]' $CONFIG_JSON | sponge $CONFIG_JSON
+fi
+
+# enable Kopano WebApp in the app grid
 if [ "${GRID_WEBAPP:-yes}" = "yes" ]; then
-	jq '.apps += {"enabled": ["kopano-webapp", "kopano-konnect"]}' $CONFIG_JSON | sponge $CONFIG_JSON
+	jq '.apps.enabled += ["kopano-webapp"]' $CONFIG_JSON | sponge $CONFIG_JSON
 fi
 
 sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
