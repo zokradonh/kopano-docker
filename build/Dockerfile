@@ -1,4 +1,4 @@
-FROM docker:18.09.6
+FROM docker:18.09
 ENV \
     COMMANDER_VERSION=1.2.1 \
     COMPOSE_VERSION=1.19.0 \
