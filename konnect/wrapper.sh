@@ -122,6 +122,11 @@ if [ -n "${uri_base_path:-}" ]; then
 	set -- "$@" --uri-base-path="$uri_base_path"
 fi
 
+if [ -n "${signing_method:-}" ]; then
+	echo "Entrypoint: Setting signing_method to $signing_method"
+	set -- "$@" --signing-method="$signing_method"
+fi
+
 if [ "${insecure:-}" = "yes" ]; then
 	echo "Entrypoint: running Konnect in insecure mode"
 	set -- "$@" "--insecure"
