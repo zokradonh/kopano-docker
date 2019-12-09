@@ -35,6 +35,7 @@ if [ -z "$image" ]; then
 fi
 
 # below code is based on https://github.com/moikot/golang-dep/blob/aab3ea8462a19407544f1ce9daa11c3f0924394c/.travis/push.sh
+# code has since then moved to https://github.com/moikot/docker-tools.git
 #
 # Pushes README.md content to Docker Hub.
 #
@@ -53,8 +54,8 @@ push_readme() {
 	local code
 	code=$(jq -n --arg msg "$(<"${readme}")" \
 		'{"registry":"registry-1.docker.io","full_description": $msg }' | \
-			curl -s -o /dev/null  -L -w "%{http_code}" \
-				https://cloud.docker.com/v2/repositories/"${image}"/ \
+			curl -v -s -o /dev/null -L -w "%{http_code}" \
+				https://hub.docker.com/v2/repositories/"${image}"/ \
 				-d @- -X PATCH \
 				-H "Content-Type: application/json" \
 				-H "Authorization: JWT ${token}")
@@ -69,8 +70,8 @@ push_readme() {
 	local code
 	code=$(jq -n --arg msg "$(head -n 1 "${readme}" | cut -d' ' -f2-)" \
 		'{"registry":"registry-1.docker.io","description": $msg }' | \
-			curl -s -o /dev/null  -L -w "%{http_code}" \
-				https://cloud.docker.com/v2/repositories/"${image}"/ \
+			curl -s -o /dev/null -L -w "%{http_code}" \
+				https://hub.docker.com/v2/repositories/"${image}"/ \
 				-d @- -X PATCH \
 				-H "Content-Type: application/json" \
 				-H "Authorization: JWT ${token}")
