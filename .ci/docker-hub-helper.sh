@@ -54,7 +54,7 @@ push_readme() {
 	local code
 	code=$(jq -n --arg msg "$(<"${readme}")" \
 		'{"registry":"registry-1.docker.io","full_description": $msg }' | \
-			curl -v -s -o /dev/null -L -w "%{http_code}" \
+			curl -s -o /dev/null -L -w "%{http_code}" \
 				https://hub.docker.com/v2/repositories/"${image}"/ \
 				-d @- -X PATCH \
 				-H "Content-Type: application/json" \
