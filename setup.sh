@@ -40,6 +40,11 @@ for dockerenv in ldap password-self-service mail db kopano_ssl kopano_server kop
 	touch ./"$dockerenv".env
 done
 
+if ! grep -q download.kopano.com ./apt_auth.conf 2&> /dev/null; then
+	echo "Adding example entry to local apt_auth.conf"
+	echo "machine download.kopano.com login serial REPLACE-ME" >> ./apt_auth.conf
+fi
+
 if [ ! -e ./.env ]; then
 	PRINT_SETUP_SUCCESS=""
 

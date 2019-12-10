@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.0-experimental
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_base
 
@@ -37,6 +38,8 @@ LABEL maintainer=az@zok.xyz \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf cat /etc/apt/apt_auth.conf
+
 # install Kopano Core and refresh ca-certificates
 RUN \
     # apt key has already been installed in base
@@ -45,17 +48,17 @@ RUN \
     apt-get update && \
     set -x && \
     apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
-        kopano-server-packages \
-        ${ADDITIONAL_KOPANO_PACKAGES} \
-        && \
+    kopano-server-packages \
+    ${ADDITIONAL_KOPANO_PACKAGES} \
+    && \
     coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server) && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.0"; then \
-        apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
-            kopano-grapi kopano-kapid; \
+    apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
+    kopano-grapi kopano-kapid; \
     fi && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then \
-        apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
-            python3-grapi.backend.ldap; \
+    apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
+    python3-grapi.backend.ldap; \
     fi && \
     set +x && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \

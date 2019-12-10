@@ -56,7 +56,9 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	docker build --rm \
+	# make sure apt_auth.conf exist so it can be mounted during build
+	touch apt_auth.conf
+	DOCKER_BUILDKIT=1 docker build --rm \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
@@ -76,7 +78,9 @@ endif
 		--build-arg KOPANO_GID=$(KOPANO_GID) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		--cache-from $(docker_repo)/kopano_$(component):latest \
+		--secret id=repocred,src=apt_auth.conf --progress=plain \
 		-t $(docker_repo)/kopano_$(component) $(component)/
+
 
 .PHONY: build-simple
 build-simple: component ?= ssl
