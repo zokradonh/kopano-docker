@@ -48,17 +48,17 @@ RUN \
     apt-get update && \
     set -x && \
     apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
-    kopano-server-packages \
-    ${ADDITIONAL_KOPANO_PACKAGES} \
-    && \
+        kopano-server-packages \
+        ${ADDITIONAL_KOPANO_PACKAGES} \
+        && \
     coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server) && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.0"; then \
-    apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
-    kopano-grapi kopano-kapid; \
+        apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
+            kopano-grapi kopano-kapid; \
     fi && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then \
-    apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
-    python3-grapi.backend.ldap; \
+        apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
+            python3-grapi.backend.ldap; \
     fi && \
     set +x && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
