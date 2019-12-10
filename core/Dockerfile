@@ -38,6 +38,8 @@ LABEL maintainer=az@zok.xyz \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# hadolint currently does not understand the extended buildkit syntax https://github.com/hadolint/hadolint/issues/347
+# hadolint ignore=SC2215
 RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf cat /etc/apt/apt_auth.conf
 
 # install Kopano Core and refresh ca-certificates

@@ -56,8 +56,9 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	# make sure apt_auth.conf exist so it can be mounted during build
+ifeq (,$(wildcard ./apt_auth.conf))
 	touch apt_auth.conf
+endif
 	DOCKER_BUILDKIT=1 docker build --rm \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=${docker_repo} \
