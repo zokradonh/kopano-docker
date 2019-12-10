@@ -7,6 +7,10 @@ node_js:
 services:
   - docker
 before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce # update to latest docker for buildkit support
   - sudo rm /usr/local/bin/docker-compose # remove pre-installed docker-compose (too old)
   - bash .ci/setup-tools.sh
 install:
