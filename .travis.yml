@@ -7,10 +7,6 @@ node_js:
 services:
   - docker
 before_install:
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce # update to latest docker for buildkit support
   - sudo rm /usr/local/bin/docker-compose # remove pre-installed docker-compose (too old)
   - bash .ci/setup-tools.sh
 install:
@@ -19,6 +15,7 @@ install:
   - "./tests/test.exp"
   - "./version.sh"
   - commander test tests/commander.yaml
+  - .ci/travis-buildkit.sh # upgrade docker for buildkit support
   - make lint # rerun lint to see if output is different with .env in place
   - echo "docker_repo=$docker_repo" >> .env
   - echo "DOCKERREADME=yes" >> .env # add DOCKERREADME env var so that make publish also updates readme files on docker hub
