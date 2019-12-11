@@ -114,7 +114,6 @@ endif
 		--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
-		--cache-from $(docker_repo)/kopano_$(component):latest \
 		-t $(docker_repo)/kopano_$(component):builder $(component)/
 
 build-base: ## Build new base image.
