@@ -1,0 +1,17 @@
+name: Weekly Goss check
+
+on:
+  schedule:
+    - cron: "0 2 * * 1"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: create .env
+        run: ./tests/test.exp
+      - name: Run goss tests
+        run: make test-goss
