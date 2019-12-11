@@ -9,13 +9,13 @@ services:
 before_install:
   - sudo rm /usr/local/bin/docker-compose # remove pre-installed docker-compose (too old)
   - bash .ci/setup-tools.sh
+  - .ci/travis-buildkit.sh # upgrade docker for buildkit support
 install:
   - "./version.sh"
   - make lint
   - "./tests/test.exp"
   - "./version.sh"
   - commander test tests/commander.yaml
-  - .ci/travis-buildkit.sh # upgrade docker for buildkit support
   - make lint # rerun lint to see if output is different with .env in place
   - echo "docker_repo=$docker_repo" >> .env
   - echo "DOCKERREADME=yes" >> .env # add DOCKERREADME env var so that make publish also updates readme files on docker hub
