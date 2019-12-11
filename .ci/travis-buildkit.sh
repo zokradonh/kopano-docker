@@ -22,4 +22,5 @@ sudo apt-get update
 sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 
 # pull all base images once, as it will otherwise fail in travis
+# shellcheck disable=SC2016
 git ls-files | xargs awk -F' ' '/^FROM/ { print $2 }' | sort -n | uniq  | xargs --max-lines=1 docker pull
