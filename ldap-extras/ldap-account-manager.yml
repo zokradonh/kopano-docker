@@ -3,7 +3,7 @@ version: "3.5"
 
 services:
   ldap-account-manager:
-    image: ldapaccountmanager/lam:7.0.RC1 # newer releases may exist, this tag was the first one with the required changes 
+    image: ldapaccountmanager/lam:7.0.RC1 # newer releases may exist, this tag was the first one with the required changes
     restart: unless-stopped
     #ports:
     #  - "8080:80"
