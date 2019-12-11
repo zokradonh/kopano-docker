@@ -131,6 +131,16 @@ services:
     volumes:
       - kopanossl/:/kopano/ssl
 
+  kopano_kustomer:
+    image: kopano/kustomerd:${KUSTOMER_VERSION:-latest}
+    restart: unless-stopped
+    command: serve --log-level debug
+    volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id\
+      - kopanolicenses:/etc/kopano/licenses
+      - kopanosocket/:/run/kopano
+
   kopano_server:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
     restart: unless-stopped
@@ -510,6 +520,7 @@ volumes:
   kdavstates:
   kopanodata:
   kopanograpi:
+  kopanolicenses:
   kopanosocket:
   kopanossl:
   kopanowebapp:
