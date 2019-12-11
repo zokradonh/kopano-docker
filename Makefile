@@ -82,7 +82,6 @@ endif
 		--secret id=repocred,src=apt_auth.conf --progress=plain \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
-
 .PHONY: build-simple
 build-simple: component ?= ssl
 build-simple: ## Helper target to build a simplified image (no Kopano repo integration).
@@ -115,6 +114,7 @@ endif
 		--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
+		--cache-from $(docker_repo)/kopano_$(component):latest \
 		-t $(docker_repo)/kopano_$(component):builder $(component)/
 
 build-base: ## Build new base image.
