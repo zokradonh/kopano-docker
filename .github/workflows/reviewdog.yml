@@ -1,4 +1,4 @@
-name: reviewdog
+name: Linting checks via Reviewdog
 on: [pull_request]
 jobs:
   reviewdog:
