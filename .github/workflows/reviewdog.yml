@@ -2,7 +2,6 @@ name: Linting checks via Reviewdog
 on: [pull_request]
 jobs:
   reviewdog:
-    name: reviewdog
     runs-on: ubuntu-latest
     steps:
       - name: Check out code.
