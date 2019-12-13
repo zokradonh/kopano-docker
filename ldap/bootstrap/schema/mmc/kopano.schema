@@ -223,7 +223,7 @@ attributetype ( 1.3.6.1.4.1.47732.1.3.2.6
 
 attributetype (1.3.6.1.4.1.47732.1.3.1.5
 	NAME 'kopanoQuotaUserWarningRecipients'
-	DESC 'KOPANO: Users who will recieve a notification email when a user exceeds his quota'
+	DESC 'KOPANO: Users who will receive a notification email when a user exceeds his quota'
 	EQUALITY caseIgnoreMatch
 	SUBSTR caseIgnoreSubstringsMatch
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
@@ -231,7 +231,7 @@ attributetype (1.3.6.1.4.1.47732.1.3.1.5
 
 attributetype (1.3.6.1.4.1.47732.1.3.1.6
 	NAME 'kopanoQuotaCompanyWarningRecipients'
-	DESC 'KOPANO: Users who will recieve a notification email when a company exceeds its quota'
+	DESC 'KOPANO: Users who will receive a notification email when a company exceeds its quota'
 	EQUALITY caseIgnoreMatch
 	SUBSTR caseIgnoreSubstringsMatch
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
