@@ -12,7 +12,8 @@ jobs:
           github_token: ${{ secrets.github_token }}
           locale: "US"
       - name: shellcheck
-        uses: reviewdog/action-shellcheck@v1
+        #uses: reviewdog/action-shellcheck@match-more
+        uses: fbartels/action-shellcheck@v1
         with:
           github_token: ${{ secrets.github_token }}
       - name: hadolint
