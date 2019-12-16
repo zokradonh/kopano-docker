@@ -2,7 +2,7 @@ name: Weekly Goss check
 
 on:
   schedule:
-    - cron: "0 2 * * 1"
+    - cron: "1 2 * * 1"
 
 jobs:
   build:
@@ -11,6 +11,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - name: install expect
+        run: sudo apt-get update && sudo apt-get install -y expect
       - name: create .env
         run: ./tests/test.exp
       - name: Run goss tests
