@@ -17,7 +17,6 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
       - name: hadolint
-        #uses: mgrachev/action-hadolint@v1.0.0
-        uses: fbartels/action-hadolint@git-ls-files
+        uses: mgrachev/action-hadolint@v1.0.1
         with:
           github_token: ${{ secrets.github_token }}
