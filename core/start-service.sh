@@ -45,6 +45,9 @@ echo "Set ownership" | ts
 chown kopano:kopano /kopano/data/ /kopano/data/attachments
 chown kapi:kopano /var/lib/kopano-grapi
 
+coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server)
+echo "Using Kopano Groupware Core: $coreversion"
+
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]; then
 	exec "$@"
@@ -125,7 +128,6 @@ server)
 			-timeout 360s
 	fi
 	# pre populate database
-	coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server)
 	if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
 		kopano-dbadm populate
 	fi
@@ -181,6 +183,7 @@ grapi)
 	unset "${!KCCONF_@}"
 	# the backend option is only available in more recent versions of grapi
 	grapiversion=$(dpkg-query --showformat='${Version}' --show kopano-grapi)
+	echo "Using Kopano Grapi: $grapiversion"
 	if dpkg --compare-versions "$grapiversion" "gt" "10.0.0"; then
 		exec kopano-grapi serve --backend="$GRAPI_BACKEND"
 	else
@@ -200,6 +203,8 @@ kapi)
 		-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
 		-timeout 360s
 	fi
+	kapiversion=$(dpkg-query --showformat='${Version}' --show kopano-kapid)
+	echo "Using Kopano Kapi: $kapiversion"
 	LC_CTYPE=en_US.UTF-8
 	sed s/\ *=\ */=/g /etc/kopano/kapid.cfg > /tmp/kapid-env
 	# shellcheck disable=SC2046
