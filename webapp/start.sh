@@ -28,6 +28,11 @@ done
 # Ensure directories exist
 mkdir -p /run/sessions /tmp/webapp
 
+phpversion=$(dpkg-query --showformat='${Version}' --show php7-mapi)
+echo "Using PHP-Mapi: $phpversion"
+webappversion=$(dpkg-query --showformat='${Version}' --show kopano-webapp)
+echo "Using Kopano WebApp: $webappversion"
+
 if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
 	echo "Kopano WebApp is using the default: connection"
 else

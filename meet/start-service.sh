@@ -13,6 +13,9 @@ fi
 echo "Configure service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/"$SERVICE_TO_START".py
 
+meetversion=$(dpkg-query --showformat='${Version}' --show kopano-meet-webapp)
+echo "Using Kopano Meet: $meetversion"
+
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]; then
 	exec "$@"
