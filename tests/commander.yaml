@@ -52,3 +52,15 @@ tests:
         - Debian
         - amd64
         - tar.gz
+  download core nightly:
+    command: ./base/test.sh core
+    exit-code: 0
+    stderr:
+      not-contains:
+        - "tar: This does not look like a tar archive"
+  download webapp nightly:
+    command: ./base/test.sh webapp
+    exit-code: 0
+    stderr:
+      not-contains:
+        - "tar: This does not look like a tar archive"
