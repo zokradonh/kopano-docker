@@ -55,7 +55,7 @@ mkdir -p /run/sessions
 
 phpversion=$(dpkg-query --showformat='${Version}' --show php7-mapi)
 echo "Using PHP-Mapi: $phpversion"
-zpushversion=$(dpkg-query --showformat='${Version}' --show z-push-webapp)
+zpushversion=$(dpkg-query --showformat='${Version}' --show z-push-kopano)
 echo "Using Z-Push: $zpushversion"
 
 if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
