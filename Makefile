@@ -1,4 +1,10 @@
-SHELL := /bin/bash # Use bash syntax
+# define some defaults https://tech.davis-hansson.com/p/make/
+SHELL := bash
+.ONESHELL:
+.SHELLFLAGS := -eu -o pipefail -c
+.DELETE_ON_ERROR:
+MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --no-builtin-rules
 
 docker_repo := zokradonh
 # if not run in travis, get docker_login and _pwd from file

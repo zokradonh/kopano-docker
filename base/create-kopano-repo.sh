@@ -17,7 +17,7 @@ function h5ai_query {
 
 	filename=$(curl -s -XPOST "https://download.kopano.io/$channel/?action=get&items\[href\]=/$channel/$component:/$branch&items\[what\]=1" | \
 			jq -r '.items[].href' | \
-			grep "$distribution-all\|$distribution-amd64" | sed "s#/$channel/$component:/##")
+			grep "$distribution-all\|$distribution-amd64" | sed "s#/$channel/$component:/##" | sed "s#/$channel/$component%3A/##")
 
 	if [ -z "${filename// }" ]; then
 		echo "unknown component"
@@ -44,8 +44,8 @@ function dl_and_package_community {
 	tar xf "$filename2"
 
 	# save buildversion
-	currentVersion=$(version_from_filename "$filename")
-	echo "$component-$currentVersion" >> /kopano/buildversion
+	#currentVersion=$(version_from_filename "$filename")
+	#echo "$component-$currentVersion" >> /kopano/buildversion
 
 	# save disk space
 	rm "$filename2"
