@@ -10,8 +10,8 @@ before_install:
   - sudo rm /usr/local/bin/docker-compose # remove pre-installed docker-compose (too old)
   - bash .ci/setup-tools.sh
 install:
-  - "./version.sh"	
-  - make lint
+  - "./version.sh"
+   - make lint
   - "./tests/test.exp"
   - "./version.sh"
   - commander test tests/commander.yaml
