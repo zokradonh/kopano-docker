@@ -1,9 +1,9 @@
 name: Weekly Goss check
 
-#on:
-#  schedule:
-#    - cron: "1 2 * * 1"
-on: [pull_request]
+on:
+  schedule:
+    - cron: "5 8 * * 1"
+#on: [pull_request]
 
 jobs:
   build:
