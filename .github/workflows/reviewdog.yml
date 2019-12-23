@@ -6,11 +6,11 @@ jobs:
     steps:
       - name: Check out code.
         uses: actions/checkout@v1
-        - name: misspell
-          uses: reviewdog/action-misspell@v1
-          with:
-            github_token: ${{ secrets.github_token }}
-            locale: "US"
+      - name: misspell
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          locale: "US"
       - name: eclint
         uses: fbartels/action-eclint@master
         with:

@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   web:
-    image: ${docker_repo:-zokradonh}/kopano_web:${KWEB_VERSION:-latest}
+      image: ${docker_repo:-zokradonh}/kopano_web:${KWEB_VERSION:-latest}
     restart: unless-stopped
     environment:
       - DEFAULTREDIRECT=${DEFAULTREDIRECT:-/webapp}
