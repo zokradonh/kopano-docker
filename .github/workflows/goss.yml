@@ -1,8 +1,9 @@
 name: Weekly Goss check
 
-on:
-  schedule:
-    - cron: "1 2 * * 1"
+#on:
+#  schedule:
+#    - cron: "1 2 * * 1"
+on: [pull_request]
 
 jobs:
   build:
@@ -15,5 +16,9 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: create .env
         run: ./tests/test.exp
+      - name: install goss
+        run: curl -fsSL https://goss.rocks/install | sh
+      - name: install dcgoss
+        run: sudo curl -L https://raw.githubusercontent.com/aelsabbahy/goss/master/extras/dcgoss/dcgoss -o /usr/local/bin/dcgoss && sudo chmod +rx /usr/local/bin/dcgoss
       - name: Run goss tests
         run: make test-goss
