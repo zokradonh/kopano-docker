@@ -15,6 +15,10 @@ jobs:
         uses: fbartels/action-eclint@master
         with:
           github_token: ${{ secrets.github_token }}
+      - name: yamllint
+        uses: fbartels/action-yamllint@master
+        with:
+          github_token: ${{ secrets.github_token }}
       - name: shellcheck
         uses: fbartels/action-shellcheck@master
         with:
