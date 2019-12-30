@@ -11,7 +11,7 @@ before_install:
   - bash .ci/setup-tools.sh
 install:
   - "./version.sh"
-   - make lint
+  - make lint
   - "./tests/test.exp"
   - "./version.sh"
   - commander test tests/commander.yaml
