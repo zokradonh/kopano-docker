@@ -1,0 +1,29 @@
+name: Linting checks via Reviewdog
+#n: [pull_request]
+jobs:
+  reviewdog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code.
+        uses: actions/checkout@v1
+      - name: misspell
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          locale: "US"
+      - name: eclint
+        uses: fbartels/action-eclint@master
+        with:
+          github_token: ${{ secrets.github_token }}
+      - name: yamllint
+        uses: fbartels/action-yamllint@master
+        with:
+          github_token: ${{ secrets.github_token }}
+      - name: shellcheck
+        uses: fbartels/action-shellcheck@master
+        with:
+          github_token: ${{ secrets.github_token }}
+      - name: hadolint
+        uses: mgrachev/action-hadolint@v1.0.1
+        with:
+          github_token: ${{ secrets.github_token }}
