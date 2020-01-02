@@ -148,7 +148,7 @@ services:
 
   kopano_server:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    read_only: true
+    #read_only: true # runtime generation of locales fails with a read-only container
     restart: unless-stopped
     hostname: kopano_server
     container_name: ${COMPOSE_PROJECT_NAME}_server
@@ -195,10 +195,13 @@ services:
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
+    tmpfs:
+      - /tmp/server
+      - /var/lib/kopano-grapi
 
   kopano_webapp:
     image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
-    read_only: true
+    #read_only: true # running read-only needs changes to how the individual config files are read and modified in webapp
     restart: unless-stopped
     hostname: kopano_webapp
     depends_on:
@@ -222,7 +225,7 @@ services:
 
   kopano_zpush:
     image: ${docker_repo:-zokradonh}/kopano_zpush:${ZPUSH_VERSION:-latest}
-    read_only: true
+    #read_only: true # running read-only needs changes to how the individual config files are read and modified in z-push
     restart: unless-stopped
     hostname: kopano_zpush
     container_name: ${COMPOSE_PROJECT_NAME}_zpush
@@ -234,6 +237,8 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
       - zpushstates/:/var/lib/z-push/
+    tmpfs:
+      - /run/sessions
     environment:
       - TZ=${TZ}
       # Shared folders automatically assigned to all users in the format: [{"name":"<folder name>","id":"<kopano folder id>","type":"<type>","flags":"<flags>"},...]
@@ -247,7 +252,7 @@ services:
 
   kopano_grapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    read_only: true
+    # read_only: true # No such file or directory: '/var/run/kopano-grapi/grapi.pid'
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
     depends_on:
@@ -267,6 +272,9 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /kopano/data/
+      - /tmp/
 
   kopano_kapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
@@ -292,10 +300,13 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /tmp
+      - /var/lib/kopano-grapi
 
   kopano_kdav:
     image: ${docker_repo:-zokradonh}/kopano_kdav:${KDAV_VERSION:-latest}
-    read_only: true
+    #read_only: true # running read-only needs changes to how the individual config files are read and modified in kdav
     restart: unless-stopped
     hostname: kopano_kdav
     container_name: ${COMPOSE_PROJECT_NAME}_kdav
@@ -312,10 +323,12 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /run/sessions
 
   kopano_dagent:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    read_only: true
+    read_only: true # Can't open /etc/kopano/dagent.cfg, ignoring file changes
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -333,6 +346,10 @@ services:
       - kopano_dagent.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
+      - /kopano/data
+      - /var/lib/kopano-grapi
 
   kopano_spooler:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
@@ -358,6 +375,10 @@ services:
       - kopano_spooler.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
+      - /kopano/data
+      - /var/lib/kopano-grapi
 
   kopano_gateway:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
@@ -379,6 +400,10 @@ services:
       - kopano_gateway.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
+      - /kopano/data
+      - /var/lib/kopano-grapi
 
   kopano_ical:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
@@ -400,6 +425,10 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /tmp
+      - /kopano/data
+      - /var/lib/kopano-grapi
 
   kopano_monitor:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
@@ -419,6 +448,10 @@ services:
       - kopano_monitor.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
+      - /kopano/data
+      - /var/lib/kopano-grapi
 
   kopano_search:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
@@ -440,6 +473,9 @@ services:
       - kopano_search.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
+      - /var/lib/kopano-grapi
 
   kopano_konnect:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
