@@ -3,6 +3,7 @@ version: "3.5"
 services:
   web:
     image: ${docker_repo:-zokradonh}/kopano_web:${KWEB_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     environment:
       - DEFAULTREDIRECT=${DEFAULTREDIRECT:-/webapp}
@@ -123,6 +124,7 @@ services:
 
   kopano_ssl:
     image: ${docker_repo:-zokradonh}/kopano_ssl:${SSL_VERSION:-latest}
+    read_only: true
     environment:
       - FQDN=${FQDN}
       - PKI_COUNTRY=NL
@@ -130,9 +132,12 @@ services:
       - kopano_ssl.env
     volumes:
       - kopanossl/:/kopano/ssl
+    tmpfs:
+      - /kopano/easypki/
 
   kopano_kustomer:
     image: kopano/kustomerd:${KUSTOMER_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     command: serve --log-level debug
     volumes:
@@ -143,6 +148,7 @@ services:
 
   kopano_server:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     hostname: kopano_server
     container_name: ${COMPOSE_PROJECT_NAME}_server
@@ -192,6 +198,7 @@ services:
 
   kopano_webapp:
     image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     hostname: kopano_webapp
     depends_on:
@@ -215,6 +222,7 @@ services:
 
   kopano_zpush:
     image: ${docker_repo:-zokradonh}/kopano_zpush:${ZPUSH_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     hostname: kopano_zpush
     container_name: ${COMPOSE_PROJECT_NAME}_zpush
@@ -239,6 +247,7 @@ services:
 
   kopano_grapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
     depends_on:
@@ -261,6 +270,7 @@ services:
 
   kopano_kapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_kapi
     depends_on:
@@ -285,6 +295,7 @@ services:
 
   kopano_kdav:
     image: ${docker_repo:-zokradonh}/kopano_kdav:${KDAV_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     hostname: kopano_kdav
     container_name: ${COMPOSE_PROJECT_NAME}_kdav
@@ -304,6 +315,7 @@ services:
 
   kopano_dagent:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -324,6 +336,7 @@ services:
 
   kopano_spooler:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     hostname: spooler
     domainname: ${LDAP_DOMAIN}
@@ -348,6 +361,7 @@ services:
 
   kopano_gateway:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -368,6 +382,7 @@ services:
 
   kopano_ical:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -388,6 +403,7 @@ services:
 
   kopano_monitor:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -406,6 +422,7 @@ services:
 
   kopano_search:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_search
     depends_on:
@@ -426,6 +443,7 @@ services:
 
   kopano_konnect:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_ssl
@@ -455,6 +473,7 @@ services:
 
   kopano_kwmserver:
     image: ${docker_repo:-zokradonh}/kopano_kwmserver:${KWM_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     command: wrapper.sh
     depends_on:
@@ -476,6 +495,7 @@ services:
 
   kopano_meet:
     image: ${docker_repo:-zokradonh}/kopano_meet:${MEET_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     environment:
       - KCCONF_MEET_disableFullGAB=false
@@ -496,6 +516,7 @@ services:
 
   kopano_scheduler:
     image: ${docker_repo:-zokradonh}/kopano_scheduler:${SCHEDULER_VERSION:-latest}
+    read_only: true
     restart: "no"
     container_name: ${COMPOSE_PROJECT_NAME}_scheduler
     networks:
