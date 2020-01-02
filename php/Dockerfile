@@ -41,10 +41,10 @@ RUN \
     # install
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        crudini \
         kopano-kwebd \
         php-fpm \
-        crudini \
-        ca-certificates \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 

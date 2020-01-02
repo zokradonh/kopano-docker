@@ -54,8 +54,6 @@ RUN \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists/*
 
-COPY apache2-kopano-kdav.conf /etc/apache2/sites-available/kopano-kdav.conf
-
 # configure basics
 RUN \
     mkdir -p /var/lib/kopano/kdav && \
@@ -66,7 +64,7 @@ RUN \
 COPY --from=builder /usr/share/kdav /usr/share/kdav
 COPY kweb.cfg /etc/kweb.cfg
 
-EXPOSE 80/tcp
+EXPOSE 9080/tcp
 
 COPY start.sh /kopano/start.sh
 

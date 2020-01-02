@@ -34,22 +34,20 @@ sed -e "s#define('DAV_ROOT_URI', '/');#define('DAV_ROOT_URI', '/kdav/');#" -i /u
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
 
-# services need to be aware of the machine-id
-dockerize \
-	-wait file:///etc/machine-id \
-	-wait file:///var/lib/dbus/machine-id
-
 touch /var/log/kdav/kdav.log
 touch /var/log/kdav/kdav-error.log
 chown www-data:www-data /var/log/kdav/kdav.log /var/log/kdav/kdav-error.log
 tail --pid=$$ -F --lines=0 -q /var/log/kdav/kdav.log &
 tail --pid=$$ -F --lines=0 -q /var/log/kdav/kdav-error.log &
 
-echo "Starting Apache"
-rm -f /run/apache2/apache2.pid
+# services need to be aware of the machine-id
+dockerize \
+	-wait file:///etc/machine-id \
+	-wait file:///var/lib/dbus/machine-id
+
 set +u
-# shellcheck disable=SC1091
-source /etc/apache2/envvars
 # cleaning up env variables
 unset "${!KCCONF_@}"
-exec /usr/sbin/apache2 -DFOREGROUND
+echo "Starting php-fpm"
+php-fpm7.0 -F &
+exec /usr/libexec/kopano/kwebd caddy -conf /etc/kweb.cfg
