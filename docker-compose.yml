@@ -479,7 +479,7 @@ services:
 
   kopano_konnect:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
-    read_only: true
+    # read_only: true # error opening output file: %s open /etc/kopano/konnectd-identifier-registration.yaml: read-only file system
     restart: unless-stopped
     depends_on:
       - kopano_ssl
@@ -506,6 +506,8 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /tmp
 
   kopano_kwmserver:
     image: ${docker_repo:-zokradonh}/kopano_kwmserver:${KWM_VERSION:-latest}
@@ -528,10 +530,12 @@ services:
       - kopanossl/:/kopano/ssl
     networks:
       - web-net
+    tmpfs:
+      - /tmp
 
   kopano_meet:
     image: ${docker_repo:-zokradonh}/kopano_meet:${MEET_VERSION:-latest}
-    read_only: true
+    #read_only: true # sponge /usr/share/kopano-kweb/www/config/kopano/meet.json; mkstemp failed: Read-only file system
     restart: unless-stopped
     environment:
       - KCCONF_MEET_disableFullGAB=false
@@ -552,7 +556,7 @@ services:
 
   kopano_scheduler:
     image: ${docker_repo:-zokradonh}/kopano_scheduler:${SCHEDULER_VERSION:-latest}
-    read_only: true
+    #read_only: true # /etc/crontab: Read-only file system
     restart: "no"
     container_name: ${COMPOSE_PROJECT_NAME}_scheduler
     networks:
