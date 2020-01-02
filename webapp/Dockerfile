@@ -41,7 +41,7 @@ LABEL maintainer=az@zok.xyz \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# install Kopano WebApp and refresh ca-certificates
+# install Kopano WebApp
 # hadolint ignore=SC2129
 RUN \
     # community download and package as apt source repository
