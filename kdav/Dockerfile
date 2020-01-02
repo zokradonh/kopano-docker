@@ -43,7 +43,6 @@ RUN \
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
-        crudini \
         git \
         php-mbstring \
         php-sqlite3 \
@@ -59,10 +58,6 @@ COPY apache2-kopano-kdav.conf /etc/apache2/sites-available/kopano-kdav.conf
 
 # configure basics
 RUN \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP upload_max_filesize 500M && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP post_max_size 500M && \
-    crudini --set /etc/php/7.0/apache2/php.ini PHP max_input_vars 1800 && \
-    crudini --set /etc/php/7.0/apache2/php.ini Session session.save_path /run/sessions && \
     mkdir -p /var/lib/kopano/kdav && \
     chown www-data:www-data /var/lib/kopano/kdav && \
     mkdir -p /var/log/kdav && \
