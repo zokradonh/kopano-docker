@@ -10,7 +10,7 @@ RUN mv kapi/examples/* /web/kapi-playground
 WORKDIR /web/kapi-playground
 RUN rm Makefile && ln -s oidc-client-example.html index.html
 
-FROM halverneus/static-file-server:v1.5.2
+FROM halverneus/static-file-server:v1.7.0
 
 ARG VCS_REF
 ARG CODE_VERSION
