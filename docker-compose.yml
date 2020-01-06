@@ -556,7 +556,7 @@ services:
 
   kopano_scheduler:
     image: ${docker_repo:-zokradonh}/kopano_scheduler:${SCHEDULER_VERSION:-latest}
-    #read_only: true # /etc/crontab: Read-only file system
+    read_only: true
     restart: "no"
     container_name: ${COMPOSE_PROJECT_NAME}_scheduler
     networks:
@@ -576,6 +576,8 @@ services:
       - kopano_scheduler.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    tmpfs:
+      - /tmp
 
 volumes:
   kdavstates:
