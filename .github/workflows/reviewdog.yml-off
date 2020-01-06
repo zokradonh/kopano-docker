@@ -1,5 +1,5 @@
 name: Linting checks via Reviewdog
-#n: [pull_request]
+on: [pull_request]
 jobs:
   reviewdog:
     runs-on: ubuntu-latest
