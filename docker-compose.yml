@@ -535,7 +535,7 @@ services:
 
   kopano_meet:
     image: ${docker_repo:-zokradonh}/kopano_meet:${MEET_VERSION:-latest}
-    #read_only: true # sponge /usr/share/kopano-kweb/www/config/kopano/meet.json; mkstemp failed: Read-only file system
+    read_only: true
     restart: unless-stopped
     environment:
       - KCCONF_MEET_disableFullGAB=false
@@ -553,6 +553,8 @@ services:
       - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
+    tmpfs:
+      - /tmp
 
   kopano_scheduler:
     image: ${docker_repo:-zokradonh}/kopano_scheduler:${SCHEDULER_VERSION:-latest}

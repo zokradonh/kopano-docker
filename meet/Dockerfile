@@ -49,8 +49,10 @@ RUN \
         kopano-meet kopano-meet-webapp \
         ${ADDITIONAL_KOPANO_PACKAGES} \
         && \
-    cp /usr/share/doc/kopano-meet-webapp/config.json.in /usr/share/kopano-kweb/www/config/kopano/meet.json && \
-    rm -rf /var/cache/apt /var/lib/apt/lists
+    rm -rf /var/cache/apt /var/lib/apt/lists && \
+    # make configuration a symlink to prevent overwriting it
+    # TODO better would be to override its configuration in kweb.cfg
+    ln -s /tmp/meet.json /usr/share/kopano-kweb/www/config/kopano/meet.json
 
 COPY defaultconfigs/ start-service.sh /kopano/
 COPY goss.yaml /goss/
