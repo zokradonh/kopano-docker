@@ -1,6 +1,6 @@
 ARG CODE_VERSION=0.28.0
 
-FROM golang:1.13.0-alpine3.10 as builder-sponge
+FROM golang:1.13.5-alpine3.10 as builder-sponge
 
 RUN apk add --no-cache git
 RUN go get -d -v github.com/go-moreutils/sponge
