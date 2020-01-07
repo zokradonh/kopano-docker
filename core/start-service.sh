@@ -35,7 +35,7 @@ ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 	fi
 done
 
-mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano /var/lib/kopano-grapi
+mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano
 
 # TODO is this still required now that we won't modify configuration mounted to /etc/kopano?
 if [ "${DISABLE_CONFIG_CHANGES}" == false ]; then
@@ -45,10 +45,6 @@ fi
 
 # ensure removed pid-file on unclean shutdowns and mounted volumes
 rm -f /var/run/kopano/"$SERVICE_TO_START".pid
-
-echo "Set ownership" | ts
-chown kopano:kopano /kopano/data/ /kopano/data/attachments
-chown kapi:kopano /var/lib/kopano-grapi
 
 coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server)
 echo "Using Kopano Groupware Core: $coreversion"
@@ -94,6 +90,8 @@ fi
 # start regular service
 case "$SERVICE_TO_START" in
 server)
+	echo "Set ownership" | ts
+	chown kopano:kopano /kopano/data/ /kopano/data/attachments
 	# TODO this could check if the desired locale already exists before calling sed
 	# TODO how to make this compatible with a read-only container?
 	KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${KCCONF_ADMIN_DEFAULT_STORE_LOCALE:-"en_US.UTF-8"}
@@ -169,8 +167,9 @@ grapi)
 	LC_CTYPE=en_US.UTF-8
 	export socket_path=/var/run/kopano/grapi
 	export pid_file="$socket_path/grapi.pid"
-	mkdir -p "$socket_path"
+	mkdir -p "$socket_path" /var/lib/kopano-grapi
 	chown -R kapi:kopano "$socket_path"
+	chown kapi:kopano /var/lib/kopano-grapi
 	# TODO there could be a case where multiple backends are desired
 	case $GRAPI_BACKEND in
 	ldap)
