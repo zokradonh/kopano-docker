@@ -15,6 +15,10 @@ KCCONF_SEARCH_SERVER_SOCKET=${KCCONF_SEARCH_SERVER_SOCKET:-"file:///var/run/kopa
 KCCONF_SPOOLER_SERVER_SOCKET=${KCCONF_SPOOLER_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
 KOPANO_CON=${KOPANO_CON:-"file:///var/run/kopano/server.sock"}
 
+# copy configuration files to /tmp/kopano to prevent modification of mounted config files
+mkdir -p /tmp/kopano
+cp /etc/kopano/*.cfg /tmp/kopano
+
 if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	echo "Invalid service specified: $SERVICE_TO_START" | ts
 	exit 1
@@ -129,11 +133,11 @@ server)
 	fi
 	# pre populate database
 	if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
-		kopano-dbadm populate
+		kopano-dbadm -c /tmp/kopano/server.cfg populate
 	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-server -F
+	exec /usr/sbin/kopano-server --config /tmp/kopano/server.cfg -F
 	;;
 dagent)
 	dockerize \
@@ -141,7 +145,7 @@ dagent)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-dagent -l
+	exec /usr/sbin/kopano-dagent --config /tmp/kopano/dagent.cfg -l
 	;;
 gateway)
 	dockerize \
@@ -149,7 +153,7 @@ gateway)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-gateway -F
+	exec /usr/sbin/kopano-gateway --config /tmp/kopano/gateway.cfg -F
 	;;
 ical)
 	dockerize \
@@ -157,11 +161,12 @@ ical)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-ical -F
+	exec /usr/sbin/kopano-ical --config /tmp/kopano/ical.cfg -F
 	;;
 grapi)
 	LC_CTYPE=en_US.UTF-8
 	export socket_path=/var/run/kopano/grapi
+	export pid_file="$socket_path/grapi.pid"
 	mkdir -p "$socket_path"
 	chown -R kapi:kopano "$socket_path"
 	# TODO there could be a case where multiple backends are desired
@@ -176,7 +181,7 @@ grapi)
 		fi
 		;;
 	esac
-	sed s/\ *=\ */=/g /etc/kopano/grapi.cfg > /tmp/grapi-env
+	sed s/\ *=\ */=/g /tmp/kopano/grapi.cfg > /tmp/grapi-env
 	# shellcheck disable=SC2046
 	export $(grep -v '^#' /tmp/grapi-env | xargs -d '\n')
 	# cleaning up env variables
@@ -185,6 +190,7 @@ grapi)
 	grapiversion=$(dpkg-query --showformat='${Version}' --show kopano-grapi)
 	echo "Using Kopano Grapi: $grapiversion"
 	if dpkg --compare-versions "$grapiversion" "gt" "10.0.0"; then
+		env
 		exec kopano-grapi serve --backend="$GRAPI_BACKEND"
 	else
 		exec kopano-grapi serve
@@ -206,7 +212,7 @@ kapi)
 	kapiversion=$(dpkg-query --showformat='${Version}' --show kopano-kapid)
 	echo "Using Kopano Kapi: $kapiversion"
 	LC_CTYPE=en_US.UTF-8
-	sed s/\ *=\ */=/g /etc/kopano/kapid.cfg > /tmp/kapid-env
+	sed s/\ *=\ */=/g /tmp/kopano/kapid.cfg > /tmp/kapid-env
 	# shellcheck disable=SC2046
 	export $(grep -v '^#' /tmp/kapid-env | xargs -d '\n')
 	kopano-kapid setup
@@ -220,7 +226,7 @@ monitor)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-monitor -F
+	exec /usr/sbin/kopano-monitor --config /tmp/kopano/monitor.cfg -F
 	;;
 search)
 	dockerize \
@@ -233,9 +239,9 @@ search)
 	# with commit 702bb3fccb3 search does not need -F any longer
 	searchversion=$(dpkg-query --showformat='${Version}' --show kopano-search)
 	if dpkg --compare-versions "$searchversion" "gt" "8.7.82.165"; then
-		exec /usr/sbin/kopano-search
+		exec /usr/sbin/kopano-search --config /tmp/kopano/search.cfg
 	else
-		exec /usr/bin/python3 /usr/sbin/kopano-search -F
+		exec /usr/bin/python3 /usr/sbin/kopano-search --config /tmp/kopano/search.cfg -F
 	fi
 	;;
 spooler)
@@ -245,7 +251,7 @@ spooler)
 		-timeout 1080s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-spooler -F
+	exec /usr/sbin/kopano-spooler --config /tmp/kopano/spooler.cfg -F
 	;;
 *)
 	echo "Failed to start: Unknown service name: '$SERVICE_TO_START'" | ts

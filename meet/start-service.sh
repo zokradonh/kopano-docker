@@ -5,6 +5,10 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 set -eu # unset variables are errors & non-zero return values exit the whole script
 [ "$DEBUG" ] && set -x
 
+# copy configuration files to /tmp/kopano to prevent modification of mounted config files
+mkdir -p /tmp/kopano
+cp /etc/kopano/*.cfg /tmp/kopano
+
 if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	echo "Invalid service specified: $SERVICE_TO_START" | ts
 	exit 1
@@ -57,7 +61,7 @@ if [ "${GRID_WEBAPP:-yes}" = "yes" ]; then
 fi
 
 # todo do not replace here, but in a temp location
-sed s/\ *=\ */=/g /etc/kopano/kwebd.cfg > /tmp/kweb-env
+sed s/\ *=\ */=/g /tmp/kopano/kwebd.cfg > /tmp/kweb-env
 # always disable tls
 export tls=no
 # shellcheck disable=SC2046

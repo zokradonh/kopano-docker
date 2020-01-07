@@ -3,7 +3,7 @@ import kcconf
 
 # Component specific configurations
 kcconf.configkopano({
-    r"/etc/kopano/server.cfg":
+    r"/tmp/kopano/server.cfg":
     {
         'log_file': "-",
         'log_level': "3",
@@ -18,4 +18,4 @@ kcconf.configkopano({
 })
 
 # Override configs from environment variables
-kcconf.configkopano(kcconf.parseenvironmentvariables(r"/etc/kopano/"))
+kcconf.configkopano(kcconf.parseenvironmentvariables(r"/tmp/kopano/"))

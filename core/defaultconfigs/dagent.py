@@ -3,7 +3,7 @@ import kcconf
 
 # Component specific configurations
 kcconf.configkopano({
-    r"/etc/kopano/dagent.cfg":
+    r"/tmp/kopano/dagent.cfg":
     {
         'lmtp_listen': "0.0.0.0:2003",
         'log_file': "-",
@@ -13,4 +13,4 @@ kcconf.configkopano({
 })
 
 # Override configs from environment variables
-kcconf.configkopano(kcconf.parseenvironmentvariables(r"/etc/kopano/"))
+kcconf.configkopano(kcconf.parseenvironmentvariables(r"/tmp/kopano/"))

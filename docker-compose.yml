@@ -252,7 +252,7 @@ services:
 
   kopano_grapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    # read_only: true # No such file or directory: '/var/run/kopano-grapi/grapi.pid'
+    read_only: true
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
     depends_on:
@@ -265,6 +265,7 @@ services:
     environment:
       - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=no
       - KCCONF_GRAPI_INSECURE=${INSECURE}
+      - KCCONF_GRAPI_PERSISTENCY_PATH=/var/lib/kopano-grapi
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
     env_file:
@@ -275,10 +276,11 @@ services:
     tmpfs:
       - /kopano/data/
       - /tmp/
+      - /var/run/kopano-grapi/
 
   kopano_kapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    #read_only: true
+    read_only: true
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_kapi
     depends_on:
@@ -328,7 +330,7 @@ services:
 
   kopano_dagent:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    #read_only: true # Can't open /etc/kopano/dagent.cfg, ignoring file changes
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -353,7 +355,7 @@ services:
 
   kopano_spooler:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    #read_only: true
+    read_only: true
     restart: unless-stopped
     hostname: spooler
     domainname: ${LDAP_DOMAIN}
@@ -382,7 +384,7 @@ services:
 
   kopano_gateway:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    #read_only: true
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -407,7 +409,7 @@ services:
 
   kopano_ical:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    #read_only: true
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -432,7 +434,7 @@ services:
 
   kopano_monitor:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    #read_only: true
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -455,7 +457,7 @@ services:
 
   kopano_search:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    #read_only: true
+    read_only: true
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_search
     depends_on:
