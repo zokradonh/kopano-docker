@@ -192,7 +192,6 @@ grapi)
 	grapiversion=$(dpkg-query --showformat='${Version}' --show kopano-grapi)
 	echo "Using Kopano Grapi: $grapiversion"
 	if dpkg --compare-versions "$grapiversion" "gt" "10.0.0"; then
-		env
 		exec kopano-grapi serve --backend="$GRAPI_BACKEND"
 	else
 		exec kopano-grapi serve
