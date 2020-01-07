@@ -37,6 +37,7 @@ done
 
 mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano /var/lib/kopano-grapi
 
+# TODO is this still required now that we won't modify configuration mounted to /etc/kopano?
 if [ "${DISABLE_CONFIG_CHANGES}" == false ]; then
 	echo "Configure core service '$SERVICE_TO_START'" | ts
 	/usr/bin/python3 /kopano/"$SERVICE_TO_START".py
@@ -94,6 +95,7 @@ fi
 case "$SERVICE_TO_START" in
 server)
 	# TODO this could check if the desired locale already exists before calling sed
+	# TODO how to make this compatible with a read-only container?
 	KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${KCCONF_ADMIN_DEFAULT_STORE_LOCALE:-"en_US.UTF-8"}
 	# get locales from env
 	# shellcheck disable=SC1004
