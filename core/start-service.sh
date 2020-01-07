@@ -35,7 +35,7 @@ ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 	fi
 done
 
-mkdir -p /kopano/data/attachments /kopano/data/kapi-kvs /tmp/"$SERVICE_TO_START" /var/run/kopano
+mkdir -p /tmp/"$SERVICE_TO_START" /var/run/kopano
 
 # TODO is this still required now that we won't modify configuration mounted to /etc/kopano?
 if [ "${DISABLE_CONFIG_CHANGES}" == false ]; then
@@ -91,6 +91,7 @@ fi
 case "$SERVICE_TO_START" in
 server)
 	echo "Set ownership" | ts
+	mkdir -p /kopano/data/attachments
 	chown kopano:kopano /kopano/data/ /kopano/data/attachments
 	# TODO this could check if the desired locale already exists before calling sed
 	# TODO how to make this compatible with a read-only container?
@@ -198,6 +199,7 @@ grapi)
 	fi
 	;;
 kapi)
+	mkdir -p /kopano/data/kapi-kvs
 	if [ "$KCCONF_KAPID_INSECURE" = "yes" ]; then
 		dockerize \
 		-skip-tls-verify \
