@@ -81,6 +81,11 @@ RUN \
 
 COPY --from=builder /usr/share/kdav /usr/share/kdav
 
+# tweaks to make the container read-only
+RUN \
+    mv /usr/share/kdav/config.php /usr/share/kdav/config.php.dist && \
+    ln -s /tmp/config.php /usr/share/kdav/config.php
+
 EXPOSE 80/tcp
 
 COPY start.sh /kopano/start.sh
