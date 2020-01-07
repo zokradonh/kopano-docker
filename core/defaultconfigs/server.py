@@ -5,15 +5,16 @@ import kcconf
 kcconf.configkopano({
     r"/tmp/kopano/server.cfg":
     {
+        'attachment_path': "/kopano/data/attachments/",
+        'kcoidc_initialize_timeout': "360",
         'log_file': "-",
         'log_level': "3",
-        'attachment_path': "/kopano/data/attachments/",
-        'user_plugin': "ldap",
-        'server_listen': "0.0.0.0:236",
         'server_listen_tls': "0.0.0.0:237",
-        'sync_gab_realtime': "no",
+        'server_listen': "0.0.0.0:236",
         'softdelete_lifetime': "0",
-        'kcoidc_initialize_timeout': "360"
+        'sync_gab_realtime': "no",
+        'user_plugin_config': "/tmp/kopano/ldap.cfg",
+        'user_plugin': "ldap"
     }
 })
 
