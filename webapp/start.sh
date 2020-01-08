@@ -12,7 +12,8 @@ set -eu # unset variables are errors & non-zero return values exit the whole scr
 # shellcheck source=php/start-helper.sh
 source /kopano/start-helper.sh
 
-# TODO this is not compatible with a read-only container
+# Hint: this is not compatible with a read-only container.
+# The general recommendation is to already build a container that has all required packages installed.
 ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
 ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update

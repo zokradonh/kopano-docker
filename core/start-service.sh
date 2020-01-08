@@ -24,6 +24,8 @@ if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	exit 1
 fi
 
+# Hint: this is not compatible with a read-only container.
+# The general recommendation is to already build a container that has all required packages installed.
 ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
@@ -93,30 +95,8 @@ server)
 	echo "Set ownership" | ts
 	mkdir -p /kopano/data/attachments
 	chown kopano:kopano /kopano/data/ /kopano/data/attachments
-	# TODO this could check if the desired locale already exists before calling sed
-	# TODO locales should be installed into the container on build to be able to run read-only
-	KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${KCCONF_ADMIN_DEFAULT_STORE_LOCALE:-"en_US.UTF-8"}
-	# get locales from env
-	# shellcheck disable=SC1004
-	sed --regexp-extended --expression='
-
-		1  {
-			i\
-# This file lists locales that you wish to have built. You can find a list\
-# of valid supported locales at /usr/share/i18n/SUPPORTED, and you can add\
-# user defined locales to /usr/local/share/i18n/SUPPORTED. If you change\
-# this file, you need to rerun locale-gen.\
-\
-
-
-			}
-
-		/^('"$KCCONF_ADMIN_DEFAULT_STORE_LOCALE"')(_[[:upper:]]+)?(\.UTF-8)?(@[^[:space:]]+)?[[:space:]]+UTF-8$/!   s/^/# /
-	' /usr/share/i18n/SUPPORTED >  /etc/locale.gen
-	# make sure that en_US and de_DE are always there
-	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-	sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
-	dpkg-reconfigure --frontend=noninteractive locales
+	# Hint: if additional locales are required that should be added in base/Dockerfile
+	export KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${KCCONF_ADMIN_DEFAULT_STORE_LOCALE:-"en_US.UTF-8"}
 
 	if [[ "$DISABLE_CHECKS" == false ]]; then
 		# determine db connection mode (unix vs. network socket)
