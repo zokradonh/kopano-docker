@@ -68,7 +68,7 @@ RUN \
 RUN mkdir -p /tmp/webapp/ && \
     for i in /etc/kopano/webapp/* /etc/kopano/webapp/.[^.]*; do \
         mv "$i" "$i.dist"; \
-        ln -s /tmp/webapp/"$(basename $i)" "$i"; \
+        ln -s /tmp/webapp/"$(basename "$i")" "$i"; \
     done
 
 COPY start.sh /kopano/start.sh
