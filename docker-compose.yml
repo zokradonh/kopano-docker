@@ -221,6 +221,11 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /tmp/
+      - /run/sessions/
+      - /run/php/
+      - /var/log/
 
   kopano_zpush:
     image: ${docker_repo:-zokradonh}/kopano_zpush:${ZPUSH_VERSION:-latest}
