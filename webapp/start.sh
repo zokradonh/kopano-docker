@@ -27,10 +27,9 @@ ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 done
 
 # copy latest config template.
-for i in /etc/kopano/webapp/* /etc/kopano/webapp/.[^.]*; do \
-	mv "$i" "$i.dist"; \
-	ln -s /tmp/"$(basename "$i")" "$i"; \
-done;
+for i in /etc/kopano/webapp/*.dist /etc/kopano/webapp/.[^.]*.dist; do
+	cp "$i" /tmp/webapp/
+done
 
 # Ensure directories exist
 mkdir -p /run/sessions /tmp/webapp

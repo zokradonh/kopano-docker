@@ -36,6 +36,7 @@ TAG_FILE := build.tags
 export
 
 # convert lowercase componentname to uppercase
+component ?= base
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
 .PHONY: default
