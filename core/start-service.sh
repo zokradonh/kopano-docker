@@ -94,7 +94,7 @@ server)
 	mkdir -p /kopano/data/attachments
 	chown kopano:kopano /kopano/data/ /kopano/data/attachments
 	# TODO this could check if the desired locale already exists before calling sed
-	# TODO how to make this compatible with a read-only container?
+	# TODO locales should be installed into the container on build to be able to run read-only
 	KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${KCCONF_ADMIN_DEFAULT_STORE_LOCALE:-"en_US.UTF-8"}
 	# get locales from env
 	# shellcheck disable=SC1004

@@ -12,8 +12,8 @@ set -eu # unset variables are errors & non-zero return values exit the whole scr
 # shellcheck source=php/start-helper.sh
 source /kopano/start-helper.sh
 
+# TODO this is not compatible with a read-only container
 ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
-
 ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
@@ -24,6 +24,12 @@ ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 		echo "INFO: $installpkg is already installed"
 	fi
 done
+
+# copy latest config template.
+for i in /etc/kopano/webapp/* /etc/kopano/webapp/.[^.]*; do \
+        mv "$i" "$i.dist"; \
+        ln -s /tmp/"$(basename $i)" "$i"; \
+    done;
 
 # Ensure directories exist
 mkdir -p /run/sessions /tmp/webapp

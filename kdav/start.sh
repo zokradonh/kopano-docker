@@ -8,6 +8,7 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 set -eu # unset variables are errors & non-zero return values exit the whole script
 [ "$DEBUG" ] && set -x
 
+# TODO this is not compatible with a read-only container
 ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
