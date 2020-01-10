@@ -160,6 +160,7 @@ services:
     environment:
       - ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES}
       - KCCOMMENT_LDAP_1=${KCCOMMENT_LDAP_1}
+      # Hint: if additional locales are required that should be added in base/Dockerfile
       - KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${MAILBOXLANG:-en_US.UTF-8}
       - KCCONF_LDAP_LDAP_BIND_PASSWD=${LDAP_BIND_PW}
       - KCCONF_LDAP_LDAP_BIND_USER=${LDAP_BIND_DN}

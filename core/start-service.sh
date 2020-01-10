@@ -95,9 +95,7 @@ server)
 	echo "Set ownership" | ts
 	mkdir -p /kopano/data/attachments
 	chown kopano:kopano /kopano/data/ /kopano/data/attachments
-	# Hint: if additional locales are required that should be added in base/Dockerfile
-	export KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${KCCONF_ADMIN_DEFAULT_STORE_LOCALE:-"en_US.UTF-8"}
-
+	
 	if [[ "$DISABLE_CHECKS" == false ]]; then
 		# determine db connection mode (unix vs. network socket)
 		if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
