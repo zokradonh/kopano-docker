@@ -54,7 +54,7 @@ done
 
 # copy latest config template
 mkdir -p /tmp/z-push/
-for i in /tmp/z-push/*.dist /tmp/z-push/.[^.]*.dist; do
+for i in /etc/z-push/*.dist; do
 	filename=$(basename -- "$i")
 	cp "$i" "/tmp/z-push/${filename%.*}"
 done
@@ -133,6 +133,7 @@ dockerize \
 	-wait file:///var/lib/dbus/machine-id
 
 echo "Activate z-push log rerouting"
+mkdir -p /var/log/z-push/
 touch /var/log/z-push/{z-push.log,z-push-error.log,autodiscover.log,autodiscover-error.log}
 chown -R www-data:www-data /var/log/z-push
 tail --pid=$$ -F --lines=0 -q /var/log/z-push/z-push.log &
