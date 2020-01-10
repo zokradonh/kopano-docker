@@ -64,7 +64,7 @@ RUN \
         ${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
-# tweaks to make the container read-only
+# tweak to make the container read-only
 RUN mkdir -p /tmp/webapp/ && \
     for i in /etc/kopano/webapp/* /etc/kopano/webapp/.[^.]*; do \
         mv "$i" "$i.dist"; \

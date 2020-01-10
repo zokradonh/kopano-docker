@@ -61,6 +61,13 @@ RUN \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
+# tweak to make the container read-only
+RUN mkdir -p /tmp/z-push/ && \
+    for i in /etc/z-push/* /etc/z-push/.[^.]*; do \
+        mv "$i" "$i.dist"; \
+        ln -s /tmp/z-push/"$(basename "$i")" "$i"; \
+    done
+
 COPY apache2-kopano.conf /etc/apache2/sites-available/kopano.conf
 
 # configure basics

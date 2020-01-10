@@ -39,6 +39,8 @@ php_cfg_gen() {
 	fi
 }
 
+# Hint: this is not compatible with a read-only container.
+# The general recommendation is to already build a container that has all required packages installed.
 ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
@@ -48,6 +50,13 @@ ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 	else
 		echo "INFO: $installpkg is already installed"
 	fi
+done
+
+# copy latest config template
+mkdir -p /tmp/z-push/
+for i in /tmp/z-push/*.dist /tmp/z-push/.[^.]*.dist; do
+	filename=$(basename -- "$i")
+	cp "$i" "/tmp/z-push/${filename%.*}"
 done
 
 # Ensure directories
@@ -62,58 +71,58 @@ if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
 	echo "Z-Push is using the default: connection"
 else
 	echo "Z-Push is using an ip connection"
-	php_cfg_gen /etc/z-push/kopano.conf.php MAPI_SERVER "https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano"
+	php_cfg_gen /tmp/z-push/kopano.conf.php MAPI_SERVER "https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano"
 fi
 
 echo "Configuring Z-Push for use behind a reverse proxy"
-php_cfg_gen /etc/z-push/z-push.conf.php USE_CUSTOM_REMOTE_IP_HEADER HTTP_X_FORWARDED_FOR
+php_cfg_gen /tmp/z-push/z-push.conf.php USE_CUSTOM_REMOTE_IP_HEADER HTTP_X_FORWARDED_FOR
 
 # configuring z-push from env
 for setting in $(compgen -A variable KCCONF_ZPUSH_); do
 	setting2=${setting#KCCONF_ZPUSH_}
-	php_cfg_gen /etc/z-push/z-push.conf.php "${setting2}" "${!setting}"
+	php_cfg_gen /tmp/z-push/z-push.conf.php "${setting2}" "${!setting}"
 done
 
 # configuring autodiscover
 for setting in $(compgen -A variable KCCONF_ZPUSHAUTODISCOVER_); do
 	setting2=${setting#KCCONF_ZPUSHAUTODISCOVER_}
-	php_cfg_gen /etc/z-push/autodiscover.conf.php "${setting2}" "${!setting}"
+	php_cfg_gen /tmp/z-push/autodiscover.conf.php "${setting2}" "${!setting}"
 done
 
 # configuring z-push gabsync
-php_cfg_gen /etc/z-push/gabsync.conf.php USERNAME SYSTEM
+php_cfg_gen /tmp/z-push/gabsync.conf.php USERNAME SYSTEM
 
 for setting in $(compgen -A variable KCCONF_ZPUSHGABSYNC_); do
 	setting2=${setting#KCCONF_ZPUSHGAVSYNC_}
-	php_cfg_gen /etc/z-push/z-push.conf.php "${setting2}" "${!setting}"
+	php_cfg_gen /tmp/z-push/z-push.conf.php "${setting2}" "${!setting}"
 done
 
 # configuring z-push sql state engine
 for setting in $(compgen -A variable KCCONF_ZPUSHSQL_); do
 	setting2=${setting#KCCONF_ZPUSHSQL_}
-	php_cfg_gen /etc/z-push/state-sql.conf.php "${setting2}" "${!setting}"
+	php_cfg_gen /tmp/z-push/state-sql.conf.php "${setting2}" "${!setting}"
 done
 
 # configuring z-push memcached
 for setting in $(compgen -A variable KCCONF_ZPUSHMEMCACHED_); do
 	setting2=${setting#KCCONF_ZPUSHMEMCACHED_}
-	php_cfg_gen /etc/z-push/memcached.conf.php "${setting2}" "${!setting}"
+	php_cfg_gen /tmp/z-push/memcached.conf.php "${setting2}" "${!setting}"
 done
 
 # configuring z-push gab2contacts
 for setting in $(compgen -A variable KCCONF_ZPUSHGA2CONTACTS_); do
 	setting2=${setting#KCCONF_ZPUSHSQL_}
-	php_cfg_gen /etc/z-push/gab2contacts.conf.php "${setting2}" "${!setting}"
+	php_cfg_gen /tmp/z-push/gab2contacts.conf.php "${setting2}" "${!setting}"
 done
 
 # configuring z-push shared folders
-perl -i -0pe 's/\$additionalFolders.*\);//s' /etc/z-push/z-push.conf.php
-echo -e "  \$additionalFolders = array(" >> /etc/z-push/z-push.conf.php
+perl -i -0pe 's/\$additionalFolders.*\);//s' /tmp/z-push/z-push.conf.php
+echo -e "  \$additionalFolders = array(" >> /tmp/z-push/z-push.conf.php
 echo "$ZPUSH_ADDITIONAL_FOLDERS" | jq -c '.[]' | while read -r folder; do
 	eval "$(echo "$folder" | jq -r '@sh "NAME=\(.name) ID=\(.id) TYPE=\(.type) FLAGS=\(.flags)"')"
 	echo -e "    array('store' => \"SYSTEM\", 'folderid' => \"$ID\", 'name' => \"$NAME\", 'type' => $TYPE, 'flags' => $FLAGS)," >> /etc/z-push/z-push.conf.php
 done
-echo -e '  );' >> /etc/z-push/z-push.conf.php
+echo -e '  );' >> /tmp/z-push/z-push.conf.php
 
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
