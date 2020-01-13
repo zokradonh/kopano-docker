@@ -25,10 +25,11 @@ The `docker-compose.yml` file by default pulls Docker containers from https://hu
 If you are running into a problem please include the following issues in the description of your report:
 
 - the error message produced when running `docker-compose up`
-- the output of `docker-compose ps`
+  - or the output of `docker-compose ps`
 - for failed containers the output of `docker-compose logs $containername`
 - the contents of your `.env`
-- the output of `docker-compose config`
+- either the output of `docker-compose config` (only useful when `docker-compose up` succeeds) or your `docker-compose.yml`
+- the output of `docker -v` and `docker-compose -v`
 
 Please make sure to remove sensitive data (for example your real hostname or passwords for accounts) when posting these information publicly.
 

@@ -7,6 +7,6 @@ Check https://github.com/zokradonh/kopano-docker/blob/master/ldap_demo/README.md
 ## Instructions
 
 1. run `setup.sh`
-2. check `.env` for any required customisation (port 443 already in use?)
+2. check `.env` for any required customization (port 443 already in use?)
 3. run `docker-compose up` to start
 4. navigate to https://your-domain to login to Kopano Meet

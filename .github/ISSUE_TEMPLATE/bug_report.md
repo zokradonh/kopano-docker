@@ -24,4 +24,4 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem. Please don't post screenshots text blocks such as logfiles or general console output.
 
 **Additional context**
-Add any other context about the problem here.
+Add any other context about the problem here. Please check the [troubleshooting section](https://github.com/zokradonh/kopano-docker#troubleshooting) of the readme for additional details.
