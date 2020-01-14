@@ -25,34 +25,12 @@ services:
         aliases:
           - ${FQDNCLEANED?err}
 
-  ldap:
-    image: ${docker_repo:-zokradonh}/${LDAP_CONTAINER:-kopano_ldap_demo}:${LDAP_VERSION:-latest}
-    restart: unless-stopped
-    container_name: ${COMPOSE_PROJECT_NAME}_ldap
-    environment:
-      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
-      - LDAP_BASE_DN=${LDAP_BASE_DN}
-      - LDAP_DOMAIN=${LDAP_DOMAIN}
-      - LDAP_ORGANISATION=${LDAP_ORGANISATION}
-      - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_USER_PASSWORD}
-      - LDAP_READONLY_USER=true
-    env_file:
-      - ldap.env
-    command: "--loglevel info --copy-service"
-    volumes:
-      - ldap:/var/lib/ldap
-      - slapd:/etc/ldap/slapd.d
-    networks:
-      - ldap-net
-
   mail:
     image: tvial/docker-mailserver:release-v6.2.0
     restart: unless-stopped
     hostname: mail
     domainname: ${LDAP_DOMAIN}
     container_name: ${COMPOSE_PROJECT_NAME}_mail
-    depends_on:
-      - ldap
     volumes:
       - maildata:/var/mail
       - mailstate:/var/mail-state
@@ -92,7 +70,6 @@ services:
       - mail.env
     networks:
       - kopano-net
-      - ldap-net
     # dns: 1.1.1.1  # using Google DNS can lead to lookup errors uncomment this option and
     # set to the ip of a trusted dns service (Cloudflare is given as an example).
     # See https://github.com/zokradonh/kopano-docker/issues/52 for more information.
@@ -150,7 +127,6 @@ services:
       - db
       - kopano_konnect
       - kopano_ssl
-      - ldap
     environment:
       - ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES}
       - KCCOMMENT_LDAP_1=${KCCOMMENT_LDAP_1}
@@ -181,7 +157,6 @@ services:
       - kopano_server.env
     networks:
       - kopano-net
-      - ldap-net
       - web-net
     volumes:
       - /etc/machine-id:/etc/machine-id
@@ -500,7 +475,6 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_scheduler
     networks:
       - kopano-net
-      - ldap-net
       - web-net
     depends_on:
       - kopano_server
@@ -524,18 +498,14 @@ volumes:
   kopanosocket:
   kopanossl:
   kopanowebapp:
-  ldap:
   maildata:
   mailstate:
   mtaconfig:
   mysql:
-  slapd:
   web:
   zpushstates:
 
 networks:
   kopano-net:
-    driver: bridge
-  ldap-net:
     driver: bridge
   web-net:

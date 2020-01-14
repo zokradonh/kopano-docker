@@ -1,0 +1,44 @@
+version: "3.5"
+
+services:
+  ldap:
+    image: ${docker_repo:-zokradonh}/${LDAP_CONTAINER:-kopano_ldap_demo}:${LDAP_VERSION:-latest}
+    restart: unless-stopped
+    container_name: ${COMPOSE_PROJECT_NAME}_ldap
+    ports:
+      - ${LDAPPORT:-389}:389
+    environment:
+      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
+      - LDAP_BASE_DN=${LDAP_BASE_DN}
+      - LDAP_DOMAIN=${LDAP_DOMAIN}
+      - LDAP_ORGANISATION=${LDAP_ORGANISATION}
+      - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_USER_PASSWORD}
+      - LDAP_READONLY_USER=true
+    env_file:
+      - ldap.env
+    command: "--loglevel info --copy-service"
+    volumes:
+      - ldap:/var/lib/ldap
+      - slapd:/etc/ldap/slapd.d
+    networks:
+      - ldap-net
+
+  mail:
+    depends_on:
+      - ldap
+    networks:
+      - ldap-net
+
+  kopano_server:
+    depends_on:
+      - ldap
+    networks:
+      - ldap-net
+
+volumes:
+  ldap:
+  slapd:
+
+networks:
+  ldap-net:
+    driver: bridge

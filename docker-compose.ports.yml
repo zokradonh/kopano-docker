@@ -7,10 +7,6 @@ services:
       - "${HTTP:-80}:80"
       - "${HTTPS:-443}:443"
 
-  ldap:
-    ports:
-      - ${LDAPPORT:-389}:389
-
   mail:
     ports:
       - "${SMTPPORT:-25}:25"
