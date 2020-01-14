@@ -5,11 +5,16 @@ ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 set -eu # unset variables are errors & non-zero return values exit the whole script
 [ "$DEBUG" ] && set -x
 
+# copy configuration files to /tmp/kopano to prevent modification of mounted config files
+mkdir -p /tmp/kopano
+cp /etc/kopano/*.cfg /tmp/kopano
+
 if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	echo "Invalid service specified: $SERVICE_TO_START" | ts
 	exit 1
 fi
 
+# TODO how to best move this to /tmp? 
 echo "Configure service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/"$SERVICE_TO_START".py
 
@@ -22,7 +27,8 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
-CONFIG_JSON="/usr/share/kopano-kweb/www/config/kopano/meet.json"
+cp /usr/share/doc/kopano-meet-webapp/config.json.in /tmp/meet.json
+CONFIG_JSON="/tmp/meet.json"
 echo "Updating $CONFIG_JSON"
 for setting in $(compgen -A variable KCCONF_MEET); do
 	setting2=${setting#KCCONF_MEET_}
@@ -54,11 +60,12 @@ if [ "${GRID_WEBAPP:-yes}" = "yes" ]; then
 	jq '.apps.enabled += ["kopano-webapp"]' $CONFIG_JSON | sponge $CONFIG_JSON
 fi
 
-sed -i s/\ *=\ */=/g /etc/kopano/kwebd.cfg
+# todo do not replace here, but in a temp location
+sed s/\ *=\ */=/g /tmp/kopano/kwebd.cfg > /tmp/kweb-env
 # always disable tls
 export tls=no
 # shellcheck disable=SC2046
-export $(grep -v '^#' /etc/kopano/kwebd.cfg | xargs -d '\n')
+export $(grep -v '^#' /tmp/kweb-env | xargs -d '\n')
 
 # services need to be aware of the machine-id
 dockerize \

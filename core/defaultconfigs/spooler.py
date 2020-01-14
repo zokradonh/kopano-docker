@@ -3,7 +3,7 @@ import kcconf
 
 # Component specific configurations
 kcconf.configkopano({
-    r"/etc/kopano/spooler.cfg":
+    r"/tmp/kopano/spooler.cfg":
     {
         'log_file': "-",
         'log_level': "4",
@@ -12,4 +12,4 @@ kcconf.configkopano({
 })
 
 # Override configs from environment variables
-kcconf.configkopano(kcconf.parseenvironmentvariables(r"/etc/kopano/"))
+kcconf.configkopano(kcconf.parseenvironmentvariables(r"/tmp/kopano/"))

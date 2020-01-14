@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-cronfile=/etc/crontab
+cronfile=/tmp/crontab
 
 # purge existing entries from crontab
 true > "$cronfile"
@@ -15,7 +15,7 @@ done
 
 for cronvar in ${!CRONDELAYED_*}; do
 	cronvalue=${!cronvar}
-	echo "Adding $cronvalue to crontab"
+	echo "Adding $cronvalue to crontab (delayed)"
 	echo "$cronvalue" >> "$cronfile"
 done
 
@@ -26,7 +26,7 @@ dockerize \
 echo "creating public store"
 docker exec kopano_server kopano-storeadm -h default: -P || true
 
-# run sheduled cron jobs once
+echo "Running sheduled cron jobs once"
 for cronvar in ${!CRON_*}; do
 	cronvalue=${!cronvar}
 	croncommand=$(echo "$cronvalue" | cut -d ' ' -f 6-)
@@ -34,5 +34,5 @@ for cronvar in ${!CRON_*}; do
 	$croncommand
 done
 
-supercronic -test /etc/crontab
-exec supercronic /etc/crontab
+supercronic -test $cronfile
+exec supercronic $cronfile

@@ -12,8 +12,9 @@ set -eu # unset variables are errors & non-zero return values exit the whole scr
 # shellcheck source=php/start-helper.sh
 source /kopano/start-helper.sh
 
+# Hint: this is not compatible with a read-only container.
+# The general recommendation is to already build a container that has all required packages installed.
 ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
-
 ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
@@ -23,6 +24,13 @@ ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
 	else
 		echo "INFO: $installpkg is already installed"
 	fi
+done
+
+# copy latest config template
+mkdir -p /tmp/webapp/
+for i in /etc/kopano/webapp/*.dist /etc/kopano/webapp/.[^.]*.dist; do
+	filename=$(basename -- "$i")
+	cp "$i" "/tmp/webapp/${filename%.*}"
 done
 
 # Ensure directories exist
@@ -37,13 +45,13 @@ if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
 	echo "Kopano WebApp is using the default: connection"
 else
 	echo "Kopano WebApp is using an ip connection"
-	php_cfg_gen /etc/kopano/webapp/config.php DEFAULT_SERVER "https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano"
+	php_cfg_gen /tmp/webapp/config.php DEFAULT_SERVER "https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano"
 fi
 
 # configuring webapp from env
 for setting in $(compgen -A variable KCCONF_WEBAPP_); do
 	setting2=${setting#KCCONF_WEBAPP_}
-	php_cfg_gen /etc/kopano/webapp/config.php "${setting2}" "${!setting}"
+	php_cfg_gen /tmp/webapp/config.php "${setting2}" "${!setting}"
 done
 
 # configuring webapp plugins from env
@@ -52,7 +60,7 @@ for setting in $(compgen -A variable KCCONF_WEBAPPPLUGIN_); do
 	filename="${setting2%%_*}"
 	setting3=${setting#KCCONF_WEBAPPPLUGIN_${filename}_}
 	identifier="${filename,,}"
-	php_cfg_gen /etc/kopano/webapp/config-"$identifier".php "${setting3}" "${!setting}"
+	php_cfg_gen /tmp/webapp/config-"$identifier".php "${setting3}" "${!setting}"
 done
 
 echo "Ensure config ownership"

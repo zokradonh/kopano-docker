@@ -57,8 +57,10 @@ RUN curl -L https://github.com/aelsabbahy/goss/releases/download/$GOSS_VERSION/g
     chmod +rx /usr/local/bin/goss && \
     goss --version
 
+# if additional locales are required this should be adjusted here
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
+    sed -i -e 's/# nl_NL.UTF-8 UTF-8/nl_NL.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8
 

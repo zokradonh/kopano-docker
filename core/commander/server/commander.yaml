@@ -24,7 +24,7 @@ tests:
       env:
         ADDITIONAL_KOPANO_PACKAGES: "kopano-server"
   generate configuration for kopano-server:
-    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/server.cfg
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh" && cat /tmp/kopano/server.cfg
     exit-code: 0
     stdout:
       contains:
@@ -33,7 +33,7 @@ tests:
       not-contains:
         - #server_listen_tls = *:237
   generate ldap configuration openLDAP (default):
-    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/ldap.cfg
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh" && cat /tmp/kopano/ldap.cfg
     exit-code: 0
     stdout:
       contains:
@@ -42,7 +42,7 @@ tests:
       not-contains:
         - "#!include /usr/share/kopano/ldap.openldap.cfg"
   generate ldap configuration for ADS:
-    command: /usr/bin/python3 /kopano/server.py && cat /etc/kopano/ldap.cfg
+    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh" && cat /tmp/kopano/ldap.cfg
     exit-code: 0
     stdout:
       contains:
@@ -63,50 +63,8 @@ tests:
         - C.UTF-8
         - de_DE.utf8
         - en_US.utf8
-        - POSIX
-  start-service script dutch locale:
-    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh && locale -a"
-    exit-code: 0
-    stdout:
-      contains:
-        - C
-        - C.UTF-8
-        - de_DE.utf8
-        - en_US.utf8
         - nl_NL.utf8
         - POSIX
-    config:
-      env:
-        KCCONF_ADMIN_DEFAULT_STORE_LOCALE: "nl_NL.UTF-8"
-  start-service script dutch locale (short):
-    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh && locale -a"
-    exit-code: 0
-    stdout:
-      contains:
-        - C
-        - C.UTF-8
-        - de_DE.utf8
-        - en_US.utf8
-        - nl_NL.utf8
-        - POSIX
-    config:
-      env:
-        KCCONF_ADMIN_DEFAULT_STORE_LOCALE: "nl_NL"
-  start-service script unknown locale:
-    command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh && locale -a"
-    exit-code: 0
-    stdout:
-      contains:
-        - C
-        - C.UTF-8
-        - de_DE.utf8
-        - en_US.utf8
-        - POSIX
-      not-contains:
-        - abc
-    config:
-      env:
-        KCCONF_ADMIN_DEFAULT_STORE_LOCALE: "abc"
   start-service script no dockerize:
     command: bash -c "shopt -s expand_aliases; alias exec='echo'; . /kopano/start-service.sh"
     exit-code: 0

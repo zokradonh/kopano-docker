@@ -1,5 +1,5 @@
 tests:
-  check mailbox language: # this needs a running kopano-server can can therefore not be executed in that container directly
+  check mailbox language: # this needs a running kopano-server and can can therefore not be executed in that container directly
     command: "docker exec kopano_server kopano-storeadm -C -n user10; docker exec kopano_server show-folders.py --user user10"
     exit-code: 0
     stdout:
@@ -12,13 +12,24 @@ tests:
     stdout:
       not-contains:
         - "WARNING: Unable to get user store entry id. User possibly has no store."
-  check mailbox language german: # this needs a running kopano-server can can therefore not be executed in that container directly
-    command: "docker exec kopano_server kopano-storeadm -D user 11; docker exec kopano_server kopano-storeadm -C -l de_DE -n user11; docker exec kopano_server show-folders.py --user user11"
+  check mailbox language german: # this needs a running kopano-server and can can therefore not be executed in that container directly
+    command: "docker exec kopano_server kopano-storeadm -D -n user11; docker exec kopano_server kopano-storeadm -C -l de_DE -n user11; docker exec kopano_server show-folders.py --user user11"
     exit-code: 0
     stdout:
       not-contains:
         - "Inbox"
         - "Drafts"
+      contains:
+        - "Posteingang"
+  check mailbox language dutch: # this needs a running kopano-server and can can therefore not be executed in that container directly
+    command: "docker exec kopano_server kopano-storeadm -D -n user12; docker exec kopano_server kopano-storeadm -C -l nl_NL -n user12; docker exec kopano_server show-folders.py --user user12"
+    exit-code: 0
+    stdout:
+      not-contains:
+        - "Inbox"
+        - "Drafts"
+      contains:
+        - "Postvak IN"
 #  test renaming of folders:
 #    command: docker exec kopano_server env KCCONF_ADMIN_DEFAULT_STORE_LOCALE=de_DE.UTF-8 /usr/bin/python3 /kopano/server.py && docker exec kopano_server kopano-storeadm -Y -n user12
 #    exit-code: 0

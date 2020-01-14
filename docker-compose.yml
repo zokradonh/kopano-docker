@@ -3,6 +3,7 @@ version: "3.5"
 services:
   web:
     image: ${docker_repo:-zokradonh}/kopano_web:${KWEB_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     environment:
       - DEFAULTREDIRECT=${DEFAULTREDIRECT:-/webapp}
@@ -123,6 +124,7 @@ services:
 
   kopano_ssl:
     image: ${docker_repo:-zokradonh}/kopano_ssl:${SSL_VERSION:-latest}
+    read_only: true
     environment:
       - FQDN=${FQDN}
       - PKI_COUNTRY=NL
@@ -130,9 +132,12 @@ services:
       - kopano_ssl.env
     volumes:
       - kopanossl/:/kopano/ssl
+    tmpfs:
+      - /kopano/easypki/
 
   kopano_kustomer:
     image: kopano/kustomerd:${KUSTOMER_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     command: serve --log-level debug
     volumes:
@@ -143,6 +148,7 @@ services:
 
   kopano_server:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true # in case additional packages need to be installed this option should be set to false
     restart: unless-stopped
     hostname: kopano_server
     container_name: ${COMPOSE_PROJECT_NAME}_server
@@ -154,6 +160,7 @@ services:
     environment:
       - ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES}
       - KCCOMMENT_LDAP_1=${KCCOMMENT_LDAP_1}
+      # Hint: if additional locales are required that should be added in base/Dockerfile
       - KCCONF_ADMIN_DEFAULT_STORE_LOCALE=${MAILBOXLANG:-en_US.UTF-8}
       - KCCONF_LDAP_LDAP_BIND_PASSWD=${LDAP_BIND_PW}
       - KCCONF_LDAP_LDAP_BIND_USER=${LDAP_BIND_DN}
@@ -189,9 +196,12 @@ services:
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
+    tmpfs:
+      - /tmp/
 
   kopano_webapp:
     image: ${docker_repo:-zokradonh}/kopano_webapp:${WEBAPP_VERSION:-latest}
+    read_only: true # in case additional packages need to be installed this option should be set to false
     restart: unless-stopped
     hostname: kopano_webapp
     depends_on:
@@ -212,9 +222,15 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /tmp/
+      - /run/sessions/
+      - /run/php/
+      - /var/log/
 
   kopano_zpush:
     image: ${docker_repo:-zokradonh}/kopano_zpush:${ZPUSH_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     hostname: kopano_zpush
     container_name: ${COMPOSE_PROJECT_NAME}_zpush
@@ -236,9 +252,15 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /run/apache2/
+      - /run/sessions/
+      - /tmp
+      - /var/log/z-push/
 
   kopano_grapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
     depends_on:
@@ -251,6 +273,7 @@ services:
     environment:
       - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=no
       - KCCONF_GRAPI_INSECURE=${INSECURE}
+      - KCCONF_GRAPI_PERSISTENCY_PATH=/var/lib/kopano-grapi
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
     env_file:
@@ -258,9 +281,12 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /tmp/
 
   kopano_kapi:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_kapi
     depends_on:
@@ -282,9 +308,12 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /tmp
 
   kopano_kdav:
     image: ${docker_repo:-zokradonh}/kopano_kdav:${KDAV_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     hostname: kopano_kdav
     container_name: ${COMPOSE_PROJECT_NAME}_kdav
@@ -301,9 +330,15 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /run/apache2/
+      - /run/sessions/
+      - /tmp
+      - /var/log/kdav/
 
   kopano_dagent:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -321,9 +356,12 @@ services:
       - kopano_dagent.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
 
   kopano_spooler:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     hostname: spooler
     domainname: ${LDAP_DOMAIN}
@@ -345,9 +383,12 @@ services:
       - kopano_spooler.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
 
   kopano_gateway:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -365,9 +406,12 @@ services:
       - kopano_gateway.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
 
   kopano_ical:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -385,9 +429,12 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /tmp
 
   kopano_monitor:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -403,9 +450,12 @@ services:
       - kopano_monitor.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
 
   kopano_search:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_search
     depends_on:
@@ -423,14 +473,17 @@ services:
       - kopano_search.env
     networks:
       - kopano-net
+    tmpfs:
+      - /tmp
 
   kopano_konnect:
     image: ${docker_repo:-zokradonh}/kopano_konnect:${KONNECT_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_ssl
       - web
-      # to be useful Konnect also need a running kopano_server, but this dependency cannot be added here since this would be a circular dependency
+      # to be useful Konnect also needs a running kopano_server, but this dependency cannot be added here since this would be a circular dependency
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
@@ -452,9 +505,12 @@ services:
     networks:
       - kopano-net
       - web-net
+    tmpfs:
+      - /tmp
 
   kopano_kwmserver:
     image: ${docker_repo:-zokradonh}/kopano_kwmserver:${KWM_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     command: wrapper.sh
     depends_on:
@@ -473,9 +529,12 @@ services:
       - kopanossl/:/kopano/ssl
     networks:
       - web-net
+    tmpfs:
+      - /tmp
 
   kopano_meet:
     image: ${docker_repo:-zokradonh}/kopano_meet:${MEET_VERSION:-latest}
+    read_only: true
     restart: unless-stopped
     environment:
       - KCCONF_MEET_disableFullGAB=false
@@ -493,9 +552,12 @@ services:
       - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
+    tmpfs:
+      - /tmp
 
   kopano_scheduler:
     image: ${docker_repo:-zokradonh}/kopano_scheduler:${SCHEDULER_VERSION:-latest}
+    read_only: true
     restart: "no"
     container_name: ${COMPOSE_PROJECT_NAME}_scheduler
     networks:
@@ -515,6 +577,8 @@ services:
       - kopano_scheduler.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    tmpfs:
+      - /tmp
 
 volumes:
   kdavstates:

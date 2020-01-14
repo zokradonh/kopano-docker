@@ -64,6 +64,13 @@ RUN \
         ${ADDITIONAL_KOPANO_WEBAPP_PLUGINS} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
+# tweak to make the container read-only
+RUN mkdir -p /tmp/webapp/ && \
+    for i in /etc/kopano/webapp/* /etc/kopano/webapp/.[^.]*; do \
+        mv "$i" "$i.dist"; \
+        ln -s /tmp/webapp/"$(basename "$i")" "$i"; \
+    done
+
 COPY start.sh /kopano/start.sh
 COPY goss* /goss/
 

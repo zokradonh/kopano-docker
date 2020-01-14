@@ -3,7 +3,7 @@ import kcconf
 
 # Component specific configurations
 kcconf.configkopano({
-    r"/etc/kopano/kapid.cfg":
+    r"/tmp/kopano/kapid.cfg":
     {
         'log_level': "info",
         'listen': "0.0.0.0:8039",
@@ -15,4 +15,4 @@ kcconf.configkopano({
 })
 
 # Override configs from environment variables
-kcconf.configkopano(kcconf.parseenvironmentvariables(r"/etc/kopano/"))
+kcconf.configkopano(kcconf.parseenvironmentvariables(r"/tmp/kopano/"))

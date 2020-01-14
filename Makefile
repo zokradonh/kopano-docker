@@ -36,6 +36,7 @@ TAG_FILE := build.tags
 export
 
 # convert lowercase componentname to uppercase
+component ?= base
 COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 
 .PHONY: default
@@ -149,7 +150,7 @@ build-python:
 	component=python make build
 
 build-kdav:
-	docker pull composer:1.8
+	docker pull composer:1.9
 	component=kdav make build-builder
 	component=kdav make build
 
@@ -158,7 +159,7 @@ build-scheduler:
 	component=scheduler make build-simple
 
 build-ssl:
-	docker pull alpine:3.9
+	docker pull alpine:3.11
 	component=ssl make build-simple
 
 build-utils:
