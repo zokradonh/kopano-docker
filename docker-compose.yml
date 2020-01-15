@@ -423,10 +423,6 @@ volumes:
   kopanosocket:
   kopanossl:
   kopanowebapp:
-  maildata:
-  mailstate:
-  mtaconfig:
-  mysql:
   web:
   zpushstates:
 
