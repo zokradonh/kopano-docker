@@ -1,0 +1,30 @@
+version: "3.5"
+
+services:
+  db:
+    image: mariadb:10.3.10-bionic
+    restart: unless-stopped
+    container_name: ${COMPOSE_PROJECT_NAME}_db
+    volumes:
+      - mysql/:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+    env_file:
+      - db.env
+    healthcheck:
+      test: ["CMD-SHELL", 'mysql --database=$$MYSQL_DATABASE --password=$$MYSQL_ROOT_PASSWORD --execute="SELECT count(table_name) > 0 FROM information_schema.tables;" --skip-column-names -B']
+      interval: 30s
+      timeout: 10s
+      retries: 4
+    networks:
+      - kopano-net
+
+  kopano_server:
+    depends_on:
+      - db
+
+volumes:
+  mysql:
