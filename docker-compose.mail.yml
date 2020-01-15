@@ -1,0 +1,67 @@
+version: "3.5"
+
+services:
+  mail:
+    image: tvial/docker-mailserver:release-v6.2.0
+    restart: unless-stopped
+    hostname: mail
+    domainname: ${LDAP_DOMAIN}
+    container_name: ${COMPOSE_PROJECT_NAME}_mail
+    ports:
+      - "${SMTPPORT:-25}:25"
+      - "${SMTPSPORT:-465}:465"
+      - "${MSAPORT:-587}:587"
+    volumes:
+      - maildata:/var/mail
+      - mailstate:/var/mail-state
+      - mtaconfig:/tmp/docker-mailserver/
+    environment:
+      - DMS_DEBUG=0
+      - ENABLE_CLAMAV=1
+      - ENABLE_FAIL2BAN=1
+      - ENABLE_LDAP=1
+      - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
+      - ENABLE_POSTGREY=1
+      - ENABLE_SASLAUTHD=1
+      - ENABLE_SPAMASSASSIN=1
+      - LDAP_BIND_DN=${LDAP_BIND_DN}
+      - LDAP_BIND_PW=${LDAP_BIND_PW}
+      - LDAP_QUERY_FILTER_ALIAS=${LDAP_QUERY_FILTER_ALIAS}
+      - LDAP_QUERY_FILTER_DOMAIN=${LDAP_QUERY_FILTER_DOMAIN}
+      - LDAP_QUERY_FILTER_GROUP=${LDAP_QUERY_FILTER_GROUP}
+      - LDAP_QUERY_FILTER_USER=${LDAP_QUERY_FILTER_USER}
+      - LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
+      - LDAP_SERVER_HOST=${LDAP_SERVER}
+      - ONE_DIR=1
+      - PERMIT_DOCKER=connected-networks
+      - POSTFIX_DAGENT=lmtp:kopano_dagent:2003
+      - POSTMASTER_ADDRESS=${POSTMASTER_ADDRESS}
+      - REPORT_RECIPIENT=1
+      - SASLAUTHD_LDAP_BIND_DN=${LDAP_BIND_DN}
+      - SASLAUTHD_LDAP_FILTER=${SASLAUTHD_LDAP_FILTER}
+      - SASLAUTHD_LDAP_PASSWORD=${LDAP_BIND_PW}
+      - SASLAUTHD_LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
+      - SASLAUTHD_LDAP_SERVER=${LDAP_SERVER}
+      - SASLAUTHD_MECHANISMS=ldap
+      - SMTP_ONLY=1
+      - SSL_TYPE=self-signed
+      - TZ=${TZ}
+    env_file:
+      - mail.env
+    networks:
+      - kopano-net
+    # dns: 1.1.1.1  # using Google DNS can lead to lookup errors uncomment this option and
+    # set to the ip of a trusted dns service (Cloudflare is given as an example).
+    # See https://github.com/zokradonh/kopano-docker/issues/52 for more information.
+    cap_add:
+      - NET_ADMIN
+      - SYS_PTRACE
+
+  kopano_spooler:
+    depends_on:
+      - mail
+
+volumes:
+  maildata:
+  mailstate:
+  mtaconfig:

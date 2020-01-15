@@ -25,79 +25,6 @@ services:
         aliases:
           - ${FQDNCLEANED?err}
 
-  mail:
-    image: tvial/docker-mailserver:release-v6.2.0
-    restart: unless-stopped
-    hostname: mail
-    domainname: ${LDAP_DOMAIN}
-    container_name: ${COMPOSE_PROJECT_NAME}_mail
-    volumes:
-      - maildata:/var/mail
-      - mailstate:/var/mail-state
-      - mtaconfig:/tmp/docker-mailserver/
-    environment:
-      - DMS_DEBUG=0
-      - ENABLE_CLAMAV=1
-      - ENABLE_FAIL2BAN=1
-      - ENABLE_LDAP=1
-      - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
-      - ENABLE_POSTGREY=1
-      - ENABLE_SASLAUTHD=1
-      - ENABLE_SPAMASSASSIN=1
-      - LDAP_BIND_DN=${LDAP_BIND_DN}
-      - LDAP_BIND_PW=${LDAP_BIND_PW}
-      - LDAP_QUERY_FILTER_ALIAS=${LDAP_QUERY_FILTER_ALIAS}
-      - LDAP_QUERY_FILTER_DOMAIN=${LDAP_QUERY_FILTER_DOMAIN}
-      - LDAP_QUERY_FILTER_GROUP=${LDAP_QUERY_FILTER_GROUP}
-      - LDAP_QUERY_FILTER_USER=${LDAP_QUERY_FILTER_USER}
-      - LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
-      - LDAP_SERVER_HOST=${LDAP_SERVER}
-      - ONE_DIR=1
-      - PERMIT_DOCKER=connected-networks
-      - POSTFIX_DAGENT=lmtp:kopano_dagent:2003
-      - POSTMASTER_ADDRESS=${POSTMASTER_ADDRESS}
-      - REPORT_RECIPIENT=1
-      - SASLAUTHD_LDAP_BIND_DN=${LDAP_BIND_DN}
-      - SASLAUTHD_LDAP_FILTER=${SASLAUTHD_LDAP_FILTER}
-      - SASLAUTHD_LDAP_PASSWORD=${LDAP_BIND_PW}
-      - SASLAUTHD_LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
-      - SASLAUTHD_LDAP_SERVER=${LDAP_SERVER}
-      - SASLAUTHD_MECHANISMS=ldap
-      - SMTP_ONLY=1
-      - SSL_TYPE=self-signed
-      - TZ=${TZ}
-    env_file:
-      - mail.env
-    networks:
-      - kopano-net
-    # dns: 1.1.1.1  # using Google DNS can lead to lookup errors uncomment this option and
-    # set to the ip of a trusted dns service (Cloudflare is given as an example).
-    # See https://github.com/zokradonh/kopano-docker/issues/52 for more information.
-    cap_add:
-      - NET_ADMIN
-      - SYS_PTRACE
-
-  db:
-    image: mariadb:10.3.10-bionic
-    restart: unless-stopped
-    container_name: ${COMPOSE_PROJECT_NAME}_db
-    volumes:
-      - mysql/:/var/lib/mysql
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-    env_file:
-      - db.env
-    healthcheck:
-      test: ["CMD-SHELL", 'mysql --database=$$MYSQL_DATABASE --password=$$MYSQL_ROOT_PASSWORD --execute="SELECT count(table_name) > 0 FROM information_schema.tables;" --skip-column-names -B']
-      interval: 30s
-      timeout: 10s
-      retries: 4
-    networks:
-      - kopano-net
-
   kopano_ssl:
     image: ${docker_repo:-zokradonh}/kopano_ssl:${SSL_VERSION:-latest}
     environment:
@@ -124,7 +51,6 @@ services:
     hostname: kopano_server
     container_name: ${COMPOSE_PROJECT_NAME}_server
     depends_on:
-      - db
       - kopano_konnect
       - kopano_ssl
     environment:
@@ -304,7 +230,6 @@ services:
     domainname: ${LDAP_DOMAIN}
     depends_on:
       - kopano_server
-      - mail
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id

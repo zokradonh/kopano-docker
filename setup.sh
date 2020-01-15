@@ -351,11 +351,25 @@ else
 		echo "COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.ldap.yml" >> ./.env
 	fi
 
+	if ! grep -q docker-compose.db.yml ./.env; then
+		echo "Adding docker-compose.db.yml to COMPOSE_FILE variable in .env"
+		cfvalue="$(grep COMPOSE_FILE ./.env)"
+		sed -i "/^COMPOSE_FILE=/d" ./.env
+		echo "$cfvalue:docker-compose.db.yml" >> ./.env
+	fi
+
 	if ! grep -q docker-compose.ldap.yml ./.env; then
 		echo "Adding docker-compose.ldap.yml to COMPOSE_FILE variable in .env"
 		cfvalue="$(grep COMPOSE_FILE ./.env)"
 		sed -i "/^COMPOSE_FILE=/d" ./.env
 		echo "$cfvalue:docker-compose.ldap.yml" >> ./.env
+	fi
+
+	if ! grep -q docker-compose.mail.yml ./.env; then
+		echo "Adding docker-compose.mail.yml to COMPOSE_FILE variable in .env"
+		cfvalue="$(grep COMPOSE_FILE ./.env)"
+		sed -i "/^COMPOSE_FILE=/d" ./.env
+		echo "$cfvalue:docker-compose.mail.yml" >> ./.env
 	fi
 
 	echo ".env already exists with initial configuration"

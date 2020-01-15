@@ -7,12 +7,6 @@ services:
       - "${HTTP:-80}:80"
       - "${HTTPS:-443}:443"
 
-  mail:
-    ports:
-      - "${SMTPPORT:-25}:25"
-      - "${SMTPSPORT:-465}:465"
-      - "${MSAPORT:-587}:587"
-
   kopano_server:
     ports:
       - ${KOPANOPORT:-236}:236
