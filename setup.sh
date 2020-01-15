@@ -326,7 +326,7 @@ INSECURE=$INSECURE
 # Docker Repository to push to/pull from
 docker_repo=zokradonh
 COMPOSE_PROJECT_NAME=kopano
-COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.ldap.yml
+COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.db.yml:docker-compose.ldap.yml:docker-compose.mail.yml
 
 # Modify below to build a different version, than the kopano nightly release
 #KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/
@@ -347,8 +347,8 @@ EOF
 else
 
 	if ! grep -q COMPOSE_FILE ./.env; then
-		echo "Adding COMPOSE_FILE setting to .env"
-		echo "COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.ldap.yml" >> ./.env
+		echo "Adding COMPOSE_FILE setting to .env (for docker-compose.ports.yml)"
+		echo "COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml" >> ./.env
 	fi
 
 	if ! grep -q docker-compose.db.yml ./.env; then
