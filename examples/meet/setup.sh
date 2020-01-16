@@ -133,9 +133,6 @@ INSECURE=$INSECURE
 docker_repo=kopano
 COMPOSE_PROJECT_NAME=kopano
 
-# Additional packages to install
-ADDITIONAL_KOPANO_PACKAGES=python3-grapi.backend.ldap
-
 EOF
 else
 	echo ".env already exists with initial configuration"

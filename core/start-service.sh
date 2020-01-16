@@ -27,15 +27,22 @@ fi
 # Hint: this is not compatible with a read-only container.
 # The general recommendation is to already build a container that has all required packages installed.
 ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
-[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
-[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
-	# shellcheck disable=SC2016 disable=SC2086
-	if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
-		DEBIAN_FRONTEND=noninteractive apt --assume-yes --no-upgrade install "$installpkg"
-	else
-		echo "INFO: $installpkg is already installed"
-	fi
-done
+if [ -n "$(mkdir -p "/var/lib/apt/lists/" 2&> /dev/null)" ]; then
+	[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
+	[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
+		# shellcheck disable=SC2016 disable=SC2086
+		if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
+			DEBIAN_FRONTEND=noninteractive apt --assume-yes --no-upgrade install "$installpkg"
+		else
+			echo "INFO: $installpkg is already installed"
+		fi
+	done
+else
+	echo "Notice: Container is run read-only, skipping package installation."
+	echo "If you want to have additional packages installed in the container either:"
+	echo "- build your own image with the packages already included"
+	echo "- switch the container to 'read_only: false'"
+fi
 
 mkdir -p /tmp/"$SERVICE_TO_START" /var/run/kopano
 
