@@ -38,7 +38,7 @@ if [ -n "$(mkdir -p "/var/lib/apt/lists/" 2&> /dev/null)" ]; then
 		fi
 	done
 else
-    echo "Notice: Container is run read-only, skipping package installation."
+	echo "Notice: Container is run read-only, skipping package installation."
 	echo "If you want to have additional packages installed in the container either:"
 	echo "- build your own image with the packages already included"
 	echo "- switch the container to 'read_only: false'"
