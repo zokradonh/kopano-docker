@@ -14,7 +14,6 @@ if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
 	exit 1
 fi
 
-# TODO how to best move this to /tmp? 
 echo "Configure service '$SERVICE_TO_START'" | ts
 /usr/bin/python3 /kopano/"$SERVICE_TO_START".py
 
@@ -60,7 +59,6 @@ if [ "${GRID_WEBAPP:-yes}" = "yes" ]; then
 	jq '.apps.enabled += ["kopano-webapp"]' $CONFIG_JSON | sponge $CONFIG_JSON
 fi
 
-# todo do not replace here, but in a temp location
 sed s/\ *=\ */=/g /tmp/kopano/kwebd.cfg > /tmp/kweb-env
 # always disable tls
 export tls=no

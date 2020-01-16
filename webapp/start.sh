@@ -16,7 +16,6 @@ source /kopano/start-helper.sh
 # The general recommendation is to already build a container that has all required packages installed.
 ADDITIONAL_KOPANO_PACKAGES="$ADDITIONAL_KOPANO_PACKAGES $ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
 ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
-
 if [ -n "$(mkdir -p "/var/lib/apt/lists/" 2&> /dev/null)" ]; then
     [ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 	[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
@@ -28,7 +27,10 @@ if [ -n "$(mkdir -p "/var/lib/apt/lists/" 2&> /dev/null)" ]; then
 		fi
 	done
 else
-    echo "Notice: Container is run read-only skipping package installation"
+    echo "Notice: Container is run read-only, skipping package installation."
+	echo "If you want to have additional packages installed in the container either:"
+	echo "- build your own image with the packages already included"
+	echo "- switch the container to 'read_only: false'"
 fi
 
 # copy latest config template
