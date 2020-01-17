@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<info>
+	<id>kopano</id>
+	<name>Kopano Theme for ownCloud</name>
+	<description>Make your ownCloud look more integrated in the Intranet Plugin of Kopano WebApp</description>
+	<licence>AGPL</licence>
+	<author>Felix Bartels</author>
+	<version>0.0.1</version>
+	<types>
+		<theme/>
+	</types>
+	<dependencies>
+		<owncloud min-version="10.2" max-version="10" />
+	</dependencies>
+	<namespace>Theme</namespace>
+</info>
