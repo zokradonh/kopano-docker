@@ -21,27 +21,19 @@
 class OC_Theme {
 
 	/**
-	 * Returns the base URL
-	 * @return string URL
-	 */
-	public function getBaseUrl() {
-		return 'https://owncloud.org';
-	}
-
-	/**
 	 * Returns the title
 	 * @return string title
 	 */
 	public function getTitle() {
 		return 'ownCloud powered by Kopano';
-	}
+    }
 
 	/**
 	 * Returns mail header color
 	 * @return string
 	 */
 	public function getMailHeaderColor() {
-		return '#745bca';
+		return '#0f70bd';
 	}
 
 }
