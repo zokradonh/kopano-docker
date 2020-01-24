@@ -41,7 +41,7 @@ for i in /etc/kopano/webapp/*.dist /etc/kopano/webapp/.[^.]*.dist; do
 done
 
 # Ensure directories exist
-mkdir -p /run/sessions /tmp/webapp
+mkdir -p /run/sessions /tmp/webapp /var/lib/kopano-webapp/tmp
 
 phpversion=$(dpkg-query --showformat='${Version}' --show php7-mapi)
 echo "Using PHP-Mapi: $phpversion"
@@ -71,7 +71,7 @@ for setting in $(compgen -A variable KCCONF_WEBAPPPLUGIN_); do
 done
 
 echo "Ensure config ownership"
-chown -R www-data:www-data /run/sessions /tmp/webapp
+chown -R www-data:www-data /run/sessions /tmp/webapp /var/lib/kopano-webapp/tmp
 
 # services need to be aware of the machine-id
 dockerize \
