@@ -7,11 +7,6 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
 docker_repo := zokradonh
-# if not run in travis, get docker_login and _pwd from file
-ifndef TRAVIS
-	docker_login := $(shell cat ~/.docker-account-user)
-	docker_pwd := $(shell cat ~/.docker-account-pwd)
-endif
 
 base_download_version := $(shell ./version.sh core)
 core_download_version := $(shell ./version.sh core)
@@ -268,11 +263,9 @@ tag-zpush:
 	component=zpush make tag-container
 
 # Docker publish
-repo-login: ## Login at hub.docker.com
-	@echo $(docker_pwd) | docker login -u $(docker_login) --password-stdin
 
 .PHONY: publish
-publish: repo-login
+publish:
 	make $(shell grep -o ^publish-.*: Makefile | grep -Ev 'publish-container' | uniq | sed s/://g | xargs)
 
 publish-container: component ?= base
