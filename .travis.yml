@@ -30,6 +30,7 @@ deploy:
   - provider: script
     skip-cleanup: true
     script:
+      - echo "$docker_pwd" | docker login -u "$docker_login" --password-stdin
       - make publish
     on:
       branch: master
