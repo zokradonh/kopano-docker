@@ -432,7 +432,7 @@ services:
     environment:
       - KCCONF_MEET_disableFullGAB=false
       - KCCONF_MEET_guests_enabled=true
-      - KCCONF_MEET_oidc_useImplicitFlow=true # workaround for guest login with meet. not required
+      - KCCONF_MEET_oidc_useImplicitFlow=true # workaround for guest login with meet https://stash.kopano.io/projects/KWM/repos/meet/pull-requests/102/overview
       - KCCONF_MEET_minimumVersion=20200121 # can be used force updates of Meet
       - SERVICE_TO_START=meet
     env_file:
