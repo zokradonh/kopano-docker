@@ -74,7 +74,6 @@ services:
       - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
     environment:
-      - ADDITIONAL_KOPANO_PACKAGES=python3-grapi.backend.ldap
       - GRAPI_BACKEND=ldap
       - LDAP_BASEDN=${LDAP_SEARCH_BASE}
       - LDAP_BINDDN=${LDAP_BIND_DN}

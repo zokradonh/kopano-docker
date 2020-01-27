@@ -33,7 +33,7 @@ for setting in $(compgen -A variable KCCONF_MEET); do
 	setting2=${setting#KCCONF_MEET_}
 	# dots in setting2 need to be escaped to not be handled as separate entities in the json file
 	case ${!setting} in
-		true|TRUE|false|FALSE)
+		true|TRUE|false|FALSE|[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])
 			jq ".\"${setting2//_/\".\"}\" = ${!setting}" $CONFIG_JSON | sponge $CONFIG_JSON
 			;;
 		*)
