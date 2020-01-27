@@ -37,7 +37,7 @@ If you have problems or questions about Kopano in general then either get in con
 
 ## Updating
 
-The used `docker-compose.yml` is part of the git versioning. Which mean all changes in this repository will also be applied to your local data once you pull in the latest version. If you need to configure additional env variables, this can now be done in the additional env files (more details further below, for example for `kopano_server` this file is called `kopano_server.env`). If you only want to run a subset of containers it is recommended to create a copy of `docker-compose.yml` and specify your copy when running. e.g. like ´docker-compose -f my-setup.yml up -d´.
+The used `docker-compose.yml` is part of the git versioning. Which mean all changes in this repository will also be applied to your local data once you pull in the latest version. If you need to configure additional env variables, this can now be done in the additional env files (more details further below, for example for `kopano_server` this file is called `kopano_server.env`). If you only want to run a subset of containers it is recommended to create a copy of `docker-compose.yml` and specify your copy when running. e.g. like `docker-compose -f my-setup.yml up -d`.
 
 ## Is this project also interesting for me when I already have a (non-Docker) Kopano environment?
 
@@ -51,9 +51,9 @@ If you want to modify some of the values from the `setup.sh` run you can simply 
 
 Additionally a dedicated env file is created for each container (at least where that would make sense). The env file has the container name as part of the file name. For example for the `kopano_server` container the filename is named `kopano_server.env`. These additional env files are auto created when running `setup.sh`.
 
-Any additional configuration should be done through environment variables and not done in the actual container. The images working with configuration files (e.g. `kopano_core`, `kopano_webapp`, `kopano_meet`) have a mechanism built in to translate env variables into configuration files. For services that can directly work with env variables (e.g. `kopano_konnect`, ´kopano_kwmserver´) these can be specified directly. Please check the individual `README.md` files for further instructions.
+Any additional configuration should be done through environment variables and not done in the actual container. The images working with configuration files (e.g. `kopano_core`, `kopano_webapp`, `kopano_meet`) have a mechanism built in to translate env variables into configuration files. For services that can directly work with env variables (e.g. `kopano_konnect`, `kopano_kwmserver`) these can be specified directly. Please check the individual `README.md` files for further instructions.
 
-The compose file itself is part of the git repository and should not be edited directly. Instead a `docker-compose.override.yml` (will be ignored by git) file can be created to override and extend the default one. See https://docs.docker.com/compose/extends/ for more information.
+The compose file itself is part of the git repository and should not be edited directly. Instead a `docker-compose.override.yml` file (will be ignored by git) can be created to override and extend the default one. See https://docs.docker.com/compose/extends/ for more information.
 
 #### Why is my compose override file ignored?
 
@@ -77,7 +77,7 @@ To be able to easily go back to a previous version you can also "tag" you Docker
 
 ### Recurring tasks and maintenance tasks within Kopano
 
-There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external LDAP tree). For convenience this project includes a "scheduler" container that will take care of this and that can be dynamically configured through env variables.
+There are certain tasks within Kopano that either need to be executed once (like creating the public store when starting a new environment for the first time) or on a regular base (like syncing the internal user list with and external LDAP tree). For convenience this project includes a `scheduler` container that will take care of this and that can be dynamically configured through env variables.
 
 Please check the `README.md` of the scheduler image for further instructions.
 
