@@ -59,7 +59,7 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	docker build \
+	docker build --rm \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
@@ -82,7 +82,7 @@ endif
 .PHONY: build-simple
 build-simple: component ?= ssl
 build-simple: ## Helper target to build a simplified image (no Kopano repo integration).
-	docker build \
+	docker build --rm \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=$(docker_repo) \
 		--cache-from $(docker_repo)/kopano_$(component):latest \
@@ -95,7 +95,8 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	docker build --target builder \
+	docker build --rm \
+		--target builder \
 		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
@@ -170,7 +171,7 @@ build-webapp:
 	component=webapp make build
 
 build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
-	docker build \
+	docker build --rm \
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
 
