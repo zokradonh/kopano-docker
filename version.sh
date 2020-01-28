@@ -63,7 +63,7 @@ zpush)
 	fi
 	;;
 meet)
-	KOPANO_CORE_REPOSITORY_URL=${KOPANO_MEET_REPOSITORY_URL:-""}
+	KOPANO_MEET_REPOSITORY_URL=${KOPANO_MEET_REPOSITORY_URL:-""}
 	if [[ $KOPANO_MEET_REPOSITORY_URL == http* ]]; then
 		version=$(curl -s -S -L "$KOPANO_MEET_REPOSITORY_URL"/Packages | grep -A2 "Package: kopano-meet-packages")
 		echo "${version##* }"
