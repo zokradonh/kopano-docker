@@ -143,7 +143,7 @@ Yes, that is certainly a possibility. Within the `examples/` directory you can f
 
 ### Some more commands for those unfamiliar with docker-compose
 
-- Start ``docker-compose-yml`` file in the background: `docker-compose up -d`
+- Start ``docker-compose.yml`` file in the background: `docker-compose up -d`
 - Get a status overview of the running containers: `docker-compose ps`
 - Stop compose running in the background: `docker-compose stop`
 - Destroy local containers and network interfaces: `docker-compose down`
@@ -151,6 +151,7 @@ Yes, that is certainly a possibility. Within the `examples/` directory you can f
 - Run commands in a running container: `docker-compose exec kopano_server kopano-cli --list-users`
 - Get logs of a in the background running container: `docker-compose logs -f kopano_server`
 - Run a `kopano-backup`: `docker run --rm -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils kopano-backup`
+  - Same command but getting volumes from the existing `kopano_server` container: `docker run --rm -it --volumes-from kopano_server -v /root/kopano-backup:/kopano/path zokradonh/kopano_utils kopano-backup -h`
 - Get a shell in a new container to (for example) run `kopano-migration-pst`: `docker run --rm -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils` (to directly run kopano-migration-pst just append it to the command)
 
 ## Third party docker images
