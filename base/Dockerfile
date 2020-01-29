@@ -8,11 +8,12 @@ ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG RELEASE_KEY_DOWNLOAD=0
 
+# Both UID and GID should not be set to values above 999
 ARG KOPANO_UID=999
 ARG KOPANO_GID=999
 
 ENV \
-    BASE_VERSION=1.3.0 \
+    BASE_VERSION=1.4.0 \
     DEBUG="" \
     DEBIAN_FRONTEND=noninteractive
 
