@@ -7,11 +7,6 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
 docker_repo := zokradonh
-# if not run in travis, get docker_login and _pwd from file
-ifndef TRAVIS
-	docker_login := $(shell cat ~/.docker-account-user)
-	docker_pwd := $(shell cat ~/.docker-account-pwd)
-endif
 
 base_download_version := $(shell ./version.sh core)
 core_download_version := $(shell ./version.sh core)
@@ -59,7 +54,7 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	docker build \
+	docker build --rm \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
@@ -82,7 +77,7 @@ endif
 .PHONY: build-simple
 build-simple: component ?= ssl
 build-simple: ## Helper target to build a simplified image (no Kopano repo integration).
-	docker build \
+	docker build --rm \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=$(docker_repo) \
 		--cache-from $(docker_repo)/kopano_$(component):latest \
@@ -95,7 +90,8 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	docker build --target builder \
+	docker build --rm \
+		--target builder \
 		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
@@ -170,7 +166,7 @@ build-webapp:
 	component=webapp make build
 
 build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
-	docker build \
+	docker build --rm \
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
 
@@ -267,11 +263,9 @@ tag-zpush:
 	component=zpush make tag-container
 
 # Docker publish
-repo-login: ## Login at hub.docker.com
-	@echo $(docker_pwd) | docker login -u $(docker_login) --password-stdin
 
 .PHONY: publish
-publish: repo-login
+publish:
 	make $(shell grep -o ^publish-.*: Makefile | grep -Ev 'publish-container' | uniq | sed s/://g | xargs)
 
 publish-container: component ?= base
