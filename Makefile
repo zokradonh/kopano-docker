@@ -356,6 +356,14 @@ clean:
 	docker ps --filter name=kopano_test* -aq | xargs docker rm -f || true
 	docker-compose -f $(DOCKERCOMPOSE_FILE) down -v --remove-orphans || true
 
+.PHONY: clean-all-images
+clean-all-images:
+	docker rmi $$(docker images --format '{{.Repository}}:{{.Tag}}' | grep '${docker_repo}/kopano_') | grep -v '<none>'
+
+.PHONY: clean-all-containers
+clean-all-containers:
+	docker ps -a | awk '{ print $$1,$$2 }' | grep '$(docker_repo)/kopano_' | awk '{print $$1 }' | xargs -I {} docker rm {}
+
 .PHONY: test
 test: ## Build and start new containers for testing (also deletes existing data volumes).
 	docker-compose -f $(DOCKERCOMPOSE_FILE) down -v --remove-orphans || true
