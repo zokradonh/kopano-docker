@@ -41,6 +41,7 @@ services:
     volumes:
       - oc_files:/mnt/data
       - ./owncloud/99-ldap.sh:/etc/owncloud.d/99-ldap.sh
+      - ./owncloud/kopano/:/mnt/data/apps/kopano/
     networks:
       - web-net
       - owncloud-net
