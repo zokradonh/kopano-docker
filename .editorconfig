@@ -31,5 +31,5 @@ indent_style = space
 [*.json]
 indent_style = space
 
-[*.php]
+[LICENSE]
 indent_style = space
