@@ -8,7 +8,7 @@ ENV \
     CODE_VERSION="${CODE_VERSION}" \
     DEFAULTREDIRECT="/webapp" \
     KONNECTPATH=kopanoid
-# Workaround to not break backwards compatibility,
+# FIXME Workaround to not break backwards compatibility,
 # since an underscore is not a valid char in a hostname.
 # This causes issues when using kweb in kubernetes.
 # Related issue https://github.com/docker/compose/issues/229
