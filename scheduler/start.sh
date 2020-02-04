@@ -23,7 +23,8 @@ done
 dockerize \
 	-wait tcp://kopano_server:236 \
 	-timeout 360s
-echo "creating public store"
+
+echo "Creating public store"
 docker exec kopano_server kopano-storeadm -h default: -P || true
 
 echo "Running sheduled cron jobs once"

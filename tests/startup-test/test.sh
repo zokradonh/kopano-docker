@@ -29,9 +29,13 @@ docker exec kopano_server kopano-storeadm -h default: -P || true
 
 docker exec kopano_server kopano-admin --sync
 docker exec kopano_server kopano-cli --list-users
+docker exec kopano_server kopano-storeadm -O # list users without a store
 docker exec kopano_server kopano-admin -l
 docker exec kopano_zpush z-push-admin -a list
 docker exec kopano_zpush z-push-gabsync -a sync
 
-# will print nothing if store exists and fail if it doen't
+# FIXME temporary workaround for issue where kopano-admin --sync is not properly creating stores
+docker exec kopano_server kopano-create-missing-stores.sh || true
+
+# will print nothing if store exists and fail if it doesn't
 docker exec kopano_server kopano-admin --details user1 | grep -q "^Store GUID:"

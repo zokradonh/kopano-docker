@@ -47,7 +47,7 @@ RUN \
     curl -s -S -L -o - "${KOPANO_ZPUSH_REPOSITORY_URL}/Release.key" | apt-key add - && \
     # install
     set -x && \
-    # TODO set IGNORE_FIXSTATES_ON_UPGRADE https://jira.z-hub.io/browse/ZP-1164?jql=text%20~%20%22IGNORE_FIXSTATES_ON_UPGRADE%22
+    # TODO set IGNORE_FIXSTATES_ON_UPGRADE https://jira.z-hub.io/browse/ZP-1164
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
         libapache2-mod-php7.0 \
