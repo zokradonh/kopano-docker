@@ -27,11 +27,16 @@ script:
   - docker-compose down -v
   - make test-startup-meet-demo
 deploy:
+  # login to docker hub
   - provider: script
     skip-cleanup: true
-    script:
-      - echo "$docker_pwd" | docker login -u "$docker_login" --password-stdin
-      - make publish
+    script: echo "$docker_pwd" | docker login -u "$docker_login" --password-stdin
+    on:
+      branch: master
+  # push images
+  - provider: script
+    skip-cleanup: true
+    script: make publish
     on:
       branch: master
 #cache: # uncomment to not load/upload trivy files each time
