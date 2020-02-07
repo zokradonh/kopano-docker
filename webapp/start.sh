@@ -74,9 +74,9 @@ echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions /tmp/webapp /var/lib/kopano-webapp/tmp
 
 # services need to be aware of the machine-id
-dockerize \
-	-wait file:///etc/machine-id \
-	-wait file:///var/lib/dbus/machine-id
+#dockerize \
+#	-wait file:///etc/machine-id \
+#	-wait file:///var/lib/dbus/machine-id
 
 set +u
 # cleaning up env variables
