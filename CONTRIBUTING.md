@@ -6,6 +6,10 @@ When contributing to this repository, please first discuss the change you wish t
 
 To get an impression how the containers interact/relate with each other have a look at the [architecture](ARCHITECTURE.md) description.
 
+## Helping others help you
+
+When reporting issues or asking questions please make sure to use the appropriate templates and include information such as your current configuration and versions (see https://github.com/zokradonh/kopano-docker#troubleshooting for interesting commands for this). If you are having questions about scripts and commands please make sure to include the command you're executing and the full output of this command.
+
 ## Testing
 
 This project includes a few automated tests that can be run to ensure that containers start up and are operational. Required tools for testing can be installed by executing `bash .ci/setup-tools.sh`.
