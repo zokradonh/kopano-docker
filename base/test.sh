@@ -8,7 +8,7 @@ WORK_DIR=$(mktemp -d)
 component=${1:-core}
 
 function cleanup {
-	#rm -rf "$WORK_DIR"
+	rm -rf "$WORK_DIR"
 	echo "Deleted temp working directory $WORK_DIR"
 }
 
