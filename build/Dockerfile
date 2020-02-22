@@ -25,7 +25,7 @@ RUN curl -fSL "https://github.com/genuinetools/reg/releases/download/v$REG_VERSI
     curl -L "https://raw.githubusercontent.com/fbartels/goss/dcgoss-v2/extras/dcgoss/dcgoss -o /usr/local/bin/dcgoss" && \
     curl -fSL "https://github.com/SimonBaeumer/commander/releases/download/v$COMMANDER_VERSION/commander-linux-amd64" -o /usr/local/bin/commander && \
     curl -fSL "https://raw.githubusercontent.com/fbartels/dccommander/master/dccommander" -o /usr/local/bin/dccommander && \
-    pip install yamllint==1.19.0 && \
+    pip install --no-cache-dir yamllint==1.19.0 && \
     npm config set unsafe-perm true && \
     npm install -g eclint@2.8.1 && \
     chmod a+x /usr/local/bin/*
