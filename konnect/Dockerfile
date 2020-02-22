@@ -36,7 +36,7 @@ RUN apk add --no-cache \
     jq \
     openssl \
     py-pip \
-    && pip install yq==2.7.2
+    && pip install --no-cache-dir yq==2.7.2
 
 COPY --from=builder-sponge /go/bin/sponge /usr/local/bin
 
