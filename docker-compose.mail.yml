@@ -4,7 +4,7 @@ services:
   mail:
     image: tvial/docker-mailserver:release-v6.2.0
     restart: unless-stopped
-    hostname: mail
+    hostname: mail # hostname and domainname may need to be commented on some platforms (e.g. ChromeOS)
     domainname: ${LDAP_DOMAIN}
     container_name: ${COMPOSE_PROJECT_NAME}_mail
     ports:
