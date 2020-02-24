@@ -60,9 +60,10 @@ RUN \
     set +x && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
     touch /etc/kopano/admin.cfg && \
-    cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ && \
-    cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ && \
-    gzip -d -f /etc/kopano/*.gz
+    # with 9.0 config files are once again in /etc/kopano
+    (cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ || true) && \
+    (cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ || true) && \
+    (gzip -d -f /etc/kopano/*.gz || true)
 
 ENV LANG=en_US.UTF-8
 
