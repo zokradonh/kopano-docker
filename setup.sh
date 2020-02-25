@@ -339,6 +339,9 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.db.yml:d
 #RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
 
+# Remove this variable to not push versioned containers with the :latest tag
+PUBLISHLATEST=yes
+
 # Additional packages to install
 ADDITIONAL_KOPANO_PACKAGES=""
 ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$ADDITIONAL_KOPANO_WEBAPP_PLUGINS"

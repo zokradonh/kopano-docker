@@ -280,7 +280,9 @@ publish-container: ## Helper target to push a given image to a registry. Default
 		version=$${version%.*} ; \
 		docker push $(docker_repo)/kopano_$(component):$$version ; \
 	done
-	#docker push $(docker_repo)/kopano_$(component):latest
+ifdef PUBLISHLATEST
+	docker push $(docker_repo)/kopano_$(component):latest
+endif
 #ifdef DOCKERREADME
 #	bash .ci/docker-hub-helper.sh $(component)
 #endif

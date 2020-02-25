@@ -4,8 +4,8 @@ services:
   mail:
     image: tvial/docker-mailserver:release-v6.2.0
     restart: unless-stopped
-    #hostname: mail
-    #domainname: ${LDAP_DOMAIN}
+    hostname: mail
+    domainname: ${LDAP_DOMAIN}
     container_name: ${COMPOSE_PROJECT_NAME}_mail
     ports:
       - "${SMTPPORT:-25}:25"
