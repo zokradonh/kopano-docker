@@ -68,9 +68,9 @@ RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf \
     (cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ || true) && \
     (gzip -d -f /etc/kopano/*.gz || true)
 
-ENV LANG=en_US.UTF-8
-
-ENV SERVICE_TO_START=server
+ENV \
+    LANG=en_US.UTF-8 \
+    SERVICE_TO_START=server
 
 COPY defaultconfigs/ start-service.sh healthcheck.sh /kopano/
 COPY bin/ /usr/local/bin/

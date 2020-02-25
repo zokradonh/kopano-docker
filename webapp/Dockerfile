@@ -45,6 +45,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=SC2129
 RUN \
     # community download and package as apt source repository
+    # TODO is it neccesary to source this file here? was already sourced before
     . /kopano/helper/create-kopano-repo.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
         dl_and_package_community "webapp" "Debian_10"; \
