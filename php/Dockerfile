@@ -32,11 +32,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # add install common php dependencies
 # hadolint ignore=SC2129
 RUN \
-    # community download and package as apt source repository
-    . /kopano/helper/create-kopano-repo.sh && \
-    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "core"; \
-    fi; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # install
     set -x && \
@@ -51,10 +46,10 @@ RUN \
 # configure php-fpm
 RUN \
     mkdir -p /run/php && chown www-data:www-data /run/php && \
-    crudini --set /etc/php/7.0/fpm/php.ini PHP upload_max_filesize 500M && \
-    crudini --set /etc/php/7.0/fpm/php.ini PHP post_max_size 500M && \
-    crudini --set /etc/php/7.0/fpm/php.ini PHP max_input_vars 1800 && \
-    crudini --set /etc/php/7.0/fpm/php.ini Session session.save_path /run/sessions
+    crudini --set /etc/php/7.3/fpm/php.ini PHP upload_max_filesize 500M && \
+    crudini --set /etc/php/7.3/fpm/php.ini PHP post_max_size 500M && \
+    crudini --set /etc/php/7.3/fpm/php.ini PHP max_input_vars 1800 && \
+    crudini --set /etc/php/7.3/fpm/php.ini Session session.save_path /run/sessions
 
 EXPOSE 9080/tcp
 

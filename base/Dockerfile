@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:buster
 
 ARG VCS_REF
 ARG ADDITIONAL_KOPANO_PACKAGES=""
@@ -13,7 +13,7 @@ ARG KOPANO_UID=999
 ARG KOPANO_GID=999
 
 ENV \
-    BASE_VERSION=1.4.0 \
+    BASE_VERSION=2.0.0 \
     DEBUG="" \
     DEBIAN_FRONTEND=noninteractive
 
@@ -40,6 +40,7 @@ RUN apt-get update && \
         curl \
         dumb-init \
         gpg \
+        gpg-agent \
         jq \
         locales \
         moreutils \
@@ -77,3 +78,14 @@ COPY create-kopano-repo.sh /kopano/helper/
 COPY kcconf.py /kopano/
 
 SHELL [ "/bin/bash", "-c"]
+
+ONBUILD ARG DOWNLOAD_COMMUNITY_PACKAGES=1
+ONBUILD ARG DOWNLOAD_DISTRIBUTION="Debian_10"
+ONBUILD ARG DOWNLOAD_CHANNEL="community"
+ONBUILD ARG DOWNLOAD_BRANCH=""
+ONBUILD RUN \
+    # community download and package as apt source repository
+    . /kopano/helper/create-kopano-repo.sh && \
+    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
+        dl_and_package_community "core" "$DOWNLOAD_DISTRIBUTION" "$DOWNLOAD_CHANNEL" "$DOWNLOAD_BRANCH"; \
+    fi

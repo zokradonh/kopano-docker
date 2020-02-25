@@ -82,5 +82,5 @@ set +u
 # cleaning up env variables
 unset "${!KCCONF_@}"
 echo "Starting php-fpm"
-php-fpm7.0 -F &
+php-fpm7.3 -F &
 exec /usr/libexec/kopano/kwebd caddy -conf /etc/kweb.cfg

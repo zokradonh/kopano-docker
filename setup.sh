@@ -329,15 +329,18 @@ COMPOSE_PROJECT_NAME=kopano
 COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.db.yml:docker-compose.ldap.yml:docker-compose.mail.yml
 
 # Modify below to build a different version, than the kopano nightly release
-#KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/
-#KOPANO_MEET_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/meet:/final/Debian_9.0/
-#KOPANO_WEBAPP_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/webapp:/final/Debian_9.0/
-#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/files:/final/Debian_9.0/
-#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/mdm:/final/Debian_9.0/
-#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/smime:/final/Debian_9.0/
-#KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_9.0/
+#KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/9.x/Debian_10/
+#KOPANO_MEET_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/meet:/final/Debian_10/
+#KOPANO_WEBAPP_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/webapp:/final/Debian_10/
+#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/files:/final/Debian_10/
+#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/mdm:/final/Debian_10/
+#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/smime:/final/Debian_10/
+#KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_10/
 #RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
+
+# Remove this variable to not push versioned containers with the :latest tag
+PUBLISHLATEST=yes
 
 # Additional packages to install
 ADDITIONAL_KOPANO_PACKAGES=""

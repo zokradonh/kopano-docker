@@ -2,7 +2,7 @@
 
 mkdir -p /kopano/ssl/clients/
 
-set -euo pipefail
+set -euo
 
 # clean out any potential port numbers
 FQDN=${FQDN%:*}

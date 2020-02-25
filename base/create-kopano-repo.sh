@@ -11,7 +11,7 @@ function version_from_filename {
 
 function h5ai_query {
 	component=${1:-core}
-	distribution=${2:-Debian_9.0}
+	distribution=${2:-Debian_10}
 	channel=${3:-community} # could either be community, supported or limited
 	branch=${4:-""} # could either be empty, "master/tarballs/", "pre-final/tarballs/" or "final/tarballs/"
 
@@ -31,7 +31,7 @@ function h5ai_query {
 function dl_and_package_community {
 	# take component as first argument and fallback to core if none given
 	component=${1:-core}
-	distribution=${2:-Debian_9.0}
+	distribution=${2:-Debian_10}
 	channel=${3:-community}
 	branch=${4:-""}
 

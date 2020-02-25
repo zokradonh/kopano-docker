@@ -13,7 +13,7 @@ ARG KOPANO_CORE_VERSION=newest
 ENV \
     ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES \
     DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES \
-    DOWNLOAD_DISTRIBUTION="Debian_9.0" \
+    DOWNLOAD_DISTRIBUTION="Debian_10" \
     DOWNLOAD_CHANNEL="community" \
     DOWNLOAD_BRANCH="" \
     KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
@@ -39,11 +39,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Kopano Core and refresh ca-certificates
 RUN \
-    # community download and package as apt source repository
-    . /kopano/helper/create-kopano-repo.sh && \
-    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "core" "$DOWNLOAD_DISTRIBUTION" "$DOWNLOAD_CHANNEL" "$DOWNLOAD_BRANCH"; \
-    fi; \
     # apt key has already been installed in base
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # install
@@ -65,9 +60,10 @@ RUN \
     set +x && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
     touch /etc/kopano/admin.cfg && \
-    cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ && \
-    cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ && \
-    gzip -d -f /etc/kopano/*.gz
+    # with 9.0 config files are once again in /etc/kopano
+    (cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ || true) && \
+    (cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ || true) && \
+    (gzip -d -f /etc/kopano/*.gz || true)
 
 ENV LANG=en_US.UTF-8
 

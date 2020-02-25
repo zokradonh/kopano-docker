@@ -21,7 +21,7 @@ KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
 KOPANO_WEBAPP_FILES_REPOSITORY_URL := file:/kopano/repo/files
 KOPANO_WEBAPP_MDM_REPOSITORY_URL := file:/kopano/repo/mdm
 KOPANO_WEBAPP_SMIME_REPOSITORY_URL := file:/kopano/repo/smime
-KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_9.0/
+KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_10/
 RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 KOPANO_UID := 999
@@ -113,7 +113,7 @@ endif
 		-t $(docker_repo)/kopano_$(component):builder $(component)/
 
 build-base: ## Build new base image.
-	docker pull debian:stretch
+	docker pull debian:buster
 	component=base make build
 
 build-core:
@@ -280,7 +280,9 @@ publish-container: ## Helper target to push a given image to a registry. Default
 		version=$${version%.*} ; \
 		docker push $(docker_repo)/kopano_$(component):$$version ; \
 	done
+ifdef PUBLISHLATEST
 	docker push $(docker_repo)/kopano_$(component):latest
+endif
 #ifdef DOCKERREADME
 #	bash .ci/docker-hub-helper.sh $(component)
 #endif
