@@ -42,4 +42,4 @@ CMD ["start.sh"]
 
 # TODO interval does not only define how often the healtcheck is run, but also how long to wait for the first check after startup
 HEALTHCHECK --interval=60m --timeout=15s \
-    CMD goss -g /goss/goss.yaml validate --format json_oneline
+    CMD goss -g /goss/goss.yaml validate
