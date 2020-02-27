@@ -1,5 +1,5 @@
 file:
-  /usr/share/kopano-kweb/www/config/kopano/meet.json:
+  /tmp/meet.json:
     exists: true
     mode: "0644"
     owner: root
