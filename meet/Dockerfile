@@ -59,5 +59,5 @@ COPY goss.yaml /goss/
 CMD [ "/kopano/start-service.sh" ]
 
 HEALTHCHECK --interval=1m --timeout=10s \
-    CMD goss -g /goss/goss.yaml validate --format json_oneline
+    CMD goss -g /goss/goss.yaml validate
 
