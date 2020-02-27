@@ -43,16 +43,18 @@ RUN \
     # install
     set -x && \
     # TODO set IGNORE_FIXSTATES_ON_UPGRADE https://jira.z-hub.io/browse/ZP-1164
+    # TODO remove php-mbstring once https://jira.z-hub.io/browse/ZP-1541 is resolved
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
-        libapache2-mod-php7.3 \
-        crudini \
-        z-push-kopano \
-        z-push-config-apache \
-        z-push-kopano-gabsync \
-        z-push-autodiscover \
-        z-push-config-apache-autodiscover \
         ca-certificates \
+        crudini \
+        libapache2-mod-php7.3 \
+        php-mbstring \
+        z-push-autodiscover \
+        z-push-config-apache \
+        z-push-config-apache-autodiscover \
+        z-push-kopano \
+        z-push-kopano-gabsync \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
