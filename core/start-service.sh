@@ -187,7 +187,6 @@ kapi)
 	if [ "$KCCONF_KAPID_INSECURE" = "yes" ]; then
 		dockerize \
 		-skip-tls-verify \
-		-wait file:///var/run/kopano/grapi/notify.sock \
 		-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
 		-timeout 360s
 	else
