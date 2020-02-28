@@ -50,7 +50,8 @@ RUN \
         && \
     coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server) && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.0"; then \
-        apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
+	# For grapi also install recommended packages
+        apt-get -o Debug::pkgProblemResolver=true install -y \
             kopano-grapi kopano-kapid; \
     fi && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then \
