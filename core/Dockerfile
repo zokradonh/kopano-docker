@@ -51,6 +51,7 @@ RUN \
     coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server) && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.0"; then \
 	# For grapi also install recommended packages
+	# hadolint ignore=DL3015
         apt-get -o Debug::pkgProblemResolver=true install -y \
             kopano-grapi kopano-kapid; \
     fi && \
