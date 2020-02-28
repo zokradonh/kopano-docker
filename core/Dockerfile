@@ -38,6 +38,7 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Kopano Core and refresh ca-certificates
+# hadolint ignore=DL3015
 RUN \
     # apt key has already been installed in base
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
@@ -51,7 +52,6 @@ RUN \
     coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server) && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.0"; then \
         # For grapi also install recommended packages
-        # hadolint ignore=DL3015
         apt-get -o Debug::pkgProblemResolver=true install -y \
             kopano-grapi kopano-kapid; \
     fi && \
