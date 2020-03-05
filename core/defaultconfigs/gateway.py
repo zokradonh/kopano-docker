@@ -1,14 +1,12 @@
-import os
+#!/usr/bin/env python3
 import kcconf
 
 # Component specific configurations
 kcconf.configkopano({
     r"/tmp/kopano/gateway.cfg":
     {
-        'imap_listen': "0.0.0.0:143",
-        'log_file': "-",
-        'log_level': "3",
-        'tmp_path': "/tmp/gateway/"
+        # Certain configuration can be pre-defined at startup:
+        #'imap_listen': "0.0.0.0:143",
     }
 })
 

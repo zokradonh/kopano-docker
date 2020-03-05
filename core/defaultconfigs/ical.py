@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import kcconf
 
@@ -5,9 +6,8 @@ import kcconf
 kcconf.configkopano({
     r"/tmp/kopano/ical.cfg":
     {
-        'ical_listen': "0.0.0.0:8080",
-        'log_file': "-",
-        'log_level': "3"
+        # Certain configuration can be pre-defined at startup:
+        #'ical_listen': "0.0.0.0:8080",
     }
 })
 

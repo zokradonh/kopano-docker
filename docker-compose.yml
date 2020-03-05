@@ -241,8 +241,10 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - KCCONF_DAGENT_LMTP_LISTEN=0.0.0.0:2003
       - KCCONF_DAGENT_LOG_LEVEL=3
       - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kopano_dagent.pem
+      - KCCONF_DAGENT_TMP_PATH=/tmp/dagent/
       - SERVICE_TO_START=dagent
       - TZ=${TZ}
     env_file:
@@ -290,8 +292,10 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - KCCONF_GATEWAY_IMAP_LISTEN=0.0.0.0:143
       - KCCONF_GATEWAY_LOG_LEVEL=3
       - KCCONF_GATEWAY_SERVER_SOCKET=http://kopano_server:236/
+      - KCCONF_GATEWAY_TMP_PATH=/tmp/gateway/
       - SERVICE_TO_START=gateway
       - TZ=${TZ}
     env_file:
@@ -313,6 +317,8 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - KCCONF_ICAL_LISTEN=0.0.0.0:8080
+      - KCCONF_ICAL_LOG_LEVEL=3
       - KCCONF_ICAL_SERVER_SOCKET=http://kopano_server:236/
       - SERVICE_TO_START=ical
       - TZ=${TZ}
