@@ -173,14 +173,9 @@ services:
       - kopanograpi/:/var/lib/kopano-grapi
       - kopanosocket/:/run/kopano
     environment:
-      - KCCONF_GRAPI_DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE=/kopano/ssl/kapid-pubs-secret.key
       - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=no
       - KCCONF_GRAPI_INSECURE=${INSECURE}
-      - KCCONF_GRAPI_LISTEN=0.0.0.0:8039
-      - KCCONF_GRAPI_LOG_LEVEL=info
       - KCCONF_GRAPI_PERSISTENCY_PATH=/var/lib/kopano-grapi
-      - KCCONF_GRAPI_PLUGIN_GRAPI_SOCKET_PATH=/var/run/kopano/grapi
-      - KCCONF_GRAPI_PLUGIN_KVS_DB_DATASOURCE=/kopano/data/kapi-kvs/kvs.db
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
     env_file:
@@ -205,9 +200,14 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - KCCONF_KAPID_DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE=/kopano/ssl/kapid-pubs-secret.key
       - KCCONF_KAPID_INSECURE=${INSECURE}
+      - KCCONF_KAPID_LISTEN=0.0.0.0:8039
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
+      - KCCONF_KAPID_LOG_LEVEL=info
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
+      - KCCONF_KAPID_PLUGIN_GRAPI_SOCKET_PATH=/var/run/kopano/grapi
+      - KCCONF_KAPID_PLUGIN_KVS_DB_DATASOURCE=/kopano/data/kapi-kvs/kvs.db
       - SERVICE_TO_START=kapi
       - TZ=${TZ}
     env_file:
@@ -332,7 +332,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
-      - KCCONF_ICAL_LISTEN=0.0.0.0:8080
+      - KCCONF_ICAL_ICAL_LISTEN=0.0.0.0:8080
       - KCCONF_ICAL_LOG_LEVEL=3
       - KCCONF_ICAL_SERVER_SOCKET=http://kopano_server:236/
       - SERVICE_TO_START=ical
