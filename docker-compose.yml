@@ -60,21 +60,30 @@ services:
       - KCCONF_LDAP_LDAP_BIND_USER=${LDAP_BIND_DN}
       - KCCONF_LDAP_LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
       - KCCONF_LDAP_LDAP_URI=${LDAP_SERVER}
+      - KCCONF_SERVER_ATTACHMENT_PATH=/kopano/data/attachments
       - KCCONF_SERVER_COREDUMP_ENABLED=no
       - KCCONF_SERVER_ENABLE_SSO=yes
+      - KCCONF_SERVER_KCOIDC_INITIALIZE_TIMEOUT=360
       - KCCONF_SERVER_KCOIDC_INSECURE_SKIP_VERIFY=${INSECURE}
       - KCCONF_SERVER_KCOIDC_ISSUER_IDENTIFIER=https://${FQDN}
+      - KCCONF_SERVER_LOG_LEVEL=3
       - KCCONF_SERVER_MYSQL_DATABASE=${MYSQL_DATABASE}
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
       - KCCONF_SERVER_MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - KCCONF_SERVER_MYSQL_PORT=3306
       - KCCONF_SERVER_MYSQL_USER=${MYSQL_USER}
       - KCCONF_SERVER_PROXY_HEADER=*  # delete line if webapp is not behind reverse proxy
+      - KCCONF_SERVER_SERVER_LISTEN_TLS=0.0.0.0:237
+      - KCCONF_SERVER_SERVER_LISTEN=0.0.0.0:236
       - KCCONF_SERVER_SERVER_NAME=Kopano
       - KCCONF_SERVER_SERVER_SSL_CA_FILE=/kopano/ssl/ca.pem
       - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kopano_server.pem
+      - KCCONF_SERVER_SOFTDELETE_LIFETIME=0
       - KCCONF_SERVER_SSLKEYS_PATH=/kopano/ssl/clients
+      - KCCONF_SERVER_SYNC_GAB_REALTIME=no
       - KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS=${POSTMASTER_ADDRESS}
+      - KCCONF_SERVER_USER_PLUGIN_CONFIG=/tmp/kopano/ldap.cfg
+      - KCCONF_SERVER_USER_PLUGIN=ldap
       - KCUNCOMMENT_LDAP_1=${KCUNCOMMENT_LDAP_1}
       - SERVICE_TO_START=server
       - TZ=${TZ}
@@ -164,9 +173,14 @@ services:
       - kopanograpi/:/var/lib/kopano-grapi
       - kopanosocket/:/run/kopano
     environment:
+      - KCCONF_GRAPI_DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE=/kopano/ssl/kapid-pubs-secret.key
       - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=no
       - KCCONF_GRAPI_INSECURE=${INSECURE}
+      - KCCONF_GRAPI_LISTEN=0.0.0.0:8039
+      - KCCONF_GRAPI_LOG_LEVEL=info
       - KCCONF_GRAPI_PERSISTENCY_PATH=/var/lib/kopano-grapi
+      - KCCONF_GRAPI_PLUGIN_GRAPI_SOCKET_PATH=/var/run/kopano/grapi
+      - KCCONF_GRAPI_PLUGIN_KVS_DB_DATASOURCE=/kopano/data/kapi-kvs/kvs.db
       - SERVICE_TO_START=grapi
       - TZ=${TZ}
     env_file:
@@ -271,6 +285,7 @@ services:
       - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_SMTP_SERVER=mail
       - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kopano_spooler.pem
+      - KCCONF_SPOOLER_TMP_PATH=/tmp/spooler/
       - SERVICE_TO_START=spooler
       - TZ=${TZ}
     env_file:
@@ -343,6 +358,7 @@ services:
       - kopanossl/:/kopano/ssl
     environment:
       - SERVICE_TO_START=monitor
+      - KCCONF_MONITOR_LOG_LEVEL=3
       - TZ=${TZ}
     env_file:
       - kopano_monitor.env
@@ -366,6 +382,8 @@ services:
       - kopanossl/:/kopano/ssl
     environment:
       - SERVICE_TO_START=search
+      - KCCONF_SEARCH_LOG_LEVEL=3
+      - KCCONF_SEARCH_INDEX_PATH=/kopano/data/search/
       - TZ=${TZ}
     env_file:
       - kopano_search.env

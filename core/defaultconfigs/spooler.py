@@ -1,13 +1,12 @@
-import os
+#!/usr/bin/env python3
 import kcconf
 
 # Component specific configurations
 kcconf.configkopano({
     r"/tmp/kopano/spooler.cfg":
     {
-        'log_file': "-",
-        'log_level': "4",
-        'tmp_path': "/tmp/spooler/"
+        # Certain configuration can be pre-defined at startup:
+        #'log_level': "4",
     }
 })
 
