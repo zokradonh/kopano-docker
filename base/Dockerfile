@@ -14,8 +14,8 @@ ARG KOPANO_GID=999
 
 ENV \
     BASE_VERSION=2.0.0 \
-    DEBUG="" \
-    DEBIAN_FRONTEND=noninteractive
+    DEBIAN_FRONTEND=noninteractive \
+    DEBUG=""
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano base container" \

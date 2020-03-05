@@ -123,7 +123,7 @@ server)
 	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-server --config /tmp/kopano/server.cfg -F
+	exec /usr/sbin/kopano-server -F
 	;;
 dagent)
 	dockerize \
@@ -131,7 +131,7 @@ dagent)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-dagent --config /tmp/kopano/dagent.cfg -l
+	exec /usr/sbin/kopano-dagent -l
 	;;
 gateway)
 	dockerize \
@@ -139,7 +139,7 @@ gateway)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-gateway --config /tmp/kopano/gateway.cfg -F
+	exec /usr/sbin/kopano-gateway -F
 	;;
 ical)
 	dockerize \
@@ -147,7 +147,7 @@ ical)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-ical --config /tmp/kopano/ical.cfg -F
+	exec /usr/sbin/kopano-ical -F
 	;;
 grapi)
 	LC_CTYPE=en_US.UTF-8
@@ -212,7 +212,7 @@ monitor)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-monitor --config /tmp/kopano/monitor.cfg -F
+	exec /usr/sbin/kopano-monitor -F
 	;;
 search)
 	dockerize \
@@ -227,7 +227,7 @@ search)
 	if dpkg --compare-versions "$searchversion" "gt" "8.7.82.165"; then
 		exec /usr/sbin/kopano-search --config /tmp/kopano/search.cfg
 	else
-		exec /usr/bin/python3 /usr/sbin/kopano-search --config /tmp/kopano/search.cfg -F
+		exec /usr/bin/python3 /usr/sbin/kopano-search -F
 	fi
 	;;
 spooler)
@@ -237,7 +237,7 @@ spooler)
 		-timeout 1080s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-spooler --config /tmp/kopano/spooler.cfg -F
+	exec /usr/sbin/kopano-spooler -F
 	;;
 *)
 	echo "Failed to start: Unknown service name: '$SERVICE_TO_START'" | ts
