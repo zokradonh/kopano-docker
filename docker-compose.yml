@@ -200,7 +200,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
-      - KCCONF_KAPID_DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE=/kopano/ssl/kapid-pubs-secret.key
+      - DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE=/kopano/ssl/kapid-pubs-secret.key
       - KCCONF_KAPID_INSECURE=${INSECURE}
       - KCCONF_KAPID_LISTEN=0.0.0.0:8039
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
