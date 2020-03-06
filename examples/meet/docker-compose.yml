@@ -98,9 +98,14 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - KCCONF_KAPID_DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE=/kopano/ssl/kapid-pubs-secret.key
       - KCCONF_KAPID_INSECURE=${INSECURE}
+      - KCCONF_KAPID_LISTEN=0.0.0.0:8039
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
+      - KCCONF_KAPID_LOG_LEVEL=info
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
+      - KCCONF_KAPID_PLUGIN_GRAPI_SOCKET_PATH=/var/run/kopano/grapi
+      - KCCONF_KAPID_PLUGIN_KVS_DB_DATASOURCE=/kopano/data/kapi-kvs/kvs.db
       - SERVICE_TO_START=kapi
       - TZ=${TZ}
     networks:
