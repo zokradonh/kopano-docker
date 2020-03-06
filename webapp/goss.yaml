@@ -1,12 +1,9 @@
 file:
   /run/sessions:
     exists: true
-    mode: "0755"
-    size: 4096
     owner: www-data
     group: www-data
     filetype: directory
-    contains: []
   /usr/lib/php/20180731/mapi.so:
     exists: true
     mode: "0644"

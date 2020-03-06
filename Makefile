@@ -385,7 +385,7 @@ test-update-env: ## Recreate containers based on updated .env.
 test-ci: test-startup
 
 .PHONY: test-startup
-test-startup: ## Test if all containers start up
+test-startup: clean ## Test if all containers start up
 	docker-compose -f $(DOCKERCOMPOSE_FILE) -f tests/test-container.yml build
 	docker-compose -f $(DOCKERCOMPOSE_FILE) up -d
 	docker-compose -f $(DOCKERCOMPOSE_FILE) ps

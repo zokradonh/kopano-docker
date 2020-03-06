@@ -13,19 +13,20 @@ ARG KOPANO_CORE_VERSION=newest
 
 ENV \
     ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES \
+    DOWNLOAD_BRANCH="" \
+    DOWNLOAD_CHANNEL="community" \
     DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES \
     DOWNLOAD_DISTRIBUTION="Debian_10" \
-    DOWNLOAD_CHANNEL="community" \
-    DOWNLOAD_BRANCH="" \
+    GRAPI_BACKEND="kopano" \
+    KCCONF_GRAPI_LDAP_BASEDN="" \
+    KCCONF_GRAPI_LDAP_BINDDN="" \
+    KCCONF_GRAPI_LDAP_BINDPW_FILE="" \
+    KCCONF_GRAPI_LDAP_URI="" \
+    KOPANO_CONFIG_PATH=/tmp/kopano \
     KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
     KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
-    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD \
-    GRAPI_BACKEND="kopano" \
-    KCCONF_GRAPI_LDAP_URI="" \
-    KCCONF_GRAPI_LDAP_BASEDN="" \
-    KCCONF_GRAPI_LDAP_BINDDN="" \
-    KCCONF_GRAPI_LDAP_BINDPW_FILE=""
+    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano core container" \
@@ -53,7 +54,8 @@ RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf \
         && \
     coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server) && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.0"; then \
-        apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
+        # For grapi also install recommended packages
+        apt-get -o Debug::pkgProblemResolver=true install -y \
             kopano-grapi kopano-kapid; \
     fi && \
     if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then \

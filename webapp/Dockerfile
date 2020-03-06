@@ -83,4 +83,4 @@ ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD [ "/kopano/start.sh" ]
 
 HEALTHCHECK --interval=1m --timeout=10s \
-    CMD goss -g /goss/goss.yaml validate --format json_oneline
+    CMD goss -g /goss/goss.yaml validate

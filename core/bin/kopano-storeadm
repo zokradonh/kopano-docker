@@ -1,3 +1,0 @@
-#!/bin/bash
-
-/usr/sbin/kopano-storeadm -c /tmp/kopano/admin.cfg "$@"
