@@ -1,4 +1,5 @@
 # (unofficial) Kopano Docker Images
+
 [![Build Status](https://travis-ci.com/zokradonh/kopano-docker.svg?branch=master)](https://travis-ci.com/zokradonh/kopano-docker)
 
 This repository contains an easy to replicate recipe to spin up a [Kopano](https://kopano.com/) demo environment, which can (through modification of `.env` and possibly `docker-compose.yml`/`docker-compose.override.yml`) also be used for production environments.
@@ -16,7 +17,7 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 
 If you want to get an impression how the containers interact/relate with each other have a look at the [architecture](ARCHITECTURE.md) description.
 
-**Note:** There have been reports about the LDAP demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image. 
+**Note:** There have been reports about the LDAP demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image.
 
 The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
 
@@ -59,7 +60,7 @@ The compose file itself is part of the git repository and should not be edited d
 
 This project uses the `COMPOSE_FILE` environment variable to allow users to override the ports exposed by each container (for example when using a different front facing proxy). When using a `docker-compose.override.yml` file make sure this is included in this variable in the `.env` file. For example like this:
 
-```
+```bash
 COMPOSE_FILE=docker-compose.yml:docker-compose.portmapping.yml:docker-compose.override.yml
 ```
 
