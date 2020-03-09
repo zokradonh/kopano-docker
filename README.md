@@ -8,18 +8,21 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 
 - make sure that you are running at least Docker 17.06.0 and [Docker Compose](https://docs.docker.com/compose/install/) 1.19.0.
 - clone this repository to your local disk
-- run `setup.sh`
-  - this script will ask you a few questions about your environment.
+- run `setup.sh`:
+  - this script will ask you a few questions about your environment
   - If you are just interested in the demo environment you can accept the default values by pressing `Enter` on each question
 - now run `docker-compose up` and you will see how the remaining Docker images are pulled and then everything is started
 - after startup has succeeded you can access the Kopano WebApp by going to `https://kopano.demo/webapp`
-- there are already some users created in the demo LDAP. These users all have a password that is identical to the username, e.g. the password for `user1` user `user1`.
+- there are already some users created in the demo LDAP
+  - these users all have a password that is identical to the username, e.g. the password for `user1` user `user1`
+- to build own containers at least Docker 19.03 is required
+  - this is due to the usage of build-time secrets
 
 If you want to get an impression how the containers interact/relate with each other have a look at the [architecture](ARCHITECTURE.md) description.
 
 **Note:** There have been reports about the LDAP demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image.
 
-The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
+The `docker-compose.yml` file by default pulls Docker containers from for example https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
 
 ## Troubleshooting
 
