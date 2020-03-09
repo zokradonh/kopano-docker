@@ -49,7 +49,7 @@ mkdir -p /tmp/"$SERVICE_TO_START" /var/run/kopano
 # TODO is this still required now that we won't modify configuration mounted to /etc/kopano?
 if [ "${DISABLE_CONFIG_CHANGES}" == false ]; then
 	echo "Configure core service '$SERVICE_TO_START'" | ts
-	/usr/bin/python3 /kopano/"$SERVICE_TO_START".py
+	/kopano/"$SERVICE_TO_START".py
 fi
 
 # ensure removed pid-file on unclean shutdowns and mounted volumes
