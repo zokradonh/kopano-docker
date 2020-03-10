@@ -107,8 +107,8 @@ services:
       - kopanowebapp/:/var/lib/kopano-webapp/
     environment:
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
-      - KCCONF_WEBAPP_OIDC_CLIENT_ID=webapp
-      - KCCONF_WEBAPP_OIDC_ISS=https://${FQDN}
+      #- KCCONF_WEBAPP_OIDC_CLIENT_ID=webapp
+      #- KCCONF_WEBAPP_OIDC_ISS=https://${FQDN}
       - TZ=${TZ}
     env_file:
       - kopano_webapp.env
