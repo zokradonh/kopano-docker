@@ -4337,3 +4337,24 @@ sn: meetingroom3
 uidNumber: 20055
 uid: meetingroom3
 kopanoUserServer: kopano_server
+
+dn: uid=user24,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
+cn: Sun Qi
+gidnumber: 501
+givenname: Sun
+homedirectory: /home/user24
+kopanoaccount: 1
+kopanoaliases: sun@{{ LDAP_DOMAIN }}
+kopanouserserver: kopano_server_2
+loginshell: /bin/bash
+mail: user24@{{ LDAP_DOMAIN }}
+objectclass: posixAccount
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: kopano-user
+sn: Qi
+title: Programmer, Internationalization
+# base64 representation of 孙七
+uid:: 5a2Z5LiD
+uidnumber: 24
+userpassword: user24
