@@ -109,7 +109,7 @@ services:
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
       - KCCONF_WEBAPP_OIDC_CLIENT_ID=webapp
       - KCCONF_WEBAPP_OIDC_ISS=https://${FQDN}
-      - KCCONF_WEBAPP_CLIENT_TIMEOUT=0 # needed to set to 0 to work around an oidc bug
+      - KCCONF_WEBAPP_CLIENT_TIMEOUT=0 # needed to set to 0 to work around an oidc bug KW-3398
       - TZ=${TZ}
     env_file:
       - kopano_webapp.env
