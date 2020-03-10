@@ -191,7 +191,6 @@ kapi)
 		-timeout 360s
 	else
 		dockerize \
-		-wait file:///var/run/kopano/grapi/notify.sock \
 		-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
 		-timeout 360s
 	fi
