@@ -48,8 +48,6 @@ fi
 
 if [ "${allow_client_guests:-}" = "yes" ]; then
 	# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
-
-	
 	ecparam=${ecparam:-/etc/kopano/ecparam.pem}
 	if ! true >> "$ecparam"; then
 		# ecparam can not be created in this container, wait for external creation
