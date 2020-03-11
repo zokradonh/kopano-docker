@@ -49,6 +49,7 @@ fi
 if [ "${allow_client_guests:-}" = "yes" ]; then
 	# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
 
+	
 	ecparam=${ecparam:-/etc/kopano/ecparam.pem}
 	if ! true >> "$ecparam"; then
 		# ecparam can not be created in this container, wait for external creation
@@ -81,6 +82,7 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 	cp /etc/kopano/konnectd-identifier-registration.yaml /tmp/konnectd-identifier-registration.yaml
 	CONFIG_JSON=/tmp/konnectd-identifier-registration.yaml
 	#yq -y ".clients += [{\"id\": \"grapi-explorer.js\", \"name\": \"Grapi Explorer\", \"application_type\": \"web\", \"trusted\": true, \"insecure\": true, \"redirect_uris\": [\"http://$FQDNCLEANED:3000/\"]}]" $CONFIG_JSON | sponge $CONFIG_JSON
+	# TODO this causes a new and slightly different identifier registration to be created at each start?
 	yq -y ".clients += [{\"id\": \"kpop-https://${FQDN%/*}/meet/\", \"name\": \"Kopano Meet\", \"application_type\": \"web\", \"trusted\": true, \"redirect_uris\": [\"https://${FQDN%/*}/meet/\"], \"trusted_scopes\": [\"konnect/guestok\", \"kopano/kwm\"], \"jwks\": {\"keys\": [{\"kty\": $(jq .kty /tmp/jwk-meet.json), \"use\": $(jq .use /tmp/jwk-meet.json), \"crv\": $(jq .crv /tmp/jwk-meet.json), \"d\": $(jq .d /tmp/jwk-meet.json), \"kid\": $(jq .kid /tmp/jwk-meet.json), \"x\": $(jq .x /tmp/jwk-meet.json), \"y\": $(jq .y /tmp/jwk-meet.json)}]},\"request_object_signing_alg\": \"ES256\"}]" $CONFIG_JSON | sponge $CONFIG_JSON
 	# TODO this last bit can likely go (but then we must default to a registry stored below /etc/kopano)
 	yq -y . $CONFIG_JSON | sponge "${identifier_registration_conf:?}"
