@@ -110,6 +110,14 @@ if [ ! -e ./.env ]; then
 		INSECURE="no"
 	fi
 
+	value_default="ldap"
+	read -r -p "SASLAUTHD-Mechanism to be used for Postfix (SMTP)-authentication (defaults to ldap) [$value_default]: " new_value
+	SASLAUTHD_MECHANISMS=${new_value:-$value_default}
+	
+	SASLAUTHD_MECH_OPTIONS=""
+	read -r -p "SASLAUTHD-Mechanism -options to be used for Postfix (SMTP)-authentication (defaults to nothing (ldap)) [$value_default]: " new_value
+	SASLAUTHD_MECH_OPTIONS=${new_value:-$value_default}
+	
 	LDAP_BASE_DN=$(fqdn_to_dn "${FQDN%:*}")
 	value_default="$LDAP_BASE_DN"
 	read -r -p "Name of the BASE DN for LDAP [$value_default]: " new_value
@@ -277,6 +285,10 @@ LDAP_QUERY_FILTER_GROUP=(&(objectclass=kopano-group)(mail=%s))
 LDAP_QUERY_FILTER_ALIAS=(&(kopanoAccount=1)(kopanoAliases=%s))
 LDAP_QUERY_FILTER_DOMAIN=(&(|(mail=*@%s)(kopanoAliases=*@%s)))
 SASLAUTHD_LDAP_FILTER=(&(kopanoAccount=1)(uid=%s))
+
+#SASLAUTHD config
+SASLAUTHD_MECHANISMS=$SASLAUTHD_MECHANISMS
+SASLAUTHD_MECH_OPTIONS=$SASLAUTHD_MECH_OPTIONS
 
 # LDAP user password self-service reset settings
 SELF_SERVICE_SECRETEKEY=$(random_string)
