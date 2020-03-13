@@ -33,8 +33,5 @@ docker exec kopano_server kopano-admin -l
 docker exec kopano_zpush z-push-admin -a list
 docker exec kopano_zpush z-push-gabsync -a sync
 
-# FIXME temporary workaround for issue where kopano-admin --sync is not properly creating stores
-docker exec kopano_server kopano-create-missing-stores.sh || true
-
 # will print nothing if store exists and fail if it doesn't
 docker exec kopano_server kopano-admin --details user1 | grep -q "^Store GUID:"
