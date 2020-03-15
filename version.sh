@@ -72,4 +72,12 @@ filename=$(h5ai_query "$component" "$distribution" "$channel" "$branch")
 
 currentVersion=$(version_from_filename "$filename")
 
+versiontemp="${currentVersion//[^.]}"
+
+# a valid version number has at least two dots. e.g. 1.2.3
+if [ $versiontemp -lt 2 ]; then
+	echo "Malformed version recieved"
+	exit 1
+fi	
+
 echo "$currentVersion"
