@@ -75,7 +75,7 @@ currentVersion=$(version_from_filename "$filename")
 versiontemp="${currentVersion//[^.]}"
 # a valid version number has at least two dots. e.g. 1.2.3
 if [ ${#versiontemp} -lt 2 ]; then
-	echo "Malformed version recieved"
+	echo "Malformed version received"
 	exit 1
 fi	
 
