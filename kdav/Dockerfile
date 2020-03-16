@@ -32,6 +32,7 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
     org.label-schema.schema-version="1.0"
 
+# TODO add build secret
 # install Kopano kDAV
 RUN \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \

@@ -29,6 +29,7 @@ LABEL maintainer=az@zok.xyz \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# TODO add build-secrets
 # add install common php dependencies
 # hadolint ignore=SC2129
 RUN \

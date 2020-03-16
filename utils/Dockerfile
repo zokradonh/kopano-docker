@@ -10,6 +10,7 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.version=$KOPANO_CORE_VERSION \
     org.label-schema.schema-version="1.0"
 
+# TODO add build secrets
 RUN apt-get update && apt-get install --no-install-recommends -y \
     git \
     iputils-ping \

@@ -32,6 +32,7 @@ LABEL maintainer=az@zok.xyz \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# TODO add build-secrets
 # install Kopano Core and refresh ca-certificates
 RUN \
     # community download and package as apt source repository
