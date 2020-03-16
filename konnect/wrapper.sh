@@ -22,15 +22,15 @@ if ! true >> "$signing_private_key"; then
 fi
 
 if [ -f "${signing_private_key}" ] && [ ! -s "${signing_private_key}" ]; then
-		mkdir -p "${validation_keys_path}"
-		rnd=$(RANDFILE=/tmp/.rnd openssl rand -hex 2)
-		key="${validation_keys_path}/konnect-$(date +%Y%m%d)-${rnd}.pem"
-		>&2	echo "setup: creating new RSA private key at ${key} ..."
-		RANDFILE=/tmp/.rnd openssl genpkey -algorithm RSA -out "${key}" -pkeyopt rsa_keygen_bits:4096 -pkeyopt rsa_keygen_pubexp:65537
-		if [ -f "${key}" ]; then
-			rm "$signing_private_key"
-			ln -sn "${key}" "${signing_private_key}"
-		fi
+	mkdir -p "${validation_keys_path}"
+	rnd=$(RANDFILE=/tmp/.rnd openssl rand -hex 2)
+	key="${validation_keys_path}/konnect-$(date +%Y%m%d)-${rnd}.pem"
+	>&2	echo "setup: creating new RSA private key at ${key} ..."
+	RANDFILE=/tmp/.rnd openssl genpkey -algorithm RSA -out "${key}" -pkeyopt rsa_keygen_bits:4096 -pkeyopt rsa_keygen_pubexp:65537
+	if [ -f "${key}" ]; then
+		rm "$signing_private_key"
+		ln -sn "${key}" "${signing_private_key}"
+	fi
 fi
 
 encryption_secret_key=${encryption_secret_key:-"/etc/kopano/konnectd-encryption-secret.key"}
@@ -47,50 +47,55 @@ if [ -f "${encryption_secret_key}" ] && [ ! -s "${encryption_secret_key}" ]; the
 fi
 
 if [ "${allow_client_guests:-}" = "yes" ]; then
-	# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
+	# only modify identifier registration if it does not already contain the right settings
+	if ! grep -q "konnect/guestok" "${identifier_registration_conf:?}"; then
 
-	ecparam=${ecparam:-/etc/kopano/ecparam.pem}
-	if ! true >> "$ecparam"; then
-		# ecparam can not be created in this container, wait for external creation
-		dockerize \
-			-wait file://"$ecparam" \
-			-timeout "$DOCKERIZE_TIMEOUT"
+		# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
+		ecparam=${ecparam:-/etc/kopano/ecparam.pem}
+		if ! true >> "$ecparam"; then
+			# ecparam can not be created in this container, wait for external creation
+			dockerize \
+				-wait file://"$ecparam" \
+				-timeout "$DOCKERIZE_TIMEOUT"
+		fi
+
+		eckey=${eckey:-/etc/kopano/meet-kwmserver.pem}
+		if ! true >> "$eckey"; then
+			# eckey can not be created in this container, wait for external creation
+			dockerize \
+				-wait file://"$eckey" \
+				-timeout "$DOCKERIZE_TIMEOUT"
+		fi
+
+		# Key generation for Meet guest mode
+		if [ ! -s "$ecparam" ]; then
+			echo "Creating ec param key for Meet guest mode ..."
+			openssl ecparam -name prime256v1 -genkey -noout -out "$ecparam" >/dev/null 2>&1
+		fi
+
+		if [ ! -s "$eckey" ]; then
+			echo "Creating ec private key for Meet guest mode..."
+			openssl ec -in "$ecparam" -out "$eckey" >/dev/null 2>&1
+		fi
+
+		echo "Patching identifier registration for use of the Meet guest mode"
+		/usr/local/bin/konnectd utils jwk-from-pem --use sig "$eckey" > /tmp/jwk-meet.json
+		cp /etc/kopano/konnectd-identifier-registration.yaml /tmp/konnectd-identifier-registration.yaml
+		CONFIG_JSON=/tmp/konnectd-identifier-registration.yaml
+		#yq -y ".clients += [{\"id\": \"grapi-explorer.js\", \"name\": \"Grapi Explorer\", \"application_type\": \"web\", \"trusted\": true, \"insecure\": true, \"redirect_uris\": [\"http://$FQDNCLEANED:3000/\"]}]" $CONFIG_JSON | sponge $CONFIG_JSON
+		yq -y ".clients += [{\"id\": \"kpop-https://${FQDN%/*}/meet/\", \"name\": \"Kopano Meet\", \"application_type\": \"web\", \"trusted\": true, \"redirect_uris\": [\"https://${FQDN%/*}/meet/\"], \"trusted_scopes\": [\"konnect/guestok\", \"kopano/kwm\"], \"jwks\": {\"keys\": [{\"kty\": $(jq .kty /tmp/jwk-meet.json), \"use\": $(jq .use /tmp/jwk-meet.json), \"crv\": $(jq .crv /tmp/jwk-meet.json), \"d\": $(jq .d /tmp/jwk-meet.json), \"kid\": $(jq .kid /tmp/jwk-meet.json), \"x\": $(jq .x /tmp/jwk-meet.json), \"y\": $(jq .y /tmp/jwk-meet.json)}]},\"request_object_signing_alg\": \"ES256\"}]" $CONFIG_JSON | sponge $CONFIG_JSON
+		# TODO this last bit can likely go (but then we must default to a registry stored below /etc/kopano)
+		yq -y . $CONFIG_JSON | sponge "$identifier_registration_conf"
+	else
+		echo "Entrypoint: Skipping guest mode configuration, as it is already configured."
 	fi
-
-	eckey=${eckey:-/etc/kopano/meet-kwmserver.pem}
-	if ! true >> "$eckey"; then
-		# eckey can not be created in this container, wait for external creation
-		dockerize \
-			-wait file://"$eckey" \
-			-timeout "$DOCKERIZE_TIMEOUT"
-	fi
-
-	# Key generation for Meet guest mode
-	if [ ! -s "$ecparam" ]; then
-		echo "Creating ec param key for Meet guest mode ..."
-		openssl ecparam -name prime256v1 -genkey -noout -out "$ecparam" >/dev/null 2>&1
-	fi
-
-	if [ ! -s "$eckey" ]; then
-		echo "Creating ec private key for Meet guest mode..."
-		openssl ec -in "$ecparam" -out "$eckey" >/dev/null 2>&1
-	fi
-
-	echo "Patching identifier registration for use of the Meet guest mode"
-	/usr/local/bin/konnectd utils jwk-from-pem --use sig "$eckey" > /tmp/jwk-meet.json
-	cp /etc/kopano/konnectd-identifier-registration.yaml /tmp/konnectd-identifier-registration.yaml
-	CONFIG_JSON=/tmp/konnectd-identifier-registration.yaml
-	#yq -y ".clients += [{\"id\": \"grapi-explorer.js\", \"name\": \"Grapi Explorer\", \"application_type\": \"web\", \"trusted\": true, \"insecure\": true, \"redirect_uris\": [\"http://$FQDNCLEANED:3000/\"]}]" $CONFIG_JSON | sponge $CONFIG_JSON
-	yq -y ".clients += [{\"id\": \"kpop-https://${FQDN%/*}/meet/\", \"name\": \"Kopano Meet\", \"application_type\": \"web\", \"trusted\": true, \"redirect_uris\": [\"https://${FQDN%/*}/meet/\"], \"trusted_scopes\": [\"konnect/guestok\", \"kopano/kwm\"], \"jwks\": {\"keys\": [{\"kty\": $(jq .kty /tmp/jwk-meet.json), \"use\": $(jq .use /tmp/jwk-meet.json), \"crv\": $(jq .crv /tmp/jwk-meet.json), \"d\": $(jq .d /tmp/jwk-meet.json), \"kid\": $(jq .kid /tmp/jwk-meet.json), \"x\": $(jq .x /tmp/jwk-meet.json), \"y\": $(jq .y /tmp/jwk-meet.json)}]},\"request_object_signing_alg\": \"ES256\"}]" $CONFIG_JSON | sponge $CONFIG_JSON
-	# TODO this last bit can likely go (but then we must default to a registry stored below /etc/kopano)
-	yq -y . $CONFIG_JSON | sponge "${identifier_registration_conf:?}"
 fi
 
 if [ "${external_oidc_provider:-}" = "yes" ]; then
 	echo "Patching identifier registration for external OIDC provider"
 	CONFIG_JSON=/etc/kopano/konnectd-identifier-registration.yaml
 	echo "authorities: [{name: ${external_oidc_name:-}, default: yes, iss: ${external_oidc_url:-}, client_id: kopano-meet, client_secret: ${external_oidc_clientsecret:-}, authority_type: oidc, response_type: id_token, scopes: [openid, profile, email]}]" >> $CONFIG_JSON
-	yq -y . $CONFIG_JSON | sponge "${identifier_registration_conf:?}"
+	yq -y . $CONFIG_JSON | sponge "$identifier_registration_conf"
 fi
 
 # source additional configuration from Konnect cfg (potentially overwrites env vars)
