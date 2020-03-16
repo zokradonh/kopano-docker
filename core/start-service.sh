@@ -81,9 +81,15 @@ gateway)
 	EXE="${EXE:-$(which kopano-gateway)}"
 	KOPANO_CON="$KCCONF_GATEWAY_SERVER_SOCKET"
 	;;
+grapi)
+	EXE="${EXE:-$(which kopano-grapi)}"
+	;;
 ical)
 	EXE="${EXE:-$(which kopano-ical)}"
 	KOPANO_CON="$KCCONF_ICAL_SERVER_SOCKET"
+	;;
+kapi)
+	EXE="${EXE:-$(which kopano-kapid)}"
 	;;
 monitor)
 	EXE="${EXE:-$(which kopano-monitor)}"
