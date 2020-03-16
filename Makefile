@@ -119,6 +119,11 @@ build-base: ## Build new base image.
 build-core:
 	component=core make build
 
+build-core-dagent:
+	docker build --rm \
+		-f core/Dockerfile.dagent \
+		-t $(docker_repo)/kopano_dagent core/
+
 build-helper:
 	component=build make build-simple
 
@@ -203,6 +208,11 @@ tag-core:
 	$(eval core_version := \
 	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_core | cut -d+ -f1))
 	component=core make tag-container
+
+tag-dagent:
+	$(eval dagent_version := \
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_dagent | cut -d+ -f1))
+	component=dagent make tag-container
 
 tag-konnect:
 	$(eval konnect_version := \
@@ -292,6 +302,9 @@ publish-base: tag-base
 
 publish-core: tag-core
 	component=core make publish-container
+
+publish-dagent: tag-dagent
+	component=dagent make publish-container
 
 publish-helper:
 	docker push $(docker_repo)/kopano_build:latest
