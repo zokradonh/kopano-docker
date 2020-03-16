@@ -16,6 +16,7 @@ ENV \
     DOWNLOAD_CHANNEL="community" \
     DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES \
     DOWNLOAD_DISTRIBUTION="Debian_10" \
+    EXE=/usr/sbin/kopano-server \
     GRAPI_BACKEND="kopano" \
     KCCONF_GRAPI_LDAP_BASEDN="" \
     KCCONF_GRAPI_LDAP_BINDDN="" \
@@ -25,7 +26,9 @@ ENV \
     KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
     KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
-    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
+    LANG=en_US.UTF-8 \
+    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD \
+    SERVICE_TO_START=server
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano core container" \
@@ -67,11 +70,6 @@ RUN \
     (cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ || true) && \
     (cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ || true) && \
     (gzip -d -f /etc/kopano/*.gz || true)
-
-ENV LANG=en_US.UTF-8
-
-ENV SERVICE_TO_START=server \
-    EXE=/usr/sbin/kopano-server
 
 COPY defaultconfigs/ start-service.sh healthcheck.sh /kopano/
 COPY bin/ /usr/local/bin/
