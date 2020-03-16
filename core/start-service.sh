@@ -74,21 +74,30 @@ fi
 # put specified socket into KOPANO_CON variable to ease checks further down
 case "$SERVICE_TO_START" in
 dagent)
+	EXE="${EXE:-$(which kopano-dagent)}"
 	KOPANO_CON="$KCCONF_DAGENT_SERVER_SOCKET"
 	;;
 gateway)
+	EXE="${EXE:-$(which kopano-gateway)}"
 	KOPANO_CON="$KCCONF_GATEWAY_SERVER_SOCKET"
 	;;
 ical)
+	EXE="${EXE:-$(which kopano-ical)}"
 	KOPANO_CON="$KCCONF_ICAL_SERVER_SOCKET"
 	;;
 monitor)
+	EXE="${EXE:-$(which kopano-monitor)}"
 	KOPANO_CON="$KCCONF_MONITOR_SERVER_SOCKET"
 	;;
 search)
+	EXE="${EXE:-$(which kopano-search)}"
 	KOPANO_CON="$KCCONF_SEARCH_SERVER_SOCKET"
 	;;
+server)
+	EXE="${EXE:-$(which kopano-server)}"
+	;;
 spooler)
+	EXE="${EXE:-$(which kopano-spooler)}"
 	KOPANO_CON="$KCCONF_SPOOLER_SERVER_SOCKET"
 	;;
 esac
@@ -123,7 +132,7 @@ server)
 	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-server -F
+	exec "$EXE" -F
 	;;
 dagent)
 	dockerize \
@@ -131,7 +140,7 @@ dagent)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-dagent -l
+	exec "$EXE" -l
 	;;
 gateway)
 	dockerize \
@@ -139,7 +148,7 @@ gateway)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-gateway -F
+	exec "$EXE" -F
 	;;
 ical)
 	dockerize \
@@ -147,7 +156,7 @@ ical)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-ical -F
+	exec "$EXE" -F
 	;;
 grapi)
 	LC_CTYPE=en_US.UTF-8
@@ -177,9 +186,9 @@ grapi)
 	grapiversion=$(dpkg-query --showformat='${Version}' --show kopano-grapi)
 	echo "Using Kopano Grapi: $grapiversion"
 	if dpkg --compare-versions "$grapiversion" "gt" "10.0.0"; then
-		exec kopano-grapi serve --backend="$GRAPI_BACKEND"
+		exec "$EXE" serve --backend="$GRAPI_BACKEND"
 	else
-		exec kopano-grapi serve
+		exec "$EXE" serve
 	fi
 	;;
 kapi)
@@ -200,10 +209,10 @@ kapi)
 	sed s/\ *=\ */=/g /tmp/kopano/kapid.cfg > /tmp/kapid-env
 	# shellcheck disable=SC2046
 	export $(grep -v '^#' /tmp/kapid-env | xargs -d '\n')
-	kopano-kapid setup
+	"$EXE" setup
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec kopano-kapid serve --log-timestamp=false
+	exec "$EXE" serve --log-timestamp=false
 	;;
 monitor)
 	dockerize \
@@ -211,7 +220,7 @@ monitor)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-monitor -F
+	exec "$EXE" -F
 	;;
 search)
 	dockerize \
@@ -224,9 +233,9 @@ search)
 	# with commit 702bb3fccb3 search does not need -F any longer
 	searchversion=$(dpkg-query --showformat='${Version}' --show kopano-search)
 	if dpkg --compare-versions "$searchversion" "gt" "8.7.82.165"; then
-		exec /usr/sbin/kopano-search --config /tmp/kopano/search.cfg
+		exec "$EXE" --config /tmp/kopano/search.cfg
 	else
-		exec /usr/bin/python3 /usr/sbin/kopano-search -F
+		exec /usr/bin/python3 "$EXE" -F
 	fi
 	;;
 spooler)
@@ -236,7 +245,7 @@ spooler)
 		-timeout 1080s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec /usr/sbin/kopano-spooler -F
+	exec "$EXE" -F
 	;;
 *)
 	echo "Failed to start: Unknown service name: '$SERVICE_TO_START'" | ts

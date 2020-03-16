@@ -70,7 +70,8 @@ RUN \
 
 ENV LANG=en_US.UTF-8
 
-ENV SERVICE_TO_START=server
+ENV SERVICE_TO_START=server \
+    EXE=/usr/sbin/kopano-server
 
 COPY defaultconfigs/ start-service.sh healthcheck.sh /kopano/
 COPY bin/ /usr/local/bin/
