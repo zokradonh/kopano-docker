@@ -1,0 +1,6 @@
+ARG docker_repo=zokradonh
+FROM ${docker_repo}/kopano_webapp
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    kopano-webapp-plugin-mdm \
+    && rm -rf /var/cache/apt /var/lib/apt/lists
