@@ -39,32 +39,35 @@ php_cfg_gen() {
 	fi
 }
 
-# Hint: this is not compatible with a read-only container.
-# The general recommendation is to already build a container that has all required packages installed.
-ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
-if [ -n "$(mkdir -p "/var/lib/apt/lists/" 2&> /dev/null)" ]; then
-	[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
-	[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
-		# shellcheck disable=SC2016 disable=SC2086
-		if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
-			DEBIAN_FRONTEND=noninteractive apt --assume-yes --no-upgrade install "$installpkg"
-		else
-			echo "INFO: $installpkg is already installed"
-		fi
-	done
-else
-	echo "Notice: Container is run read-only, skipping package installation."
-	echo "If you want to have additional packages installed in the container either:"
-	echo "- build your own image with the packages already included"
-	echo "- switch the container to 'read_only: false'"
-fi
+# Only configure services and wait for sane evironment if AUTOCONFIG env is set
+if [ "$AUTOCONFIG" = "yes" ]; then
+	# Hint: this is not compatible with a read-only container.
+	# The general recommendation is to already build a container that has all required packages installed.
+	ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
+	if [ -n "$(mkdir -p "/var/lib/apt/lists/" 2&> /dev/null)" ]; then
+		[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
+		[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
+			# shellcheck disable=SC2016 disable=SC2086
+			if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
+				DEBIAN_FRONTEND=noninteractive apt --assume-yes --no-upgrade install "$installpkg"
+			else
+				echo "INFO: $installpkg is already installed"
+			fi
+		done
+	else
+		echo "Notice: Container is run read-only, skipping package installation."
+		echo "If you want to have additional packages installed in the container either:"
+		echo "- build your own image with the packages already included"
+		echo "- switch the container to 'read_only: false'"
+	fi
 
-# copy latest config template
-mkdir -p /tmp/z-push/
-for i in /etc/z-push/*.dist; do
-	filename=$(basename -- "$i")
-	cp "$i" "/tmp/z-push/${filename%.*}"
-done
+	# copy latest config template
+	mkdir -p /tmp/z-push/
+	for i in /etc/z-push/*.dist; do
+		filename=$(basename -- "$i")
+		cp "$i" "/tmp/z-push/${filename%.*}"
+	done
+fi
 
 # Ensure directories
 mkdir -p /run/sessions
@@ -74,70 +77,72 @@ echo "Using PHP-Mapi: $phpversion"
 zpushversion=$(dpkg-query --showformat='${Version}' --show z-push-kopano)
 echo "Using Z-Push: $zpushversion"
 
-if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
-	echo "Z-Push is using the default: connection"
-else
-	echo "Z-Push is using an ip connection"
-	php_cfg_gen /tmp/z-push/kopano.conf.php MAPI_SERVER "https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano"
+if [ "$AUTOCONFIG" = "yes" ]; then
+	if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
+		echo "Z-Push is using the default: connection"
+	else
+		echo "Z-Push is using an ip connection"
+		php_cfg_gen /tmp/z-push/kopano.conf.php MAPI_SERVER "https://${KCCONF_SERVERHOSTNAME}:${KCCONF_SERVERPORT}/kopano"
+	fi
+
+	echo "Configuring Z-Push for use behind a reverse proxy"
+	php_cfg_gen /tmp/z-push/z-push.conf.php USE_CUSTOM_REMOTE_IP_HEADER HTTP_X_FORWARDED_FOR
+
+	# configuring z-push from env
+	for setting in $(compgen -A variable KCCONF_ZPUSH_); do
+		setting2=${setting#KCCONF_ZPUSH_}
+		php_cfg_gen /tmp/z-push/z-push.conf.php "${setting2}" "${!setting}"
+	done
+
+	# configuring autodiscover
+	for setting in $(compgen -A variable KCCONF_ZPUSHAUTODISCOVER_); do
+		setting2=${setting#KCCONF_ZPUSHAUTODISCOVER_}
+		php_cfg_gen /tmp/z-push/autodiscover.conf.php "${setting2}" "${!setting}"
+	done
+
+	# configuring z-push gabsync
+	php_cfg_gen /tmp/z-push/gabsync.conf.php USERNAME SYSTEM
+
+	for setting in $(compgen -A variable KCCONF_ZPUSHGABSYNC_); do
+		setting2=${setting#KCCONF_ZPUSHGAVSYNC_}
+		php_cfg_gen /tmp/z-push/z-push.conf.php "${setting2}" "${!setting}"
+	done
+
+	# configuring z-push sql state engine
+	for setting in $(compgen -A variable KCCONF_ZPUSHSQL_); do
+		setting2=${setting#KCCONF_ZPUSHSQL_}
+		php_cfg_gen /tmp/z-push/state-sql.conf.php "${setting2}" "${!setting}"
+	done
+
+	# configuring z-push memcached
+	for setting in $(compgen -A variable KCCONF_ZPUSHMEMCACHED_); do
+		setting2=${setting#KCCONF_ZPUSHMEMCACHED_}
+		php_cfg_gen /tmp/z-push/memcached.conf.php "${setting2}" "${!setting}"
+	done
+
+	# configuring z-push gab2contacts
+	for setting in $(compgen -A variable KCCONF_ZPUSHGA2CONTACTS_); do
+		setting2=${setting#KCCONF_ZPUSHSQL_}
+		php_cfg_gen /tmp/z-push/gab2contacts.conf.php "${setting2}" "${!setting}"
+	done
+
+	# configuring z-push shared folders
+	perl -i -0pe 's/\$additionalFolders.*\);//s' /tmp/z-push/z-push.conf.php
+	echo -e "  \$additionalFolders = array(" >> /tmp/z-push/z-push.conf.php
+	echo "$ZPUSH_ADDITIONAL_FOLDERS" | jq -c '.[]' | while read -r folder; do
+		eval "$(echo "$folder" | jq -r '@sh "NAME=\(.name) ID=\(.id) TYPE=\(.type) FLAGS=\(.flags)"')"
+		echo -e "    array('store' => \"SYSTEM\", 'folderid' => \"$ID\", 'name' => \"$NAME\", 'type' => $TYPE, 'flags' => $FLAGS)," >> /etc/z-push/z-push.conf.php
+	done
+	echo -e '  );' >> /tmp/z-push/z-push.conf.php
+
+	# services need to be aware of the machine-id
+	dockerize \
+		-wait file:///etc/machine-id \
+		-wait file:///var/lib/dbus/machine-id
 fi
-
-echo "Configuring Z-Push for use behind a reverse proxy"
-php_cfg_gen /tmp/z-push/z-push.conf.php USE_CUSTOM_REMOTE_IP_HEADER HTTP_X_FORWARDED_FOR
-
-# configuring z-push from env
-for setting in $(compgen -A variable KCCONF_ZPUSH_); do
-	setting2=${setting#KCCONF_ZPUSH_}
-	php_cfg_gen /tmp/z-push/z-push.conf.php "${setting2}" "${!setting}"
-done
-
-# configuring autodiscover
-for setting in $(compgen -A variable KCCONF_ZPUSHAUTODISCOVER_); do
-	setting2=${setting#KCCONF_ZPUSHAUTODISCOVER_}
-	php_cfg_gen /tmp/z-push/autodiscover.conf.php "${setting2}" "${!setting}"
-done
-
-# configuring z-push gabsync
-php_cfg_gen /tmp/z-push/gabsync.conf.php USERNAME SYSTEM
-
-for setting in $(compgen -A variable KCCONF_ZPUSHGABSYNC_); do
-	setting2=${setting#KCCONF_ZPUSHGAVSYNC_}
-	php_cfg_gen /tmp/z-push/z-push.conf.php "${setting2}" "${!setting}"
-done
-
-# configuring z-push sql state engine
-for setting in $(compgen -A variable KCCONF_ZPUSHSQL_); do
-	setting2=${setting#KCCONF_ZPUSHSQL_}
-	php_cfg_gen /tmp/z-push/state-sql.conf.php "${setting2}" "${!setting}"
-done
-
-# configuring z-push memcached
-for setting in $(compgen -A variable KCCONF_ZPUSHMEMCACHED_); do
-	setting2=${setting#KCCONF_ZPUSHMEMCACHED_}
-	php_cfg_gen /tmp/z-push/memcached.conf.php "${setting2}" "${!setting}"
-done
-
-# configuring z-push gab2contacts
-for setting in $(compgen -A variable KCCONF_ZPUSHGA2CONTACTS_); do
-	setting2=${setting#KCCONF_ZPUSHSQL_}
-	php_cfg_gen /tmp/z-push/gab2contacts.conf.php "${setting2}" "${!setting}"
-done
-
-# configuring z-push shared folders
-perl -i -0pe 's/\$additionalFolders.*\);//s' /tmp/z-push/z-push.conf.php
-echo -e "  \$additionalFolders = array(" >> /tmp/z-push/z-push.conf.php
-echo "$ZPUSH_ADDITIONAL_FOLDERS" | jq -c '.[]' | while read -r folder; do
-	eval "$(echo "$folder" | jq -r '@sh "NAME=\(.name) ID=\(.id) TYPE=\(.type) FLAGS=\(.flags)"')"
-	echo -e "    array('store' => \"SYSTEM\", 'folderid' => \"$ID\", 'name' => \"$NAME\", 'type' => $TYPE, 'flags' => $FLAGS)," >> /etc/z-push/z-push.conf.php
-done
-echo -e '  );' >> /tmp/z-push/z-push.conf.php
 
 echo "Ensure config ownership"
 chown -R www-data:www-data /run/sessions
-
-# services need to be aware of the machine-id
-#dockerize \
-#	-wait file:///etc/machine-id \
-#	-wait file:///var/lib/dbus/machine-id
 
 echo "Activate z-push log rerouting"
 mkdir -p /var/log/z-push/

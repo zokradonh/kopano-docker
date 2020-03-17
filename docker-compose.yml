@@ -6,6 +6,7 @@ services:
     read_only: true
     restart: unless-stopped
     environment:
+      - AUTOCONFIG=yes
       - DEFAULTREDIRECT=${DEFAULTREDIRECT:-/webapp}
       - EMAIL=${EMAIL:-off}
       - FQDN=${FQDNCLEANED?err}
@@ -108,6 +109,7 @@ services:
       - kopanowebapp/:/var/lib/kopano-webapp/
     environment:
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
+      - AUTOCONFIG=yes
       - KCCONF_WEBAPP_OIDC_CLIENT_ID=webapp
       - KCCONF_WEBAPP_OIDC_ISS=https://${FQDN}
       - KCCONF_WEBAPP_CLIENT_TIMEOUT=0 # needed to set to 0 to work around an oidc bug KW-3398
@@ -138,6 +140,7 @@ services:
       - kopanossl/:/kopano/ssl
       - zpushstates/:/var/lib/z-push/
     environment:
+      - AUTOCONFIG=yes
       - TZ=${TZ}
       # Shared folders automatically assigned to all users in the format: [{"name":"<folder name>","id":"<kopano folder id>","type":"<type>","flags":"<flags>"},...]
       # For more information on the parameters see the z-push-admin help for the addshared-action.
