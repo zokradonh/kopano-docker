@@ -74,36 +74,36 @@ fi
 # put specified socket into KOPANO_CON variable to ease checks further down
 case "$SERVICE_TO_START" in
 dagent)
-	EXE="${EXE:-$(which kopano-dagent)}"
+	EXE="${EXE:-$(command -v kopano-dagent)}"
 	KOPANO_CON="$KCCONF_DAGENT_SERVER_SOCKET"
 	;;
 gateway)
-	EXE="${EXE:-$(which kopano-gateway)}"
+	EXE="${EXE:-$(command -v kopano-gateway)}"
 	KOPANO_CON="$KCCONF_GATEWAY_SERVER_SOCKET"
 	;;
 grapi)
-	EXE="${EXE:-$(which kopano-grapi)}"
+	EXE="${EXE:-$(command -v kopano-grapi)}"
 	;;
 ical)
-	EXE="${EXE:-$(which kopano-ical)}"
+	EXE="${EXE:-$(command -v kopano-ical)}"
 	KOPANO_CON="$KCCONF_ICAL_SERVER_SOCKET"
 	;;
 kapi)
-	EXE="${EXE:-$(which kopano-kapid)}"
+	EXE="${EXE:-$(command -v kopano-kapid)}"
 	;;
 monitor)
-	EXE="${EXE:-$(which kopano-monitor)}"
+	EXE="${EXE:-$(command -v kopano-monitor)}"
 	KOPANO_CON="$KCCONF_MONITOR_SERVER_SOCKET"
 	;;
 search)
-	EXE="${EXE:-$(which kopano-search)}"
+	EXE="${EXE:-$(command -v kopano-search)}"
 	KOPANO_CON="$KCCONF_SEARCH_SERVER_SOCKET"
 	;;
 server)
-	EXE="${EXE:-$(which kopano-server)}"
+	EXE="${EXE:-$(command -v kopano-server)}"
 	;;
 spooler)
-	EXE="${EXE:-$(which kopano-spooler)}"
+	EXE="${EXE:-$(command -v kopano-spooler)}"
 	KOPANO_CON="$KCCONF_SPOOLER_SERVER_SOCKET"
 	;;
 esac
