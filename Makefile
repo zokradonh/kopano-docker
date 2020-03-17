@@ -47,7 +47,7 @@ help:
 all: build-all
 
 build-all:
-	make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder|build-webapp-demo' | uniq | sed s/://g | xargs)
+	make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder|build-webapp-demo|build-webapp-plugins' | uniq | sed s/://g | xargs)
 
 .PHONY: build
 build: component ?= base
@@ -177,6 +177,11 @@ build-webapp:
 build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
 	docker build --rm \
 		-f webapp/Dockerfile.demo \
+		-t $(docker_repo)/kopano_webapp webapp/
+
+build-webapp-plugins: ## Example for a custom image to install Kopano WebApp plugins
+	docker build --rm \
+		-f webapp/Dockerfile.plugins \
 		-t $(docker_repo)/kopano_webapp webapp/
 
 build-zpush:
