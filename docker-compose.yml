@@ -226,6 +226,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - AUTOCONFIG=yes
       - TZ=${TZ}
     networks:
       - kopano-net
