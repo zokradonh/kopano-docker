@@ -420,6 +420,7 @@ services:
       - kopano_kapi
       - kopano_konnect
     environment:
+      - AUTOCONFIG=yes
       - enable_guest_api=yes
       - INSECURE=${INSECURE}
       - oidc_issuer_identifier=https://${FQDN}

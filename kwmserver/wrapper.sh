@@ -65,22 +65,25 @@ if [ -n "$public_guest_access_regexp" ]; then
 	set -- "$@" --public-guest-access-regexp="$public_guest_access_regexp"
 fi
 
-if [ "$INSECURE" = "yes" ]; then
+# Only configure services and wait for sane evironment if AUTOCONFIG env is set
+if [ "$AUTOCONFIG" = "yes" ]; then
+	if [ "$INSECURE" = "yes" ]; then
+		dockerize \
+		-skip-tls-verify \
+		-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
+		-timeout 360s
+	else
+		dockerize \
+		-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
+		-timeout 360s
+	fi
+
+	# services need to be aware of the machine-id
 	dockerize \
-	-skip-tls-verify \
-	-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
-	-timeout 360s
-else
-	dockerize \
-	-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
-	-timeout 360s
+		-wait file:///etc/machine-id \
+		-wait file:///var/lib/dbus/machine-id
 fi
 
-# services need to be aware of the machine-id
-dockerize \
-	-wait file:///etc/machine-id \
-	-wait file:///var/lib/dbus/machine-id
-
-exec /usr/local/bin/docker-entrypoint.sh serve \
+exec docker-entrypoint.sh serve \
 	--registration-conf /kopano/ssl/konnectd-identifier-registration.yaml \
 	"$@"
