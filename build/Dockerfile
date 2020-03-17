@@ -1,3 +1,4 @@
+# TODO needs newer version for buildkit?
 FROM docker:18.09
 ENV \
     COMMANDER_VERSION=1.2.1 \

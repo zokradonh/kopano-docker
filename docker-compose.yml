@@ -166,6 +166,7 @@ services:
       - kopanograpi/:/var/lib/kopano-grapi
       - kopanosocket/:/run/kopano
     environment:
+      - AUTOCONFIG=yes
       - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=no
       - KCCONF_GRAPI_INSECURE=${INSECURE}
       - KCCONF_GRAPI_PERSISTENCY_PATH=/var/lib/kopano-grapi
@@ -193,6 +194,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - AUTOCONFIG=yes
       - KCCONF_KAPID_INSECURE=${INSECURE}
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
@@ -243,6 +245,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - AUTOCONFIG=yes
       - KCCONF_DAGENT_LOG_LEVEL=3
       - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kopano_dagent.pem
       - SERVICE_TO_START=dagent
@@ -268,6 +271,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - AUTOCONFIG=yes
       - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_SMTP_SERVER=mail
       - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kopano_spooler.pem
@@ -292,6 +296,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - AUTOCONFIG=yes
       - KCCONF_GATEWAY_LOG_LEVEL=3
       - KCCONF_GATEWAY_SERVER_SOCKET=http://kopano_server:236/
       - SERVICE_TO_START=gateway
@@ -315,6 +320,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - AUTOCONFIG=yes
       - KCCONF_ICAL_SERVER_SOCKET=http://kopano_server:236/
       - SERVICE_TO_START=ical
       - TZ=${TZ}
@@ -338,6 +344,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - AUTOCONFIG=yes
       - SERVICE_TO_START=monitor
       - TZ=${TZ}
     env_file:
@@ -361,6 +368,7 @@ services:
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - AUTOCONFIG=yes
       - SERVICE_TO_START=search
       - TZ=${TZ}
     env_file:
@@ -386,6 +394,7 @@ services:
     environment:
       - allow_client_guests=yes
       - allow_dynamic_client_registration=yes
+      - AUTOCONFIG=yes
       - eckey=/kopano/ssl/meet-kwmserver.pem
       - ecparam=/kopano/ssl/ecparam.pem
       - encryption_secret_key=/kopano/ssl/konnectd-encryption.key
