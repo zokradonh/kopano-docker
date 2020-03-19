@@ -46,9 +46,13 @@ if [ -f "${encryption_secret_key}" ] && [ ! -s "${encryption_secret_key}" ]; the
 	RANDFILE=/tmp/.rnd openssl rand -out "${encryption_secret_key}" 32
 fi
 
+# Create working copy by merging packaged example in /etc/kopano with passed registration conf
+CONFIG_JSON=/tmp/konnectd-identifier-registration.yaml
+yq -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "${identifier_registration_conf:?}" | sponge "$CONFIG_JSON"
+
 if [ "${allow_client_guests:-}" = "yes" ]; then
 	# only modify identifier registration if it does not already contain the right settings
-	if ! grep -q "konnect/guestok" "${identifier_registration_conf:?}"; then
+	if ! grep -q "konnect/guestok" "$CONFIG_JSON"; then
 
 		# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
 		ecparam=${ecparam:-/etc/kopano/ecparam.pem}
@@ -80,8 +84,6 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 
 		echo "Patching identifier registration for use of the Meet guest mode"
 		/usr/local/bin/konnectd utils jwk-from-pem --use sig "$eckey" > /tmp/jwk-meet.json
-		cp /etc/kopano/konnectd-identifier-registration.yaml /tmp/konnectd-identifier-registration.yaml
-		CONFIG_JSON=/tmp/konnectd-identifier-registration.yaml
 		#yq -y ".clients += [{\"id\": \"grapi-explorer.js\", \"name\": \"Grapi Explorer\", \"application_type\": \"web\", \"trusted\": true, \"insecure\": true, \"redirect_uris\": [\"http://$FQDNCLEANED:3000/\"]}]" $CONFIG_JSON | sponge $CONFIG_JSON
 		yq -y ".clients += [{\"id\": \"kpop-https://${FQDN%/*}/meet/\", \"name\": \"Kopano Meet\", \"application_type\": \"web\", \"trusted\": true, \"redirect_uris\": [\"https://${FQDN%/*}/meet/\"], \"trusted_scopes\": [\"konnect/guestok\", \"kopano/kwm\"], \"jwks\": {\"keys\": [{\"kty\": $(jq .kty /tmp/jwk-meet.json), \"use\": $(jq .use /tmp/jwk-meet.json), \"crv\": $(jq .crv /tmp/jwk-meet.json), \"d\": $(jq .d /tmp/jwk-meet.json), \"kid\": $(jq .kid /tmp/jwk-meet.json), \"x\": $(jq .x /tmp/jwk-meet.json), \"y\": $(jq .y /tmp/jwk-meet.json)}]},\"request_object_signing_alg\": \"ES256\"}]" $CONFIG_JSON | sponge $CONFIG_JSON
 		# TODO this last bit can likely go (but then we must default to a registry stored below /etc/kopano)
@@ -93,9 +95,8 @@ fi
 
 if [ "${external_oidc_provider:-}" = "yes" ]; then
 	echo "Patching identifier registration for external OIDC provider"
-	CONFIG_JSON=/etc/kopano/konnectd-identifier-registration.yaml
-	echo "authorities: [{name: ${external_oidc_name:-}, default: yes, iss: ${external_oidc_url:-}, client_id: kopano-meet, client_secret: ${external_oidc_clientsecret:-}, authority_type: oidc, response_type: id_token, scopes: [openid, profile, email]}]" >> $CONFIG_JSON
-	yq -y . $CONFIG_JSON | sponge "$identifier_registration_conf"
+	echo "authorities: [{name: ${external_oidc_name:-}, default: yes, iss: ${external_oidc_url:-}, client_id: kopano-meet, client_secret: ${external_oidc_clientsecret:-}, authority_type: oidc, response_type: id_token, scopes: [openid, profile, email]}]" >> /tmp/authority.json
+	yq -s '.[0] + .[1]' $CONFIG_JSON /tmp/authority.json | sponge "$identifier_registration_conf"
 fi
 
 # source additional configuration from Konnect cfg (potentially overwrites env vars)
