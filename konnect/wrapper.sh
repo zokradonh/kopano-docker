@@ -46,12 +46,15 @@ if [ -f "${encryption_secret_key}" ] && [ ! -s "${encryption_secret_key}" ]; the
 	RANDFILE=/tmp/.rnd openssl rand -out "${encryption_secret_key}" 32
 fi
 
+# Create working copy by merging packaged example in /etc/kopano with passed registration conf
 CONFIG_JSON=/tmp/konnectd-identifier-registration.yaml
-yq -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "$identifier_registration_conf" | sponge "$CONFIG_JSON"
+yq -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "${identifier_registration_conf:?}" | sponge "$CONFIG_JSON"
+
+cat $CONFIG_JSON
 
 if [ "${allow_client_guests:-}" = "yes" ]; then
 	# only modify identifier registration if it does not already contain the right settings
-	if ! grep -q "konnect/guestok" "${identifier_registration_conf:?}"; then
+	if ! grep -q "konnect/guestok" "$CONFIG_JSON"; then
 
 		# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
 		ecparam=${ecparam:-/etc/kopano/ecparam.pem}
@@ -91,6 +94,8 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 		echo "Entrypoint: Skipping guest mode configuration, as it is already configured."
 	fi
 fi
+
+cat $CONFIG_JSON
 
 if [ "${external_oidc_provider:-}" = "yes" ]; then
 	echo "Patching identifier registration for external OIDC provider"
