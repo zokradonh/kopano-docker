@@ -110,14 +110,6 @@ if [ ! -e ./.env ]; then
 		INSECURE="no"
 	fi
 
-	value_default="ldap"
-	read -r -p "SASLAUTHD-Mechanism to be used for Postfix (SMTP)-authentication (defaults to ldap) [$value_default]: " new_value
-	SASLAUTHD_MECHANISMS=${new_value:-$value_default}
-	
-	SASLAUTHD_MECH_OPTIONS=""
-	read -r -p "SASLAUTHD-Mechanism -options to be used for Postfix (SMTP)-authentication (defaults to nothing (ldap)) [$value_default]: " new_value
-	SASLAUTHD_MECH_OPTIONS=${new_value:-$value_default}
-	
 	LDAP_BASE_DN=$(fqdn_to_dn "${FQDN%:*}")
 	value_default="$LDAP_BASE_DN"
 	read -r -p "Name of the BASE DN for LDAP [$value_default]: " new_value
