@@ -278,10 +278,6 @@ LDAP_QUERY_FILTER_ALIAS=(&(kopanoAccount=1)(kopanoAliases=%s))
 LDAP_QUERY_FILTER_DOMAIN=(&(|(mail=*@%s)(kopanoAliases=*@%s)))
 SASLAUTHD_LDAP_FILTER=(&(kopanoAccount=1)(uid=%s))
 
-#SASLAUTHD config
-SASLAUTHD_MECHANISMS=$SASLAUTHD_MECHANISMS
-SASLAUTHD_MECH_OPTIONS=$SASLAUTHD_MECH_OPTIONS
-
 # LDAP user password self-service reset settings
 SELF_SERVICE_SECRETEKEY=$(random_string)
 SELF_SERVICE_PASSWORD_MIN_LENGTH=5
