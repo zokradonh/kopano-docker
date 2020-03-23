@@ -156,6 +156,7 @@ services:
       - INSECURE=${INSECURE}
       - oidc_issuer_identifier=https://${FQDN}
       - public_guest_access_regexp=^group/public/.*
+      - registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
       - turn_service_credentials_password=${TURN_PASSWORD}
       - turn_service_credentials_user=${TURN_USER}
     volumes:
