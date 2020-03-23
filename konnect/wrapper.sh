@@ -43,10 +43,13 @@ if [ "$AUTOCONFIG" = "yes" ]; then
 			-timeout "$DOCKERIZE_TIMEOUT"
 	fi
 
-	if [ -f "${encryption_secret_key}" ] && [ ! -s "${encryption_secret_key}" ]; then
-		>&2	echo "setup: creating new secret key at ${encryption_secret_key} ..."
-		RANDFILE=/tmp/.rnd openssl rand -out "${encryption_secret_key}" 32
-	fi
+# Create working copy by merging packaged example in /etc/kopano with passed registration conf
+CONFIG_JSON=/tmp/konnectd-identifier-registration.yaml
+yq -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "${identifier_registration_conf:?}" | sponge "$CONFIG_JSON"
+
+if [ "${allow_client_guests:-}" = "yes" ]; then
+	# only modify identifier registration if it does not already contain the right settings
+	if ! grep -q "konnect/guestok" "$CONFIG_JSON"; then
 
 	if [ "${allow_client_guests:-}" = "yes" ]; then
 		# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
@@ -87,12 +90,10 @@ if [ "$AUTOCONFIG" = "yes" ]; then
 		yq -y . $CONFIG_JSON | sponge "${identifier_registration_conf:?}"
 	fi
 
-	if [ "${external_oidc_provider:-}" = "yes" ]; then
-		echo "Patching identifier registration for external OIDC provider"
-		CONFIG_JSON=/etc/kopano/konnectd-identifier-registration.yaml
-		echo "authorities: [{name: ${external_oidc_name:-}, default: yes, iss: ${external_oidc_url:-}, client_id: kopano-meet, client_secret: ${external_oidc_clientsecret:-}, authority_type: oidc, response_type: id_token, scopes: [openid, profile, email]}]" >> $CONFIG_JSON
-		yq -y . $CONFIG_JSON | sponge "${identifier_registration_conf:?}"
-	fi
+if [ "${external_oidc_provider:-}" = "yes" ]; then
+	echo "Patching identifier registration for external OIDC provider"
+	echo "authorities: [{name: ${external_oidc_name:-}, default: yes, iss: ${external_oidc_url:-}, client_id: kopano-meet, client_secret: ${external_oidc_clientsecret:-}, authority_type: oidc, response_type: id_token, scopes: [openid, profile, email]}]" >> /tmp/authority.json
+	yq -s '.[0] + .[1]' $CONFIG_JSON /tmp/authority.json | sponge "$identifier_registration_conf"
 fi
 
 # source additional configuration from Konnect cfg (potentially overwrites env vars)

@@ -30,11 +30,11 @@ tests:
     stdout:
       contains:
         - '"description": "Access Kopano Meet"'
-  identifier registration in /etc/kopano:
-    command: /commander/test-helper.sh && wrapper.sh && yq . $identifier_registration_conf
-    config:
-      env:
-        identifier_registration_conf: /etc/kopano/konnectd-identifier-registration.yaml
+  #identifier registration in /etc/kopano:
+  #  command: /commander/test-helper.sh && wrapper.sh && yq . $identifier_registration_conf
+  #  config:
+  #    env:
+  #      identifier_registration_conf: /etc/kopano/konnectd-identifier-registration.yaml
   no write permissions for certificates:
     command: /commander/test-helper.sh && wrapper.sh
     exit-code: 1
@@ -46,17 +46,17 @@ tests:
       env:
         signing_private_key: /root/sign.key
         DOCKERIZE_TIMEOUT: 1s
-  certificate creation in container:
-    command: /commander/test-helper.sh && wrapper.sh
-    stderr:
-      contains:
-        - "setup: creating new RSA private key at"
-      not-contains:
-        - "Timeout after 360s waiting on dependencies to become available:"
-    config:
-      env:
-        signing_private_key: /tmp/sign.key
-        encryption_secret_key: /tmp/secret.key
+  #certificate creation in container: # currently does not work because of read-only container
+  #  command: /commander/test-helper.sh && wrapper.sh
+  #  stderr:
+  #    contains:
+  #      - "setup: creating new RSA private key at"
+  #    not-contains:
+  #      - "Timeout after 360s waiting on dependencies to become available:"
+  #  config:
+  #    env:
+  #      signing_private_key: /tmp/sign.key
+  #      encryption_secret_key: /tmp/secret.key
 config:
   env:
     PATH: ${PATH}
