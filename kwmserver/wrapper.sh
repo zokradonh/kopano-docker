@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -e
+[ "$DEBUG" ] && set -x
 
 if [ -n "${log_level:-}" ]; then
 	set -- "$@" --log-level="$log_level"
