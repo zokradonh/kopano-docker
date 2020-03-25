@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -e
+[ "$DEBUG" ] && set -x
 
 if [ -n "${log_level:-}" ]; then
 	set -- "$@" --log-level="$log_level"
@@ -37,6 +38,11 @@ if [ -n "${turn_service_credentials:-}" ]; then
 fi
 
 if [ -n "${turn_server_shared_secret:-}" ]; then
+	if [ ! -f "$turn_server_shared_secret" ]; then
+		turn_server_shared_secret_file=/tmp/turn_server_shared_secret_file
+		echo "$turn_server_shared_secret" > "$turn_server_shared_secret_file"
+		turn_server_shared_secret="$turn_server_shared_secret_file"
+	fi
 	set -- "$@" --turn-server-shared-secret="$turn_server_shared_secret"
 fi
 
