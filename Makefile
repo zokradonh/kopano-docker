@@ -415,7 +415,7 @@ test-startup-meet-demo: ## Test if the Meet demo setup starts up
 
 .PHONY: test-startup-individual
 test-startup-individual:
-	docker run -it --rm -e DEBUG=true -v /etc/machine-id:/etc/machine-id -v /var/lib/dbus/machine-id:/var/lib/dbus/machine-id kopano/kopano_konnect
+	docker run -it --rm -e DEBUG=true -v /etc/machine-id:/etc/machine-id -v /etc/machine-id:/var/lib/dbus/machine-id kopano/kopano_konnect
 
 # TODO this needs goss added to travis and dcgoss pulled from my own git repo
 .PHONY: test-goss

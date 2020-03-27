@@ -57,7 +57,7 @@ services:
       - web-net
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanodata2/:/kopano/data
       - kopanosocket2/:/run/kopano
       - kopanossl/:/kopano/ssl

@@ -10,6 +10,11 @@ random_string() {
 	hexdump -n 16 -v -e '/1 "%02X"' /dev/urandom
 }
 
+if [ ! -e /etc/machine-id ]; then
+	echo "This compose file uses /etc/machine-id to identify the system its running on. The file does not seem to exist on your system, please create it."
+	exit 1 
+fi
+
 if [ ! -e ./.env ]; then
 	PRINT_SETUP_SUCCESS=""
 
