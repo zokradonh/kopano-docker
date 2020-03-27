@@ -12,7 +12,7 @@ services:
     command: wrapper.sh
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - web:/.kweb
     networks:
       web-net:
@@ -39,7 +39,7 @@ services:
     command: serve --log-level debug
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id\
+      - /etc/machine-id:/var/lib/dbus/machine-id\
       - kopanolicenses:/etc/kopano/licenses
       - kopanosocket/:/run/kopano
 
@@ -85,7 +85,7 @@ services:
       - web-net
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
@@ -101,7 +101,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
       - kopanowebapp/:/var/lib/kopano-webapp/
@@ -132,7 +132,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
       - zpushstates/:/var/lib/z-push/
@@ -161,7 +161,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanograpi/:/var/lib/kopano-grapi
       - kopanosocket/:/run/kopano
     environment:
@@ -187,7 +187,7 @@ services:
       - kopano_grapi
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
@@ -215,7 +215,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kdavstates/:/var/lib/kopano/kdav
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
@@ -238,7 +238,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
@@ -263,7 +263,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
@@ -287,7 +287,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
@@ -310,7 +310,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
@@ -333,7 +333,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
@@ -355,7 +355,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
@@ -379,7 +379,7 @@ services:
       # to be useful Konnect also needs a running kopano_server, but this dependency cannot be added here since this would be a circular dependency
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
@@ -419,7 +419,7 @@ services:
       - kopano_kwmserver.env
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
     networks:
       - web-net
@@ -445,7 +445,7 @@ services:
       - web
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
     tmpfs:

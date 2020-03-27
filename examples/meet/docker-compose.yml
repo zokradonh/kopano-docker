@@ -22,7 +22,7 @@ services:
       - SETUID
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - web:/.kweb
     networks:
       web-net:
@@ -61,7 +61,7 @@ services:
     command: serve
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id\
+      - /etc/machine-id:/var/lib/dbus/machine-id\
       - kopanolicenses:/etc/kopano/licenses
       - kopanosocket/:/run/kopano
 
@@ -71,7 +71,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
     environment:
       - GRAPI_BACKEND=ldap
@@ -93,7 +93,7 @@ services:
       - kopano_grapi
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
@@ -115,7 +115,7 @@ services:
       - web
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
     environment:
       - allow_client_guests=yes
@@ -161,7 +161,7 @@ services:
       - turn_service_credentials_user=${TURN_USER}
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
     networks:
       - web-net
@@ -182,7 +182,7 @@ services:
       - web
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
 
