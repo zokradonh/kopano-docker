@@ -13,13 +13,6 @@ services:
       - EMAIL=${EMAIL:-off}
       - FQDN=${FQDNCLEANED?err}
     command: wrapper.sh
-    cap_drop:
-      - ALL
-    cap_add:
-      - CHOWN
-      - NET_BIND_SERVICE
-      - SETGID
-      - SETUID
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
