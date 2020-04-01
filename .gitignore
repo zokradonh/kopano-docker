@@ -9,3 +9,5 @@ dive.log
 docker-compose.override.yml
 build.tags
 calendar/kopano-calendar-*/
+*.pem
+apt_auth.conf
