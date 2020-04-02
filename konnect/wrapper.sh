@@ -92,6 +92,7 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 	fi
 fi
 
+yq -y -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "${identifier_registration_conf:?}" | sponge "$CONFIG_JSON"
 if [ "${external_oidc_provider:-}" = "yes" ]; then
 	echo "Patching identifier registration for external OIDC provider"
 	echo "authorities: [{name: ${external_oidc_name:-}, default: yes, iss: ${external_oidc_url:-}, client_id: kopano-meet, client_secret: ${external_oidc_clientsecret:-}, authority_type: oidc, response_type: id_token, scopes: [openid, profile, email]}]" >> /tmp/authority.yml
