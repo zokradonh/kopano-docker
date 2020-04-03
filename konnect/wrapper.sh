@@ -46,11 +46,12 @@ if [ -f "${encryption_secret_key}" ] && [ ! -s "${encryption_secret_key}" ]; the
 	RANDFILE=/tmp/.rnd openssl rand -out "${encryption_secret_key}" 32
 fi
 
-# Create working copy by merging packaged example in /etc/kopano with passed registration conf
 CONFIG_JSON=/tmp/konnectd-identifier-registration.yaml
-yq -y -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "${identifier_registration_conf:?}" | sponge "$CONFIG_JSON"
 
 if [ "${allow_client_guests:-}" = "yes" ]; then
+	# Create working copy by merging packaged example in /etc/kopano with passed registration conf
+	yq -y -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "${identifier_registration_conf:?}" | sponge "$CONFIG_JSON"
+
 	# only modify identifier registration if it does not already contain the right settings
 	if [ ! $(yq .clients[].id /kopano/ssl/konnectd-identifier-registration.yaml | grep -q "kpop-https://${FQDN%/*}/meet/") ]; then
 
@@ -92,8 +93,10 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 	fi
 fi
 
-yq -y -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "${identifier_registration_conf:?}" | sponge "$CONFIG_JSON"
 if [ "${external_oidc_provider:-}" = "yes" ]; then
+	# Create working copy by merging packaged example in /etc/kopano with passed registration conf
+	yq -y -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "${identifier_registration_conf:?}" | sponge "$CONFIG_JSON"
+
 	echo "Patching identifier registration for external OIDC provider"
 	echo "authorities: [{name: ${external_oidc_name:-}, default: yes, iss: ${external_oidc_url:-}, client_id: kopano-meet, client_secret: ${external_oidc_clientsecret:-}, authority_type: oidc, response_type: id_token, scopes: [openid, profile, email]}]" >> /tmp/authority.yml
 	yq -y -s '.[0] + .[1]' $CONFIG_JSON /tmp/authority.yml | sponge "$identifier_registration_conf"
