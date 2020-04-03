@@ -53,7 +53,7 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 	yq -y -s '.[0] + .[1]' /etc/kopano/konnectd-identifier-registration.yaml "${identifier_registration_conf:?}" | sponge "$CONFIG_JSON"
 
 	# only modify identifier registration if it does not already contain the right settings
-	if [ ! $(yq .clients[].id /kopano/ssl/konnectd-identifier-registration.yaml | grep -q "kpop-https://${FQDN%/*}/meet/") ]; then
+	if ! yq .clients[].id /kopano/ssl/konnectd-identifier-registration.yaml | grep -q "kpop-https://${FQDN%/*}/meet/"; then
 
 		# TODO this could be simplified so that ecparam and eckey are only required if there is no jwk-meet.json yet
 		ecparam=${ecparam:-/etc/kopano/ecparam.pem}
