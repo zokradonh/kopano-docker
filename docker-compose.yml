@@ -39,7 +39,7 @@ services:
     command: serve --log-level debug
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /etc/machine-id:/var/lib/dbus/machine-id\
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanolicenses:/etc/kopano/licenses
       - kopanosocket/:/run/kopano
 
