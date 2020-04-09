@@ -1,14 +1,12 @@
-import os
+#!/usr/bin/env python3
 import kcconf
 
 # Component specific configurations
 kcconf.configkopano({
     r"/tmp/kopano/dagent.cfg":
     {
-        'lmtp_listen': "0.0.0.0:2003",
-        'log_file': "-",
-        'log_level': "4",
-        'tmp_path': "/tmp/dagent/"
+        # Certain configuration can be pre-defined at startup:
+        #'lmtp_listen': "0.0.0.0:2003",
     }
 })
 

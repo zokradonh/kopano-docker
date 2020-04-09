@@ -28,7 +28,7 @@ ENV \
     RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
 LABEL maintainer=az@zok.xyz \
-    org.label-schema.name="Kopano core container" \
+    org.label-schema.name="Kopano Groupware Core container" \
     org.label-schema.description="Container for running applications out of Kopano Groupware Core" \
     org.label-schema.url="https://kopano.io" \
     org.label-schema.vcs-ref=$VCS_REF \

@@ -1,16 +1,12 @@
-import os
+#!/usr/bin/env python3
 import kcconf
 
 # Component specific configurations
 kcconf.configkopano({
     r"/tmp/kopano/kapid.cfg":
     {
-        'log_level': "info",
-        'listen': "0.0.0.0:8039",
-        'DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE': "/kopano/ssl/kapid-pubs-secret.key",
-        'plugin_kvs_db_datasource': "/kopano/data/kapi-kvs/kvs.db",
-        'plugin_grapi_socket_path': "/var/run/kopano/grapi"
-
+        # Certain configuration can be pre-defined at startup:
+        #'listen': "0.0.0.0:8039",
     }
 })
 
