@@ -1,4 +1,5 @@
-FROM docker:18.09
+FROM koalaman/shellcheck-alpine:v0.7.1 as shellcheck
+FROM docker:19.03
 ENV \
     COMMANDER_VERSION=1.2.1 \
     COMPOSE_VERSION=1.19.0 \
@@ -15,8 +16,9 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.version=1.0.0 \
     org.label-schema.schema-version="1.0"
 
-RUN apk add --no-cache bash curl coreutils git grep expect make nano npm jq py-pip && \
-    apk add --no-cache shellcheck --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+RUN apk add --no-cache bash curl coreutils git grep expect make nano npm jq py-pip
+#RUN apk add --no-cache shellcheck --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+COPY --from=shellcheck /bin/shellcheck /bin/shellcheck
 
 RUN curl -fSL "https://github.com/genuinetools/reg/releases/download/v$REG_VERSION/reg-linux-amd64" -o "/usr/local/bin/reg" && \
     curl -fSL "https://github.com/hadolint/hadolint/releases/download/v$HADOLINT_VERSION/hadolint-$(uname -s)-$(uname -m)" -o /usr/local/bin/hadolint && \
