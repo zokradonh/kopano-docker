@@ -1,7 +1,6 @@
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_php
 
-ARG VCS_REF
 ARG ADDITIONAL_KOPANO_PACKAGES=""
 ARG ADDITIONAL_KOPANO_WEBAPP_PLUGINS=""
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
@@ -34,7 +33,6 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano WebApp container" \
     org.label-schema.description="Container for running Kopano WebApp" \
     org.label-schema.url="https://kopano.io" \
-    org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
     org.label-schema.version=$KOPANO_WEBAPP_VERSION \
     org.label-schema.schema-version="1.0"
@@ -84,3 +82,6 @@ CMD [ "/kopano/start.sh" ]
 
 HEALTHCHECK --interval=1m --timeout=10s \
     CMD goss -g /goss/goss.yaml validate
+
+ARG VCS_REF
+LABEL org.label-schema.vcs-ref=$VCS_REF

@@ -1,6 +1,5 @@
 FROM debian:buster
 
-ARG VCS_REF
 ARG ADDITIONAL_KOPANO_PACKAGES=""
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
@@ -21,7 +20,6 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano base container" \
     org.label-schema.description="Base image for containers running the Kopano groupware stack" \
     org.label-schema.url="https://kopano.io" \
-    org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
     org.label-schema.version=$BASE_VERSION \
     org.label-schema.schema-version="1.0"
@@ -89,3 +87,6 @@ ONBUILD RUN \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
         dl_and_package_community "core" "$DOWNLOAD_DISTRIBUTION" "$DOWNLOAD_CHANNEL" "$DOWNLOAD_BRANCH"; \
     fi
+
+ARG VCS_REF
+LABEL org.label-schema.vcs-ref=$VCS_REF
