@@ -1,7 +1,5 @@
 FROM docker:18.09
 
-ARG VCS_REF
-
 ENV \
     DOCKERIZE_VERSION=v0.6.1 \
     GOSS_VERSION=v0.3.7 \
@@ -11,7 +9,6 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano scheduler container" \
     org.label-schema.description="Helper container for running tasks within the Kopano stack" \
     org.label-schema.url="https://kopano.io" \
-    org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
     org.label-schema.version=$SUPERCRONIC_VERSION \
     org.label-schema.schema-version="1.0"
@@ -43,3 +40,6 @@ CMD ["start.sh"]
 # TODO interval does not only define how often the healtcheck is run, but also how long to wait for the first check after startup
 HEALTHCHECK --interval=60m --timeout=15s \
     CMD goss -g /goss/goss.yaml validate
+
+ARG VCS_REF
+LABEL org.label-schema.vcs-ref=$VCS_REF
