@@ -142,6 +142,11 @@ if [ "${insecure:-}" = "yes" ]; then
 	set -- "$@" "--insecure"
 fi
 
+if [ -n "${signed_out_uri:-}" ]; then
+	echo "Entrypoint: Setting signed-out-uri to $signed_out_uri"
+	set -- "$@" --signed-out-uri="$signed_out_uri"
+fi
+
 # Support additional args provided via environment.
 if [ -n "${ARGS:-}" ]; then
 	set -- "$@" "${ARGS}"
