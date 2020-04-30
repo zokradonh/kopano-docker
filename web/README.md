@@ -22,21 +22,27 @@ Kweb in the Web container can easily be extended to serve static content. By def
 By default this container will use automatic tls certificates provided by Let's Encrypt. This can be influenced through the following environment variables:
 
 ```
-# 1. Automatic HTTPS from letsencrypt
+# 1. Automatic certificate from Let's Encrypt
 TLS_MODE=tls_auto
 EMAIL=example@example.com
 
 # 2. Custom certificate and key
-# TLS_MODE=tls_custom
-# TLS_CERT=/src/ssl/cert.pem
-# TLS_KEY=/src/ssl/key.pem
+TLS_MODE=tls_custom
+TLS_CERT=/src/ssl/cert.pem
+TLS_KEY=/src/ssl/key.pem
 
 # 3. Self signed certificate (FOR DEBUGGING)
-# TLS_MODE=tls_selfsigned
+TLS_MODE=tls_selfsigned
 
 # 4. Disable TLS entirely
-# TLS_MODE=tls_off
+TLS_MODE=tls_off
 ```
+
+## Using with with a reverse proxy in front
+
+In case there is already an ssl terminating proxy in the network this container can be switched to plain http by either setting `EMAIL=off` or `TLS_MODE=tls_off`. In addition to this the default docker-compose.yml has a tweak to [route all traffic for the configured domain through this container](https://github.com/zokradonh/kopano-docker/blob/3572fc74e7054c9774985e69aeed745f9e5d1a4f/docker-compose.yml#L19-L20). This route needs to be changed when this container is only offering http access by either putting another domain in `FQDNCLEANED` or removing this section alltogether.
+
+When using an external reverse proxy it is recommended to proxy connections to port 2015 of this container. Just make sure that connections to `/api/kwm/v2/rtm/websocket` are properly uupgraded to websocket connections.
 
 ## Information needed when not running your own reverse proxy
 
