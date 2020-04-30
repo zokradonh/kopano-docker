@@ -12,9 +12,11 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 ENV \
+    AUTOCONFIG=yes \
     CODE_VERSION="${CODE_VERSION}" \
     DEFAULTREDIRECT="/webapp" \
-    KONNECTPATH=kopanoid
+    KONNECTPATH=kopanoid \
+    TLS_MODE=tls_auto
 # FIXME Workaround to not break backwards compatibility,
 # since an underscore is not a valid char in a hostname.
 # This causes issues when using kweb in kubernetes.
@@ -37,8 +39,10 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-COPY wrapper.sh /usr/local/bin
-COPY kweb.cfg /etc/kweb.cfg
+COPY wrapper.sh /usr/local/bin/
+COPY kweb.cfg tls_* /etc/
+
+ENTRYPOINT ["wrapper.sh"]
 
 ARG VCS_REF
 LABEL org.label-schema.vcs-ref=$VCS_REF

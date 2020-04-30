@@ -9,7 +9,7 @@ services:
       - DEFAULTREDIRECT=${DEFAULTREDIRECT:-/webapp}
       - EMAIL=${EMAIL:-off}
       - FQDN=${FQDNCLEANED?err}
-    command: wrapper.sh
+      - TLS_MODE=tls_auto
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
