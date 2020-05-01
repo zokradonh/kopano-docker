@@ -103,8 +103,14 @@ if [ "${external_oidc_provider:-}" = "yes" ]; then
 
 	echo "Checking if external OIDC provider is reachable"
 	dockerize \
-        -wait "$external_oidc_url"/.well-known/openid-configuration \
-        -timeout "$DOCKERIZE_TIMEOUT"
+		-wait "$external_oidc_url"/.well-known/openid-configuration \
+		-timeout "$DOCKERIZE_TIMEOUT"
+
+	reported_issuer=$(curl -s "$external_oidc_url/.well-known/openid-configuration" | jq -r .issuer)
+	if [ -n "${external_oidc_url##$reported_issuer}" ] ;then
+		echo "Error: The Issuer does not match the configured url"
+		exit 1
+	fi
 fi
 
 # source additional configuration from Konnect cfg (potentially overwrites env vars)
