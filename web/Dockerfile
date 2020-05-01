@@ -39,8 +39,8 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-COPY wrapper.sh /usr/local/bin/
 COPY kweb.cfg tls_* /etc/
+COPY wrapper.sh /usr/local/bin/
 
 ENTRYPOINT ["wrapper.sh"]
 
