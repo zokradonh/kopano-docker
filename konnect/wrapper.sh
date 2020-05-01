@@ -100,6 +100,11 @@ if [ "${external_oidc_provider:-}" = "yes" ]; then
 	echo "Patching identifier registration for external OIDC provider"
 	echo "authorities: [{name: ${external_oidc_name:-}, default: yes, iss: ${external_oidc_url:-}, client_id: ${external_oidc_clientid:-}, client_secret: ${external_oidc_clientsecret:-}, authority_type: oidc, response_type: id_token, scopes: [openid, profile, email], trusted: yes, end_session_enabled: true}]" >> /tmp/authority.yml
 	yq -y -s '.[0] + .[1]' $CONFIG_JSON /tmp/authority.yml | sponge "$identifier_registration_conf"
+
+	echo "Checking if external OIDC provider is reachable"
+	dockerize \
+        -wait "$external_oidc_url"/.well-known/openid-configuration \
+        -timeout "$DOCKERIZE_TIMEOUT"
 fi
 
 # source additional configuration from Konnect cfg (potentially overwrites env vars)
