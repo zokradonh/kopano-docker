@@ -2,6 +2,12 @@
 
 set -e
 
+# allow helper commands given by "docker-compose run"
+if [ $# -gt 0 ]; then
+	exec "$@"
+	exit
+fi
+
 # services need to be aware of the machine-id
 if [ "$AUTOCONFIG" = "yes" ]; then
 	dockerize \
@@ -9,4 +15,4 @@ if [ "$AUTOCONFIG" = "yes" ]; then
 		-wait file:///var/lib/dbus/machine-id
 fi
 
-exec kwebd caddy -conf /etc/kweb.cfg -agree
+exec "$EXE" caddy -conf /etc/kweb.cfg -agree
