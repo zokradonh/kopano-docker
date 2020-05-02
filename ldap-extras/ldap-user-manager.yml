@@ -1,0 +1,28 @@
+version: "3.5"
+
+services:
+  ldap:
+    environment:
+      - LDAP_TLS=false
+      - LDAP_TLS_VERIFY_CLIENT=try
+  ldap-admin:
+    image: wheelybird/ldap-user-manager:ldap-debug
+    ports:
+      - 30080:80
+    environment:
+      - LDAP_URI=ldap://ldap:389
+      - LDAP_BASE_DN=${LDAP_BASE_DN}
+      - LDAP_REQUIRE_STARTTLS=FALSE
+      - LDAP_TLS_VERIFY_CLIENT=never
+      - LDAP_ADMINS_GROUP=admins
+      - LDAP_ADMIN_BIND_DN=cn=admin,${LDAP_BASE_DN}
+      - LDAP_ADMIN_BIND_PWD=${LDAP_ADMIN_PASSWORD}
+      - EMAIL_DOMAIN=${LDAP_DOMAIN}
+      - NO_HTTPS=TRUE
+      - LDAP_DEBUG=TRUE
+    depends_on:
+      - ldap
+      - web
+    networks:
+      - web-net
+      - ldap-net
