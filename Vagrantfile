@@ -7,21 +7,25 @@ Vagrant.configure(2) do |config|
     print "  Use 'vagrant plugin install vagrant-docker-compose' to install.\n"
   end
 
-  compose_env = Hash.new
-  if File.file?(".env")
-    array = File.read(".env").split("\n")
-    array.each do |e|
-      unless e.start_with?("#")
-        var = e.split("=")
-        compose_env[var[0]] = var[1]
-      end
-    end
+  config.vm.box = "hashicorp/bionic64"
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 4096
+    v.cpus = 2
   end
 
+  config.vm.network "private_network", ip: "10.16.73.20"
+
   config.vm.provision :docker
-  config.vm.provision :docker_compose,
-    project_name: "docker-vagrant",
-    yml: "/vagrant/docker-compose.yml",
-    env: compose_env,
-    run: "always"
+  config.vm.provision :docker_compose
+
+  config.vm.provision "app",
+    type: "shell",
+    keep_color: true,
+    privileged: false,
+    run: "always",
+    inline: <<-SCRIPT
+      cd /vagrant
+      docker-compose up --detach
+    SCRIPT
 end
