@@ -20,6 +20,7 @@ services:
       - EMAIL_DOMAIN=${LDAP_DOMAIN}
       - NO_HTTPS=TRUE
       - LDAP_DEBUG=TRUE
+      - SESSION_DEBUG=TRUE
     depends_on:
       - ldap
       - web
