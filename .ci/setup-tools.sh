@@ -9,6 +9,7 @@ GOSS_VERSION=0.3.7
 HADOLINT_VERSION=1.17.1
 REG_VERSION=0.16.1
 TRIVY_VERSION=0.1.1
+SHELLCHECK_VERSION=0.7.1
 
 progname=$(basename "$0")
 tempdir=$(mktemp -d "/tmp/$progname.XXXXXX")
@@ -78,5 +79,11 @@ if ! command -v npm > /dev/null; then
 fi
 
 if ! command -v eclint > /dev/null; then
-	npm install -g eclint
+	sudo npm install eclint -g
+fi
+
+if ! command -v shellcheck > /dev/null; then
+	wget "https://github.com/koalaman/shellcheck/releases/download/v$SHELLCHECK_VERSION/shellcheck-v$SHELLCHECK_VERSION.linux.x86_64.tar.xz"
+	tar -xf shellcheck-v*.linux.x86_64.tar.xz
+	sudo mv shellcheck-v*/shellcheck /usr/local/bin/
 fi
