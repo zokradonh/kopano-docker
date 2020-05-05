@@ -84,7 +84,7 @@ if [ "${allow_client_guests:-}" = "yes" ]; then
 		fi
 
 		echo "Entrypoint: Patching identifier registration for use of the Meet guest mode"
-		/usr/local/bin/konnectd utils jwk-from-pem --use sig "$eckey" > /tmp/jwk-meet.json
+		"$EXE" utils jwk-from-pem --use sig "$eckey" > /tmp/jwk-meet.json
 		#yq -y ".clients += [{\"id\": \"grapi-explorer.js\", \"name\": \"Grapi Explorer\", \"application_type\": \"web\", \"trusted\": true, \"insecure\": true, \"redirect_uris\": [\"http://$FQDNCLEANED:3000/\"]}]" $CONFIG_JSON | sponge $CONFIG_JSON
 		yq -y ".clients += [{\"id\": \"kpop-https://${FQDN%/*}/meet/\", \"name\": \"Kopano Meet\", \"application_type\": \"web\", \"trusted\": true, \"redirect_uris\": [\"https://${FQDN%/*}/meet/\"], \"trusted_scopes\": [\"konnect/guestok\", \"kopano/kwm\"], \"jwks\": {\"keys\": [{\"kty\": $(jq .kty /tmp/jwk-meet.json), \"use\": $(jq .use /tmp/jwk-meet.json), \"crv\": $(jq .crv /tmp/jwk-meet.json), \"d\": $(jq .d /tmp/jwk-meet.json), \"kid\": $(jq .kid /tmp/jwk-meet.json), \"x\": $(jq .x /tmp/jwk-meet.json), \"y\": $(jq .y /tmp/jwk-meet.json)}]},\"request_object_signing_alg\": \"ES256\"}]" $CONFIG_JSON >> /tmp/guest-mode.yml
 		yq -y -s '.[0] + .[1]' $CONFIG_JSON /tmp/guest-mode.yml | sponge "$identifier_registration_conf"
@@ -174,7 +174,7 @@ dockerize \
 	-wait file:///etc/machine-id \
 	-wait file:///var/lib/dbus/machine-id \
 	-timeout "$DOCKERIZE_TIMEOUT"
-exec konnectd serve \
+exec "$EXE" serve \
 	--signing-private-key="$signing_private_key" \
 	--encryption-secret="$encryption_secret_key" \
 	--identifier-registration-conf "${identifier_registration_conf:?}" \
