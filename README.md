@@ -164,7 +164,8 @@ Steps to start kopano-docker in Vagrant:
 # run setup.sh
 $ ./setup.sh
 # provision virtual machine
-$ vagrant up
+$ vagrant up 
+# alternatively "vagrant up --provider hyperv" when running on Windows
 # in case you want to connect into the machine
 $ vagrant ssh
 ```
