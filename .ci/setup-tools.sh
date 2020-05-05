@@ -79,7 +79,7 @@ if ! command -v npm > /dev/null; then
 fi
 
 if ! command -v eclint > /dev/null; then
-	sudo npm install eclint -g
+	npm install eclint -g
 fi
 
 if ! command -v shellcheck > /dev/null; then
