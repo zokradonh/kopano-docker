@@ -170,7 +170,7 @@ $ vagrant up
 $ vagrant ssh
 ```
 
-After the machine has started it will be reachable from the local system through the IP `10.16.73.20`, please make sure that your chosen hostname resolves to this IP. The project files are mounted to `/vagrant` in the machine.
+After the machine has started it will be reachable from the local system through the IP `10.16.73.20`, please make sure that your chosen hostname resolves to this IP. The project files are mounted to `/vagrant` in the machine. To interact with the containers just change into this directory first.
 
 ## Third party docker images
 

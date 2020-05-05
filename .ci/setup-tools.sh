@@ -87,3 +87,7 @@ if ! command -v shellcheck > /dev/null; then
 	tar -xf shellcheck-v*.linux.x86_64.tar.xz
 	sudo mv shellcheck-v*/shellcheck /usr/local/bin/
 fi
+
+if ! command -v jq > /dev/null; then
+	sudo apt install -y jq
+fi
