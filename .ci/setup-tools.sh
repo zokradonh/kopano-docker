@@ -3,12 +3,13 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-COMMANDER_VERSION=1.2.1
-DOCKER_COMPOSE_VERSION=1.23.2
-GOSS_VERSION=0.3.7
-HADOLINT_VERSION=1.17.1
+COMMANDER_VERSION=2.0.0
+DOCKER_COMPOSE_VERSION=1.25.5
+GOSS_VERSION=0.3.11
+HADOLINT_VERSION=1.17.6
 REG_VERSION=0.16.1
-TRIVY_VERSION=0.1.1
+SHELLCHECK_VERSION=0.7.1
+TRIVY_VERSION=0.6.0
 
 progname=$(basename "$0")
 tempdir=$(mktemp -d "/tmp/$progname.XXXXXX")
@@ -78,5 +79,15 @@ if ! command -v npm > /dev/null; then
 fi
 
 if ! command -v eclint > /dev/null; then
-	npm install -g eclint
+	npm install eclint -g
+fi
+
+if ! command -v shellcheck > /dev/null; then
+	wget "https://github.com/koalaman/shellcheck/releases/download/v$SHELLCHECK_VERSION/shellcheck-v$SHELLCHECK_VERSION.linux.x86_64.tar.xz"
+	tar -xf shellcheck-v*.linux.x86_64.tar.xz
+	sudo mv shellcheck-v*/shellcheck /usr/local/bin/
+fi
+
+if ! command -v jq > /dev/null; then
+	sudo apt install -y jq
 fi

@@ -11,3 +11,4 @@ build.tags
 calendar/kopano-calendar-*/
 *.pem
 apt_auth.conf
+.vagrant
