@@ -7,7 +7,7 @@ Vagrant.configure(2) do |config|
     print "  Use 'vagrant plugin install vagrant-docker-compose' to install.\n"
   end
 
-  config.vm.box = "geerlingguy/ubuntu1804"
+  config.vm.box = "hashicorp/bionic64"
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 4096
