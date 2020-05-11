@@ -8,6 +8,8 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
+export CADDYPATH="$KOPANO_KWEB_ASSETS_PATH"
+
 # services need to be aware of the machine-id
 if [ "$AUTOCONFIG" = "yes" ]; then
 	dockerize \
