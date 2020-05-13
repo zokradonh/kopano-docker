@@ -22,17 +22,18 @@ ENV \
 # This causes issues when using kweb in kubernetes.
 # Related issue https://github.com/docker/compose/issues/229
 ENV \
-    KWEBD_DNS_KONNECT="kopano_konnect" \
-    KWEBD_DNS_MEET="kopano_meet" \
-    KWEBD_DNS_KAPI="kopano_kapi" \
-    KWEBD_DNS_PLAYGROUND="kopano_playground" \
-    KWEBD_DNS_KWMSERVER="kopano_kwmserver" \
-    KWEBD_DNS_WEBAPP="kopano_webapp" \
-    KWEBD_DNS_ZPUSH="kopano_zpush" \
-    KWEBD_DNS_ICAL="kopano_ical" \
-    KWEBD_DNS_KDAV="kopano_kdav" \
     KWEBD_DNS_GRAPI="kopano_grapi" \
-    KWEBD_DNS_ICAL="kopano_ical"
+    KWEBD_DNS_ICAL="kopano_ical" \
+    KWEBD_DNS_ICAL="kopano_ical" \
+    KWEBD_DNS_KAPI="kopano_kapi" \
+    KWEBD_DNS_KAPPS="kopano_kapps" \
+    KWEBD_DNS_KDAV="kopano_kdav" \
+    KWEBD_DNS_KONNECT="kopano_konnect" \
+    KWEBD_DNS_KWMSERVER="kopano_kwmserver" \
+    KWEBD_DNS_MEET="kopano_meet" \
+    KWEBD_DNS_PLAYGROUND="kopano_playground" \
+    KWEBD_DNS_WEBAPP="kopano_webapp" \
+    KWEBD_DNS_ZPUSH="kopano_zpush"
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \

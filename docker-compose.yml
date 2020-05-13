@@ -173,7 +173,7 @@ services:
       - kopanograpi/:/var/lib/kopano-grapi
       - kopanosocket/:/run/kopano
     environment:
-      - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=no
+      - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=yes # needs to be set to yes for grapi versions prior to 10.2 (?) to use calendar
       - KCCONF_GRAPI_INSECURE=${INSECURE}
       - KCCONF_GRAPI_PERSISTENCY_PATH=/var/lib/kopano-grapi
       - SERVICE_TO_START=grapi
@@ -214,6 +214,26 @@ services:
       - kopano_kapi.env
     networks:
       - kopano-net
+      - web-net
+    tmpfs:
+      - /tmp
+
+  kopano_kapps:
+    image: ${docker_repo:-zokradonh}/kopano_kapps:${CORE_VERSION:-latest}
+    read_only: true
+    restart: unless-stopped
+    environment:
+      - SERVICE_TO_START=kapps
+    env_file:
+      - kopano_kapps.env
+    depends_on:
+      - kopano_kapi
+      - kopano_konnect
+      - web
+    volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
+    networks:
       - web-net
     tmpfs:
       - /tmp
@@ -458,7 +478,6 @@ services:
       - KCCONF_MEET_guests_enabled=true
       - KCCONF_MEET_oidc_useImplicitFlow=true # workaround for guest login with meet https://stash.kopano.io/projects/KWM/repos/meet/pull-requests/102/overview
       - KCCONF_MEET_minimumVersion=20200121 # can be used force updates of Meet
-      - SERVICE_TO_START=meet
     env_file:
       - kopano_meet.env
     depends_on:

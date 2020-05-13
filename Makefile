@@ -10,6 +10,7 @@ docker_repo := zokradonh
 
 base_download_version := $(shell ./version.sh core)
 core_download_version := $(shell ./version.sh core)
+kapps_download_version := $(shell ./version.sh kapps)
 meet_download_version := $(shell ./version.sh meet)
 webapp_download_version := $(shell ./version.sh webapp)
 zpush_download_version := $(shell ./version.sh zpush)
@@ -127,6 +128,9 @@ build-core-dagent:
 
 build-helper:
 	component=build make build-simple
+
+build-kapps:
+	component=kapps make build
 
 build-konnect:
 	component=konnect make build-simple
