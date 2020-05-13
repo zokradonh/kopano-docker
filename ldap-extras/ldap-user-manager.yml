@@ -6,7 +6,7 @@ services:
       - LDAP_TLS=false
       - LDAP_TLS_VERIFY_CLIENT=try
   ldap-admin:
-    image: wheelybird/ldap-user-manager:ldap-debug
+    image: wheelybird/ldap-user-manager:latest
     ports:
       - 30080:80
     environment:
