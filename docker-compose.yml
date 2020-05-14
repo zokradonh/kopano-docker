@@ -173,6 +173,7 @@ services:
       - kopanograpi/:/var/lib/kopano-grapi
       - kopanosocket/:/run/kopano
     environment:
+      # TODO switch to no once 10.3 is available
       - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=yes # needs to be set to yes for grapi versions prior to 10.3 to use calendar
       - KCCONF_GRAPI_INSECURE=${INSECURE}
       - KCCONF_GRAPI_PERSISTENCY_PATH=/var/lib/kopano-grapi
