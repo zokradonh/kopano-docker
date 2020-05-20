@@ -9,10 +9,10 @@ services:
       - DEFAULTREDIRECT=${DEFAULTREDIRECT:-/webapp}
       - EMAIL=${EMAIL:-off}
       - FQDN=${FQDNCLEANED?err}
-    command: wrapper.sh
+      - TLS_MODE=tls_auto
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - web:/.kweb
     networks:
       web-net:
@@ -39,7 +39,7 @@ services:
     command: serve --log-level debug
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id\
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanolicenses:/etc/kopano/licenses
       - kopanosocket/:/run/kopano
 
@@ -60,21 +60,29 @@ services:
       - KCCONF_LDAP_LDAP_BIND_USER=${LDAP_BIND_DN}
       - KCCONF_LDAP_LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE}
       - KCCONF_LDAP_LDAP_URI=${LDAP_SERVER}
+      - KCCONF_SERVER_ATTACHMENT_PATH=/kopano/data/attachments
       - KCCONF_SERVER_COREDUMP_ENABLED=no
       - KCCONF_SERVER_ENABLE_SSO=yes
       - KCCONF_SERVER_KCOIDC_INSECURE_SKIP_VERIFY=${INSECURE}
       - KCCONF_SERVER_KCOIDC_ISSUER_IDENTIFIER=https://${FQDN}
+      - KCCONF_SERVER_LOG_LEVEL=3
       - KCCONF_SERVER_MYSQL_DATABASE=${MYSQL_DATABASE}
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
       - KCCONF_SERVER_MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - KCCONF_SERVER_MYSQL_PORT=3306
       - KCCONF_SERVER_MYSQL_USER=${MYSQL_USER}
       - KCCONF_SERVER_PROXY_HEADER=*  # delete line if webapp is not behind reverse proxy
+      - KCCONF_SERVER_SERVER_LISTEN_TLS=0.0.0.0:237
+      - KCCONF_SERVER_SERVER_LISTEN=0.0.0.0:236
       - KCCONF_SERVER_SERVER_NAME=Kopano
       - KCCONF_SERVER_SERVER_SSL_CA_FILE=/kopano/ssl/ca.pem
       - KCCONF_SERVER_SERVER_SSL_KEY_FILE=/kopano/ssl/kopano_server.pem
+      - KCCONF_SERVER_SOFTDELETE_LIFETIME=0
       - KCCONF_SERVER_SSLKEYS_PATH=/kopano/ssl/clients
+      - KCCONF_SERVER_SYNC_GAB_REALTIME=no
       - KCCONF_SERVER_SYSTEM_EMAIL_ADDRESS=${POSTMASTER_ADDRESS}
+      - KCCONF_SERVER_USER_PLUGIN_CONFIG=/tmp/kopano/ldap.cfg
+      - KCCONF_SERVER_USER_PLUGIN=ldap
       - KCUNCOMMENT_LDAP_1=${KCUNCOMMENT_LDAP_1}
       - SERVICE_TO_START=server
       - TZ=${TZ}
@@ -85,7 +93,7 @@ services:
       - web-net
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
@@ -101,7 +109,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
       - kopanowebapp/:/var/lib/kopano-webapp/
@@ -109,6 +117,7 @@ services:
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
       - KCCONF_WEBAPP_OIDC_CLIENT_ID=webapp
       - KCCONF_WEBAPP_OIDC_ISS=https://${FQDN}
+      - KCCONF_WEBAPP_CLIENT_TIMEOUT=0 # needed to set to 0 to work around an oidc bug KW-3398
       - TZ=${TZ}
     env_file:
       - kopano_webapp.env
@@ -131,7 +140,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
       - zpushstates/:/var/lib/z-push/
@@ -160,7 +169,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanograpi/:/var/lib/kopano-grapi
       - kopanosocket/:/run/kopano
     environment:
@@ -186,14 +195,19 @@ services:
       - kopano_grapi
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE=/kopano/ssl/kapid-pubs-secret.key
       - KCCONF_KAPID_INSECURE=${INSECURE}
+      - KCCONF_KAPID_LISTEN=0.0.0.0:8039
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
+      - KCCONF_KAPID_LOG_LEVEL=info
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
+      - KCCONF_KAPID_PLUGIN_GRAPI_SOCKET_PATH=/var/run/kopano/grapi
+      - KCCONF_KAPID_PLUGIN_KVS_DB_DATASOURCE=/kopano/data/kapi-kvs/kvs.db
       - SERVICE_TO_START=kapi
       - TZ=${TZ}
     env_file:
@@ -214,7 +228,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kdavstates/:/var/lib/kopano/kdav
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
@@ -237,12 +251,14 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - KCCONF_DAGENT_LMTP_LISTEN=0.0.0.0:2003
       - KCCONF_DAGENT_LOG_LEVEL=3
       - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kopano_dagent.pem
+      - KCCONF_DAGENT_TMP_PATH=/tmp/dagent/
       - SERVICE_TO_START=dagent
       - TZ=${TZ}
     env_file:
@@ -262,13 +278,14 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
       - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_SMTP_SERVER=mail
       - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kopano_spooler.pem
+      - KCCONF_SPOOLER_TMP_PATH=/tmp/spooler/
       - SERVICE_TO_START=spooler
       - TZ=${TZ}
     env_file:
@@ -286,12 +303,14 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - KCCONF_GATEWAY_IMAP_LISTEN=0.0.0.0:143
       - KCCONF_GATEWAY_LOG_LEVEL=3
       - KCCONF_GATEWAY_SERVER_SOCKET=http://kopano_server:236/
+      - KCCONF_GATEWAY_TMP_PATH=/tmp/gateway/
       - SERVICE_TO_START=gateway
       - TZ=${TZ}
     env_file:
@@ -309,10 +328,12 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - KCCONF_ICAL_ICAL_LISTEN=0.0.0.0:8080
+      - KCCONF_ICAL_LOG_LEVEL=3
       - KCCONF_ICAL_SERVER_SOCKET=http://kopano_server:236/
       - SERVICE_TO_START=ical
       - TZ=${TZ}
@@ -332,11 +353,12 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
       - SERVICE_TO_START=monitor
+      - KCCONF_MONITOR_LOG_LEVEL=3
       - TZ=${TZ}
     env_file:
       - kopano_monitor.env
@@ -354,12 +376,14 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
       - SERVICE_TO_START=search
+      - KCCONF_SEARCH_LOG_LEVEL=3
+      - KCCONF_SEARCH_INDEX_PATH=/kopano/data/search/
       - TZ=${TZ}
     env_file:
       - kopano_search.env
@@ -378,7 +402,7 @@ services:
       # to be useful Konnect also needs a running kopano_server, but this dependency cannot be added here since this would be a circular dependency
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
@@ -413,11 +437,12 @@ services:
       - INSECURE=${INSECURE}
       - oidc_issuer_identifier=https://${FQDN}
       - public_guest_access_regexp=^group/public/.*
+      - registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
     env_file:
       - kopano_kwmserver.env
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
     networks:
       - web-net
@@ -443,7 +468,7 @@ services:
       - web
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
     tmpfs:

@@ -35,6 +35,11 @@ docker_tag_search() {
 	echo "$results" | xargs -n1 | sort --version-sort -ru | xargs
 }
 
+if [ ! -e /etc/machine-id ]; then
+	echo "This compose file uses /etc/machine-id to identify the system its running on. The file does not seem to exist on your system, please create it."
+	exit 1 
+fi
+
 echo "Creating individual env files for containers (if they do not exist already)"
 for dockerenv in ldap password-self-service mail db kopano_ssl kopano_server kopano_webapp kopano_zpush kopano_grapi kopano_kapi kopano_dagent kopano_spooler kopano_gateway kopano_ical kopano_monitor kopano_scheduler kopano_search kopano_konnect kopano_kwmserver kopano_meet; do
 	touch ./"$dockerenv".env

@@ -13,16 +13,9 @@ services:
       - EMAIL=${EMAIL:-off}
       - FQDN=${FQDNCLEANED?err}
     command: wrapper.sh
-    cap_drop:
-      - ALL
-    cap_add:
-      - CHOWN
-      - NET_BIND_SERVICE
-      - SETGID
-      - SETUID
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - web:/.kweb
     networks:
       web-net:
@@ -61,7 +54,7 @@ services:
     command: serve
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id\
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanolicenses:/etc/kopano/licenses
       - kopanosocket/:/run/kopano
 
@@ -71,7 +64,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_grapi
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
     environment:
       - GRAPI_BACKEND=ldap
@@ -93,14 +86,19 @@ services:
       - kopano_grapi
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanodata/:/kopano/data
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
     environment:
+      - DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE=/kopano/ssl/kapid-pubs-secret.key
       - KCCONF_KAPID_INSECURE=${INSECURE}
+      - KCCONF_KAPID_LISTEN=0.0.0.0:8039
       - KCCONF_KAPID_LOG_LEVEL=DEBUG
+      - KCCONF_KAPID_LOG_LEVEL=info
       - KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER=https://${FQDN}
+      - KCCONF_KAPID_PLUGIN_GRAPI_SOCKET_PATH=/var/run/kopano/grapi
+      - KCCONF_KAPID_PLUGIN_KVS_DB_DATASOURCE=/kopano/data/kapi-kvs/kvs.db
       - SERVICE_TO_START=kapi
       - TZ=${TZ}
     networks:
@@ -115,7 +113,7 @@ services:
       - web
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
     environment:
       - allow_client_guests=yes
@@ -156,11 +154,12 @@ services:
       - INSECURE=${INSECURE}
       - oidc_issuer_identifier=https://${FQDN}
       - public_guest_access_regexp=^group/public/.*
+      - registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
       - turn_service_credentials_password=${TURN_PASSWORD}
       - turn_service_credentials_user=${TURN_USER}
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
     networks:
       - web-net
@@ -181,7 +180,7 @@ services:
       - web
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
     networks:
       - web-net
 

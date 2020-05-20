@@ -10,3 +10,6 @@ calendar/kopano-calendar-*/
 data/*
 dive.log
 docker-compose.override.yml
+*.pem
+apt_auth.conf
+.vagrant

@@ -33,3 +33,6 @@ indent_style = space
 
 [LICENSE]
 indent_style = space
+
+[Vagrantfile]
+indent_style = space

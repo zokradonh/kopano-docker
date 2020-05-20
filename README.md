@@ -158,6 +158,24 @@ Yes, that is certainly a possibility. Within the `examples/` directory you can f
   - Same command but getting volumes from the existing `kopano_server` container: `docker run --rm -it --volumes-from kopano_server -v /root/kopano-backup:/kopano/path zokradonh/kopano_utils kopano-backup -h`
 - Get a shell in a new container to (for example) run `kopano-migration-pst`: `docker run --rm -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils` (to directly run kopano-migration-pst just append it to the command)
 
+### Try this project without installing Docker locally
+
+This project includes a configuration file for [Vagrant](https://www.vagrantup.com/) to easily try kopano-docker locally. All that is required is Vagrant itself and Virtualbox.
+
+Steps to start kopano-docker in Vagrant:
+
+```bash
+# run setup.sh
+$ ./setup.sh
+# provision virtual machine
+$ vagrant up
+# alternatively "vagrant up --provider hyperv" when running on Windows
+# in case you want to connect into the machine
+$ vagrant ssh
+```
+
+After the machine has started it will be reachable from the local system through the IP `10.16.73.20`, please make sure that your chosen hostname resolves to this IP. The project files are mounted to `/vagrant` in the machine. To interact with the containers just change into this directory first.
+
 ## Third party docker images
 
 The example `docker-compose.yml` uses the following components for the MTA (mail delivery, including anti-spam & anti-virus) and openLDAP. Please consult their documentation for further configuration advice.

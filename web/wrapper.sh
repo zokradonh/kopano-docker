@@ -2,9 +2,19 @@
 
 set -e
 
-# services need to be aware of the machine-id
-dockerize \
-	-wait file:///etc/machine-id \
-	-wait file:///var/lib/dbus/machine-id
+# allow helper commands given by "docker-compose run"
+if [ $# -gt 0 ]; then
+	exec "$@"
+	exit
+fi
 
-exec kwebd caddy -conf /etc/kweb.cfg -agree
+export CADDYPATH="$KOPANO_KWEB_ASSETS_PATH"
+
+# services need to be aware of the machine-id
+if [ "$AUTOCONFIG" = "yes" ]; then
+	dockerize \
+		-wait file:///etc/machine-id \
+		-wait file:///var/lib/dbus/machine-id
+fi
+
+exec "$EXE" caddy -conf /etc/kweb.cfg -agree

@@ -47,7 +47,7 @@ help:
 all: build-all
 
 build-all:
-	make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder|build-webapp-demo' | uniq | sed s/://g | xargs)
+	make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder|build-webapp-demo|build-webapp-plugins' | uniq | sed s/://g | xargs)
 
 .PHONY: build
 build: component ?= base
@@ -123,6 +123,12 @@ build-base: ## Build new base image.
 build-core:
 	component=core make build
 
+build-core-dagent:
+	docker build --rm \
+		-f core/Dockerfile.dagent \
+		--build-arg docker_repo=$(docker_repo) \
+		-t $(docker_repo)/kopano_dagent core/
+
 build-helper:
 	component=build make build-simple
 
@@ -178,6 +184,11 @@ build-webapp-demo: ## Replaces the actual kopano_webapp container with one that 
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
 
+build-webapp-plugins: ## Example for a custom image to install Kopano WebApp plugins
+	docker build --rm \
+		-f webapp/Dockerfile.plugins \
+		-t $(docker_repo)/kopano_webapp webapp/
+
 build-zpush:
 	component=zpush make build
 
@@ -207,6 +218,11 @@ tag-core:
 	$(eval core_version := \
 	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_core | cut -d+ -f1))
 	component=core make tag-container
+
+tag-dagent:
+	$(eval dagent_version := \
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_dagent | cut -d+ -f1))
+	component=dagent make tag-container
 
 tag-konnect:
 	$(eval konnect_version := \
@@ -296,6 +312,9 @@ publish-base: tag-base
 
 publish-core: tag-core
 	component=core make publish-container
+
+publish-dagent: tag-dagent
+	component=dagent make publish-container
 
 publish-helper:
 	docker push $(docker_repo)/kopano_build:latest
@@ -414,7 +433,7 @@ test-startup-meet-demo: ## Test if the Meet demo setup starts up
 
 .PHONY: test-startup-individual
 test-startup-individual:
-	docker run -it --rm -e DEBUG=true -v /etc/machine-id:/etc/machine-id -v /var/lib/dbus/machine-id:/var/lib/dbus/machine-id kopano/kopano_konnect
+	docker run -it --rm -e DEBUG=true -v /etc/machine-id:/etc/machine-id -v /etc/machine-id:/var/lib/dbus/machine-id kopano/kopano_konnect
 
 # TODO this needs goss added to travis and dcgoss pulled from my own git repo
 .PHONY: test-goss
