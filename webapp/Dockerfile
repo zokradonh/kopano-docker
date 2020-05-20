@@ -22,12 +22,13 @@ ENV \
     KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
     KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
-    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD \
+    KOPANO_WEBAPP_FILES_REPOSITORY_URL=$KOPANO_WEBAPP_FILES_REPOSITORY_URL \
+    KOPANO_WEBAPP_MDM_REPOSITORY_URL=$KOPANO_WEBAPP_MDM_REPOSITORY_URL \
     KOPANO_WEBAPP_REPOSITORY_URL=$KOPANO_WEBAPP_REPOSITORY_URL \
     KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$KOPANO_WEBAPP_SMIME_REPOSITORY_URL \
-    KOPANO_WEBAPP_MDM_REPOSITORY_URL=$KOPANO_WEBAPP_MDM_REPOSITORY_URL \
-    KOPANO_WEBAPP_FILES_REPOSITORY_URL=$KOPANO_WEBAPP_FILES_REPOSITORY_URL \
-    KOPANO_WEBAPP_VERSION=$KOPANO_WEBAPP_VERSION
+    KOPANO_WEBAPP_VERSION=$KOPANO_WEBAPP_VERSION \
+    LANG=en_US.UTF-8 \
+    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano WebApp container" \
@@ -39,9 +40,9 @@ LABEL maintainer=az@zok.xyz \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# install Kopano WebApp and refresh ca-certificates
-# hadolint ignore=SC2129
-RUN \
+# install Kopano WebApp
+# hadolint ignore=SC2129,SC2215
+RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf \
     # community download and package as apt source repository
     # TODO is it neccesary to source this file here? was already sourced before
     . /kopano/helper/create-kopano-repo.sh && \
@@ -73,8 +74,6 @@ RUN mkdir -p /tmp/webapp/ && \
 COPY kweb.cfg /etc/kweb.cfg
 COPY start.sh /kopano/start.sh
 COPY goss* /goss/
-
-ENV LANG en_US.UTF-8
 
 WORKDIR /kopano/path
 
