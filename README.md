@@ -111,7 +111,7 @@ The credentials for the Kopano package repositories can either be defined throug
 
 With the above lines uncommented and credentials in place running `make build-all` will rebuild the images based on the latest available Kopano release (don't forget to `make tag-core` and `make tag-webapp` your images after building them).
 
-If you are running a private Docker Registry then you have to change `docker_repo` to reference your internal registry.
+If you are running a private Docker Registry then you have to change `docker_repo` to reference your internal registry. Afterward you can run for example `make publish-core` to push the image to your registry.
 
 ***WARNING***
 
