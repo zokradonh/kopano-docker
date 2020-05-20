@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.0-experimental
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_core
 

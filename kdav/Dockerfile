@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.0-experimental
 ARG docker_repo=zokradonh
 FROM composer:1.9 as builder
 
