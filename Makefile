@@ -163,7 +163,7 @@ build-kdav:
 	component=kdav make build
 
 build-scheduler:
-	docker pull docker:18.09
+	docker pull docker:19.03
 	component=scheduler make build-simple
 
 build-ssl:

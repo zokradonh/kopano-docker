@@ -1,4 +1,4 @@
-FROM docker:18.09
+FROM docker:19.03
 
 ENV \
     DOCKERIZE_VERSION=v0.6.1 \
