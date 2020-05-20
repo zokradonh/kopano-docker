@@ -23,6 +23,7 @@ fi
 
 cp /usr/share/doc/kopano-calendar-webapp/config.json.in /tmp/calendar.json
 CONFIG_JSON="/tmp/calendar.json"
+# TODO move into extra file to make it easier to reuse
 echo "Updating $CONFIG_JSON"
 for setting in $(compgen -A variable KCCONF_CALENDAR); do
 	setting2=${setting#KCCONF_CALENDAR_}
@@ -38,7 +39,9 @@ for setting in $(compgen -A variable KCCONF_CALENDAR); do
 done
 
 # Populate app grid
-# Note: if below variables are set to "no" kpop will fall back to its default behaviour and show all known apps.
+# TODO move into extra file to make it easier to reuse
+# Note: if all of below variables are set to "no" kpop will fall back to its default behaviour and show all known apps.
+
 # enable Kopano Konnect in the app grid
 if [ "${GRID_KONNECT:-yes}" = "yes" ]; then
 	jq '.apps.enabled += ["kopano-konnect"]' $CONFIG_JSON | sponge $CONFIG_JSON
