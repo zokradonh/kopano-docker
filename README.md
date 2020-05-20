@@ -96,24 +96,26 @@ This project also makes it possible to build Docker images based on the official
 docker_repo=zokradonh
 COMPOSE_PROJECT_NAME=kopano
 
-# Modify below to build a different version, than the kopano nightly release
-#KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/
-#KOPANO_WEBAPP_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/webapp:/final/Debian_9.0/
-#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/files:/final/Debian_9.0/
-#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/mdm:/final/Debian_9.0/
-#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/smime:/final/Debian_9.0/
-#KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_9.0/
+# Modify below to build a different version, than the Kopano nightly release
+#KOPANO_CORE_REPOSITORY_URL=https://download.kopano.io/supported/core:/final/Debian_10/
+#KOPANO_WEBAPP_REPOSITORY_URL=https://download.kopano.io/supported/webapp:/final/Debian_10/
+#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://download.kopano.io/supported/files:/final/Debian_10/
+#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://download.kopano.io/supported/mdm:/final/Debian_10/
+#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://download.kopano.io/supported/smime:/final/Debian_10/
+#KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_10/
 #RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
 ```
 
-Just uncomment the last four lines and insert your Kopano subscription key where it currently says `REPLACE-ME`. Once this is done a `make build-all` will rebuild the images based on the latest available Kopano release (don't forget to `make tag-core` and `make tag-webapp` your images after building them).
+The credentials for the Kopano package repositories can either be defined through the url itself, e.g. like `https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_10/` or through an `apt_auth.conf` file. Using `apt_auth.conf` is preferred, since it does not "leak" credentials into the final image.
 
-If you are running a private Docker Registry then you may also change `docker_repo` to reference your internal registry.
+With the above lines uncommented and credentials in place running `make build-all` will rebuild the images based on the latest available Kopano release (don't forget to `make tag-core` and `make tag-webapp` your images after building them).
+
+If you are running a private Docker Registry then you have to change `docker_repo` to reference your internal registry.
 
 ***WARNING***
 
-The built image includes your subscription key! Do not push this image to any public registry like e.g. https://hub.docker.com!
+When storing the credentials in the url the built image will include your subscription key! Do not push this image to any public registry like e.g. https://hub.docker.com!
 
 ### When building my own containers, how can I make sure my build works as expected?
 
