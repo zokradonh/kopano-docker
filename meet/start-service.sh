@@ -9,13 +9,8 @@ set -eu # unset variables are errors & non-zero return values exit the whole scr
 mkdir -p /tmp/kopano
 cp /etc/kopano/*.cfg /tmp/kopano
 
-if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
-	echo "Invalid service specified: $SERVICE_TO_START" | ts
-	exit 1
-fi
-
-echo "Configure service '$SERVICE_TO_START'" | ts
-/usr/bin/python3 /kopano/"$SERVICE_TO_START".py
+echo "Applying cfg changes from env"
+/usr/bin/python3 /kopano/cfg-from-env.py
 
 meetversion=$(dpkg-query --showformat='${Version}' --show kopano-meet-webapp)
 echo "Using Kopano Meet: $meetversion"
@@ -57,6 +52,11 @@ fi
 # enable Kopano WebApp in the app grid
 if [ "${GRID_WEBAPP:-yes}" = "yes" ]; then
 	jq '.apps.enabled += ["kopano-webapp"]' $CONFIG_JSON | sponge $CONFIG_JSON
+fi
+
+# enable Kopano WebApp in the app grid
+if [ "${GRID_CALENDAR:-yes}" = "yes" ]; then
+	jq '.apps.enabled += ["kopano-calendar"]' $CONFIG_JSON | sponge $CONFIG_JSON
 fi
 
 sed s/\ *=\ */=/g /tmp/kopano/kwebd.cfg > /tmp/kweb-env

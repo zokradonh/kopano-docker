@@ -53,7 +53,7 @@ RUN \
     # TODO better would be to override its configuration in kweb.cfg
     ln -s /tmp/meet.json /usr/share/kopano-kweb/www/config/kopano/meet.json
 
-COPY defaultconfigs/ start-service.sh /kopano/
+COPY start-service.sh /kopano/
 COPY goss.yaml /goss/
 CMD [ "/kopano/start-service.sh" ]
 

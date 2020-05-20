@@ -18,8 +18,7 @@ ENV \
     KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
     KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
-    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD \
-    SERVICE_TO_START=kapps
+    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano apps container" \
@@ -53,7 +52,7 @@ RUN \
     # TODO better would be to override its configuration in kweb.cfg
     ln -s /tmp/calendar.json /usr/share/kopano-kweb/www/config/kopano/calendar.json
 
-COPY defaultconfigs/ start-service.sh /kopano/
+COPY start-service.sh /kopano/
 COPY goss.yaml /goss/
 CMD [ "/kopano/start-service.sh" ]
 

@@ -12,7 +12,7 @@ ARG KOPANO_UID=999
 ARG KOPANO_GID=999
 
 ENV \
-    BASE_VERSION=2.0.0 \
+    BASE_VERSION=2.1.0 \
     DEBIAN_FRONTEND=noninteractive \
     DEBUG=""
 
@@ -72,7 +72,7 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     update-locale LANG=en_US.UTF-8
 
 # get common utilities
-COPY create-kopano-repo.sh /kopano/helper/
+COPY defaultconfigs/ create-kopano-repo.sh /kopano/helper/
 COPY kcconf.py /kopano/
 
 SHELL [ "/bin/bash", "-c"]
