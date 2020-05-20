@@ -72,8 +72,8 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     update-locale LANG=en_US.UTF-8
 
 # get common utilities
-COPY create-kopano-repo.sh defaultconfigs/ /kopano/helper/
-COPY kcconf.py /kopano/
+COPY create-kopano-repo.sh /kopano/helper/
+COPY kcconf.py defaultconfigs/ /kopano/
 
 SHELL [ "/bin/bash", "-c"]
 

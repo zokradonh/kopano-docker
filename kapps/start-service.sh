@@ -10,7 +10,7 @@ mkdir -p /tmp/kopano
 cp /etc/kopano/*.cfg /tmp/kopano
 
 echo "Applying cfg changes from env"
-/usr/bin/python3 /kopano/helper/cfg-from-env.py
+/usr/bin/python3 /kopano/cfg-from-env.py
 
 meetversion=$(dpkg-query --showformat='${Version}' --show kopano-calendar-webapp)
 echo "Using Kopano Calendar: $meetversion"
