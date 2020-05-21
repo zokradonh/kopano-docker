@@ -16,8 +16,8 @@ sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 #docker pull composer:1.8
 #docker pull debian:stretch
 #docker pull docker:19.03
-#docker pull docker/dockerfile:1.0-experimental
-#docker pull docker.io/docker/dockerfile-copy:v0.1.9
+docker pull docker/dockerfile:1.0-experimental
+docker pull docker.io/docker/dockerfile-copy:v0.1.9
 #docker pull halverneus/static-file-server:v1.5.2
 #docker pull kopano/konnectd:latest
 #docker pull kopano/kwebd:latest
