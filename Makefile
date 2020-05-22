@@ -56,7 +56,10 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	docker build --rm \
+ifeq (,$(wildcard ./apt_auth.conf))
+	touch apt_auth.conf
+endif
+	DOCKER_BUILDKIT=1 docker build --rm \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
@@ -76,6 +79,7 @@ endif
 		--build-arg KOPANO_GID=$(KOPANO_GID) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		--cache-from $(docker_repo)/kopano_$(component):latest \
+		--secret id=repocred,src=apt_auth.conf --progress=plain \
 		-t $(docker_repo)/kopano_$(component) $(component)/
 
 .PHONY: build-simple
@@ -94,7 +98,7 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	docker build --rm \
+	DOCKER_BUILDKIT=1 docker build --rm \
 		--target builder \
 		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=${docker_repo} \
@@ -159,7 +163,7 @@ build-kdav:
 	component=kdav make build
 
 build-scheduler:
-	docker pull docker:18.09
+	docker pull docker:19.03
 	component=scheduler make build-simple
 
 build-ssl:

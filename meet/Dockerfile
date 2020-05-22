@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.0-experimental
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_base:latest
 
@@ -30,8 +31,9 @@ LABEL maintainer=az@zok.xyz \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# install Kopano Core and refresh ca-certificates
-RUN \
+# hadolint ignore=SC2215
+RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf \
+    # apt key for this repo has already been installed in base
     # community download and package as apt source repository
     . /kopano/helper/create-kopano-repo.sh && \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \

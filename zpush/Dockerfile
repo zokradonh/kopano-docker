@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.0-experimental
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_base
 
@@ -17,9 +18,10 @@ ENV \
     KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
     KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
-    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD \
     KOPANO_ZPUSH_REPOSITORY_URL=$KOPANO_ZPUSH_REPOSITORY_URL \
-    KOPANO_ZPUSH_VERSION=$KOPANO_ZPUSH_VERSION
+    KOPANO_ZPUSH_VERSION=$KOPANO_ZPUSH_VERSION \
+    LANG=en_US.UTF-8 \
+    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano Z-Push container" \
@@ -32,7 +34,9 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Z-Push
-RUN \
+# TODO secret handling could go away when kopano_php is used as a base image
+# hadolint ignore=SC2215
+RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # prepare z-push installation
     echo "deb ${KOPANO_ZPUSH_REPOSITORY_URL} /" > /etc/apt/sources.list.d/zpush.list && \
@@ -95,8 +99,6 @@ VOLUME /var/lib/z-push/
 EXPOSE 80/tcp
 
 COPY start.sh /kopano/start.sh
-
-ENV LANG en_US.UTF-8
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD [ "/kopano/start.sh" ]

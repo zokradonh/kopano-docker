@@ -9,6 +9,7 @@ services:
 before_install:
   - sudo rm /usr/local/bin/docker-compose # remove pre-installed docker-compose (too old)
   - bash .ci/setup-tools.sh
+  - .ci/travis-buildkit.sh # upgrade docker for buildkit support
 install:
   - "./version.sh"
   - make lint

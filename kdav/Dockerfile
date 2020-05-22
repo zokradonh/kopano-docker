@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.0-experimental
 ARG docker_repo=zokradonh
 FROM composer:1.9 as builder
 
@@ -31,7 +32,9 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 # install Kopano kDAV
-RUN \
+# hadolint ignore=SC2215
+RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf \
+    # apt key for this repo has already been installed in base
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
