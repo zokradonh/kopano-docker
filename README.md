@@ -1,4 +1,5 @@
 # (unofficial) Kopano Docker Images
+
 [![Build Status](https://travis-ci.com/zokradonh/kopano-docker.svg?branch=master)](https://travis-ci.com/zokradonh/kopano-docker)
 
 This repository contains an easy to replicate recipe to spin up a [Kopano](https://kopano.com/) demo environment, which can (through modification of `.env` and possibly `docker-compose.yml`/`docker-compose.override.yml`) also be used for production environments.
@@ -7,18 +8,21 @@ This repository contains an easy to replicate recipe to spin up a [Kopano](https
 
 - make sure that you are running at least Docker 17.06.0 and [Docker Compose](https://docs.docker.com/compose/install/) 1.19.0.
 - clone this repository to your local disk
-- run `setup.sh`
-  - this script will ask you a few questions about your environment.
+- run `setup.sh`:
+  - this script will ask you a few questions about your environment
   - If you are just interested in the demo environment you can accept the default values by pressing `Enter` on each question
 - now run `docker-compose up` and you will see how the remaining Docker images are pulled and then everything is started
 - after startup has succeeded you can access the Kopano WebApp by going to `https://kopano.demo/webapp`
-- there are already some users created in the demo LDAP. These users all have a password that is identical to the username, e.g. the password for `user1` user `user1`.
+- there are already some users created in the demo LDAP
+  - these users all have a password that is identical to the username, e.g. the password for `user1` user `user1`
+- to build own containers at least Docker 19.03 is required
+  - this is due to the usage of build-time secrets
 
 If you want to get an impression how the containers interact/relate with each other have a look at the [architecture](ARCHITECTURE.md) description.
 
-**Note:** There have been reports about the LDAP demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image. 
+**Note:** There have been reports about the LDAP demo not starting up on MacOS. It is recommended to use a Linux OS if you want to use the bundled LDAP image.
 
-The `docker-compose.yml` file by default pulls Docker containers from https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
+The `docker-compose.yml` file by default pulls Docker containers from for example https://hub.docker.com/r/zokradonh/kopano_core/ and https://hub.docker.com/r/zokradonh/kopano_webapp/. These images are based on the [Kopano nightly builds](https://download.kopano.io/community/) and will contain the latest version available from the time the image was built.
 
 ## Troubleshooting
 
@@ -91,25 +95,30 @@ This project also makes it possible to build Docker images based on the official
 # Docker Repository to push to/pull from
 docker_repo=zokradonh
 COMPOSE_PROJECT_NAME=kopano
+COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.db.yml:docker-compose.ldap.yml:docker-compose.mail.yml
 
-# Modify below to build a different version, than the kopano nightly release
-#KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_9.0/
-#KOPANO_WEBAPP_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/webapp:/final/Debian_9.0/
-#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/files:/final/Debian_9.0/
-#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/mdm:/final/Debian_9.0/
-#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/smime:/final/Debian_9.0/
-#KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_9.0/
+# Modify below to build a different version, than the Kopano nightly release
+# credentials for repositories are handled through a file called apt_auth.conf (which will be created through setup.sh or Makefile)
+#KOPANO_CORE_REPOSITORY_URL=https://download.kopano.io/supported/core:/9.x/Debian_10/
+#KOPANO_MEET_REPOSITORY_URL=https://download.kopano.io/supported/meet:/final/Debian_10/
+#KOPANO_WEBAPP_REPOSITORY_URL=https://download.kopano.io/supported/webapp:/final/Debian_10/
+#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://download.kopano.io/supported/files:/final/Debian_10/
+#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://download.kopano.io/supported/mdm:/final/Debian_10/
+#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://download.kopano.io/supported/smime:/final/Debian_10/
+#KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_10/
 #RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
 ```
 
-Just uncomment the last four lines and insert your Kopano subscription key where it currently says `REPLACE-ME`. Once this is done a `make build-all` will rebuild the images based on the latest available Kopano release (don't forget to `make tag-core` and `make tag-webapp` your images after building them).
+The credentials for the Kopano package repositories can either be defined through the url itself, e.g. like `https://serial:REPLACE-ME@download.kopano.io/supported/core:/final/Debian_10/` or through an `apt_auth.conf` file. Using `apt_auth.conf` is preferred, since it does not "leak" credentials into the final image.
 
-If you are running a private Docker Registry then you may also change `docker_repo` to reference your internal registry.
+With the above lines uncommented and credentials in place running `make build-all` will rebuild the images based on the latest available Kopano release (don't forget to `make tag-core` and `make tag-webapp` your images after building them).
+
+If you are running a private Docker Registry then you have to change `docker_repo` to reference your internal registry. Afterward you can run for example `make publish-core` to push the image to your registry.
 
 ***WARNING***
 
-The built image includes your subscription key! Do not push this image to any public registry like e.g. https://hub.docker.com!
+When storing the credentials in the url the built image will include your subscription key! Do not push this image to any public registry like e.g. https://hub.docker.com!
 
 ### When building my own containers, how can I make sure my build works as expected?
 

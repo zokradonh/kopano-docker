@@ -45,6 +45,11 @@ for dockerenv in ldap password-self-service mail db kopano_ssl kopano_server kop
 	touch ./"$dockerenv".env
 done
 
+if ! grep -q download.kopano.com ./apt_auth.conf 2&> /dev/null; then
+	echo "Adding example entry to local apt_auth.conf"
+	echo "machine download.kopano.com login serial REPLACE-ME" >> ./apt_auth.conf
+fi
+
 if [ ! -e ./.env ]; then
 	PRINT_SETUP_SUCCESS=""
 
@@ -334,13 +339,14 @@ docker_repo=zokradonh
 COMPOSE_PROJECT_NAME=kopano
 COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.db.yml:docker-compose.ldap.yml:docker-compose.mail.yml
 
-# Modify below to build a different version, than the kopano nightly release
-#KOPANO_CORE_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/core:/9.x/Debian_10/
-#KOPANO_MEET_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/meet:/final/Debian_10/
-#KOPANO_WEBAPP_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/webapp:/final/Debian_10/
-#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/files:/final/Debian_10/
-#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/mdm:/final/Debian_10/
-#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://serial:REPLACE-ME@download.kopano.io/supported/smime:/final/Debian_10/
+# Modify below to build a different version, than the Kopano nightly release
+# credentials for repositories are handled through a file called apt_auth.conf (which will be created through setup.sh or Makefile)
+#KOPANO_CORE_REPOSITORY_URL=https://download.kopano.io/supported/core:/9.x/Debian_10/
+#KOPANO_MEET_REPOSITORY_URL=https://download.kopano.io/supported/meet:/final/Debian_10/
+#KOPANO_WEBAPP_REPOSITORY_URL=https://download.kopano.io/supported/webapp:/final/Debian_10/
+#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://download.kopano.io/supported/files:/final/Debian_10/
+#KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://download.kopano.io/supported/mdm:/final/Debian_10/
+#KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://download.kopano.io/supported/smime:/final/Debian_10/
 #KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_10/
 #RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
@@ -354,7 +360,6 @@ ADDITIONAL_KOPANO_WEBAPP_PLUGINS="$ADDITIONAL_KOPANO_WEBAPP_PLUGINS"
 
 EOF
 else
-
 	if ! grep -q COMPOSE_FILE ./.env; then
 		echo "Adding COMPOSE_FILE setting to .env (for docker-compose.ports.yml)"
 		echo "COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml" >> ./.env
