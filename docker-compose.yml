@@ -245,7 +245,7 @@ services:
 
   kopano_dagent:
     image: ${docker_repo:-zokradonh}/kopano_core:${CORE_VERSION:-latest}
-    read_only: false
+    read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_server
@@ -256,10 +256,11 @@ services:
       - kopanossl/:/kopano/ssl
     environment:
       - KCCONF_DAGENT_LMTP_LISTEN=0.0.0.0:2003
-      - KCCONF_DAGENT_LOG_LEVEL=3
+      - KCCONF_DAGENT_LOG_LEVEL=6
       - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kopano_dagent.pem
       - KCCONF_DAGENT_TMP_PATH=/tmp/dagent/
-      # TODO how to make autorespond use the cfg file in /tmp?
+      # TODO how to make autorespond use the cfg file in /tmp? this way its not picked up properly
+      - KCCONF_DAGENT_AUTORESPONDER=/usr/sbin/kopano-autorespond -C /tmp/kopano/autorespond.cfg
       - KCCONF_AUTORESPOND_SENDDB=/tmp/autorespond.db
       - SERVICE_TO_START=dagent
       - TZ=${TZ}
