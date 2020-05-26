@@ -258,7 +258,7 @@ services:
       - KCCONF_AUTORESPOND_SENDDB=/tmp/autorespond.db
       - KCCONF_DAGENT_AUTORESPONDER=/usr/local/bin/kopano-autorespond
       - KCCONF_DAGENT_LMTP_LISTEN=0.0.0.0:2003
-      - KCCONF_DAGENT_LOG_LEVEL=6
+      - KCCONF_DAGENT_LOG_LEVEL=3
       - KCCONF_DAGENT_SSLKEY_FILE=/kopano/ssl/kopano_dagent.pem
       - SERVICE_TO_START=dagent
       - TZ=${TZ}
