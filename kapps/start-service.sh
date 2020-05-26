@@ -12,8 +12,8 @@ cp /etc/kopano/*.cfg /tmp/kopano
 echo "Applying cfg changes from env"
 /usr/bin/python3 /kopano/cfg-from-env.py
 
-meetversion=$(dpkg-query --showformat='${Version}' --show kopano-meet-webapp)
-echo "Using Kopano Meet: $meetversion"
+meetversion=$(dpkg-query --showformat='${Version}' --show kopano-calendar-webapp)
+echo "Using Kopano Calendar: $meetversion"
 
 # allow helper commands given by "docker-compose run"
 if [ $# -gt 0 ]; then
@@ -21,11 +21,12 @@ if [ $# -gt 0 ]; then
 	exit
 fi
 
-cp /usr/share/doc/kopano-meet-webapp/config.json.in /tmp/meet.json
-CONFIG_JSON="/tmp/meet.json"
+cp /usr/share/doc/kopano-calendar-webapp/config.json.in /tmp/calendar.json
+CONFIG_JSON="/tmp/calendar.json"
+# TODO move into extra file to make it easier to reuse
 echo "Updating $CONFIG_JSON"
-for setting in $(compgen -A variable KCCONF_MEET); do
-	setting2=${setting#KCCONF_MEET_}
+for setting in $(compgen -A variable KCCONF_CALENDAR); do
+	setting2=${setting#KCCONF_CALENDAR_}
 	# dots in setting2 need to be escaped to not be handled as separate entities in the json file
 	case ${!setting} in
 		true|TRUE|false|FALSE|[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])
@@ -38,7 +39,9 @@ for setting in $(compgen -A variable KCCONF_MEET); do
 done
 
 # Populate app grid
-# Note: if below variables are set to "no" kpop will fall back to its default behaviour and show all known apps.
+# TODO move into extra file to make it easier to reuse
+# Note: if all of below variables are set to "no" kpop will fall back to its default behaviour and show all known apps.
+
 # enable Kopano Konnect in the app grid
 if [ "${GRID_KONNECT:-yes}" = "yes" ]; then
 	jq '.apps.enabled += ["kopano-konnect"]' $CONFIG_JSON | sponge $CONFIG_JSON

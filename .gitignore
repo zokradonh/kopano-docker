@@ -8,7 +8,6 @@
 **/.vscode
 apt_auth.conf
 build.tags
-calendar/kopano-calendar-*/
 data/*
 dive.log
 docker-compose.override.yml

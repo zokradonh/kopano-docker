@@ -1,4 +1,4 @@
-import os
+#!/usr/bin/env python3
 import kcconf
 
 # Override configs from environment variables
