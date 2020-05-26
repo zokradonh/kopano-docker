@@ -144,8 +144,6 @@ dagent)
 	dockerize \
 		-wait "$KOPANO_CON" \
 		-timeout 360s
-	# chown tmpdir so that the autoresponder can write to it
-	chown kopano:kopano /tmp/dagent
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec "$EXE" -l
