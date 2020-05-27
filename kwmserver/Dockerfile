@@ -15,7 +15,7 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
 USER root
-ENV DOCKERIZE_VERSION v0.11.0
+ENV DOCKERIZE_VERSION v0.11.6
 RUN wget -O - https://github.com/powerman/dockerize/releases/download/"$DOCKERIZE_VERSION"/dockerize-"$(uname -s)"-"$(uname -m)" | install /dev/stdin /bin/dockerize
 USER nobody
 

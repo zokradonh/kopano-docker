@@ -2,7 +2,7 @@ FROM docker:19.03
 
 ENV \
     DOCKERIZE_VERSION=v0.6.1 \
-    GOSS_VERSION=v0.3.7 \
+    GOSS_VERSION=v0.3.11 \
     SUPERCRONIC_VERSION=0.1.9
 
 LABEL maintainer=az@zok.xyz \

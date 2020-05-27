@@ -54,12 +54,12 @@ RUN apt-get update && \
 RUN groupadd --system --gid ${KOPANO_GID} kopano
 RUN useradd --system --shell /usr/sbin/nologin --home /var/lib/kopano --gid ${KOPANO_GID} --uid ${KOPANO_UID} kopano
 
-ENV DOCKERIZE_VERSION v0.11.0
+ENV DOCKERIZE_VERSION v0.11.6
 RUN curl -sfL https://github.com/powerman/dockerize/releases/download/"$DOCKERIZE_VERSION"/dockerize-"$(uname -s)"-"$(uname -m)" \
     | install /dev/stdin /usr/local/bin/dockerize && \
     dockerize --version
 
-ENV GOSS_VERSION v0.3.7
+ENV GOSS_VERSION v0.3.11
 RUN curl -L https://github.com/aelsabbahy/goss/releases/download/$GOSS_VERSION/goss-linux-amd64 -o /usr/local/bin/goss && \
     chmod +rx /usr/local/bin/goss && \
     goss --version
