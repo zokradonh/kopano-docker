@@ -228,6 +228,11 @@ tag-dagent:
 	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_dagent | cut -d+ -f1))
 	component=dagent make tag-container
 
+tag-kapps:
+	$(eval kapps_version := \
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_kapps  | cut -d+ -f1))
+	component=kapps make tag-container
+
 tag-konnect:
 	$(eval konnect_version := \
 	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_konnect))
@@ -322,6 +327,9 @@ publish-dagent: tag-dagent
 
 publish-helper:
 	docker push $(docker_repo)/kopano_build:latest
+
+publish-kapps: tag-kapps
+	component=kapps make publish-container
 
 publish-konnect: tag-konnect
 	component=konnect make publish-container
