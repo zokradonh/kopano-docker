@@ -1,10 +1,10 @@
 FROM koalaman/shellcheck-alpine:v0.7.1 as shellcheck
 FROM docker:19.03
 ENV \
-    COMMANDER_VERSION=1.2.1 \
+    COMMANDER_VERSION=2.1.0 \
     COMPOSE_VERSION=1.19.0 \
-    GOSS_VERSION=0.3.7 \
-    HADOLINT_VERSION=1.17.1 \
+    GOSS_VERSION=0.3.11 \
+    HADOLINT_VERSION=1.17.6 \
     REG_VERSION=0.16.1 \
     TRIVY_VERSION=0.1.1
 
