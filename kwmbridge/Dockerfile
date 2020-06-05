@@ -1,12 +1,12 @@
-ARG CODE_VERSION=1.2.0
-FROM kopano/kwmserverd:${CODE_VERSION}
+ARG CODE_VERSION=0.1.0
+FROM kopano/kwmbridged:${CODE_VERSION}
 
 ARG CODE_VERSION
 ENV CODE_VERSION="${CODE_VERSION}"
 
 LABEL maintainer=az@zok.xyz \
-    org.label-schema.name="Kopano Kwmserver container" \
-    org.label-schema.description="Container for running Kopano Kwmserver (WebRTC signalling server)" \
+    org.label-schema.name="Kopano Kwmbridge container" \
+    org.label-schema.description="Container for running Kopano Kwmbridge (SFU)" \
     org.label-schema.url="https://kopano.io" \
     org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
     org.label-schema.version=$CODE_VERSION \
@@ -20,6 +20,8 @@ RUN wget -O - https://github.com/powerman/dockerize/releases/download/"$DOCKERIZ
 USER nobody
 
 COPY wrapper.sh /usr/local/bin
+
+ENTRYPOINT ["wrapper.sh"]
 
 ARG VCS_REF
 LABEL org.label-schema.vcs-ref=$VCS_REF

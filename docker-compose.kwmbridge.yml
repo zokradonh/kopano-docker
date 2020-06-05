@@ -1,0 +1,27 @@
+version: "3.5"
+
+services:
+  kopano_kwmserver:
+    environment:
+      - enable_mcu_api=yes
+
+  kopano_kwmbridge:
+    image: ${docker_repo:-zokradonh}/kopano_kwmbridge:${KWMBRDIGE_VERSION:-latest}
+    read_only: true
+    restart: unless-stopped
+    depends_on:
+      - kopano_kwmserver
+    environment:
+      - INSECURE=${INSECURE}
+      - DEBUG=true
+      - oidc_issuer_identifier=https://${FQDN}
+      - log_level=debug
+    env_file:
+      - kopano_kwmbridge.env
+    volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
+      - kopanossl/:/kopano/ssl
+    network_mode: "host"
+    tmpfs:
+      - /tmp
