@@ -43,7 +43,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Kopano WebApp
 # hadolint ignore=SC2129,SC2215
-RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf \
+RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     # community download and package as apt source repository
     # TODO is it neccesary to source this file here? was already sourced before
     . /kopano/helper/create-kopano-repo.sh && \

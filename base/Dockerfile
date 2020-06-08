@@ -44,11 +44,7 @@ RUN apt-get update && \
         moreutils \
         python3-minimal \
         && \
-    rm -rf /var/cache/apt /var/lib/apt/lists/*; \
-    # install apt key if supported kopano
-    if [ ${RELEASE_KEY_DOWNLOAD} -eq 1 ]; then \
-        curl -s -S -o - "${KOPANO_CORE_REPOSITORY_URL}/Release.key" | apt-key add -; \
-    fi
+    rm -rf /var/cache/apt /var/lib/apt/lists/*
 
 # Create kopano user and group
 RUN groupadd --system --gid ${KOPANO_GID} kopano
@@ -73,7 +69,8 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 
 # get common utilities
 COPY create-kopano-repo.sh /kopano/helper/
-COPY kcconf.py defaultconfigs/ /kopano/
+COPY kcconf.py Release.key defaultconfigs/ /kopano/
+RUN apt-key add /kopano/Release.key
 
 SHELL [ "/bin/bash", "-c"]
 

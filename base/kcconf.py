@@ -10,7 +10,7 @@ def configkopano(configs):
     """ Changes configuration files according to configs typically returned from parseenvironmentvariables(..)"""
     for filename, config in configs.items():
         if not os.path.exists(filename):
-            return
+            continue
         # read configuration file
         with open(filename) as f:
             contents = f.read()

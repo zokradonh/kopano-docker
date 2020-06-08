@@ -36,7 +36,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # install Z-Push
 # TODO secret handling could go away when kopano_php is used as a base image
 # hadolint ignore=SC2215
-RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf \
+RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # prepare z-push installation
     echo "deb ${KOPANO_ZPUSH_REPOSITORY_URL} /" > /etc/apt/sources.list.d/zpush.list && \

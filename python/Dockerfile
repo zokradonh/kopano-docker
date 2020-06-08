@@ -29,7 +29,7 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # hadolint ignore=SC2215
-RUN --mount=type=secret,id=repocred,dst=/etc/apt/apt_auth.conf \
+RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # install
     set -x && \

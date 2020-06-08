@@ -99,7 +99,7 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.db.yml:d
 
 # Modify below to build a different version, than the Kopano nightly release
 # credentials for repositories are handled through a file called apt_auth.conf (which will be created through setup.sh or Makefile)
-#KOPANO_CORE_REPOSITORY_URL=https://download.kopano.io/supported/core:/9.x/Debian_10/
+#KOPANO_CORE_REPOSITORY_URL=https://download.kopano.io/supported/core:/8.7/Debian_10/
 #KOPANO_MEET_REPOSITORY_URL=https://download.kopano.io/supported/meet:/final/Debian_10/
 #KOPANO_WEBAPP_REPOSITORY_URL=https://download.kopano.io/supported/webapp:/final/Debian_10/
 #KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://download.kopano.io/supported/files:/final/Debian_10/

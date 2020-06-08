@@ -241,7 +241,7 @@ search)
 	if dpkg --compare-versions "$searchversion" "gt" "8.7.82.165"; then
 		exec "$EXE" --config /tmp/kopano/search.cfg
 	else
-		exec /usr/bin/python3 "$EXE" -F
+		exec /usr/bin/python3 "$EXE" --config /tmp/kopano/search.cfg -F
 	fi
 	;;
 spooler)
