@@ -16,6 +16,7 @@ services:
       - DEBUG=true
       - oidc_issuer_identifier=https://${FQDN}
       - log_level=debug
+      - kwm_server_urls=https://kopano.demo:2015
     env_file:
       - kopano_kwmbridge.env
     volumes:
