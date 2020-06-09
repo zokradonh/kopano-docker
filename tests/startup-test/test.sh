@@ -19,6 +19,7 @@ dockerize \
 	-wait tcp://kopano_zpush:80 \
 	-wait tcp://web:2015 \
 	-timeout 120s
+# TODO add check for port 8779 of kwmbridge
 
 # until goss is part of the general testsuite check goss for kopano-server here as well
 docker exec kopano_server goss -g /kopano/goss/server/goss.yaml validate

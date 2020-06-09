@@ -32,5 +32,5 @@ dockerize \
 	-wait file:///etc/machine-id \
 	-wait file:///var/lib/dbus/machine-id
 
-exec /usr/local/bin/docker-entrypoint.sh serve \
+exec sh -x /usr/local/bin/docker-entrypoint.sh serve \
 	"$@"
