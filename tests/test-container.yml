@@ -17,6 +17,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - KCCONF_SERVER_MYSQL_HOST=${MYSQL_HOST}
+      - FQDN=${FQDNCLEANED?err}
   ldap:
     tmpfs:
       - /var/lib/ldap

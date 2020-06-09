@@ -6,17 +6,15 @@ services:
       - enable_mcu_api=yes
 
   kopano_kwmbridge:
-    image: ${docker_repo:-zokradonh}/kopano_kwmbridge:${KWMBRDIGE_VERSION:-latest}
+    image: ${docker_repo:-zokradonh}/kopano_kwmbridge:${KWMBRIDGE_VERSION:-latest}
     read_only: true
     restart: unless-stopped
     depends_on:
       - kopano_kwmserver
     environment:
       - INSECURE=${INSECURE}
-      - DEBUG=true
       - oidc_issuer_identifier=https://${FQDN}
-      - log_level=debug
-      - kwm_server_urls=https://kopano.demo:2015
+      - kwm_server_urls=https://${FQDN}
     env_file:
       - kopano_kwmbridge.env
     volumes:

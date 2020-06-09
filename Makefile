@@ -28,7 +28,7 @@ DOWNLOAD_COMMUNITY_PACKAGES := 1
 KOPANO_UID := 999
 KOPANO_GID := 999
 
-DOCKERCOMPOSE_FILE := docker-compose.yml -f docker-compose.db.yml -f docker-compose.ldap.yml -f docker-compose.mail.yml
+DOCKERCOMPOSE_FILE := docker-compose.yml -f docker-compose.db.yml -f docker-compose.ldap.yml -f docker-compose.mail.yml -f docker-compose.kwmbridge.yml -f docker-compose.ports.yml
 TAG_FILE := build.tags
 -include .env
 export
