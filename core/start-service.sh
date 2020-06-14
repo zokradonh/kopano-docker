@@ -154,7 +154,7 @@ gateway)
 		-timeout 360s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec "$EXE" -F
+	exec "$EXE" -c /tmp/kopano/gateway.cfg
 	;;
 ical)
 	dockerize \
