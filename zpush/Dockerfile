@@ -46,12 +46,14 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     set -x && \
     # TODO set IGNORE_FIXSTATES_ON_UPGRADE https://jira.z-hub.io/browse/ZP-1164
     # TODO remove php-mbstring once https://jira.z-hub.io/browse/ZP-1541 is resolved
+    # TODO remove php-xml once https://jira.z-hub.io/projects/ZP/issues/ZP-1558 is resolved
     apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
         ca-certificates \
         crudini \
         libapache2-mod-php7.3 \
         php-mbstring \
+        php-xml \
         z-push-autodiscover \
         z-push-config-apache \
         z-push-config-apache-autodiscover \
