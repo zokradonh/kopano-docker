@@ -7,13 +7,20 @@ if [ -n "${log_level:-}" ]; then
 	set -- "$@" --log-level="$log_level"
 fi
 
-# shellcheck disable=SC2154
 if [ -n "${oidc_issuer_identifier:-}" ]; then
 	set -- "$@" --iss="$oidc_issuer_identifier"
 fi
 
 if [ "${enable_guest_api:-}" = "yes" ]; then
 	set -- "$@" --enable-guest-api
+fi
+
+if [ "${enable_rtm_api:-}" = "yes" ]; then
+	set -- "$@" --enable-rtm-api
+fi
+
+if [ "${enable_mcu_api:-}" = "yes" ]; then
+	set -- "$@" --enable-mcu-api
 fi
 
 if [ "$INSECURE" = "yes" ]; then

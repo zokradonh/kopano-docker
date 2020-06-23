@@ -139,6 +139,9 @@ build-kapps:
 build-konnect:
 	component=konnect make build-simple
 
+build-kwmbridge:
+	component=kwmbridge make build-simple
+
 build-kwmserver:
 	component=kwmserver make build-simple
 
