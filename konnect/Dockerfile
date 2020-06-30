@@ -1,4 +1,4 @@
-ARG CODE_VERSION=0.33.4
+ARG CODE_VERSION=0.33.5
 
 FROM golang:1.13.5-alpine3.10 as builder-sponge
 
