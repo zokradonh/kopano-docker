@@ -17,10 +17,11 @@ zpush_download_version := $(shell ./version.sh zpush)
 vcs_ref := $(shell git rev-parse --short HEAD)
 
 KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
+KOPANO_KAPPS_REPOSITORY_URL := file:/kopano/repo/kapps
 KOPANO_MEET_REPOSITORY_URL := file:/kopano/repo/meet
-KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
 KOPANO_WEBAPP_FILES_REPOSITORY_URL := file:/kopano/repo/files
 KOPANO_WEBAPP_MDM_REPOSITORY_URL := file:/kopano/repo/mdm
+KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
 KOPANO_WEBAPP_SMIME_REPOSITORY_URL := file:/kopano/repo/smime
 KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_10/
 RELEASE_KEY_DOWNLOAD := 0
