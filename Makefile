@@ -17,10 +17,11 @@ zpush_download_version := $(shell ./version.sh zpush)
 vcs_ref := $(shell git rev-parse --short HEAD)
 
 KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
+KOPANO_KAPPS_REPOSITORY_URL := file:/kopano/repo/kapps
 KOPANO_MEET_REPOSITORY_URL := file:/kopano/repo/meet
-KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
 KOPANO_WEBAPP_FILES_REPOSITORY_URL := file:/kopano/repo/files
 KOPANO_WEBAPP_MDM_REPOSITORY_URL := file:/kopano/repo/mdm
+KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
 KOPANO_WEBAPP_SMIME_REPOSITORY_URL := file:/kopano/repo/smime
 KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_10/
 RELEASE_KEY_DOWNLOAD := 0
@@ -66,10 +67,11 @@ endif
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
 		--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+		--build-arg KOPANO_KAPPS_REPOSITORY_URL=$(KOPANO_KAPPS_REPOSITORY_URL) \
 		--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
-		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
 		--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
 		--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
