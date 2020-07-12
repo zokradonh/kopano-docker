@@ -349,7 +349,6 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.db.yml:d
 #KOPANO_WEBAPP_REPOSITORY_URL=https://download.kopano.io/supported/webapp:/final/Debian_10/
 #KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://download.kopano.io/supported/smime:/final/Debian_10/
 #KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_10/
-#RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
 
 # Remove this variable to not push versioned containers with the :latest tag
