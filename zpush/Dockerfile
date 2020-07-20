@@ -66,7 +66,6 @@ RUN mkdir -p /tmp/z-push/ && \
 
 # configure basics
 RUN \
-    a2enmod rewrite && \
     crudini --set /etc/php/7.3/apache2/php.ini PHP upload_max_filesize 500M && \
     crudini --set /etc/php/7.3/apache2/php.ini PHP post_max_size 500M && \
     crudini --set /etc/php/7.3/apache2/php.ini PHP max_input_vars 1800 && \

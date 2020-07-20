@@ -51,6 +51,7 @@ RUN \
 
 EXPOSE 9080/tcp
 
+COPY php-fpm.conf /etc/php/7.3/fpm/pool.d/
 COPY start-helper.sh /kopano/start-helper.sh
 COPY kweb.cfg /etc/kweb.cfg
 
