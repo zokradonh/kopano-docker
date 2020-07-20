@@ -156,7 +156,7 @@ Yes, that is certainly a possibility. Within the `examples/` directory you can f
 - Stop compose running in the background: `docker-compose stop`
 - Destroy local containers and network interfaces: `docker-compose down`
 - Destroy volumes as well (will completely reset the containers, **deletes all data**): `docker-compose down -v`
-- Run commands in a running container: `docker-compose exec kopano_server kopano-cli --list-users`
+- Run commands in a running container: `docker-compose exec kopano_server kopano-admin -l`
 - Get logs of a in the background running container: `docker-compose logs -f kopano_server`
 - Run a `kopano-backup`: `docker run --rm -it -v /var/run/kopano/:/var/run/kopano -v $(pwd):/kopano/path zokradonh/kopano_utils kopano-backup`
   - Same command but getting volumes from the existing `kopano_server` container: `docker run --rm -it --volumes-from kopano_server -v /root/kopano-backup:/kopano/path zokradonh/kopano_utils kopano-backup -h`

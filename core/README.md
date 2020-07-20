@@ -33,11 +33,11 @@ e.g. `KCCOMMENT_LDAP_1=!include /usr/share/kopano/ldap.openldap.cfg`
 
 For core dumps on crashes kopano-server requires the `fs.suid_dumpable sysctl` to contain the value 2, not 0.
 
-It is recommended to sync the user list before the first login of a user. With the bundled ´docker-compose.yml´ the ´kopano_scheduler´ container will take care of this. Alternatively `kopano-cli --list-users` could be run once after initial install in the kopano_server container.
+It is recommended to sync the user list before the first login of a user. With the bundled ´docker-compose.yml´ the ´kopano_scheduler´ container will take care of this. Alternatively `kopano-admin --sync` could be run once after initial install in the kopano_server container.
 
 Example:
 
-`docker-compose exec kopano_server kopano-cli --list-users`
+`docker-compose exec kopano_server kopano-admin -l`
 
 Depending on the overall performance of the system and the amount of user the first execution of this command will take a moment before it produces any output. This is since this command kicks off the mailbox creation for the users.
 
