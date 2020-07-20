@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.0-experimental
 ARG docker_repo=zokradonh
-FROM ${docker_repo}/kopano_base
+FROM ${docker_repo}/kopano_php
 
 ARG ADDITIONAL_KOPANO_PACKAGES=""
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
@@ -46,10 +46,7 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     # TODO remove php-mbstring once https://jira.z-hub.io/browse/ZP-1541 is resolved
     # TODO remove php-xml once https://jira.z-hub.io/projects/ZP/issues/ZP-1558 is resolved
     apt-get update && apt-get install -y --no-install-recommends \
-        apache2 \
-        ca-certificates \
         crudini \
-        libapache2-mod-php7.3 \
         php-mbstring \
         php-xml \
         z-push-autodiscover \
@@ -67,18 +64,8 @@ RUN mkdir -p /tmp/z-push/ && \
         ln -s /tmp/z-push/"$(basename "$i")" "$i"; \
     done
 
-COPY apache2-kopano.conf /etc/apache2/sites-available/kopano.conf
-
 # configure basics
 RUN \
-    # configure apache
-    rm /etc/apache2/sites-enabled/* && \
-    sed -e 's,^ErrorLog.*,ErrorLog "|/bin/cat",' -i /etc/apache2/apache2.conf && \
-    sed -e "s,MaxSpareServers[^:].*,MaxSpareServers 5," -i /etc/apache2/mods-available/mpm_prefork.conf && \
-    a2disconf other-vhosts-access-log && \
-    a2ensite kopano && \
-    echo "Listen 80" > /etc/apache2/ports.conf && \
-    # configure mod_php
     a2enmod rewrite && \
     crudini --set /etc/php/7.3/apache2/php.ini PHP upload_max_filesize 500M && \
     crudini --set /etc/php/7.3/apache2/php.ini PHP post_max_size 500M && \
@@ -94,9 +81,11 @@ RUN \
 # can be removed once gabsync is fixed - should not hurt
 RUN sed -i -e "s/set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH_CLI);/define('PATH_TO_ZPUSH', '..\/..\/backend\/kopano\/');\n    set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH_CLI . PATH_SEPARATOR . BASE_PATH_CLI . PATH_TO_ZPUSH);/" /usr/share/z-push/tools/gab-sync/gab-sync.php
 
+COPY kweb.cfg /etc/kweb.cfg
+
 VOLUME /var/lib/z-push/
 
-EXPOSE 80/tcp
+EXPOSE 9080/tcp
 
 COPY start.sh /kopano/start.sh
 
