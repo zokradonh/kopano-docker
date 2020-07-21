@@ -60,7 +60,7 @@ endif
 ifeq (,$(wildcard ./apt_auth.conf))
 	touch apt_auth.conf
 endif
-	DOCKER_BUILDKIT=1 docker build --rm \
+	BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 docker build --rm \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
@@ -99,7 +99,7 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	DOCKER_BUILDKIT=1 docker build --rm \
+	BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 docker build --rm \
 		--target builder \
 		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=${docker_repo} \

@@ -148,11 +148,9 @@ tail --pid=$$ -F --lines=0 -q /var/log/z-push/z-push-error.log &
 tail --pid=$$ -F --lines=0 -q /var/log/z-push/autodiscover.log &
 tail --pid=$$ -F --lines=0 -q /var/log/z-push/autodiscover-error.log &
 
-echo "Starting Apache"
-rm -f /run/apache2/apache2.pid
 set +u
-# shellcheck disable=SC1091
-source /etc/apache2/envvars
 # cleaning up env variables
 unset "${!KCCONF_@}"
-exec /usr/sbin/apache2 -DFOREGROUND
+echo "Starting php-fpm"
+php-fpm7.3 -F &
+exec /usr/libexec/kopano/kwebd caddy -conf /etc/kweb.cfg
