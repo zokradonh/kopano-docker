@@ -32,10 +32,7 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Z-Push
-# TODO secret handling could go away when kopano_php is used as a base image
-# hadolint ignore=SC2215
-RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
+RUN \
     # prepare z-push installation
     echo "deb ${KOPANO_ZPUSH_REPOSITORY_URL} /" > /etc/apt/sources.list.d/zpush.list && \
     # this is the same key as for the rest of the Kopano stack, making a separate download anyways as this may not be the case in the future 
@@ -64,13 +61,8 @@ RUN mkdir -p /tmp/z-push/ && \
         ln -s /tmp/z-push/"$(basename "$i")" "$i"; \
     done
 
-# configure basics
+# ensure right permissions of folders (should have been taked care of by the packaging, just for good measure)
 RUN \
-    crudini --set /etc/php/7.3/apache2/php.ini PHP upload_max_filesize 500M && \
-    crudini --set /etc/php/7.3/apache2/php.ini PHP post_max_size 500M && \
-    crudini --set /etc/php/7.3/apache2/php.ini PHP max_input_vars 1800 && \
-    crudini --set /etc/php/7.3/apache2/php.ini Session session.save_path /run/sessions && \
-    # configure z-push
     mkdir -p /var/lib/z-push /var/log/z-push && \
     chown www-data:www-data /var/lib/z-push /var/log/z-push
 
