@@ -29,6 +29,8 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.version=$KOPANO_ZPUSH_VERSION \
     org.label-schema.schema-version="1.0"
 
+VOLUME /var/lib/z-push/
+
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Z-Push
@@ -54,6 +56,12 @@ RUN \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 
+# Patch Gabsync to make it work
+# See https://jira.z-hub.io/browse/ZP-1463
+# https://forum.kopano.io/topic/1928/8-7-80-missing-php-files-in-php-mapi-deb-package-ubuntu-16-04
+# can be removed once gabsync is fixed - should not hurt
+RUN sed -i -e "s/set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH_CLI);/define('PATH_TO_ZPUSH', '..\/..\/backend\/kopano\/');\n    set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH_CLI . PATH_SEPARATOR . BASE_PATH_CLI . PATH_TO_ZPUSH);/" /usr/share/z-push/tools/gab-sync/gab-sync.php
+
 # tweak to make the container read-only
 RUN mkdir -p /tmp/z-push/ && \
     for i in /etc/z-push/*; do \
@@ -66,18 +74,7 @@ RUN \
     mkdir -p /var/lib/z-push /var/log/z-push && \
     chown www-data:www-data /var/lib/z-push /var/log/z-push
 
-# Patch Gabsync to make it work
-# See https://jira.z-hub.io/browse/ZP-1463
-# https://forum.kopano.io/topic/1928/8-7-80-missing-php-files-in-php-mapi-deb-package-ubuntu-16-04
-# can be removed once gabsync is fixed - should not hurt
-RUN sed -i -e "s/set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH_CLI);/define('PATH_TO_ZPUSH', '..\/..\/backend\/kopano\/');\n    set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH_CLI . PATH_SEPARATOR . BASE_PATH_CLI . PATH_TO_ZPUSH);/" /usr/share/z-push/tools/gab-sync/gab-sync.php
-
 COPY kweb.cfg /etc/kweb.cfg
-
-VOLUME /var/lib/z-push/
-
-EXPOSE 9080/tcp
-
 COPY start.sh /kopano/start.sh
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
