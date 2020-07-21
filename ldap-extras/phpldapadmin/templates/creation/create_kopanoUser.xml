@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE template SYSTEM "template.dtd">
+<template>
+<title>Kopano User Account</title>
+<regexp>ou=.*</regexp>
+<icon>ldap-user.png</icon>
+<description>New Kopano User Account</description>
+<askcontainer>1</askcontainer>
+<rdn>cn</rdn>
+<visible>1</visible>
+
+<objectClasses>
+<objectClass id="simpleSecurityObject"></objectClass>
+<objectClass id="kopano-user"></objectClass>
+<objectClass id="inetOrgPerson"></objectClass>
+</objectClasses>
+
+<attributes>
+<attribute id="cn">
+        <display>Common Name (usually: 'Firstname Lastname')</display>
+        <order>3</order>
+        <page>1</page>
+</attribute>
+
+<attribute id="givenName">
+        <display>First name</display>
+        <icon>ldap-user.png</icon>
+        <onchange>=autoFill(cn;%givenName% %sn%)</onchange>
+<!--        <onchange>=autoFill(uid;%givenName%.%sn%@DOMAIN)</onchange> -->
+        <order>1</order>
+        <page>1</page>
+</attribute>
+<attribute id="sn">
+        <display>Last name</display>
+        <onchange>=autoFill(cn;%givenName% %sn%)</onchange>
+<!--        <onchange>=autoFill(uid;%givenName%.%sn%@DOMAIN)</onchange> -->
+        <order>2</order>
+        <page>1</page>
+</attribute>
+<attribute id="uid">
+        <display>Login Name (usually the Email address)</display>
+        <hint>required</hint>
+        <onchange>=autoFill(mail;%uid%)</onchange>
+        <order>3</order>
+        <page>1</page>
+</attribute>
+<attribute id="userPassword">
+  <display>Password</display>
+  <hint>Encryption types: crypt OR ssha (default)</hint>
+    <helper>
+      <default>ssha</default>
+      <display>Encryption</display>
+      <id>enc</id>
+      <location>side</location>
+      <option>crypt</option>
+      <option>ssha</option>
+    </helper>
+  <icon>lock.png</icon>
+  <order>4</order>
+  <page>1</page>
+  <post>=php.Password(%enc%,%userPassword%)</post>
+  <spacer>1</spacer>
+  <type>password</type>
+  <verify>1</verify>
+</attribute>
+
+<!--
+<attribute id="userPassword">
+        <display>Password</display>
+        <helper>
+                <default>md5</default>
+                <display>Encryption</display>
+                <id>enc</id>
+                <location>side</location>
+                <option>blowfish</option>
+                <option>clear</option>
+                <option>crypt</option>
+                <option>ext_des</option>
+                <option>md5</option>
+                <option>md5crypt</option>
+                <option>sha</option>
+                <option>smd5</option>
+                <option>ssha</option>
+        </helper>
+        <icon>lock.png</icon>
+        <order>4</order>
+        <page>1</page>
+        <post>=php.Password(%enc%,%userPassword%)</post>
+        <spacer>1</spacer>
+        <type>password</type>
+        <verify>1</verify>
+</attribute>
+-->
+<attribute id="mail">
+        <display>Email</display>
+        <icon>mail.png</icon>
+        <order>5</order>
+        <page>1</page>
+</attribute>
+<attribute id="kopanoAliases">
+   <display>Mail Alias</display>
+   <hint>Other email addresses that will be delivered to this account. More aliases can be added later.</hint>
+   <icon>mail.png</icon>
+   <max>5</max>
+   <order>6</order>
+   <page>1</page>
+</attribute>
+<attribute id="telephoneNumber">
+        <display>Work phone</display>
+        <icon>phone.png</icon>
+        <order>8</order>
+        <page>1</page>
+</attribute>
+<attribute id="facsimileTelephoneNumber">
+        <display>Fax</display>
+        <order>9</order>
+        <page>1</page>
+</attribute>
+<attribute id="mobile">
+        <display>Mobile</display>
+        <order>9</order>
+        <page>1</page>
+        <spacer>1</spacer>
+</attribute>
+<attribute id="kopanoEnabledFeatures">
+   <display>Kopano Enabled Feature, one per field.</display>
+   <hint>Possible values: imap pop3 mobile outlook webapp</hint>
+   <icon>mail.png</icon>
+   <max>5</max>
+   <order>10</order>
+   <page>1</page>
+</attribute>
+<attribute id="kopanoDisabledFeatures">
+   <display>Kopano Disabled Feature, one per field.</display>
+   <hint>Possible values: imap pop3 mobile outlook webapp</hint>
+   <icon>mail.png</icon>
+   <max>5</max>
+   <order>11</order>
+   <page>1</page>
+</attribute>
+<attribute id="kopanoAdmin">
+   <display>Kopano Administrator</display>
+   <order>1</order>
+   <page>2</page>
+</attribute>
+<attribute id="kopanoQuotaWarn">
+   <display>Quota Warning (MB)</display>
+   <order>2</order>
+   <page>2</page>
+</attribute>
+<attribute id="kopanoQuotaSoft">
+   <display>Soft Quota (MB)</display>
+   <order>3</order>
+   <page>2</page>
+</attribute>
+<attribute id="kopanoQuotaHard">
+   <display>Hard Quota (MB)</display>
+   <order>4</order>
+   <page>2</page>
+</attribute>
+<attribute id="kopanoQuotaOverride">
+   <display>Override Quota limits</display>
+   <order>5</order>
+   <page>2</page>
+</attribute>
+</attributes>
+</template>
