@@ -305,6 +305,7 @@ services:
     environment:
       - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_SMTP_SERVER=mail
+      - KCCONF_SPOOLER_SMTP_PORT=25
       - KCCONF_SPOOLER_SSLKEY_FILE=/kopano/ssl/kopano_spooler.pem
       - SERVICE_TO_START=spooler
       - TZ=${TZ}

@@ -14,6 +14,8 @@ KCCONF_MONITOR_SERVER_SOCKET=${KCCONF_MONITOR_SERVER_SOCKET:-"file:///var/run/ko
 KCCONF_SEARCH_SERVER_SOCKET=${KCCONF_SEARCH_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
 KCCONF_SPOOLER_SERVER_SOCKET=${KCCONF_SPOOLER_SERVER_SOCKET:-"file:///var/run/kopano/server.sock"}
 KOPANO_CON=${KOPANO_CON:-"file:///var/run/kopano/server.sock"}
+KCCONF_SPOOLER_SMTP_SERVER=${KCCONF_SPOOLER_SMTP_SERVER:-mail}
+KCCONF_SPOOLER_SMTP_PORT=${KCCONF_SPOOLER_SMTP_PORT:-25}
 
 # copy configuration files to /tmp/kopano to prevent modification of mounted config files
 mkdir -p /tmp/kopano
@@ -247,7 +249,7 @@ search)
 spooler)
 	dockerize \
 		-wait "$KOPANO_CON" \
-		-wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":25 \
+		-wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":"$KCCONF_SPOOLER_SMTP_PORT" \
 		-timeout 1080s
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
