@@ -16,7 +16,7 @@ services:
       - LDAP_READONLY_USER=true
     env_file:
       - ldap.env
-    command: "--loglevel error --copy-service"
+    command: "--copy-service"
     volumes:
       - ldap:/var/lib/ldap
       - slapd:/etc/ldap/slapd.d
