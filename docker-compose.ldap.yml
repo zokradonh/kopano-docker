@@ -11,12 +11,13 @@ services:
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
       - LDAP_BASE_DN=${LDAP_BASE_DN}
       - LDAP_DOMAIN=${LDAP_DOMAIN}
+      - LDAP_LOG_LEVEL=0
       - LDAP_ORGANISATION=${LDAP_ORGANISATION}
       - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_USER_PASSWORD}
       - LDAP_READONLY_USER=true
     env_file:
       - ldap.env
-    command: "--loglevel info --copy-service"
+    command: "--copy-service"
     volumes:
       - ldap:/var/lib/ldap
       - slapd:/etc/ldap/slapd.d
