@@ -153,7 +153,7 @@ build-ldap-demo:
 build-meet:
 	component=meet make build
 
-build-php:
+build-php: build-base
 	component=php make build
 
 build-playground:
@@ -182,20 +182,20 @@ build-utils:
 build-web:
 	component=web make build-simple
 
-build-webapp:
+build-webapp: build-php
 	component=webapp make build
 
-build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
+build-webapp-demo: build-webapp ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
 	docker build --rm \
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
 
-build-webapp-plugins: ## Example for a custom image to install Kopano WebApp plugins
+build-webapp-plugins: build-webapp ## Example for a custom image to install Kopano WebApp plugins
 	docker build --rm \
 		-f webapp/Dockerfile.plugins \
 		-t $(docker_repo)/kopano_webapp webapp/
 
-build-zpush:
+build-zpush: build-php
 	component=zpush make build
 
 tag-all: build-all ## Helper target to create tags for all images.
