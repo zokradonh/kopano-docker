@@ -120,10 +120,10 @@ build-base: ## Build new base image.
 	docker pull debian:buster
 	component=base make build
 
-build-core:
+build-core: build-base
 	component=core make build
 
-build-core-dagent:
+build-core-dagent: build-cre
 	docker build --rm \
 		-f core/Dockerfile.dagent \
 		--build-arg docker_repo=$(docker_repo) \
@@ -132,7 +132,7 @@ build-core-dagent:
 build-helper:
 	component=build make build-simple
 
-build-kapps:
+build-kapps: build-base
 	component=kapps make build
 
 build-konnect:
@@ -147,10 +147,10 @@ build-kwmserver:
 build-ldap:
 	component=ldap make build-simple
 
-build-ldap-demo:
+build-ldap-demo: build-ldap
 	component=ldap_demo make build-simple
 
-build-meet:
+build-meet: build-base
 	component=meet make build
 
 build-php: build-base
@@ -160,7 +160,7 @@ build-playground:
 	component=playground make build-builder
 	component=playground make build-simple
 
-build-python:
+build-python: build-base
 	component=python make build
 
 build-kdav:
@@ -176,7 +176,7 @@ build-ssl:
 	docker pull alpine:3.11
 	component=ssl make build-simple
 
-build-utils:
+build-utils: build-core
 	component=utils make build
 
 build-web:
