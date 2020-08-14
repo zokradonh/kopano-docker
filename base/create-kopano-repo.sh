@@ -35,6 +35,11 @@ function dl_and_package_community {
 	channel=${3:-community}
 	branch=${4:-""}
 
+	if [ -d $component ]; then
+		echo "Packages have been downloaded in a previous stage. Skipping..."
+		return
+	fi
+
 	# query community server by h5ai API
 	filename=$(h5ai_query "$component" "$distribution" "$channel" "$branch")
 	filename2=$(basename "$filename")
