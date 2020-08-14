@@ -123,7 +123,7 @@ build-base: ## Build new base image.
 build-core: build-base
 	component=core make build
 
-build-core-dagent: build-cre
+build-core-dagent: build-core
 	docker build --rm \
 		-f core/Dockerfile.dagent \
 		--build-arg docker_repo=$(docker_repo) \
