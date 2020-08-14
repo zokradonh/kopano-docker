@@ -35,7 +35,7 @@ function dl_and_package_community {
 	channel=${3:-community}
 	branch=${4:-""}
 
-	if [ -d $component ]; then
+	if [ -d "$component" ]; then
 		echo "Packages have been downloaded in a previous stage. Skipping..."
 		return
 	fi
