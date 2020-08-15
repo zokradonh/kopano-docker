@@ -120,10 +120,10 @@ build-base: ## Build new base image.
 	docker pull debian:buster
 	component=base make build
 
-build-core:
+build-core: build-base
 	component=core make build
 
-build-core-dagent:
+build-core-dagent: build-core
 	docker build --rm \
 		-f core/Dockerfile.dagent \
 		--build-arg docker_repo=$(docker_repo) \
@@ -132,7 +132,7 @@ build-core-dagent:
 build-helper:
 	component=build make build-simple
 
-build-kapps:
+build-kapps: build-base
 	component=kapps make build
 
 build-konnect:
@@ -147,20 +147,20 @@ build-kwmserver:
 build-ldap:
 	component=ldap make build-simple
 
-build-ldap-demo:
+build-ldap-demo: build-ldap
 	component=ldap_demo make build-simple
 
-build-meet:
+build-meet: build-base
 	component=meet make build
 
-build-php:
+build-php: build-base
 	component=php make build
 
 build-playground:
 	component=playground make build-builder
 	component=playground make build-simple
 
-build-python:
+build-python: build-base
 	component=python make build
 
 build-kdav:
@@ -176,26 +176,26 @@ build-ssl:
 	docker pull alpine:3.11
 	component=ssl make build-simple
 
-build-utils:
+build-utils: build-core
 	component=utils make build
 
 build-web:
 	component=web make build-simple
 
-build-webapp:
+build-webapp: build-php
 	component=webapp make build
 
-build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
+build-webapp-demo: build-webapp ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
 	docker build --rm \
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
 
-build-webapp-plugins: ## Example for a custom image to install Kopano WebApp plugins
+build-webapp-plugins: build-webapp ## Example for a custom image to install Kopano WebApp plugins
 	docker build --rm \
 		-f webapp/Dockerfile.plugins \
 		-t $(docker_repo)/kopano_webapp webapp/
 
-build-zpush:
+build-zpush: build-php
 	component=zpush make build
 
 tag-all: build-all ## Helper target to create tags for all images.
