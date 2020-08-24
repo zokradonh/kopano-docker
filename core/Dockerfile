@@ -47,7 +47,7 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     apt-get update && \
     set -x && \
     apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
-        kopano-server-packages \
+        kopano-server-packages kopano-spamd \
         ${ADDITIONAL_KOPANO_PACKAGES} \
         && \
     coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server) && \

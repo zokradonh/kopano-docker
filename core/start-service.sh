@@ -104,6 +104,9 @@ search)
 server)
 	EXE="${EXE:-$(command -v kopano-server)}"
 	;;
+spamd)
+	EXE="${EXE:-$(command -v kopano-spamd)}"
+	;;
 spooler)
 	EXE="${EXE:-$(command -v kopano-spooler)}"
 	KOPANO_CON="$KCCONF_SPOOLER_SERVER_SOCKET"
@@ -245,6 +248,14 @@ search)
 	else
 		exec /usr/bin/python3 "$EXE" --config /tmp/kopano/search.cfg -F
 	fi
+	;;
+spamd)
+	dockerize \
+		-wait "$KOPANO_CON" \
+		-timeout 360s
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
+	exec "$EXE" --config /tmp/kopano/spamd.cfg -F
 	;;
 spooler)
 	dockerize \
