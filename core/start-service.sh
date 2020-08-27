@@ -4,6 +4,7 @@ set -eu # unset variables are errors & non-zero return values exit the whole scr
 [ "$DEBUG" ] && set -x
 
 ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
+AUTOCONFIGURE=${AUTOCONFIGURE:-true} # when set to false will disable all automatic configuration actions
 KCCONF_SERVER_MYSQL_SOCKET=${KCCONF_SERVER_MYSQL_SOCKET:-""}
 DISABLE_CHECKS=${DISABLE_CHECKS:-false}
 DISABLE_CONFIG_CHANGES=${DISABLE_CONFIG_CHANGES:-false}
@@ -17,45 +18,47 @@ KOPANO_CON=${KOPANO_CON:-"file:///var/run/kopano/server.sock"}
 KCCONF_SPOOLER_SMTP_SERVER=${KCCONF_SPOOLER_SMTP_SERVER:-mail}
 KCCONF_SPOOLER_SMTP_PORT=${KCCONF_SPOOLER_SMTP_PORT:-25}
 
-# copy configuration files to /tmp/kopano to prevent modification of mounted config files
-mkdir -p /tmp/kopano
-cp /etc/kopano/*.cfg /tmp/kopano
+if [ "${AUTOCONFIGURE}" == true ]; then
+	# copy configuration files to /tmp/kopano to prevent modification of mounted config files
+	mkdir -p /tmp/kopano
+	cp /etc/kopano/*.cfg /tmp/kopano
 
-if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
-	echo "Invalid service specified: $SERVICE_TO_START" | ts
-	exit 1
+	if [ ! -e /kopano/"$SERVICE_TO_START".py ]; then
+		echo "Invalid service specified: $SERVICE_TO_START" | ts
+		exit 1
+	fi
+
+	# Hint: this is not compatible with a read-only container.
+	# The general recommendation is to already build a container that has all required packages installed.
+	ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
+	if [ -n "$(mkdir -p "/var/lib/apt/lists/" 2&> /dev/null)" ]; then
+		[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
+		[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
+			# shellcheck disable=SC2016 disable=SC2086
+			if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
+				DEBIAN_FRONTEND=noninteractive apt --assume-yes --no-upgrade install "$installpkg"
+			else
+				echo "INFO: $installpkg is already installed"
+			fi
+		done
+	else
+		echo "Notice: Container is run read-only, skipping package installation."
+		echo "If you want to have additional packages installed in the container either:"
+		echo "- build your own image with the packages already included"
+		echo "- switch the container to 'read_only: false'"
+	fi
+
+	mkdir -p /tmp/"$SERVICE_TO_START" /var/run/kopano
+
+	# TODO is this still required now that we won't modify configuration mounted to /etc/kopano?
+	if [ "${DISABLE_CONFIG_CHANGES}" == false ]; then
+		echo "Configure core service '$SERVICE_TO_START'" | ts
+		/kopano/"$SERVICE_TO_START".py
+	fi
+
+	# ensure removed pid-file on unclean shutdowns and mounted volumes
+	rm -f /var/run/kopano/"$SERVICE_TO_START".pid
 fi
-
-# Hint: this is not compatible with a read-only container.
-# The general recommendation is to already build a container that has all required packages installed.
-ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
-if [ -n "$(mkdir -p "/var/lib/apt/lists/" 2&> /dev/null)" ]; then
-	[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
-	[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
-		# shellcheck disable=SC2016 disable=SC2086
-		if [ "$(dpkg-query -W -f='${Status}' $installpkg 2>/dev/null | grep -c 'ok installed')" -eq 0 ]; then
-			DEBIAN_FRONTEND=noninteractive apt --assume-yes --no-upgrade install "$installpkg"
-		else
-			echo "INFO: $installpkg is already installed"
-		fi
-	done
-else
-	echo "Notice: Container is run read-only, skipping package installation."
-	echo "If you want to have additional packages installed in the container either:"
-	echo "- build your own image with the packages already included"
-	echo "- switch the container to 'read_only: false'"
-fi
-
-mkdir -p /tmp/"$SERVICE_TO_START" /var/run/kopano
-
-# TODO is this still required now that we won't modify configuration mounted to /etc/kopano?
-if [ "${DISABLE_CONFIG_CHANGES}" == false ]; then
-	echo "Configure core service '$SERVICE_TO_START'" | ts
-	/kopano/"$SERVICE_TO_START".py
-fi
-
-# ensure removed pid-file on unclean shutdowns and mounted volumes
-rm -f /var/run/kopano/"$SERVICE_TO_START".pid
 
 coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server)
 echo "Using Kopano Groupware Core: $coreversion"
@@ -67,7 +70,7 @@ if [ $# -gt 0 ]; then
 fi
 
 # services need to be aware of the machine-id
-if [[ "$DISABLE_CHECKS" == false  ]]; then
+if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
 	dockerize \
 		-wait file:///etc/machine-id \
 		-wait file:///var/lib/dbus/machine-id
@@ -119,30 +122,32 @@ fi
 # start regular service
 case "$SERVICE_TO_START" in
 server)
-	echo "Set ownership" | ts
-	mkdir -p /kopano/data/attachments
-	chown kopano:kopano /kopano/data/ /kopano/data/attachments
+	if [ "${AUTOCONFIGURE}" == true ]; then
+		echo "Set ownership" | ts
+		mkdir -p /kopano/data/attachments
+		chown kopano:kopano /kopano/data/ /kopano/data/attachments
 	
-	if [[ "$DISABLE_CHECKS" == false ]]; then
-		# determine db connection mode (unix vs. network socket)
-		if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
-			DB_CON="file://$KCCONF_SERVER_MYSQL_SOCKET"
-		else
-			DB_CON="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
-		fi
+		if [[ "$DISABLE_CHECKS" == false ]]; then
+			# determine db connection mode (unix vs. network socket)
+			if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
+				DB_CON="file://$KCCONF_SERVER_MYSQL_SOCKET"
+			else
+				DB_CON="tcp://$KCCONF_SERVER_MYSQL_HOST:$KCCONF_SERVER_MYSQL_PORT"
+			fi
 
-		dockerize \
-			-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
-			-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
-			-wait "$DB_CON" \
-			-timeout 360s
+			dockerize \
+				-wait file://"$KCCONF_SERVER_SERVER_SSL_CA_FILE" \
+				-wait file://"$KCCONF_SERVER_SERVER_SSL_KEY_FILE" \
+				-wait "$DB_CON" \
+				-timeout 360s
+		fi
+		# pre populate database
+		if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
+			kopano-dbadm -c /tmp/kopano/server.cfg populate
+		fi
+		# cleaning up env variables
+		unset "${!KCCONF_@}"
 	fi
-	# pre populate database
-	if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
-		kopano-dbadm -c /tmp/kopano/server.cfg populate
-	fi
-	# cleaning up env variables
-	unset "${!KCCONF_@}"
 	exec "$EXE" -F
 	;;
 dagent)
