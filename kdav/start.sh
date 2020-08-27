@@ -1,10 +1,11 @@
 #!/bin/bash
 
+ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
+AUTOCONFIGURE=${AUTOCONFIGURE:-true} # when set to false will disable all automatic configuration actions
+
 # define default value for serverhostname and serverport if not passed into container
 KCCONF_SERVERHOSTNAME=${KCCONF_SERVERHOSTNAME:-127.0.0.1}
 KCCONF_SERVERPORT=${KCCONF_SERVERPORT:-236}
-ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
-AUTOCONFIGURE=${AUTOCONFIGURE:-true} # when set to false will disable all automatic configuration actions
 
 set -eu # unset variables are errors & non-zero return values exit the whole script
 [ "$DEBUG" ] && set -x

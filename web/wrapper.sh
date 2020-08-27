@@ -11,7 +11,7 @@ fi
 export CADDYPATH="$KOPANO_KWEB_ASSETS_PATH"
 
 # services need to be aware of the machine-id
-if [ "$AUTOCONFIGURE" = "yes" ]; then
+if [ "$AUTOCONFIGURE" = true ]; then
 	dockerize \
 		-wait file:///etc/machine-id \
 		-wait file:///var/lib/dbus/machine-id
