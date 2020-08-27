@@ -68,21 +68,23 @@ if [ -n "${public_guest_access_regexp:-}" ]; then
 	set -- "$@" --public-guest-access-regexp="$public_guest_access_regexp"
 fi
 
-if [ "$INSECURE" = "yes" ]; then
-	dockerize \
-	-skip-tls-verify \
-	-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
-	-timeout 360s
-else
-	dockerize \
-	-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
-	-timeout 360s
-fi
+if [ "${AUTOCONFIGURE}" = true ]; then
+	if [ "$INSECURE" = "yes" ]; then
+		dockerize \
+		-skip-tls-verify \
+		-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
+		-timeout 360s
+	else
+		dockerize \
+		-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
+		-timeout 360s
+	fi
 
-# services need to be aware of the machine-id
-dockerize \
-	-wait file:///etc/machine-id \
-	-wait file:///var/lib/dbus/machine-id
+	# services need to be aware of the machine-id
+	dockerize \
+		-wait file:///etc/machine-id \
+		-wait file:///var/lib/dbus/machine-id
+fi
 
 registration_conf=${registration_conf:-/etc/kopano/kwmserverd-registration.yaml}
 

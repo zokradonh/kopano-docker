@@ -2,7 +2,9 @@ ARG CODE_VERSION=1.2.0
 FROM kopano/kwmserverd:${CODE_VERSION}
 
 ARG CODE_VERSION
-ENV CODE_VERSION="${CODE_VERSION}"
+ENV \
+    AUTOCONFIGURE=true \
+    CODE_VERSION="${CODE_VERSION}"
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano Kwmserver container" \

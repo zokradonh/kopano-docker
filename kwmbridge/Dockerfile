@@ -2,7 +2,9 @@ ARG CODE_VERSION=0.1.0
 FROM kopano/kwmbridged:${CODE_VERSION}
 
 ARG CODE_VERSION
-ENV CODE_VERSION="${CODE_VERSION}"
+ENV \
+    AUTOCONFIGURE=true \
+    CODE_VERSION="${CODE_VERSION}"
 
 LABEL maintainer=az@zok.xyz \
     org.label-schema.name="Kopano Kwmbridge container" \
