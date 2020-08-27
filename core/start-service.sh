@@ -145,57 +145,65 @@ server)
 		if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
 			kopano-dbadm -c /tmp/kopano/server.cfg populate
 		fi
-		# cleaning up env variables
-		unset "${!KCCONF_@}"
 	fi
+	# cleaning up env variables
+	unset "${!KCCONF_@}"
 	exec "$EXE" -F
 	;;
 dagent)
-	dockerize \
-		-wait "$KOPANO_CON" \
-		-timeout 360s
+	if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
+		dockerize \
+			-wait "$KOPANO_CON" \
+			-timeout 360s
+	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec "$EXE" -l
 	;;
 gateway)
-	dockerize \
-		-wait "$KOPANO_CON" \
-		-timeout 360s
+	if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
+		dockerize \
+			-wait "$KOPANO_CON" \
+			-timeout 360s
+	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec "$EXE" -F
 	;;
 ical)
-	dockerize \
-		-wait "$KOPANO_CON" \
-		-timeout 360s
+	if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
+		dockerize \
+			-wait "$KOPANO_CON" \
+			-timeout 360s
+	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec "$EXE" -F
 	;;
 grapi)
-	LC_CTYPE=en_US.UTF-8
-	export socket_path=/var/run/kopano/grapi
-	export pid_file="$socket_path/grapi.pid"
-	mkdir -p "$socket_path" /var/lib/kopano-grapi
-	chown -R kapi:kopano "$socket_path"
-	chown kapi:kopano /var/lib/kopano-grapi
-	# TODO there could be a case where multiple backends are desired
-	case $GRAPI_BACKEND in
-	ldap)
-		[ -n "$KCCONF_GRAPI_LDAP_URI" ] && export LDAP_URI="${KCCONF_GRAPI_LDAP_URI}"
-		[ -n "$KCCONF_GRAPI_LDAP_BASEDN" ] && export LDAP_BASEDN="${KCCONF_GRAPI_LDAP_BASEDN}"
-		[ -n "$KCCONF_GRAPI_LDAP_BINDDN" ] && export LDAP_BINDDN="${KCCONF_GRAPI_LDAP_BINDDN}"
-		if [ -n "$KCCONF_GRAPI_LDAP_BINDPW_FILE" ]; then
-			bindpw="$(cat "${KCCONF_GRAPI_LDAP_BINDPW_FILE}")"
-			export LDAP_BINDPW="${bindpw}"
-		fi
-		;;
-	esac
-	sed s/\ *=\ */=/g /tmp/kopano/grapi.cfg > /tmp/grapi-env
-	# shellcheck disable=SC2046
-	export $(grep -v '^#' /tmp/grapi-env | xargs -d '\n')
+	if [ "${AUTOCONFIGURE}" == true ]; then
+		LC_CTYPE=en_US.UTF-8
+		export socket_path=/var/run/kopano/grapi
+		export pid_file="$socket_path/grapi.pid"
+		mkdir -p "$socket_path" /var/lib/kopano-grapi
+		chown -R kapi:kopano "$socket_path"
+		chown kapi:kopano /var/lib/kopano-grapi
+		# TODO there could be a case where multiple backends are desired
+		case $GRAPI_BACKEND in
+		ldap)
+			[ -n "$KCCONF_GRAPI_LDAP_URI" ] && export LDAP_URI="${KCCONF_GRAPI_LDAP_URI}"
+			[ -n "$KCCONF_GRAPI_LDAP_BASEDN" ] && export LDAP_BASEDN="${KCCONF_GRAPI_LDAP_BASEDN}"
+			[ -n "$KCCONF_GRAPI_LDAP_BINDDN" ] && export LDAP_BINDDN="${KCCONF_GRAPI_LDAP_BINDDN}"
+			if [ -n "$KCCONF_GRAPI_LDAP_BINDPW_FILE" ]; then
+				bindpw="$(cat "${KCCONF_GRAPI_LDAP_BINDPW_FILE}")"
+				export LDAP_BINDPW="${bindpw}"
+			fi
+			;;
+		esac
+		sed s/\ *=\ */=/g /tmp/kopano/grapi.cfg > /tmp/grapi-env
+		# shellcheck disable=SC2046
+		export $(grep -v '^#' /tmp/grapi-env | xargs -d '\n')
+	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	# the backend option is only available in more recent versions of grapi
@@ -208,42 +216,48 @@ grapi)
 	fi
 	;;
 kapi)
-	mkdir -p /kopano/data/kapi-kvs
-	if [ "$KCCONF_KAPID_INSECURE" = "yes" ]; then
-		dockerize \
-		-skip-tls-verify \
-		-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
-		-timeout 360s
-	else
-		dockerize \
-		-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
-		-timeout 360s
+	if [ "${AUTOCONFIGURE}" == true ]; then
+		mkdir -p /kopano/data/kapi-kvs
+		if [ "$KCCONF_KAPID_INSECURE" = "yes" ]; then
+			dockerize \
+			-skip-tls-verify \
+			-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
+			-timeout 360s
+		else
+			dockerize \
+			-wait "$KCCONF_KAPID_OIDC_ISSUER_IDENTIFIER"/.well-known/openid-configuration \
+			-timeout 360s
+		fi
+		LC_CTYPE=en_US.UTF-8
+		sed s/\ *=\ */=/g /tmp/kopano/kapid.cfg > /tmp/kapid-env
+		# shellcheck disable=SC2046
+		export $(grep -v '^#' /tmp/kapid-env | xargs -d '\n')
+		"$EXE" setup
 	fi
-	kapiversion=$(dpkg-query --showformat='${Version}' --show kopano-kapid)
-	echo "Using Kopano Kapi: $kapiversion"
-	LC_CTYPE=en_US.UTF-8
-	sed s/\ *=\ */=/g /tmp/kopano/kapid.cfg > /tmp/kapid-env
-	# shellcheck disable=SC2046
-	export $(grep -v '^#' /tmp/kapid-env | xargs -d '\n')
-	"$EXE" setup
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
+	kapiversion=$(dpkg-query --showformat='${Version}' --show kopano-kapid)
+	echo "Using Kopano Kapi: $kapiversion"
 	exec "$EXE" serve --log-timestamp=false
 	;;
 monitor)
-	dockerize \
-		-wait "$KOPANO_CON" \
-		-timeout 360s
+	if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
+		dockerize \
+			-wait "$KOPANO_CON" \
+			-timeout 360s
+	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec "$EXE" -F
 	;;
 search)
-	dockerize \
-		-wait "$KOPANO_CON" \
-		-timeout 360s
-	# give kopano-server a moment to settler before starting search
-	sleep 5
+	if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
+		dockerize \
+			-wait "$KOPANO_CON" \
+			-timeout 360s
+		# give kopano-server a moment to settler before starting search
+		sleep 5
+	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	# with commit 702bb3fccb3 search does not need -F any longer
@@ -255,18 +269,22 @@ search)
 	fi
 	;;
 spamd)
-	dockerize \
-		-wait "$KOPANO_CON" \
-		-timeout 360s
+	if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
+		dockerize \
+			-wait "$KOPANO_CON" \
+			-timeout 360s
+	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec "$EXE" --config /tmp/kopano/spamd.cfg -F
 	;;
 spooler)
-	dockerize \
-		-wait "$KOPANO_CON" \
-		-wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":"$KCCONF_SPOOLER_SMTP_PORT" \
-		-timeout 1080s
+	if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
+		dockerize \
+			-wait "$KOPANO_CON" \
+			-wait tcp://"$KCCONF_SPOOLER_SMTP_SERVER":"$KCCONF_SPOOLER_SMTP_PORT" \
+			-timeout 1080s
+	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
 	exec "$EXE" -F
