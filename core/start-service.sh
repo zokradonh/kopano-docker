@@ -144,7 +144,7 @@ server)
 		fi
 		# pre populate database
 		if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
-			kopano-dbadm -c $KOPANO_CONFIG_PATH/server.cfg populate
+			kopano-dbadm -c "$KOPANO_CONFIG_PATH/server.cfg" populate
 		fi
 	fi
 	# cleaning up env variables
@@ -201,7 +201,7 @@ grapi)
 			fi
 			;;
 		esac
-		sed s/\ *=\ */=/g $KOPANO_CONFIG_PATH/grapi.cfg > /tmp/grapi-env
+		sed s/\ *=\ */=/g "$KOPANO_CONFIG_PATH/grapi.cfg" > /tmp/grapi-env
 		# shellcheck disable=SC2046
 		export $(grep -v '^#' /tmp/grapi-env | xargs -d '\n')
 	fi
@@ -230,7 +230,7 @@ kapi)
 			-timeout 360s
 		fi
 		LC_CTYPE=en_US.UTF-8
-		sed s/\ *=\ */=/g $KOPANO_CONFIG_PATH/kapid.cfg > /tmp/kapid-env
+		sed s/\ *=\ */=/g "$KOPANO_CONFIG_PATH/kapid.cfg" > /tmp/kapid-env
 		# shellcheck disable=SC2046
 		export $(grep -v '^#' /tmp/kapid-env | xargs -d '\n')
 		"$EXE" setup
@@ -264,9 +264,9 @@ search)
 	# with commit 702bb3fccb3 search does not need -F any longer
 	searchversion=$(dpkg-query --showformat='${Version}' --show kopano-search)
 	if dpkg --compare-versions "$searchversion" "gt" "8.7.82.165"; then
-		exec "$EXE" --config $KOPANO_CONFIG_PATH/search.cfg
+		exec "$EXE" --config "$KOPANO_CONFIG_PATH/search.cfg"
 	else
-		exec /usr/bin/python3 "$EXE" --config $KOPANO_CONFIG_PATH/search.cfg -F
+		exec /usr/bin/python3 "$EXE" --config "$KOPANO_CONFIG_PATH/search.cfg" -F
 	fi
 	;;
 spamd)
@@ -277,7 +277,7 @@ spamd)
 	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec "$EXE" --config $KOPANO_CONFIG_PATH/spamd.cfg -F
+	exec "$EXE" --config "$KOPANO_CONFIG_PATH/spamd.cfg" -F
 	;;
 spooler)
 	if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
