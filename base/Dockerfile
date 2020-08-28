@@ -11,6 +11,7 @@ ARG KOPANO_UID=999
 ARG KOPANO_GID=999
 
 ENV \
+    AUTOCONFIGURE=true \
     BASE_VERSION=2.2.0 \
     DEBIAN_FRONTEND=noninteractive \
     DEBUG=""
