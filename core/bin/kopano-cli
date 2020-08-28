@@ -1,3 +1,8 @@
 #!/bin/bash
 
+if [ ! -f /usr/sbin/kopano-cli ]; then
+	echo "kopano-cli has been removed from Kopano Groupware Core 10 and upwards. Please use kopano-admin instead."
+	exit 1
+fi
+
 /usr/sbin/kopano-cli --config "$KOPANO_CONFIG_PATH/admin.cfg" "$@"
