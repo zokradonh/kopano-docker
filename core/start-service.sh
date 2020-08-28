@@ -17,9 +17,10 @@ KCCONF_SPOOLER_SERVER_SOCKET=${KCCONF_SPOOLER_SERVER_SOCKET:-"file:///var/run/ko
 KOPANO_CON=${KOPANO_CON:-"file:///var/run/kopano/server.sock"}
 KCCONF_SPOOLER_SMTP_SERVER=${KCCONF_SPOOLER_SMTP_SERVER:-mail}
 KCCONF_SPOOLER_SMTP_PORT=${KCCONF_SPOOLER_SMTP_PORT:-25}
+KOPANO_CONFIG_PATH=${KOPANO_CONFIG_PATH:-/tmp/kopano}
 
 if [ "${AUTOCONFIGURE}" == true ]; then
-	# copy configuration files to /tmp/kopano to prevent modification of mounted config files
+	# copy configuration files to /tmp/kopano (default value of $KOPANO_CONFIG_PATH)  to prevent modification of mounted config files
 	mkdir -p /tmp/kopano
 	cp /etc/kopano/*.cfg /tmp/kopano
 
@@ -126,7 +127,7 @@ server)
 		echo "Set ownership" | ts
 		mkdir -p /kopano/data/attachments
 		chown kopano:kopano /kopano/data/ /kopano/data/attachments
-	
+
 		if [[ "$DISABLE_CHECKS" == false ]]; then
 			# determine db connection mode (unix vs. network socket)
 			if [ -n "$KCCONF_SERVER_MYSQL_SOCKET" ]; then
@@ -143,7 +144,7 @@ server)
 		fi
 		# pre populate database
 		if dpkg --compare-versions "$coreversion" "gt" "8.7.84"; then
-			kopano-dbadm -c /tmp/kopano/server.cfg populate
+			kopano-dbadm -c $KOPANO_CONFIG_PATH/server.cfg populate
 		fi
 	fi
 	# cleaning up env variables
@@ -200,7 +201,7 @@ grapi)
 			fi
 			;;
 		esac
-		sed s/\ *=\ */=/g /tmp/kopano/grapi.cfg > /tmp/grapi-env
+		sed s/\ *=\ */=/g $KOPANO_CONFIG_PATH/grapi.cfg > /tmp/grapi-env
 		# shellcheck disable=SC2046
 		export $(grep -v '^#' /tmp/grapi-env | xargs -d '\n')
 	fi
@@ -229,7 +230,7 @@ kapi)
 			-timeout 360s
 		fi
 		LC_CTYPE=en_US.UTF-8
-		sed s/\ *=\ */=/g /tmp/kopano/kapid.cfg > /tmp/kapid-env
+		sed s/\ *=\ */=/g $KOPANO_CONFIG_PATH/kapid.cfg > /tmp/kapid-env
 		# shellcheck disable=SC2046
 		export $(grep -v '^#' /tmp/kapid-env | xargs -d '\n')
 		"$EXE" setup
@@ -263,9 +264,9 @@ search)
 	# with commit 702bb3fccb3 search does not need -F any longer
 	searchversion=$(dpkg-query --showformat='${Version}' --show kopano-search)
 	if dpkg --compare-versions "$searchversion" "gt" "8.7.82.165"; then
-		exec "$EXE" --config /tmp/kopano/search.cfg
+		exec "$EXE" --config $KOPANO_CONFIG_PATH/search.cfg
 	else
-		exec /usr/bin/python3 "$EXE" --config /tmp/kopano/search.cfg -F
+		exec /usr/bin/python3 "$EXE" --config $KOPANO_CONFIG_PATH/search.cfg -F
 	fi
 	;;
 spamd)
@@ -276,7 +277,7 @@ spamd)
 	fi
 	# cleaning up env variables
 	unset "${!KCCONF_@}"
-	exec "$EXE" --config /tmp/kopano/spamd.cfg -F
+	exec "$EXE" --config $KOPANO_CONFIG_PATH/spamd.cfg -F
 	;;
 spooler)
 	if [ "${AUTOCONFIGURE}" == true ] && [ "$DISABLE_CHECKS" == false ]; then
