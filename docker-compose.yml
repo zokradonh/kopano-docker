@@ -220,7 +220,7 @@ services:
       - /tmp
 
   kopano_kapps:
-    image: ${docker_repo:-zokradonh}/kopano_kapps:${CORE_VERSION:-latest}
+    image: ${docker_repo:-zokradonh}/kopano_kapps:${KAPPS_VERSION:-latest}
     read_only: true
     restart: unless-stopped
     environment:
