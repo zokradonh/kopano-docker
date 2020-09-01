@@ -84,9 +84,9 @@ if [ ! -e ./.env ]; then
 	read -r -p "Which tag do you want to use for Kopano Konnect? [$value_default]: " new_value
 	KONNECT_VERSION=${new_value:-$value_default}
 
-        value_default=latest
-        read -r -p "Which tag do you want to use for Kopano Kapps? [$value_default]: " new_value
-        KAPPS_VERSION=${new_value:-$value_default}
+	value_default=latest
+	read -r -p "Which tag do you want to use for Kopano Kapps? [$value_default]: " new_value
+	KAPPS_VERSION=${new_value:-$value_default}
 
 	value_default=latest
 	read -r -p "Which tag do you want to use for Kopano Kwmserver? [$value_default]: " new_value
