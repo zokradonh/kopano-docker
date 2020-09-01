@@ -17,13 +17,13 @@ zpush_download_version := $(shell ./version.sh zpush)
 vcs_ref := $(shell git rev-parse --short HEAD)
 
 KOPANO_CORE_REPOSITORY_URL := file:/kopano/repo/core
+KOPANO_KAPPS_REPOSITORY_URL := file:/kopano/repo/kapps
 KOPANO_MEET_REPOSITORY_URL := file:/kopano/repo/meet
-KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
 KOPANO_WEBAPP_FILES_REPOSITORY_URL := file:/kopano/repo/files
 KOPANO_WEBAPP_MDM_REPOSITORY_URL := file:/kopano/repo/mdm
+KOPANO_WEBAPP_REPOSITORY_URL := file:/kopano/repo/webapp
 KOPANO_WEBAPP_SMIME_REPOSITORY_URL := file:/kopano/repo/smime
 KOPANO_ZPUSH_REPOSITORY_URL := http://repo.z-hub.io/z-push:/final/Debian_10/
-RELEASE_KEY_DOWNLOAD := 0
 DOWNLOAD_COMMUNITY_PACKAGES := 1
 KOPANO_UID := 999
 KOPANO_GID := 999
@@ -41,8 +41,8 @@ COMPONENT = $(shell echo $(component) | tr a-z A-Z)
 default: help
 
 .PHONY: help
-help:
-	@eval $$(sed -r -n 's/^([a-zA-Z0-9_-]+):.*?## (.*)$$/printf "\\033[36m%-30s\\033[0m %s\\n" "\1" "\2" ;/; ta; b; :a p' $(MAKEFILE_LIST) | sort)
+help: ## Show this help
+	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: build-all
 all: build-all
@@ -60,19 +60,19 @@ endif
 ifeq (,$(wildcard ./apt_auth.conf))
 	touch apt_auth.conf
 endif
-	DOCKER_BUILDKIT=1 docker build --rm \
+	BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 docker build --rm \
 		--build-arg VCS_REF=$(vcs_ref) \
 		--build-arg docker_repo=${docker_repo} \
 		--build-arg KOPANO_CORE_VERSION=${core_download_version} \
 		--build-arg KOPANO_$(COMPONENT)_VERSION=${$(component)_download_version} \
 		--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+		--build-arg KOPANO_KAPPS_REPOSITORY_URL=$(KOPANO_KAPPS_REPOSITORY_URL) \
 		--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
-		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
 		--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
-		--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
 		--build-arg ADDITIONAL_KOPANO_PACKAGES=$(ADDITIONAL_KOPANO_PACKAGES) \
 		--build-arg ADDITIONAL_KOPANO_WEBAPP_PLUGINS=$(ADDITIONAL_KOPANO_WEBAPP_PLUGINS) \
@@ -99,7 +99,7 @@ ifdef TRAVIS
 	@echo "fetching previous build to warm up build cache (only on travis)"
 	docker pull  $(docker_repo)/kopano_$(component):builder || true
 endif
-	DOCKER_BUILDKIT=1 docker build --rm \
+	BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 docker build --rm \
 		--target builder \
 		--build-arg VCS_REF=$(vcf_ref) \
 		--build-arg docker_repo=${docker_repo} \
@@ -112,7 +112,6 @@ endif
 		--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
 		--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
 		--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
-		--build-arg RELEASE_KEY_DOWNLOAD=$(RELEASE_KEY_DOWNLOAD) \
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component):builder $(component)/
@@ -121,10 +120,10 @@ build-base: ## Build new base image.
 	docker pull debian:buster
 	component=base make build
 
-build-core:
+build-core: build-base
 	component=core make build
 
-build-core-dagent:
+build-core-dagent: build-core
 	docker build --rm \
 		-f core/Dockerfile.dagent \
 		--build-arg docker_repo=$(docker_repo) \
@@ -133,11 +132,14 @@ build-core-dagent:
 build-helper:
 	component=build make build-simple
 
-build-kapps:
+build-kapps: build-base
 	component=kapps make build
 
 build-konnect:
 	component=konnect make build-simple
+
+build-kwmbridge:
+	component=kwmbridge make build-simple
 
 build-kwmserver:
 	component=kwmserver make build-simple
@@ -145,20 +147,20 @@ build-kwmserver:
 build-ldap:
 	component=ldap make build-simple
 
-build-ldap-demo:
+build-ldap-demo: build-ldap
 	component=ldap_demo make build-simple
 
-build-meet:
+build-meet: build-base
 	component=meet make build
 
-build-php:
+build-php: build-base
 	component=php make build
 
 build-playground:
 	component=playground make build-builder
 	component=playground make build-simple
 
-build-python:
+build-python: build-base
 	component=python make build
 
 build-kdav:
@@ -174,26 +176,26 @@ build-ssl:
 	docker pull alpine:3.11
 	component=ssl make build-simple
 
-build-utils:
+build-utils: build-core
 	component=utils make build
 
 build-web:
 	component=web make build-simple
 
-build-webapp:
+build-webapp: build-php
 	component=webapp make build
 
-build-webapp-demo: ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
+build-webapp-demo: build-webapp ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
 	docker build --rm \
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
 
-build-webapp-plugins: ## Example for a custom image to install Kopano WebApp plugins
+build-webapp-plugins: build-webapp ## Example for a custom image to install Kopano WebApp plugins
 	docker build --rm \
 		-f webapp/Dockerfile.plugins \
 		-t $(docker_repo)/kopano_webapp webapp/
 
-build-zpush:
+build-zpush: build-php
 	component=zpush make build
 
 tag-all: build-all ## Helper target to create tags for all images.

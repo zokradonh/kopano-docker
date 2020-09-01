@@ -5,7 +5,6 @@ FROM ${docker_repo}/kopano_base
 ARG ADDITIONAL_KOPANO_PACKAGES=""
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
-ARG RELEASE_KEY_DOWNLOAD=0
 ARG DEBIAN_FRONTEND=noninteractive
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
@@ -26,7 +25,6 @@ ENV \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
     KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
     LANG=en_US.UTF-8 \
-    RELEASE_KEY_DOWNLOAD=$RELEASE_KEY_DOWNLOAD \
     SERVICE_TO_START=server
 
 LABEL maintainer=az@zok.xyz \
@@ -49,7 +47,7 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     apt-get update && \
     set -x && \
     apt-get -o Debug::pkgProblemResolver=true install --no-install-recommends -y \
-        kopano-server-packages \
+        kopano-server-packages kopano-spamd \
         ${ADDITIONAL_KOPANO_PACKAGES} \
         && \
     coreversion=$(dpkg-query --showformat='${Version}' --show kopano-server) && \

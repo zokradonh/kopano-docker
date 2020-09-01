@@ -2224,7 +2224,7 @@ uid: user4
 uidNumber: 4
 userPassword:: dXNlcjQ=
 sn:: 4KSw4oCM4KSc4KS/4KSk4KSV4KS+4KSw
-kopanoEnabledFeatures: imap
+kopanoEnabledFeatures: imap, pop3
 street: Scheelring 67
 postalCode: 23418
 l: Stendal

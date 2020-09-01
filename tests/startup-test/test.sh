@@ -16,7 +16,7 @@ dockerize \
 	-wait tcp://kopano_server:236 \
 	-wait tcp://kopano_server:237 \
 	-wait tcp://kopano_webapp:9080 \
-	-wait tcp://kopano_zpush:80 \
+	-wait tcp://kopano_zpush:9080 \
 	-wait tcp://web:2015 \
 	-timeout 120s
 
@@ -27,7 +27,6 @@ docker exec kopano_server goss -g /kopano/goss/server/goss.yaml validate
 docker exec kopano_server kopano-storeadm -h default: -P || true
 
 docker exec kopano_server kopano-admin --sync
-docker exec kopano_server kopano-cli --list-users
 docker exec kopano_server kopano-storeadm -O # list users without a store
 docker exec kopano_server kopano-admin -l
 docker exec kopano_zpush z-push-admin -a list

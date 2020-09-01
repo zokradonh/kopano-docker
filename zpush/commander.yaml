@@ -1,12 +1,12 @@
 tests:
   start-service script:
-    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh"
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.3='echo php-fpm7.3'; . /kopano/start.sh"
     exit-code: 0
     stdout:
       not-contains:
         - "Reading package lists..."
   start-service script (installing new package):
-    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh"
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.3='echo php-fpm7.3'; . /kopano/start.sh"
     exit-code: 0
     stdout:
       contains:
@@ -15,7 +15,7 @@ tests:
       env:
         ADDITIONAL_KOPANO_PACKAGES: "nano"
   start-service script (installing existing package):
-    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh"
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.3='echo php-fpm7.3'; . /kopano/start.sh"
     exit-code: 0
     stdout:
       contains:
@@ -24,19 +24,19 @@ tests:
       env:
         ADDITIONAL_KOPANO_PACKAGES: "z-push-kopano"
   start-service script (z-push configuration):
-    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.3='echo php-fpm7.3'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
     exit-code: 0
     stdout:
       contains:
         - "define('USE_CUSTOM_REMOTE_IP_HEADER', 'HTTP_X_FORWARDED_FOR');"
   start-service script (configuring gabsync):
-    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/z-push/gabsync.conf.php
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.3='echo php-fpm7.3'; . /kopano/start.sh" && cat /etc/z-push/gabsync.conf.php
     exit-code: 0
     stdout:
       contains:
         - "define('USERNAME', 'SYSTEM');"
   start-service script (no additional folders):
-    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.3='echo php-fpm7.3'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
     exit-code: 0
     stdout:
       contains:
@@ -45,7 +45,7 @@ tests:
         - "\t$additionalFolders = array("
         - "\t);"
   start-service script (empty additional folders):
-    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.3='echo php-fpm7.3'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
     exit-code: 0
     stdout:
       contains:
@@ -57,7 +57,7 @@ tests:
       env:
         ZPUSH_ADDITIONAL_FOLDERS: "[]"
   start-service script (set additional folders):
-    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.0='echo php-fpm7.0'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
+    command: bash -c "shopt -s expand_aliases; alias exec='echo exec'; alias php-fpm7.3='echo php-fpm7.3'; . /kopano/start.sh" && cat /etc/z-push/z-push.conf.php
     exit-code: 0
     stdout:
       contains:

@@ -41,7 +41,7 @@ if [ ! -e /etc/machine-id ]; then
 fi
 
 echo "Creating individual env files for containers (if they do not exist already)"
-for dockerenv in ldap password-self-service mail db kopano_ssl kopano_server kopano_webapp kopano_zpush kopano_grapi kopano_kapi kopano_dagent kopano_spooler kopano_gateway kopano_ical kopano_monitor kopano_scheduler kopano_search kopano_konnect kopano_kwmserver kopano_meet kopano_kapps; do
+for dockerenv in ldap password-self-service mail db kopano_ssl kopano_server kopano_webapp kopano_zpush kopano_grapi kopano_kapi kopano_dagent kopano_spooler kopano_gateway kopano_ical kopano_monitor kopano_scheduler kopano_search kopano_konnect kopano_kwmbridge kopano_kwmserver kopano_meet kopano_kapps kopano_spamd; do
 	touch ./"$dockerenv".env
 done
 
@@ -342,13 +342,13 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.db.yml:d
 # Modify below to build a different version, than the Kopano nightly release
 # credentials for repositories are handled through a file called apt_auth.conf (which will be created through setup.sh or Makefile)
 #KOPANO_CORE_REPOSITORY_URL=https://download.kopano.io/supported/core:/8.7/Debian_10/
+#KOPANO_KAPPS_REPOSITORY_URL=https://download.kopano.io/supported/kapps:/master/Debian_10/
 #KOPANO_MEET_REPOSITORY_URL=https://download.kopano.io/supported/meet:/final/Debian_10/
-#KOPANO_WEBAPP_REPOSITORY_URL=https://download.kopano.io/supported/webapp:/final/Debian_10/
-#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://download.kopano.io/supported/files:/final/Debian_10/
+#KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://download.kopano.io/supported/files:/pre-final/Debian_10/
 #KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://download.kopano.io/supported/mdm:/final/Debian_10/
+#KOPANO_WEBAPP_REPOSITORY_URL=https://download.kopano.io/supported/webapp:/final/Debian_10/
 #KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://download.kopano.io/supported/smime:/final/Debian_10/
 #KOPANO_ZPUSH_REPOSITORY_URL=http://repo.z-hub.io/z-push:/final/Debian_10/
-#RELEASE_KEY_DOWNLOAD=1
 #DOWNLOAD_COMMUNITY_PACKAGES=0
 
 # Remove this variable to not push versioned containers with the :latest tag

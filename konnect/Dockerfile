@@ -1,6 +1,6 @@
-ARG CODE_VERSION=0.33.3
+ARG CODE_VERSION=0.33.5
 
-FROM golang:1.13.5-alpine3.10 as builder-sponge
+FROM golang:1.15-alpine3.12 as builder-sponge
 
 RUN apk add --no-cache git
 RUN go get -d -v github.com/go-moreutils/sponge
@@ -10,7 +10,9 @@ FROM kopano/konnectd:${CODE_VERSION}
 
 ARG CODE_VERSION
 
-ENV CODE_VERSION="${CODE_VERSION}" \
+ENV \
+    AUTOCONFIGURE=true \
+    CODE_VERSION="${CODE_VERSION}" \
     DEBUG="" \
     FQDN=localhost \
     KONNECT_BACKEND="kc" \

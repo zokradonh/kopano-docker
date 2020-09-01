@@ -12,7 +12,7 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 ENV \
-    AUTOCONFIG=yes \
+    AUTOCONFIGURE=true \
     CODE_VERSION="${CODE_VERSION}" \
     DEFAULTREDIRECT="/webapp" \
     KONNECTPATH=kopanoid \
