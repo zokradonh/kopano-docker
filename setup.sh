@@ -85,6 +85,10 @@ if [ ! -e ./.env ]; then
 	KONNECT_VERSION=${new_value:-$value_default}
 
 	value_default=latest
+	read -r -p "Which tag do you want to use for Kopano Kapps? [$value_default]: " new_value
+	KAPPS_VERSION=${new_value:-$value_default}
+
+	value_default=latest
 	read -r -p "Which tag do you want to use for Kopano Kwmserver? [$value_default]: " new_value
 	KWM_VERSION=${new_value:-$value_default}
 
@@ -268,6 +272,7 @@ KONNECT_VERSION=$KONNECT_VERSION
 KWM_VERSION=$KWM_VERSION
 MEET_VERSION=$MEET_VERSION
 KDAV_VERSION=$KDAV_VERSION
+KAPPS_VERSION=$KAPPS_VERSION
 
 LDAP_CONTAINER=$LDAP_CONTAINER
 LDAP_ORGANISATION="$LDAP_ORGANISATION"
