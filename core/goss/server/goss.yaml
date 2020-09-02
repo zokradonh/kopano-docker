@@ -1,4 +1,5 @@
 file:
+  # TODO how to make path dynamic?
   /kopano/data/attachments/:
     exists: true
     mode: "0755"
@@ -11,12 +12,6 @@ file:
     owner: kopano
     group: kopano
     filetype: socket
-  /run/kopano/server.pid:
-    exists: true
-    mode: "0644"
-    owner: kopano
-    group: kopano
-    filetype: file
   /run/kopano/server.sock:
     exists: true
     mode: "0666"
@@ -27,9 +22,11 @@ process:
   kopano-server:
     running: true
 http:
+  # TODO what if plain http is deactivated? (or uses a different port?)
   http://localhost:236:
     status: 405
     timeout: 5000
+  # TODO what if ssl is deactivated? (or uses a different port?)
   https://localhost:237:
     status: 405
     allow-insecure: true
