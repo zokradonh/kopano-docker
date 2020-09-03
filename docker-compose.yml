@@ -533,7 +533,7 @@ services:
       - kopano_server
     volumes:
       - /etc/machine-id:/etc/machine-id
-      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanosocket/:/run/kopano
       - kopanossl/:/kopano/ssl
       - kopanospamd/:/var/lib/kopano/spamd
