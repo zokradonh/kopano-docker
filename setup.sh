@@ -37,7 +37,7 @@ docker_tag_search() {
 
 if [ ! -e /etc/machine-id ]; then
 	echo "This compose file uses /etc/machine-id to identify the system its running on. The file does not seem to exist on your system, please create it."
-	exit 1 
+	exit 1
 fi
 
 echo "Creating individual env files for containers (if they do not exist already)"
@@ -216,24 +216,6 @@ if [ ! -e ./.env ]; then
 	fi
 
 	ADDITIONAL_KOPANO_WEBAPP_PLUGINS=""
-
-	prompt="Check language spell support (again to uncheck, ENTER when done): "
-	while lang_menu && read -rp "$prompt" num && [[ "$num" ]]; do
-		# shellcheck disable=SC2015
-		[[ "$num" != *[![:digit:]]* ]] &&
-		(( num > 0 && num <= ${#LANG_OPTIONS[@]} )) ||
-		{ msg="Invalid option: $num"; continue; }
-		((num--)); msg="${LANG_OPTIONS[num]} was ${lang_choices[num]:+un}checked"
-		[[ "${lang_choices[num]}" ]] && lang_choices[num]="" || lang_choices[num]="+"
-	done
-
-	KOPANO_SPELL_PLUGIN=""
-	KOPANO_SPELL_LANG_PLUGIN=""
-	for i in "${!LANG_OPTIONS[@]}"; do
-		[[ "${lang_choices[i]}" ]] && { KOPANO_SPELL_LANG_PLUGIN="${KOPANO_SPELL_LANG_PLUGIN} kopano-webapp-plugin-spell-${LANG_OPTIONS[i]}"; KOPANO_SPELL_PLUGIN="kopano-webapp-plugin-spell"; }
-	done
-
-	ADDITIONAL_KOPANO_WEBAPP_PLUGINS="${KOPANO_SPELL_PLUGIN}${KOPANO_SPELL_LANG_PLUGIN}"
 
 	prompt="Check for additional plugins (again to uncheck, ENTER when done): "
 	while plugin_menu && read -rp "$prompt" num && [[ "$num" ]]; do
