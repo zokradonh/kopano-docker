@@ -2,16 +2,16 @@
 <!DOCTYPE template SYSTEM "template.dtd">
 <template>
 	<title>
-		Kopano Company
+		Zarafa Company
 	</title>
 	<regexp>
-		dc=.*
+		^ou=.*,
 	</regexp>
 	<icon>
-		ldap-o.png
+		images/ou.png
 	</icon>
 	<description>
-		Kopano Company
+		Zarafa Company
 	</description>
 	<askcontainer>
 		1
@@ -25,7 +25,7 @@
 	<objectClasses>
 		<objectClass id="organizationalUnit">
 		</objectClass>
-		<objectClass id="kopano-company">
+		<objectClass id="zarafa-company">
 		</objectClass>
 	</objectClasses>
 	<attributes>
@@ -34,10 +34,10 @@
 				Unit
 			</description>
 			<display>
-				Organisational Unit (usually: domain name)
+				Organisational Unit
 			</display>
 			<hint>
-				don't include 'ou='
+				don't include "ou="
 			</hint>
 			<order>
 				1
@@ -46,9 +46,9 @@
 				1
 			</page>
 		</attribute>
-		<attribute id="kopanoViewPrivilege">
+		<attribute id="zarafaViewPrivilege">
 			<description>
-				KopanoViewPrivilege
+				ZarafaViewPrivilege
 			</description>
 			<display>
 				View Privilege
@@ -63,9 +63,9 @@
 				1
 			</page>
 		</attribute>
-		<attribute id="kopanoSystemAdmin">
+		<attribute id="zarafaSystemAdmin">
 			<description>
-				KopanoSystemAdmin
+				ZarafaSystemAdmin
 			</description>
 			<display>
 				Admin Privilege
@@ -80,9 +80,9 @@
 				1
 			</page>
 		</attribute>
-		<attribute id="kopanoQuotaOverride">
+		<attribute id="zarafaQuotaOverride">
 			<description>
-				KopanoQuotaOverride
+				ZarafaQuotaOverride
 			</description>
 			<display>
 				Quota Override
@@ -97,9 +97,9 @@
 				1
 			</page>
 		</attribute>
-		<attribute id="kopanoUserDefaultQuotaWarn">
+		<attribute id="zarafaUserDefaultQuotaWarn">
 			<description>
-				kopanoUserDefaultQuotaWarn
+				zarafaUserDefaultQuotaWarn
 			</description>
 			<display>
 				User Default Quota Warn
@@ -114,9 +114,9 @@
 				1
 			</page>
 		</attribute>
-		<attribute id="kopanoUserDefaultQuotaSoft">
+		<attribute id="zarafaUserDefaultQuotaSoft">
 			<description>
-				kopanoUserDefaultQuotaSoft
+				zarafaUserDefaultQuotaSoft
 			</description>
 			<display>
 				User Default Quota Soft
@@ -131,12 +131,12 @@
 				1
 			</page>
 		</attribute>
-		<attribute id="kopanoUserDefaultQuotaHard">
+		<attribute id="zarafaUserDefaultQuotaHard">
 			<description>
-				kopanoUserDefaultQuotaHard
+				zarafaUserDefaultQuotaSoft
 			</description>
 			<display>
-				User Default Quota Hard
+				User Default Quota Soft
 			</display>
 			<hint>
 				User default hard quota size in MB
@@ -148,9 +148,9 @@
 				1
 			</page>
 		</attribute>
-		<attribute id="kopanoQuotaUserWarningRecipients">
+		<attribute id="zarafaQuotaUserWarningRecipients">
 			<description>
-				kopanoQuotaUserWarningRecipients
+				zarafaQuotaUserWarningRecipients
 			</description>
 			<display>
 				Quota User Warning Recipients
@@ -165,9 +165,9 @@
 				1
 			</page>
 		</attribute>
-		<attribute id="kopanoQuotaCompanyWarningRecipients">
+		<attribute id="zarafaQuotaCompanyWarningRecipients">
 			<description>
-				kopanoQuotaCompanyWarningRecipients
+				zarafaQuotaCompanyWarningRecipients
 			</description>
 			<display>
 				Quota Company Warning Recipients

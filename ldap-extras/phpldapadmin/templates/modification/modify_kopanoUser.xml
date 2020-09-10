@@ -1,120 +1,268 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE template SYSTEM "template.dtd">
 <template>
-<title>Update Kopano User Account</title>
-<regexp>ou=.*</regexp>
-<icon>ldap-user.png</icon>
-<description>Update Kopano User Account</description>
-<askcontainer>1</askcontainer>
-<rdn>cn</rdn>
-<visible>1</visible>
-
-<objectClasses>
-<objectClass id="simpleSecurityObject"></objectClass>
-<objectClass id="kopano-user"></objectClass>
-<objectClass id="inetOrgPerson"></objectClass>
-</objectClasses>
-
-<attributes>
-<attribute id="cn">
-        <display>Common Name</display>
-        <order>1</order>
-        <page>1</page>
-</attribute>
-
-<attribute id="givenName">
-        <display>First name</display>
-        <icon>ldap-user.png</icon>
-        <order>2</order>
-        <page>1</page>
-</attribute>
-<attribute id="sn">
-        <display>Last name</display>
-        <order>3</order>
-        <page>1</page>
-</attribute>
-<attribute id="uid">
-        <display>Login Name(UID)</display>
-        <hint>required</hint>
-        <onchange>=autoFill(mail;%uid%)</onchange>
-        <order>4</order>
-        <page>1</page>
-</attribute>
-<attribute id="mail">
-        <display>Email</display>
-        <icon>mail.png</icon>
-        <order>5</order>
-        <page>1</page>
-</attribute>
-<attribute id="kopanoAliases">
-   <display>Mail Alias</display>
-   <hint>Other email addresses that will be delivered to this account.</hint>
-   <icon>mail.png</icon>
-   <order>6</order>
-   <page>1</page>
-</attribute>
-<attribute id="telephoneNumber">
-        <display>Work phone</display>
-        <icon>phone.png</icon>
-        <order>7</order>
-        <page>1</page>
-</attribute>
-<attribute id="facsimileTelephoneNumber">
-        <display>Fax</display>
-        <order>8</order>
-        <page>1</page>
-</attribute>
-<attribute id="mobile">
-        <display>Mobile</display>
-        <order>9</order>
-        <page>1</page>
-        <spacer>1</spacer>
-</attribute>
-<attribute id="kopanoEnabledFeatures">
-   <display>Kopano Enabled Feature, one per field.</display>
-   <hint>Possible values: imap pop3 mobile outlook webapp</hint>
-   <icon>mail.png</icon>
-   <max>5</max>
-   <order>10</order>
-   <page>1</page>
-</attribute>
-<attribute id="kopanoDisabledFeatures">
-   <display>Kopano Disabled Feature, one per field.</display>
-   <hint>Possible values: imap pop3 mobile outlook webapp</hint>
-   <icon>mail.png</icon>
-   <max>5</max>
-   <order>11</order>
-   <page>1</page>
-</attribute>
-<attribute id="kopanoAdmin">
-   <display>Kopano Administrator</display>
-   <description>Is this user a Kopano Administrator?</description>
-   <order>12</order>
-   <page>1</page>
-</attribute>
-<attribute id="kopanoQuotaWarn">
-   <display>Quota Warning (MB)</display>
-   <description>Send out a warning message if the user exceeds this value.</description>
-   <order>13</order>
-   <page>1</page>
-</attribute>
-<attribute id="kopanoQuotaSoft">
-   <display>Soft Quota (MB)</display>
-   <description>Disable sending of mail if the user exceeds this value.</description>
-   <order>14</order>
-   <page>1</page>
-</attribute>
-<attribute id="kopanoQuotaHard">
-   <display>Hard Quota (MB)</display>
-   <description>Disable sending and receiving of mail if the user exceeds this value.</description>
-   <order>15</order>
-   <page>1</page>
-</attribute>
-<attribute id="kopanoQuotaOverride">
-   <display>Override Quota limits</display>
-   <description>The Quota limits set above do not affect this user</description>
-   <order>16</order>
-   <page>1</page>
-</attribute>
-</attributes>
+	<title>
+		Update Kopano User Account
+	</title>
+	<regexp>
+		ou=.*
+	</regexp>
+	<icon>
+		ldap-user.png
+	</icon>
+	<description>
+		Update Kopano User Account
+	</description>
+	<askcontainer>
+		1
+	</askcontainer>
+	<rdn>
+		cn
+	</rdn>
+	<visible>
+		1
+	</visible>
+	<objectClasses>
+		<objectClass id="simpleSecurityObject">
+		</objectClass>
+		<objectClass id="kopano-user">
+		</objectClass>
+		<objectClass id="inetOrgPerson">
+		</objectClass>
+	</objectClasses>
+	<attributes>
+		<attribute id="cn">
+			<display>
+				Common Name
+			</display>
+			<order>
+				1
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="givenName">
+			<display>
+				First name
+			</display>
+			<icon>
+				ldap-user.png
+			</icon>
+			<order>
+				2
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="sn">
+			<display>
+				Last name
+			</display>
+			<order>
+				3
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="uid">
+			<display>
+				Login Name(UID)
+			</display>
+			<hint>
+				required
+			</hint>
+			<onchange>
+				=autoFill(mail;%uid%)
+			</onchange>
+			<order>
+				4
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="mail">
+			<display>
+				Email
+			</display>
+			<icon>
+				mail.png
+			</icon>
+			<order>
+				5
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="kopanoAliases">
+			<display>
+				Mail Alias
+			</display>
+			<hint>
+				Other email addresses that will be delivered to this account.
+			</hint>
+			<icon>
+				mail.png
+			</icon>
+			<order>
+				6
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="telephoneNumber">
+			<display>
+				Work phone
+			</display>
+			<icon>
+				phone.png
+			</icon>
+			<order>
+				7
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="facsimileTelephoneNumber">
+			<display>
+				Fax
+			</display>
+			<order>
+				8
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="mobile">
+			<display>
+				Mobile
+			</display>
+			<order>
+				9
+			</order>
+			<page>
+				1
+			</page>
+			<spacer>
+				1
+			</spacer>
+		</attribute>
+		<attribute id="kopanoEnabledFeatures">
+			<display>
+				Kopano Enabled Feature, one per field.
+			</display>
+			<hint>
+				Possible values: imap pop3 mobile outlook webapp
+			</hint>
+			<icon>
+				mail.png
+			</icon>
+			<max>
+				5
+			</max>
+			<order>
+				10
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="kopanoDisabledFeatures">
+			<display>
+				Kopano Disabled Feature, one per field.
+			</display>
+			<hint>
+				Possible values: imap pop3 mobile outlook webapp
+			</hint>
+			<icon>
+				mail.png
+			</icon>
+			<max>
+				5
+			</max>
+			<order>
+				11
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="kopanoAdmin">
+			<display>
+				Kopano Administrator
+			</display>
+			<description>
+				Is this user a Kopano Administrator?
+			</description>
+			<order>
+				12
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="kopanoQuotaWarn">
+			<display>
+				Quota Warning (MB)
+			</display>
+			<description>
+				Send out a warning message if the user exceeds this value.
+			</description>
+			<order>
+				13
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="kopanoQuotaSoft">
+			<display>
+				Soft Quota (MB)
+			</display>
+			<description>
+				Disable sending of mail if the user exceeds this value.
+			</description>
+			<order>
+				14
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="kopanoQuotaHard">
+			<display>
+				Hard Quota (MB)
+			</display>
+			<description>
+				Disable sending and receiving of mail if the user exceeds this value.
+			</description>
+			<order>
+				15
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+		<attribute id="kopanoQuotaOverride">
+			<display>
+				Override Quota limits
+			</display>
+			<description>
+				The Quota limits set above do not affect this user
+			</description>
+			<order>
+				16
+			</order>
+			<page>
+				1
+			</page>
+		</attribute>
+	</attributes>
 </template>
