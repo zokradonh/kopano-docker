@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   mail:
-    image: tvial/docker-mailserver:release-v6.2.0
+    image: tvial/docker-mailserver:release-v7.0.1
     restart: unless-stopped
     hostname: mail # hostname and domainname may need to be commented on some platforms (e.g. ChromeOS)
     domainname: ${LDAP_DOMAIN}
