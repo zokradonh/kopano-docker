@@ -2,8 +2,8 @@
 ARG docker_repo=zokradonh
 FROM composer:1.9 as builder
 
-RUN git clone --depth 1 https://stash.kopano.io/scm/kc/kdav.git /usr/share/kdav
-WORKDIR /usr/share/kdav
+RUN git clone --depth 1 https://stash.kopano.io/scm/kc/kdav.git /usr/share/kopano-kdav
+WORKDIR /usr/share/kopano-kdav
 RUN composer install
 
 FROM ${docker_repo}/kopano_php
@@ -48,12 +48,12 @@ RUN \
     mkdir -p /var/lib/kopano/kdav /var/log/kdav && \
     chown www-data:www-data /var/lib/kopano/kdav /var/log/kdav
 
-COPY --from=builder /usr/share/kdav /usr/share/kdav
+COPY --from=builder /usr/share/kopano-kdav /usr/share/kopano-kdav
 
 # tweaks to make the container read-only
 RUN \
-    mv /usr/share/kdav/config.php /usr/share/kdav/config.php.dist && \
-    ln -s /tmp/config.php /usr/share/kdav/config.php
+    mv /usr/share/kopano-kdav/config.php /usr/share/kopano-kdav/config.php.dist && \
+    ln -s /tmp/config.php /usr/share/kopano-kdav/config.php
 
 COPY start.sh /kopano/start.sh
 COPY kweb.cfg /etc/kweb.cfg

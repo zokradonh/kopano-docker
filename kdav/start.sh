@@ -34,7 +34,7 @@ if [ "${AUTOCONFIGURE}" == true ]; then
 
 	CONFIG_PHP=/tmp/config.php
 	# copy latest config template. This should be the mount point for preexisting config files.
-	cp /usr/share/kdav/config.php.dist $CONFIG_PHP
+	cp /usr/share/kopano-kdav/config.php.dist $CONFIG_PHP
 
 	if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
 		echo "kDAV is using the default: connection"
