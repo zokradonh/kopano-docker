@@ -163,7 +163,7 @@ build-playground:
 build-python: build-base
 	component=python make build
 
-build-kdav:
+build-kdav: build-php
 	docker pull composer:1.9
 	component=kdav make build-builder
 	component=kdav make build

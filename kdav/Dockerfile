@@ -34,8 +34,8 @@ RUN \
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
         crudini \
-        php-xml \
         php-mbstring \
+        php-xml \
         php-zip \
         sqlite \
         php-sqlite3 \
@@ -55,6 +55,7 @@ RUN \
     mv /usr/share/kopano-kdav/config.php /usr/share/kopano-kdav/config.php.dist && \
     ln -s /tmp/config.php /usr/share/kopano-kdav/config.php
 
+COPY kopano-kdav.conf /etc/php/7.3/fpm/pool.d/
 COPY start.sh /kopano/start.sh
 COPY kweb.cfg /etc/kweb.cfg
 
