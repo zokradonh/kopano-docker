@@ -34,11 +34,11 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     # install
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        crudini \
         kopano-kwebd \
         php-fpm \
         php7-mapi \
-        crudini \
-        ca-certificates \
         ${ADDITIONAL_KOPANO_PACKAGES} \
     && rm -rf /var/cache/apt /var/lib/apt/lists
 

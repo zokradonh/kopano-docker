@@ -33,7 +33,6 @@ LABEL maintainer=az@zok.xyz \
 RUN \
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
-        crudini \
         php-mbstring \
         php-xml \
         php-zip \
