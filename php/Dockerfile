@@ -45,9 +45,6 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
 # configure php-fpm
 RUN \
     mkdir -p /run/php && chown www-data:www-data /run/php && \
-    crudini --set /etc/php/7.3/fpm/php.ini PHP upload_max_filesize 500M && \
-    crudini --set /etc/php/7.3/fpm/php.ini PHP post_max_size 500M && \
-    crudini --set /etc/php/7.3/fpm/php.ini PHP max_input_vars 1800 && \
     crudini --set /etc/php/7.3/fpm/php.ini Session session.save_path /run/sessions
 
 EXPOSE 9080/tcp

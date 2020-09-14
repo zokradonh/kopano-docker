@@ -47,7 +47,6 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     # TODO remove php-mbstring once https://jira.z-hub.io/browse/ZP-1541 is resolved
     # TODO remove php-xml once https://jira.z-hub.io/projects/ZP/issues/ZP-1558 is resolved
     apt-get update && apt-get install -y --no-install-recommends \
-        crudini \
         php-mbstring \
         php-xml \
         z-push-autodiscover \
@@ -76,6 +75,7 @@ RUN \
     mkdir -p /var/lib/z-push /var/log/z-push && \
     chown www-data:www-data /var/lib/z-push /var/log/z-push
 
+COPY kopano-z-push.conf /etc/php/7.3/fpm/pool.d/
 COPY kweb.cfg /etc/kweb.cfg
 COPY start.sh /kopano/start.sh
 

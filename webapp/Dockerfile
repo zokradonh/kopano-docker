@@ -70,6 +70,7 @@ RUN mkdir -p /tmp/webapp/ && \
         ln -s /tmp/webapp/"$(basename "$i")" "$i"; \
     done
 
+COPY kopano-webapp.conf /etc/php/7.3/fpm/pool.d/
 COPY kweb.cfg /etc/kweb.cfg
 COPY start.sh /kopano/start.sh
 COPY goss* /goss/
