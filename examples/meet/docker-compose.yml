@@ -11,7 +11,7 @@ services:
     environment:
       - DEFAULTREDIRECT=/meet
       - EMAIL=${EMAIL:-off}
-      - FQDN=${FQDNCLEANED:-domain.invalid}
+      - FQDN=${FQDN}
     command: wrapper.sh
     volumes:
       - /etc/machine-id:/etc/machine-id
