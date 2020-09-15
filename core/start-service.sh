@@ -32,7 +32,7 @@ if [ "${AUTOCONFIGURE}" == true ]; then
 	# Hint: this is not compatible with a read-only container.
 	# The general recommendation is to already build a container that has all required packages installed.
 	ADDITIONAL_KOPANO_PACKAGES=$(echo "$ADDITIONAL_KOPANO_PACKAGES" | tr -d '"')
-	if [ -n "$(mkdir -p "/var/lib/apt/lists/" 2&> /dev/null)" ]; then
+	if mkdir -p "/var/lib/apt/lists/" 2&> /dev/null; then
 		[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && apt update
 		[ -n "${ADDITIONAL_KOPANO_PACKAGES// }" ] && for installpkg in $ADDITIONAL_KOPANO_PACKAGES; do
 			# shellcheck disable=SC2016 disable=SC2086
