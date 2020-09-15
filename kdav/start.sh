@@ -34,7 +34,7 @@ if [ "${AUTOCONFIGURE}" == true ]; then
 
 	CONFIG_PHP=/tmp/config.php
 	# copy latest config template. This should be the mount point for preexisting config files.
-	cp /usr/share/kdav/config.php.dist $CONFIG_PHP
+	cp /usr/share/kopano-kdav/config.php.dist $CONFIG_PHP
 
 	if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
 		echo "kDAV is using the default: connection"
@@ -60,11 +60,9 @@ touch /var/log/kdav/kdav.log
 chown www-data:www-data /var/log/kdav/kdav.log
 tail --pid=$$ -F --lines=0 -q /var/log/kdav/kdav.log &
 
-echo "Starting Apache"
-rm -f /run/apache2/apache2.pid
 set +u
-# shellcheck disable=SC1091
-source /etc/apache2/envvars
 # cleaning up env variables
 unset "${!KCCONF_@}"
-exec /usr/sbin/apache2 -DFOREGROUND
+echo "Starting php-fpm"
+php-fpm7.3 -F &
+exec /usr/libexec/kopano/kwebd caddy -conf /etc/kweb.cfg

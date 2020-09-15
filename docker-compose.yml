@@ -259,7 +259,7 @@ services:
       - kopano-net
       - web-net
     tmpfs:
-      - /run/apache2/
+      - /run/php/
       - /run/sessions/
       - /tmp
       - /var/log/kdav/
