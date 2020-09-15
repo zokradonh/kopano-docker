@@ -10,6 +10,9 @@ fi
 
 export CADDYPATH="$KOPANO_KWEB_ASSETS_PATH"
 
+# remove ports from FQDN
+export FQDN=${FQDN%:*}
+
 # services need to be aware of the machine-id
 if [ "$AUTOCONFIGURE" = true ]; then
 	dockerize \
