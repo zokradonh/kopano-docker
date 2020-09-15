@@ -11,7 +11,7 @@ services:
     environment:
       - DEFAULTREDIRECT=/meet
       - EMAIL=${EMAIL:-off}
-      - FQDN=${FQDNCLEANED?err}
+      - FQDN=${FQDN}
     command: wrapper.sh
     volumes:
       - /etc/machine-id:/etc/machine-id
@@ -20,7 +20,7 @@ services:
     networks:
       web-net:
         aliases:
-          - ${FQDNCLEANED?err}
+          - ${FQDNCLEANED:-domain.invalid}
 
   ldap:
     image: ${docker_repo:-kopano}/${LDAP_CONTAINER:-kopano_ldap_demo}:${LDAP_VERSION:-latest}
