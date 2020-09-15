@@ -8,7 +8,7 @@ services:
     environment:
       - DEFAULTREDIRECT=${DEFAULTREDIRECT:-/webapp}
       - EMAIL=${EMAIL:-off}
-      - FQDN=${FQDNCLEANED?err}
+      - FQDN=${FQDNCLEANED:-domain.invalid}
       - TLS_MODE=tls_auto
     volumes:
       - /etc/machine-id:/etc/machine-id
@@ -17,7 +17,7 @@ services:
     networks:
       web-net:
         aliases:
-          - ${FQDNCLEANED?err}
+          - ${FQDNCLEANED:-domain.invalid}
 
   kopano_ssl:
     image: ${docker_repo:-zokradonh}/kopano_ssl:${SSL_VERSION:-latest}

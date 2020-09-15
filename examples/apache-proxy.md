@@ -2,7 +2,7 @@
 
 Example provided by [ronnybremer](https://github.com/ronnybremer) in [Add reverse proxy example for Apache](https://github.com/zokradonh/kopano-docker/issues/372).
 
-To be able to use a different proxy, than the bundled kweb the env variable `FQDNCLEANED` needs to be set to an invalid value (to not route traffic through it, but the external proxy). Additionally `EMAIL` needs to be set to `off`.
+To be able to use a different proxy, than the bundled kweb the env variable `FQDNCLEANED` needs to be unset (to not route traffic through it, but the external proxy). Additionally `EMAIL` needs to be set to `off`.
 
 ```bash
 <VirtualHost aaa.bbb.ccc.ddd:443 [aaaa:bbbb:cccc:dddd:eeee:ffff::yy]:443>

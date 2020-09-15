@@ -42,7 +42,7 @@ TLS_MODE=tls_off
 
 In case there is already an ssl terminating proxy in the network this container can be switched to plain http by either setting `EMAIL=off` or `TLS_MODE=tls_off`.
 
-In addition to this the default docker-compose.yml has a tweak to [route all traffic for the configured domain through this container](https://github.com/zokradonh/kopano-docker/blob/3572fc74e7054c9774985e69aeed745f9e5d1a4f/docker-compose.yml#L19-L20). This route needs to be changed when this container is only offering http access by either putting another domain in `FQDNCLEANED` or removing this section altogether.
+In addition to this the default docker-compose.yml has a tweak to [route all traffic for the configured domain through this container](https://github.com/zokradonh/kopano-docker/blob/3572fc74e7054c9774985e69aeed745f9e5d1a4f/docker-compose.yml#L19-L20). This route needs to be changed when this container is only offering http access by removing `FQDNCLEANED` from `.env`.
 
 When using an external reverse proxy it is recommended to proxy connections to port 2015 of this container. Additionally connections to `/api/kwm/v2/rtm/websocket` need to be upgraded to websocket connections.
 
