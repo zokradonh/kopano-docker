@@ -13,6 +13,7 @@ php_cfg_gen() {
 			return
 		fi
 		case $cfg_value in
+		# TODO stop after the first match
 		true|TRUE|false|FALSE)
 			sed -ri "s#(\s*define).+${cfg_setting}.+#\tdefine(\x27${cfg_setting}\x27, ${cfg_value}\);#g" "$cfg_file"
 			;;
