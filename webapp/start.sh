@@ -34,20 +34,26 @@ if [ "${AUTOCONFIGURE}" == true ]; then
 		echo "- switch the container to 'read_only: false'"
 	fi
 
+	phpversion=$(dpkg-query --showformat='${Version}' --show php7-mapi)
+	echo "Using PHP-Mapi: $phpversion"
+	webappversion=$(dpkg-query --showformat='${Version}' --show kopano-webapp)
+	echo "Using Kopano WebApp: $webappversion"
+
+	# Ensure directories exist
+	mkdir -p /run/sessions /tmp/webapp /var/lib/kopano-webapp/tmp
+
 	# copy latest config template
 	mkdir -p /tmp/webapp/
 	for i in /etc/kopano/webapp/*.dist /etc/kopano/webapp/.[^.]*.dist; do
 		filename=$(basename -- "$i")
 		cp "$i" "/tmp/webapp/${filename%.*}"
 	done
-
-	# Ensure directories exist
-	mkdir -p /run/sessions /tmp/webapp /var/lib/kopano-webapp/tmp
-
-	phpversion=$(dpkg-query --showformat='${Version}' --show php7-mapi)
-	echo "Using PHP-Mapi: $phpversion"
-	webappversion=$(dpkg-query --showformat='${Version}' --show kopano-webapp)
-	echo "Using Kopano WebApp: $webappversion"
+	# fallback for plugins installed during runtime
+	for i in /etc/kopano/webapp/*.php; do
+		filename=$(basename -- "$i")
+		mv -vn "$i" "/tmp/webapp/$filename"
+		ln -sfn "/tmp/webapp/$filename" "$i"
+	done
 
 	if [ "$KCCONF_SERVERHOSTNAME" == "127.0.0.1" ]; then
 		echo "Kopano WebApp is using the default: connection"
