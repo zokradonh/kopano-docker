@@ -25,13 +25,13 @@ General prefix|              |
 KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_USER_DEFAULT_ENABLE_MDM=true
 ^      ^            ^   ^                                  ^
 |      |            |   |                                  |
-General prefix      |   |                                  | 
+General prefix      |   |                                  |
        |            |   |                                  |
        Special value to signal the change should go into config-$identifier.php (located in /etc/kopano/webapp)
                     |   |                                  |
                     Identifier for the configuration file (config-$identifier.php)
-                    |                                      |
-                    Name of the configuration option in the configuration file
+                        |                                  |
+                        Name of the configuration option in the configuration file
                                                            |
                                                            Value of the configuration option
 ```
