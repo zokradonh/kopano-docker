@@ -21,6 +21,8 @@ services:
       - SETGID
       - SETUID
     volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - web:/.kweb
     networks:
       web-net:
@@ -33,6 +35,8 @@ services:
     container_name: kopano_webapp
     volumes:
       - /etc/kopano/ssl:/kopano/ssl
+      - /etc/machine-id:/etc/machine-id
+      - /etc/machine-id:/var/lib/dbus/machine-id
       - /run/kopano:/run/kopano
     environment:
       - TZ=${TZ}
@@ -41,6 +45,9 @@ services:
       # https port of kopano system
       - KCCONF_SERVERPORT=
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
+      #- ADDITIONAL_KOPANO_WEBAPP_PLUGINS=kopano-webapp-plugin-mdm
+      - KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_USER_DEFAULT_ENABLE_MDM=true
+      - KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_SERVER=kopano_zpush:9080
     networks:
       - web-net
 
