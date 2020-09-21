@@ -48,9 +48,13 @@ if [ "${AUTOCONFIGURE}" == true ]; then
 		filename=$(basename -- "$i")
 		cp "$i" "/tmp/webapp/${filename%.*}"
 	done
+
 	# fallback for plugins installed during runtime
 	for i in /etc/kopano/webapp/*.php; do
 		filename=$(basename -- "$i")
+		if [ "$filename" = config.php ]; then
+			continue
+		fi
 		mv -vn "$i" "/tmp/webapp/$filename"
 		ln -sfn "/tmp/webapp/$filename" "$i"
 	done
