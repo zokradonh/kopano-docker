@@ -39,14 +39,13 @@ services:
       - /etc/machine-id:/var/lib/dbus/machine-id
       - /run/kopano:/run/kopano
     environment:
-      - DEBUG=true
       - TZ=${TZ}
       # hostname of kopano system, leave empty for unix socket
       - KCCONF_SERVERHOSTNAME=
       # https port of kopano system
       - KCCONF_SERVERPORT=
-      #- ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
-      - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=kopano-webapp-plugin-mdm
+      - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
+      #- ADDITIONAL_KOPANO_WEBAPP_PLUGINS=kopano-webapp-plugin-mdm
       - KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_USER_DEFAULT_ENABLE_MDM=true
       - KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_SERVER=kopano_zpush:9080
     networks:
