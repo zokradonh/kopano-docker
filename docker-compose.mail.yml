@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   mail:
-    image: tvial/docker-mailserver:release-v6.2.0
+    image: tvial/docker-mailserver:release-v7.0.1
     restart: unless-stopped
     hostname: mail # hostname and domainname may need to be commented on some platforms (e.g. ChromeOS)
     domainname: ${LDAP_DOMAIN}
@@ -14,6 +14,7 @@ services:
     volumes:
       - maildata:/var/mail
       - mailstate:/var/mail-state
+      - maillogs:/var/log/mail
       - mtaconfig:/tmp/docker-mailserver/
     environment:
       - DMS_DEBUG=0
@@ -35,8 +36,8 @@ services:
       - ONE_DIR=1
       - PERMIT_DOCKER=connected-networks
       - POSTFIX_DAGENT=lmtp:kopano_dagent:2003
+      - PFLOGSUMM_TRIGGER=logrotate
       - POSTMASTER_ADDRESS=${POSTMASTER_ADDRESS}
-      - REPORT_RECIPIENT=1
       - SASLAUTHD_LDAP_BIND_DN=${LDAP_BIND_DN}
       - SASLAUTHD_LDAP_FILTER=${SASLAUTHD_LDAP_FILTER}
       - SASLAUTHD_LDAP_PASSWORD=${LDAP_BIND_PW}
@@ -45,6 +46,7 @@ services:
       - SASLAUTHD_MECHANISMS=rimap
       - SASLAUTHD_MECH_OPTIONS=kopano_gateway
       - SMTP_ONLY=1
+      - SPAMASSASSIN_SPAM_TO_INBOX=1
       - SSL_TYPE=self-signed
       - TZ=${TZ}
     env_file:
@@ -65,4 +67,5 @@ services:
 volumes:
   maildata:
   mailstate:
+  maillogs:
   mtaconfig:
