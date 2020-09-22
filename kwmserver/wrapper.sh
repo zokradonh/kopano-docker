@@ -73,7 +73,6 @@ if [ -n "${pipeline_forced_regexp:-}" ]; then
 	set -- "$@" --pipeline-forced-regexp="$pipeline_forced_regexp"
 fi
 
-
 if [ "${AUTOCONFIGURE}" = true ]; then
 	if [ "$INSECURE" = "yes" ]; then
 		dockerize \
