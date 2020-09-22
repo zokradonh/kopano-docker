@@ -48,6 +48,7 @@ services:
       #- ADDITIONAL_KOPANO_WEBAPP_PLUGINS=kopano-webapp-plugin-mdm
       - KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_USER_DEFAULT_ENABLE_MDM=true
       - KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_SERVER=kopano_zpush:9080
+      - KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_SERVER_SSL=false
     networks:
       - web-net
 
