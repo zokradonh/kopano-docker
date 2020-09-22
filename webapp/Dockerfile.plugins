@@ -1,6 +1,11 @@
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_webapp
 
+ENV \
+    KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_USER_DEFAULT_ENABLE_MDM=true \
+    KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_SERVER=kopano_zpush:9080 \
+    KCCONF_WEBAPPPLUGIN_MDM_PLUGIN_MDM_SERVER_SSL=false
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     kopano-webapp-plugin-mdm \
     && rm -rf /var/cache/apt /var/lib/apt/lists

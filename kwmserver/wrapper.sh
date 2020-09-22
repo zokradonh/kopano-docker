@@ -68,6 +68,11 @@ if [ -n "${public_guest_access_regexp:-}" ]; then
 	set -- "$@" --public-guest-access-regexp="$public_guest_access_regexp"
 fi
 
+# sfu functionality
+if [ -n "${pipeline_forced_regexp:-}" ]; then
+	set -- "$@" --pipeline-forced-regexp="$pipeline_forced_regexp"
+fi
+
 if [ "${AUTOCONFIGURE}" = true ]; then
 	if [ "$INSECURE" = "yes" ]; then
 		dockerize \
