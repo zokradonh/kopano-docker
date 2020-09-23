@@ -240,6 +240,11 @@ tag-konnect:
 	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_konnect))
 	component=konnect make tag-container
 
+tag-kwmbridge:
+	$(eval kwmbridge_version := \
+	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_kwmbridge))
+	component=kwmbridge make tag-container
+
 tag-kwmserver:
 	$(eval kwmserver_version := \
 	$(shell docker inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' $(docker_repo)/kopano_kwmserver))
@@ -335,6 +340,9 @@ publish-kapps: tag-kapps
 
 publish-konnect: tag-konnect
 	component=konnect make publish-container
+
+publish-kwmbridge: tag-kwmbridge
+	component=kwmbridge make publish-container
 
 publish-kwmserver: tag-kwmserver
 	component=kwmserver make publish-container
