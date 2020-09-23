@@ -15,10 +15,10 @@ php_cfg_gen() {
 		case $cfg_value in
 		# TODO stop after the first match (currently matching incl. closing quote)
 		true|TRUE|false|FALSE)
-			sed -ri "s#(\s*define).+${cfg_setting}\x27.+#\tdefine(\x27${cfg_setting}\x27, ${cfg_value}\);#g" "$cfg_file"
+			sed -ri "s#(\s*define).+(${cfg_setting}\x22|${cfg_setting}\x27)\.+#\tdefine(\x22${cfg_setting}\x22, ${cfg_value}\);#g" "$cfg_file"
 			;;
 		*)
-			sed -ri "s#(\s*define).+${cfg_setting}\x27.+#\tdefine(\x27${cfg_setting}\x27, \x27${cfg_value}\x27\);#g" "$cfg_file"
+			sed -ri "s#(\s*define).+(${cfg_setting}\x22|${cfg_setting}\x27).+#\tdefine(\x22${cfg_setting}\x22, \x22${cfg_value}\x22\);#g" "$cfg_file"
 			;;
 		esac
 	else
