@@ -3,7 +3,6 @@ version: "3.5"
 services:
   kopano_kwmserver:
     environment:
-      - DEBUG=true
       - enable_mcu_api=yes
       - pipeline_forced_regexp=@conference/.*
       #- pipeline_forced_regexp=@group/.*
