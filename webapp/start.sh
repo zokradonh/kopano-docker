@@ -31,6 +31,7 @@ if [ "${AUTOCONFIGURE}" == true ]; then
 		echo "Notice: Container is run read-only, skipping package installation."
 		echo "If you want to have additional packages installed in the container either:"
 		echo "- build your own image with the packages already included"
+		echo "  - see https://github.com/zokradonh/kopano-docker/blob/master/webapp/Dockerfile.plugins for an example of such a Dockerfile"
 		echo "- switch the container to 'read_only: false'"
 	fi
 
@@ -52,7 +53,8 @@ if [ "${AUTOCONFIGURE}" == true ]; then
 	# fallback for plugins installed during runtime
 	for i in /etc/kopano/webapp/*.php; do
 		filename=$(basename -- "$i")
-		if [ "$filename" = config.php ]; then
+		# skip file if its already a symlink
+		if [ -L "$i" ]; then
 			continue
 		fi
 		mv -vn "$i" "/tmp/webapp/$filename"
