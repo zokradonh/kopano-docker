@@ -1,3 +1,4 @@
+# This Dockerfile can be built by running `make build-webapp-plugins` in the root of this project
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_webapp
 

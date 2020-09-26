@@ -191,7 +191,7 @@ build-webapp-demo: build-webapp ## Replaces the actual kopano_webapp container w
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
 
-build-webapp-plugins: build-webapp ## Example for a custom image to install Kopano WebApp plugins
+build-webapp-plugins: ## Example for a custom image to install Kopano WebApp plugins
 	docker build --rm \
 		--build-arg docker_repo=$(docker_repo) \
 		-f webapp/Dockerfile.plugins \
