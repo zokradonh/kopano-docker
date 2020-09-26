@@ -187,11 +187,13 @@ build-webapp: build-php
 
 build-webapp-demo: build-webapp ## Replaces the actual kopano_webapp container with one that has login hints for demo.kopano.com.
 	docker build --rm \
+		--build-arg docker_repo=$(docker_repo) \
 		-f webapp/Dockerfile.demo \
 		-t $(docker_repo)/kopano_webapp webapp/
 
 build-webapp-plugins: build-webapp ## Example for a custom image to install Kopano WebApp plugins
 	docker build --rm \
+		--build-arg docker_repo=$(docker_repo) \
 		-f webapp/Dockerfile.plugins \
 		-t $(docker_repo)/kopano_webapp webapp/
 

@@ -52,7 +52,8 @@ if [ "${AUTOCONFIGURE}" == true ]; then
 	# fallback for plugins installed during runtime
 	for i in /etc/kopano/webapp/*.php; do
 		filename=$(basename -- "$i")
-		if [ "$filename" = config.php ]; then
+		# skip file if its already a symlink
+		if [ -L "$i" ]; then
 			continue
 		fi
 		mv -vn "$i" "/tmp/webapp/$filename"
