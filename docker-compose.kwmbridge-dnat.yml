@@ -18,12 +18,13 @@ services:
       - oidc_issuer_identifier=https://${FQDN}
       - kwm_server_urls=https://${FQDN}
       #- use_nat_1to1_ips=192.168.178.140
+      - use_nat_1to1_candidate_type=srflx
       - ice_udp_port_range=65435:65535
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
-      #- /home/fbartels/dev-workspace/kopano/kopano-docker/kwmbridge/kwmbridged:/usr/local/bin/kwmbridged
+      - /home/fbartels/dev-workspace/kopano/kopano-docker/kwmbridge/kwmbridged:/usr/local/bin/kwmbridged
     ports:
        - 65535:65535
       #- 65435-65535:65435-65535/udp
