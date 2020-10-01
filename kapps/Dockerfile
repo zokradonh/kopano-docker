@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.0-experimental
 ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_base:latest
 
@@ -9,13 +10,13 @@ ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
 ARG KOPANO_KAPPS_REPOSITORY_URL="file:/kopano/repo/kapps"
 ARG KOPANO_KAPPS_VERSION=newest
-ENV KOPANO_KAPPS_VERSION=$KOPANO_KAPPS_VERSION
 
 ENV \
     ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES \
     DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES \
     KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
+    KOPANO_KAPPS_VERSION=$KOPANO_KAPPS_VERSION \
     KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS
 
 LABEL maintainer=az@zok.xyz \
@@ -29,12 +30,8 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Kopano Core and refresh ca-certificates
-RUN \
-    # community download and package as apt source repository
-    . /kopano/helper/create-kopano-repo.sh && \
-    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "kapps"; \
-    fi; \
+RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
+    # apt key for this repo has already been installed in base
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_KAPPS_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
     # install
     apt-get update && \
