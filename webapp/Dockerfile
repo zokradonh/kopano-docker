@@ -8,8 +8,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_KAPPS_REPOSITORY_URL="file:/kopano/repo/kapps"
-ARG KOPANO_KAPPS_VERSION=newest
 ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG KOPANO_WEBAPP_FILES_REPOSITORY_URL="file:/kopano/repo/files"
 ARG KOPANO_WEBAPP_MDM_REPOSITORY_URL="file:/kopano/repo/mdm"
@@ -53,7 +51,6 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
         dl_and_package_community "mdm" "Debian_10"; \
         dl_and_package_community "smime" "Debian_10"; \
     fi; \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_KAPPS_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_SMIME_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_WEBAPP_MDM_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
