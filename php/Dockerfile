@@ -8,6 +8,8 @@ ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
+ARG KOPANO_KAPPS_REPOSITORY_URL="file:/kopano/repo/kapps"
+ARG KOPANO_KAPPS_VERSION=newest
 
 ENV \
     ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES \
@@ -31,6 +33,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     # apt key for this repo has already been installed in base
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_KAPPS_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
     # install
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
