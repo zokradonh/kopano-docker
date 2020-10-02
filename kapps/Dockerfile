@@ -47,8 +47,8 @@ RUN \
         && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
     # make configuration a symlink to prevent overwriting it
-    # TODO better would be to override its configuration in kweb.cfg
-    ln -s /tmp/calendar.json /usr/share/kopano-kweb/www/config/kopano/calendar.json
+    mkdir -p /etc/kopano/kweb/overrides.d/config/kopano/ && \
+    ln -s /tmp/calendar.json /etc/kopano/kweb/overrides.d/config/kopano/calendar.json
 
 COPY start-service.sh /kopano/
 COPY goss.yaml /goss/
