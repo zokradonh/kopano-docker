@@ -78,6 +78,7 @@ ONBUILD ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ONBUILD ARG DOWNLOAD_DISTRIBUTION="Debian_10"
 ONBUILD ARG DOWNLOAD_CHANNEL="community"
 ONBUILD ARG DOWNLOAD_BRANCH=""
+ONBUILD WORKDIR /kopano/repo
 ONBUILD RUN \
     # community download and package as apt source repository
     . /kopano/helper/create-kopano-repo.sh && \
