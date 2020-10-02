@@ -9,7 +9,6 @@ GOSS_VERSION=0.3.11
 HADOLINT_VERSION=1.17.6
 REG_VERSION=0.16.1
 SHELLCHECK_VERSION=0.7.1
-TRIVY_VERSION=0.11.0
 
 progname=$(basename "$0")
 tempdir=$(mktemp -d "/tmp/$progname.XXXXXX")
@@ -28,11 +27,6 @@ fi
 if ! command -v docker-compose > /dev/null; then
 	sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 	sudo chmod +rx /usr/local/bin/docker-compose
-fi
-
-if ! command -v trivy > /dev/null; then
-	wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
-	sudo tar zxvf trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz -C /usr/local/bin trivy
 fi
 
 if ! command -v goss > /dev/null; then
