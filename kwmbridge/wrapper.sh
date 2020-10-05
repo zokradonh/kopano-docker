@@ -33,6 +33,16 @@ if [ -n "${ice_udp_port_range:-}" ]; then
 	set -- "$@" --use-ice-udp-port-range="$ice_udp_port_range"
 fi
 
+if [ -n "${use_nat_1to1_ips:-}" ]; then
+	for use_nat_1to1_ip in $use_nat_1to1_ips; do
+		set -- "$@" --use-nat-1to1-ip="$use_nat_1to1_ip"
+	done
+fi
+
+if [ -n "${use_nat_1to1_candidate_type:-}" ]; then
+	set -- "$@" --use-nat-1to1-candidate-type="$use_nat_1to1_candidate_type"
+fi
+
 if [ "${with_metrics:-}" = "yes" ]; then
 	set -- "$@" --with-metrics
 fi
@@ -48,13 +58,13 @@ fi
 if [ "${AUTOCONFIGURE}" = true ]; then
 	if [ "$INSECURE" = "yes" ]; then
 		dockerize \
-		-skip-tls-verify \
-		-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
-		-timeout 360s
+			-skip-tls-verify \
+			-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
+			-timeout 360s
 	else
 		dockerize \
-		-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
-		-timeout 360s
+			-wait "$oidc_issuer_identifier"/.well-known/openid-configuration \
+			-timeout 360s
 	fi
 
 	# services need to be aware of the machine-id

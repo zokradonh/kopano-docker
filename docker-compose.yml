@@ -465,6 +465,8 @@ services:
       - oidc_issuer_identifier=https://${FQDN}
       - public_guest_access_regexp=^group/public/.*
       - registration_conf=/kopano/ssl/konnectd-identifier-registration.yaml
+      - turn_service_credentials_password=${TURN_PASSWORD:-}
+      - turn_service_credentials_user=${TURN_USER:-}
     env_file:
       - kopano_kwmserver.env
     volumes:
@@ -485,8 +487,6 @@ services:
       - KCCONF_MEET_guests_enabled=true
       - KCCONF_MEET_minimumVersion=20200121 # can be used force updates of Meet
       - KCCONF_MEET_oidc_useImplicitFlow=true # workaround for guest login with meet https://stash.kopano.io/projects/KWM/repos/meet/pull-requests/102/overview
-      - turn_service_credentials_password=${TURN_PASSWORD:-}
-      - turn_service_credentials_user=${TURN_USER:-}
     env_file:
       - kopano_meet.env
     depends_on:
