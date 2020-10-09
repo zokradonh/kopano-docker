@@ -24,8 +24,7 @@ services:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
       - kopanossl/:/kopano/ssl
-      - /root/kopano-docker/kwmbridge/kwmbridged:/usr/local/bin/kwmbridged
     ports:
-      - 65535:65535/udp
+      - 65435:65535/udp
     tmpfs:
       - /tmp
