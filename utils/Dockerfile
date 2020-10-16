@@ -17,7 +17,6 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     iputils-ping \
     kopano-backup \
     kopano-migration-imap \
-    kopano-migration-pst \
     ldap-utils \
     less \
     lsof \
