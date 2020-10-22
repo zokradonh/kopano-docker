@@ -13,7 +13,6 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - /home/fbartels/dev-workspace/kopano/kopano-docker/web/kweb-embedded.cfg:/etc/kweb-extras/kweb-embeded.cfg
       - web:/.kweb
     networks:
       web-net:

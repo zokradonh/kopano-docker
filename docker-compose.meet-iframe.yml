@@ -1,0 +1,6 @@
+version: "3.5"
+
+services:
+  kopano_meet:
+    volumes:
+      - ./meet/meet-iframe.cfg:/etc/kopano/kweb/snippets.d/60-kopano-staticpwa-csp.cfg

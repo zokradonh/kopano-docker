@@ -3,13 +3,15 @@ ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_base:latest
 
 ARG ADDITIONAL_KOPANO_PACKAGES=""
-ARG DOWNLOAD_COMMUNITY_PACKAGES=1
-ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG DEBIAN_FRONTEND=noninteractive
+ARG DOWNLOAD_COMMUNITY_PACKAGES=1
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
+ARG KOPANO_KAPPS_REPOSITORY_URL="file:/kopano/repo/kapps"
+ARG KOPANO_KAPPS_VERSION=newest
 ARG KOPANO_MEET_REPOSITORY_URL="file:/kopano/repo/meet"
 ARG KOPANO_MEET_VERSION=newest
+ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ENV KOPANO_MEET_VERSION=$KOPANO_MEET_VERSION
 
 ENV \
@@ -38,7 +40,8 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
         dl_and_package_community "meet"; \
     fi; \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_MEET_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_MEET_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
+    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_KAPPS_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
     # install
     apt-get update && \
     # TODO mime-support could be remove once its an official dependency of kopano-kwebd
@@ -51,7 +54,8 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
     # make configuration a symlink to prevent overwriting it
     # TODO better would be to override its configuration in kweb.cfg
-    ln -s /tmp/meet.json /usr/share/kopano-kweb/www/config/kopano/meet.json
+    mkdir -p /etc/kopano/kweb/overrides.d/config/kopano/ && \
+    ln -s /tmp/meet.json /etc/kopano/kweb/overrides.d/config/kopano//meet.json
 
 COPY start-service.sh /kopano/
 COPY goss.yaml /goss/
