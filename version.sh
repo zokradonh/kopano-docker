@@ -18,7 +18,7 @@ trap finish EXIT
 source base/create-kopano-repo.sh
 
 component=${1:-core}
-distribution=${2:-Debian_9.0}
+distribution=${2:-Debian_10}
 channel=${3:-community}
 branch=${4:-""}
 
