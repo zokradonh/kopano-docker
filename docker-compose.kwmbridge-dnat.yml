@@ -16,7 +16,8 @@ services:
     environment:
       - INSECURE=${INSECURE}
       - oidc_issuer_identifier=https://${FQDN}
-      - kwm_server_urls=https://${FQDN}
+      - kwm_server_urls=http://kwmserver:8778
+      #- kwm_server_urls=https://${FQDNCLEANED}:8443
       - use_nat_1to1_ips=${PUBLICIP}
       - use_nat_1to1_candidate_type=host
       - ice_udp_port_range=65435:65535

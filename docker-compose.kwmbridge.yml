@@ -1,6 +1,9 @@
 version: "3.5"
 
 services:
+  web:
+    ports:
+      - "8443:8443" # this port should be firewalled off so that only known instances of kwmbridge can connect tot it
   kopano_kwmserver:
     environment:
       - enable_mcu_api=yes
@@ -14,7 +17,7 @@ services:
     environment:
       - INSECURE=${INSECURE}
       - oidc_issuer_identifier=https://${FQDN}
-      - kwm_server_urls=https://${FQDN}
+      - kwm_server_urls=https://${FQDNCLEANED}:8443
     env_file:
       - kopano_kwmbridge.env
     volumes:
