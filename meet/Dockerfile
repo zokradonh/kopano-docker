@@ -51,7 +51,8 @@ RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
     # make configuration a symlink to prevent overwriting it
     # TODO better would be to override its configuration in kweb.cfg
-    ln -s /tmp/meet.json /usr/share/kopano-kweb/www/config/kopano/meet.json
+    mkdir -p /etc/kopano/kweb/overrides.d/config/kopano/ && \
+    ln -s /tmp/meet.json /etc/kopano/kweb/overrides.d/config/kopano/meet.json
 
 COPY start-service.sh /kopano/
 COPY goss.yaml /goss/
