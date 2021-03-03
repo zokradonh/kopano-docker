@@ -126,9 +126,10 @@ services:
       - kopano-net
       - web-net
     tmpfs:
-      - /tmp/
-      - /run/sessions/
       - /run/php/
+      - /run/sessions/
+      - /tmp/
+      - /var/lib/kopano-webapp/plugin_files
       - /var/log/
 
   kopano_zpush:
