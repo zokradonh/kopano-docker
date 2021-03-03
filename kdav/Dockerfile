@@ -30,7 +30,7 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.schema-version="1.0"
 
 # install Kopano kDAV
-RUN \
+RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
         php-mbstring \
