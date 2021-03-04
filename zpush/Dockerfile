@@ -35,7 +35,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Z-Push
 # hadolint currently does not understand the extended buildkit syntax https://github.com/hadolint/hadolint/issues/347
-# hadolint ignore=SC2215,DL3015
+# hadolint ignore=DL3015
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     # prepare z-push installation
     echo "deb ${KOPANO_ZPUSH_REPOSITORY_URL} /" > /etc/apt/sources.list.d/zpush.list && \

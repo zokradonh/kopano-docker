@@ -10,7 +10,6 @@ LABEL maintainer=az@zok.xyz \
     org.label-schema.version=$KOPANO_CORE_VERSION \
     org.label-schema.schema-version="1.0"
 
-# hadolint ignore=SC2215
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     apt-get update && apt-get install --no-install-recommends -y \
     git \

@@ -40,7 +40,7 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Kopano WebApp
-# hadolint ignore=SC2129,SC2215
+# hadolint ignore=SC2129
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     # community download and package as apt source repository
     # TODO is it neccesary to source this file here? was already sourced before

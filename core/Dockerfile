@@ -41,7 +41,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Kopano Core and refresh ca-certificates
 # hadolint currently does not understand the extended buildkit syntax https://github.com/hadolint/hadolint/issues/347
-# hadolint ignore=SC2215,DL3015
+# hadolint ignore=DL3015
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     # apt key for this repo has already been installed in base
     echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \

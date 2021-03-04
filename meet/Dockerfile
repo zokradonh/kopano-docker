@@ -30,7 +30,6 @@ LABEL maintainer=az@zok.xyz \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# hadolint ignore=SC2215
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
     # apt key for this repo has already been installed in base
     # community download and package as apt source repository
