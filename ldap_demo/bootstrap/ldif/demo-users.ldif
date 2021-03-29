@@ -95,7 +95,7 @@ kopanoAliases: Timmothy@{{ LDAP_DOMAIN }}
 kopanoAliases: Timmothy.Schowalter@{{ LDAP_DOMAIN }}
 cn:: VGltbW90aHkgU2Now7Z3YWx0ZXI=
 givenName:: VGltbcO2dGh5
-sn:: U2Now7Z3YWx0ZXI= 
+sn:: U2Now7Z3YWx0ZXI=
 labeledURI: http://www.hoes-giselmeyer.com/
 mobile: (0324)-585251
 street: 'Oliviaboulevard 1'
