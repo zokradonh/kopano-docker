@@ -87,7 +87,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 2
-userPassword:: dXNlcjI=
+userPassword: user2
 kopanoAccount: 1
 uid: user2
 mail: user2@{{ LDAP_DOMAIN }}
@@ -584,7 +584,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 5
-userPassword:: dXNlcjU=
+userPassword: user5
 kopanoAccount: 1
 uid: user5
 mail: user5@{{ LDAP_DOMAIN }}
@@ -1019,7 +1019,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 6
-userPassword:: dXNlcjY=
+userPassword: user6
 kopanoAccount: 1
 uid: user6
 kopanoAliases: Roy@{{ LDAP_DOMAIN }}
@@ -1047,7 +1047,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 7
-userPassword:: dXNlcjc=
+userPassword: user7
 kopanoAccount: 1
 uid: user7
 mail: user7@{{ LDAP_DOMAIN }}
@@ -1076,7 +1076,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 8
-userPassword:: dXNlcjg=
+userPassword: user8
 kopanoAccount: 1
 uid: user8
 mail: user8@{{ LDAP_DOMAIN }}
@@ -1103,7 +1103,7 @@ objectClass: posixAccount
 objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
-userPassword:: dXNlcjk=
+userPassword: user9
 kopanoAccount: 1
 uid: user9
 mail: user9@{{ LDAP_DOMAIN }}
@@ -1133,7 +1133,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 10
-userPassword:: dXNlcjEw
+userPassword: user10
 kopanoAccount: 1
 uid: user10
 mail: user10@{{ LDAP_DOMAIN }}
@@ -1161,7 +1161,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 11
-userPassword:: dXNlcjEx
+userPassword: user11
 kopanoAccount: 1
 uid: user11
 mail: user11@{{ LDAP_DOMAIN }}
@@ -1853,7 +1853,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 12
-userPassword:: dXNlcjEy
+userPassword: user12
 kopanoAccount: 1
 uid: user12
 mail: user12@{{ LDAP_DOMAIN }}
@@ -1882,7 +1882,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 13
-userPassword:: dXNlcjEz
+userPassword: user13
 kopanoAccount: 1
 uid: user13
 mail: user13@{{ LDAP_DOMAIN }}
@@ -1911,7 +1911,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 14
-userPassword:: dXNlcjE0
+userPassword: user14
 kopanoAccount: 1
 uid: user14
 mail: user14@{{ LDAP_DOMAIN }}
@@ -1940,7 +1940,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 15
-userPassword:: dXNlcjE1
+userPassword: user15
 kopanoAccount: 1
 uid: user15
 mail: user15@{{ LDAP_DOMAIN }}
@@ -1968,7 +1968,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 16
-userPassword:: dXNlcjE2
+userPassword: user16
 kopanoAccount: 1
 uid: user16
 mail: user16@{{ LDAP_DOMAIN }}
@@ -1997,7 +1997,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 17
-userPassword:: dXNlcjE3
+userPassword: user17
 kopanoAccount: 1
 uid: user17
 mail: user17@{{ LDAP_DOMAIN }}
@@ -2025,7 +2025,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 18
-userPassword:: dXNlcjE4
+userPassword: user18
 kopanoAccount: 1
 uid: user18
 mail: user18@{{ LDAP_DOMAIN }}
@@ -2054,7 +2054,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 19
-userPassword:: dXNlcjE5
+userPassword: user19
 kopanoAccount: 1
 uid: user19
 mail: user19@{{ LDAP_DOMAIN }}
@@ -2079,7 +2079,6 @@ objectClass: kopano-user
 objectClass: posixAccount
 objectClass: inetOrgPerson
 uidNumber: 2001
-userPassword:: YmVhbWVy
 kopanoAccount: 1
 kopanoResourceCapacity: 1
 kopanoResourceType: Equipment
@@ -2109,7 +2108,6 @@ kopanoAccount: 1
 kopanoResourceCapacity: 1
 kopanoResourceType: Room
 kopanoSharedStoreOnly: 1
-userPassword:: dHJhaW5pbmdyb29t
 mail: trainingroom@{{ LDAP_DOMAIN }}
 kopanoUserServer: kopano_server_2
 
@@ -2126,7 +2124,6 @@ objectClass: inetOrgPerson
 sn: sharedbox
 uid: sharedbox
 uidNumber: 2003
-userPassword:: c2hhcmVkYm94
 kopanoAccount: 1
 kopanoResourceCapacity: 1
 mail: sharedbox@{{ LDAP_DOMAIN }}
@@ -2222,7 +2219,7 @@ objectClass: inetOrgPerson
 objectClass: kopano-user
 uid: user4
 uidNumber: 4
-userPassword:: dXNlcjQ=
+userPassword: user4
 sn:: 4KSw4oCM4KSc4KS/4KSk4KSV4KS+4KSw
 kopanoEnabledFeatures: imap, pop3
 street: Scheelring 67
@@ -2774,7 +2771,7 @@ objectClass: inetOrgPerson
 objectClass: kopano-user
 uid: user3
 uidNumber: 3
-userPassword:: dXNlcjM=
+userPassword: user3
 sn: Peters
 kopanoEnabledFeatures: imap
 street: 'Amberhof 263'
@@ -3270,7 +3267,7 @@ objectClass: kopano-user
 sn: Brekke
 uidNumber: 1
 uid: user1
-userPassword:: dXNlcjE=
+userPassword: user1
 loginShell: /bin/bash
 gidNumber: 501
 labeledURI: http://warmer.com/
@@ -4122,7 +4119,6 @@ objectClass: inetOrgPerson
 sn: meetingroom
 uid: meetingroom
 uidNumber: 2004
-userPassword:: bWVldGluZ3Jvb20=
 mail: meetingroom@{{ LDAP_DOMAIN }}
 kopanoSharedStoreOnly: 1
 
@@ -4144,7 +4140,6 @@ objectClass: inetOrgPerson
 sn: meetingroom2
 uid: meetingroom2
 uidNumber: 2005
-userPassword:: bWVldGluZ3Jvb20y
 
 # beamer1, resources, {{ LDAP_DOMAIN }}
 dn: uid=beamer1,ou=resources,ou=CompanyA,{{ LDAP_BASE_DN }}
@@ -4161,7 +4156,6 @@ objectClass: top
 objectClass: kopano-user
 objectClass: posixAccount
 objectClass: inetOrgPerson
-userPassword:: YmVhbWVy
 sn: beamer1
 uidNumber: 9101
 uid: beamer1
@@ -4181,7 +4175,6 @@ objectClass: top
 objectClass: kopano-user
 objectClass: posixAccount
 objectClass: inetOrgPerson
-userPassword:: YmVhbWVy
 sn: beamer2
 uidNumber: 9102
 uid: beamer2
@@ -4196,7 +4189,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 20
-userPassword:: dXNlcjIw
+userPassword: user20
 kopanoAccount: 1
 uid: user20
 mail: user20@{{ LDAP_DOMAIN }}
@@ -4226,7 +4219,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 21
-userPassword:: dXNlcjIx
+userPassword: user21
 kopanoAccount: 1
 uid: user21
 mail: user21@{{ LDAP_DOMAIN }}
@@ -4267,7 +4260,7 @@ title: Trade mark attorney
 l: Neuss
 postalCode: 56933
 secretary: uid=user23,ou=users,ou=CompanyB,{{ LDAP_BASE_DN }}
-userPassword:: e0NSWVBUfXNUNDd4VE5IUTh5U2c=
+userPassword: user22
 kopanoUserServer: kopano_server
 
 # user23, users, {{ LDAP_DOMAIN }}
@@ -4279,7 +4272,7 @@ objectClass: top
 objectClass: inetOrgPerson
 objectClass: kopano-user
 uidNumber: 23
-userPassword:: dXNlcjIz
+userPassword: user23
 kopanoAccount: 1
 kopanoAdmin: 1
 uid: user23
@@ -4332,7 +4325,6 @@ objectClass: top
 objectClass: kopano-user
 objectClass: posixAccount
 objectClass: inetOrgPerson
-userPassword:: bWVldGluZ3Jvb20z
 sn: meetingroom3
 uidNumber: 20055
 uid: meetingroom3
