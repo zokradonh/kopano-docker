@@ -24,11 +24,11 @@ services:
     ports:
       - '9000:9000'
     volumes:
-      - miniodata:/data
+      - miniodata:/export
       - minioconfig:/root/.minio
     environment:
-      - "MINIO_ACCESS_KEY=ACCESSKEY"
-      - "MINIO_SECRET_KEY=SECRETKEY"
+      - MINIO_ACCESS_KEY=ACCESSKEY
+      - MINIO_SECRET_KEY=SECRETKEY
     command: server /data
     entrypoint: sh
     command: -c 'mkdir -p /export/kopano && /usr/bin/minio server /export'
