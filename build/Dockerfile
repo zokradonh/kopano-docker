@@ -24,7 +24,7 @@ RUN curl -fSL "https://github.com/genuinetools/reg/releases/download/v$REG_VERSI
     curl -fSL "https://github.com/hadolint/hadolint/releases/download/v$HADOLINT_VERSION/hadolint-$(uname -s)-$(uname -m)" -o /usr/local/bin/hadolint && \
     curl -fSL "https://github.com/docker/compose/releases/download/$COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
     curl -fSL "https://github.com/aelsabbahy/goss/releases/download/v$GOSS_VERSION/goss-linux-amd64" -o /usr/local/bin/goss && \
-    curl -L "https://raw.githubusercontent.com/fbartels/goss/dcgoss-v2/extras/dcgoss/dcgoss -o /usr/local/bin/dcgoss" && \
+    curl -L "https://raw.githubusercontent.com/fbartels/goss/dcgoss-v2/extras/dcgoss/dcgoss" -o /usr/local/bin/dcgoss && \
     curl -fSL "https://github.com/SimonBaeumer/commander/releases/download/v$COMMANDER_VERSION/commander-linux-amd64" -o /usr/local/bin/commander && \
     curl -fSL "https://raw.githubusercontent.com/fbartels/dccommander/master/dccommander" -o /usr/local/bin/dccommander && \
     pip install --no-cache-dir yamllint==1.19.0 && \
