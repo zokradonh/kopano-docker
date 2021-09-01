@@ -8,7 +8,7 @@ ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_ZPUSH_REPOSITORY_URL="http://repo.z-hub.io/z-push:/final/Debian_10/"
+ARG KOPANO_ZPUSH_REPOSITORY_URL="https://download.kopano.io/zhub/z-push:/final/Debian_10/"
 ARG KOPANO_ZPUSH_VERSION=newest
 
 ENV \
