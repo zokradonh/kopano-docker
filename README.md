@@ -105,7 +105,7 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.ports.yml:docker-compose.db.yml:d
 #KOPANO_WEBAPP_FILES_REPOSITORY_URL=https://download.kopano.io/supported/files:/final/Debian_10/
 #KOPANO_WEBAPP_MDM_REPOSITORY_URL=https://download.kopano.io/supported/mdm:/final/Debian_10/
 #KOPANO_WEBAPP_SMIME_REPOSITORY_URL=https://download.kopano.io/supported/smime:/final/Debian_10/
-#KOPANO_ZPUSH_REPOSITORY_URL=https://kopano.com/z-push/z-push-new-urls-for-repositories-and-wiki/
+#KOPANO_ZPUSH_REPOSITORY_URL=https://download.kopano.io/zhub/z-push:/final/Debian_10/
 #DOWNLOAD_COMMUNITY_PACKAGES=0
 ```
 
