@@ -55,7 +55,7 @@ webapp)
 	fi
 	;;
 zpush)
-	KOPANO_ZPUSH_REPOSITORY_URL=${KOPANO_ZPUSH_REPOSITORY_URL:-"http://repo.z-hub.io/z-push:/final/Debian_9.0/"}
+	KOPANO_ZPUSH_REPOSITORY_URL=${KOPANO_ZPUSH_REPOSITORY_URL:-"https://download.kopano.io/zhub/z-push:/final/Debian_10/"}
 	if [[ $KOPANO_ZPUSH_REPOSITORY_URL == http* ]]; then
 		version=$(curl -m 1 -s -S -L "$KOPANO_ZPUSH_REPOSITORY_URL"/Packages | grep -m2 -A2 "Package: z-push-kopano")
 		echo "${version##* }"
