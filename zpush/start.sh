@@ -132,6 +132,12 @@ if [ "${AUTOCONFIGURE}" == true ]; then
 	done
 	echo -e '  );' >> /tmp/z-push/z-push.conf.php
 
+	# configuring z-push php_admin_values
+	for setting in $(compgen -A variable KCCONF_ZPUSHPHPADMINVALUE_); do
+		setting2=${setting#KCCONF_ZPUSHPHPADMINVALUE_}
+		perl -i -0pe 's/^\s*php_admin_value\['${setting2,,}'\]\s*=\s*\K.*$/'${!setting}'/mg' /etc/php/7.3/fpm/pool.d/kopano-z-push.conf
+	done
+
 	echo "Ensure config ownership"
 	chown -R www-data:www-data /run/sessions
 
