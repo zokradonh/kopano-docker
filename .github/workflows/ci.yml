@@ -1,0 +1,53 @@
+# This is a basic workflow to help you get started with Actions
+
+name: buildndeploy
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+     - master
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  docker:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      #- name: Install linting tools
+      #  run: |
+      #    .ci/setup-tools.sh
+      #- name: Lint
+      #  run: |
+      #    ./version.sh
+      #    make lint
+      #    tests/test.exp
+      #    ./version.sh
+      #    commander test tests/commander.yaml
+      - name: Build all images
+        env: 
+          docker_repo: ${{ secrets.DOCKERHUB_REPO }}
+          DOCKERREADME: yes
+        run: |
+          make build-core #build-all
+      # change to docker/build-push-action templated by a local custom composite GitHub Action
+
+      - name: Test
+        run: |
+          echo "KCCONF_SERVER_SURVEYCLIENT_INTERVAL=0" >> kopano_server.env
+          echo "KOPANO_SURVEYCLIENT_ENABLED=false" >> kopano_konnect.env
+          echo "KOPANO_SURVEYCLIENT_ENABLED=false" >> kopano_kwmserver.env
+          make test-ci
+          docker-compose down -v
+          make test-startup-meet-demo
