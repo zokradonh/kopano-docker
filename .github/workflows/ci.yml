@@ -7,14 +7,19 @@ on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches:
-     - master
+     - pipeline
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  ADDITIONAL_KOPANO_PACKAGES:
+  ADDITIONAL_KOPANO_WEBAPP_PLUGINS:
+  KOPANO_UID: 999
+  KOPANO_GID: 999
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   docker:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -35,19 +40,44 @@ jobs:
       #    tests/test.exp
       #    ./version.sh
       #    commander test tests/commander.yaml
-      - name: Build all images
-        env: 
-          docker_repo: ${{ secrets.DOCKERHUB_REPO }}
-          DOCKERREADME: yes
+      - name: Prepare Kopano APT Packages
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          tags: kopano_repo_helper
+          context: repo
+      - name: Extract Version information
+        id: kopano_versions
         run: |
-          make build-core #build-all
-      # change to docker/build-push-action templated by a local custom composite GitHub Action
-
-      - name: Test
-        run: |
-          echo "KCCONF_SERVER_SURVEYCLIENT_INTERVAL=0" >> kopano_server.env
-          echo "KOPANO_SURVEYCLIENT_ENABLED=false" >> kopano_konnect.env
-          echo "KOPANO_SURVEYCLIENT_ENABLED=false" >> kopano_kwmserver.env
-          make test-ci
-          docker-compose down -v
-          make test-startup-meet-demo
+          ./gh_output_dockertags.sh core
+          ./gh_output_dockertags.sh webapp
+          ./gh_output_dockertags.sh kapps
+          ./gh_output_dockertags.sh meet
+          ./gh_output_dockertags.sh zpush
+      - uses: ./.github/actions/build-component
+        with:
+          push: false
+          component: base
+      - uses: ./.github/actions/build-component
+        with:
+          push: false
+          component: core
+          tags: ${{ steps.kopano_versions.outputs.core_version_tags }}
+      - uses: ./.github/actions/build-component
+        with:
+          push: false
+          component: webapp
+          tags: ${{ steps.kopano_versions.outputs.webapp_version_tags }}
+      - uses: ./.github/actions/build-component
+        with:
+          push: false
+          component: zpush
+          tags: ${{ steps.kopano_versions.outputs.zpush_version_tags }}
+      # - name: Test
+      #   run: |
+      #     echo "KCCONF_SERVER_SURVEYCLIENT_INTERVAL=0" >> kopano_server.env
+      #     echo "KOPANO_SURVEYCLIENT_ENABLED=false" >> kopano_konnect.env
+      #     echo "KOPANO_SURVEYCLIENT_ENABLED=false" >> kopano_kwmserver.env
+      #     make test-ci
+      #     docker-compose down -v
+      #     make test-startup-meet-demo

@@ -1,33 +1,7 @@
+# syntax = docker/dockerfile:1.3-labs
 FROM debian:buster
 
-ARG ADDITIONAL_KOPANO_PACKAGES=""
-ARG DOWNLOAD_COMMUNITY_PACKAGES=1
-ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
-ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_REPOSITORY_FLAGS=""
-
-# Both UID and GID should not be set to values above 999
-ARG KOPANO_UID=999
-ARG KOPANO_GID=999
-
-ENV \
-    AUTOCONFIGURE=true \
-    BASE_VERSION=2.2.0 \
-    DEBIAN_FRONTEND=noninteractive \
-    DEBUG=""
-
-LABEL maintainer=az@zok.xyz \
-    org.label-schema.name="Kopano base container" \
-    org.label-schema.description="Base image for containers running the Kopano groupware stack" \
-    org.label-schema.url="https://kopano.io" \
-    org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
-    org.label-schema.version=$BASE_VERSION \
-    org.label-schema.schema-version="1.0"
-
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-RUN mkdir -p /kopano/repo /kopano/data /kopano/helper /kopano/path
-WORKDIR /kopano/repo
 
 # install basics
 RUN apt-get update && \
@@ -45,6 +19,21 @@ RUN apt-get update && \
         python3-minimal \
         && \
     rm -rf /var/cache/apt /var/lib/apt/lists/*
+
+ARG ADDITIONAL_KOPANO_PACKAGES=""
+
+# Both UID and GID should not be set to values above 999
+ARG KOPANO_UID=999
+ARG KOPANO_GID=999
+
+ENV \
+    AUTOCONFIGURE=true \
+    BASE_VERSION=2.2.0 \
+    DEBIAN_FRONTEND=noninteractive \
+    DEBUG=""
+
+RUN mkdir -p /kopano/repo /kopano/data /kopano/helper /kopano/path
+WORKDIR /kopano/repo
 
 # Create kopano user and group
 RUN groupadd --system --gid ${KOPANO_GID} kopano
@@ -68,24 +57,22 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     update-locale LANG=en_US.UTF-8
 
 # get common utilities
-COPY create-kopano-repo.sh /kopano/helper/
-COPY kcconf.py Release.key defaultconfigs/ /kopano/
-RUN apt-key add /kopano/Release.key
+COPY kcconf.py defaultconfigs/ /kopano/
+# add apt key for later use
+RUN --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=kopano_repo_helper \
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /kopano/repo/Release.key
+
+# TODO: replace by org.opencontainers.image.* and set by GitHub Action instead of Dockerfile LABEL-instruction. Only set labels that might be useful in local builds
+LABEL maintainer=az@zok.xyz \
+    org.label-schema.name="Kopano base container" \
+    org.label-schema.description="Base image for containers running the Kopano groupware stack" \
+    org.label-schema.url="https://kopano.io" \
+    org.label-schema.vcs-url="https://github.com/zokradonh/kopano-docker" \
+    org.label-schema.version=$BASE_VERSION \
+    org.label-schema.schema-version="1.0"
+
 
 SHELL [ "/bin/bash", "-c"]
-
-ONBUILD ARG DOWNLOAD_COMMUNITY_PACKAGES=1
-ONBUILD ARG DOWNLOAD_DISTRIBUTION="Debian_10"
-ONBUILD ARG DOWNLOAD_CHANNEL="community"
-ONBUILD ARG DOWNLOAD_BRANCH=""
-ONBUILD WORKDIR /kopano/repo
-ONBUILD RUN \
-    # community download and package as apt source repository
-    . /kopano/helper/create-kopano-repo.sh && \
-    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "core" "$DOWNLOAD_DISTRIBUTION" "$DOWNLOAD_CHANNEL" "$DOWNLOAD_BRANCH"; \
-        dl_and_package_community "kapps" "$DOWNLOAD_DISTRIBUTION" "$DOWNLOAD_CHANNEL" "$DOWNLOAD_BRANCH"; \
-    fi
 
 ARG VCS_REF
 LABEL org.label-schema.vcs-ref=$VCS_REF

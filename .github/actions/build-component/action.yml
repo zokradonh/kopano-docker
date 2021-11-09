@@ -1,0 +1,45 @@
+name: kopano-docker-image-build
+author: zokradonh
+description: Provides a template to build all docker images in zokradonh/kopano-docker. This Action builds only one docker image.
+inputs:
+  push:
+    description: 'If the image should be pushed to registry'
+    required: false
+    default: false
+  component:
+    description: 'The directory of the component in the repo where the respective Dockerfile is'
+    required: true
+  tags:
+    description: 'Version tags'
+    required: false
+  # channel:
+  #   description: 'Kopano software channel like "community" or "supported"'
+  #   required: false
+  #   default: 'community'
+  # distribution:
+  #   description: 'OS distribution which is used in the kopano package file name.'
+  #   required: false
+  #   default: 'Debian_10'
+  # branch:
+  #   description: 'Kopano Branch of supported build. Only used in supported builds'
+  #   required: false
+  #   default: ''
+runs:
+  using: "composite"
+  steps:
+    - uses: docker/build-push-action@v2
+      with:
+        push: ${{ inputs.push }}
+        tags: ${{ inputs.tags }}
+        #labels:  # TODO: use metadata array from input
+        # TODO: move from build arg to direct label:
+        # - VCS-REF
+        # - service version (may be given to Dockerfile)
+        context: ${{ inputs.component }}
+        build-args: |
+		      ADDITIONAL_KOPANO_PACKAGES=
+		      ADDITIONAL_KOPANO_WEBAPP_PLUGINS=
+		      KOPANO_UID=999
+		      KOPANO_GID=999
+        secret-files:
+          

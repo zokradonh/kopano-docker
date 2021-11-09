@@ -3,29 +3,19 @@ ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_base
 
 ARG ADDITIONAL_KOPANO_PACKAGES=""
-ARG DOWNLOAD_COMMUNITY_PACKAGES=1
-ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG DEBIAN_FRONTEND=noninteractive
-ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_KAPPS_REPOSITORY_URL="file:/kopano/repo/kapps"
 ARG KOPANO_KAPPS_VERSION=newest
 
 ENV \
     ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES \
-    DOWNLOAD_BRANCH="" \
-    DOWNLOAD_CHANNEL="community" \
-    DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES \
-    DOWNLOAD_DISTRIBUTION="Debian_10" \
     GRAPI_BACKEND="kopano" \
     KCCONF_GRAPI_LDAP_BASEDN="" \
     KCCONF_GRAPI_LDAP_BINDDN="" \
     KCCONF_GRAPI_LDAP_BINDPW_FILE="" \
     KCCONF_GRAPI_LDAP_URI="" \
     KOPANO_CONFIG_PATH=/tmp/kopano \
-    KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
-    KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
     LANG=en_US.UTF-8 \
     SERVICE_TO_START=server
 
@@ -40,12 +30,9 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # install Kopano Core and refresh ca-certificates
-# hadolint currently does not understand the extended buildkit syntax https://github.com/hadolint/hadolint/issues/347
-# hadolint ignore=DL3015
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
-    # apt key for this repo has already been installed in base
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_CORE_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_KAPPS_REPOSITORY_URL} ./" >> /etc/apt/sources.list.d/kopano.list; \
+    --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=kopano_repo_helper \
+    --mount=type=bind,target=/etc/apt/sources.list.d/,source=/etc/apt/sources.list.d/,from=kopano_repo_helper \
     # install
     apt-get update && \
     set -x && \

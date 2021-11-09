@@ -50,6 +50,20 @@ all: build-all
 build-all:
 	make $(shell grep -o ^build-.*: Makefile | grep -Ev 'build-all|build-simple|build-builder|build-webapp-demo|build-webapp-plugins' | uniq | sed s/://g | xargs)
 
+.PHONY: repo
+build-repo:
+	BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 docker build --rm \
+		--build-arg KOPANO_CORE_REPOSITORY_URL=$(KOPANO_CORE_REPOSITORY_URL) \
+		--build-arg KOPANO_KAPPS_REPOSITORY_URL=$(KOPANO_KAPPS_REPOSITORY_URL) \
+		--build-arg KOPANO_MEET_REPOSITORY_URL=$(KOPANO_MEET_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_FILES_REPOSITORY_URL=$(KOPANO_WEBAPP_FILES_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_MDM_REPOSITORY_URL=$(KOPANO_WEBAPP_MDM_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_REPOSITORY_URL=$(KOPANO_WEBAPP_REPOSITORY_URL) \
+		--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
+		--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
+		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
+		-t kopano_repo_helper repo/
+
 .PHONY: build
 build: component ?= base
 build: ## Helper target to build a given image. Defaults to the "base" image.
@@ -116,7 +130,7 @@ endif
 		--cache-from $(docker_repo)/kopano_$(component):builder \
 		-t $(docker_repo)/kopano_$(component):builder $(component)/
 
-build-base: ## Build new base image.
+build-base: build-repo ## Build new base image.
 	docker pull debian:buster
 	component=base make build
 

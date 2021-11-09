@@ -15,7 +15,7 @@ function finish {
 }
 trap finish EXIT
 
-source base/create-kopano-repo.sh
+source repo/create-kopano-repo.sh
 
 component=${1:-core}
 distribution=${2:-Debian_10}

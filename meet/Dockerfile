@@ -3,21 +3,14 @@ ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_base:latest
 
 ARG ADDITIONAL_KOPANO_PACKAGES=""
-ARG DOWNLOAD_COMMUNITY_PACKAGES=1
-ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG DEBIAN_FRONTEND=noninteractive
-ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_MEET_REPOSITORY_URL="file:/kopano/repo/meet"
 ARG KOPANO_MEET_VERSION=newest
 ENV KOPANO_MEET_VERSION=$KOPANO_MEET_VERSION
 
 ENV \
     ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES \
-    DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES \
-    KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
-    KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
     SERVICE_TO_START=meet
 
 LABEL maintainer=az@zok.xyz \
@@ -31,13 +24,8 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
-    # apt key for this repo has already been installed in base
-    # community download and package as apt source repository
-    . /kopano/helper/create-kopano-repo.sh && \
-    if [ ${DOWNLOAD_COMMUNITY_PACKAGES} -eq 1 ]; then \
-        dl_and_package_community "meet"; \
-    fi; \
-    echo "deb [${KOPANO_REPOSITORY_FLAGS}] ${KOPANO_MEET_REPOSITORY_URL} ./" > /etc/apt/sources.list.d/kopano.list; \
+    --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=kopano_repo_helper \
+    --mount=type=bind,target=/etc/apt/sources.list.d/,source=/etc/apt/sources.list.d/,from=kopano_repo_helper \
     # install
     apt-get update && \
     # TODO mime-support could be remove once its an official dependency of kopano-kwebd

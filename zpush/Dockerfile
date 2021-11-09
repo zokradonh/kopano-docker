@@ -3,21 +3,13 @@ ARG docker_repo=zokradonh
 FROM ${docker_repo}/kopano_php
 
 ARG ADDITIONAL_KOPANO_PACKAGES=""
-ARG DOWNLOAD_COMMUNITY_PACKAGES=1
-ARG KOPANO_REPOSITORY_FLAGS="trusted=yes"
 ARG DEBIAN_FRONTEND=noninteractive
-ARG KOPANO_CORE_REPOSITORY_URL="file:/kopano/repo/core"
 ARG KOPANO_CORE_VERSION=newest
-ARG KOPANO_ZPUSH_REPOSITORY_URL="https://download.kopano.io/zhub/z-push:/final/Debian_10/"
 ARG KOPANO_ZPUSH_VERSION=newest
 
 ENV \
     ADDITIONAL_KOPANO_PACKAGES=$ADDITIONAL_KOPANO_PACKAGES \
-    DOWNLOAD_COMMUNITY_PACKAGES=$DOWNLOAD_COMMUNITY_PACKAGES \
-    KOPANO_CORE_REPOSITORY_URL=$KOPANO_CORE_REPOSITORY_URL \
     KOPANO_CORE_VERSION=$KOPANO_CORE_VERSION \
-    KOPANO_REPOSITORY_FLAGS=$KOPANO_REPOSITORY_FLAGS \
-    KOPANO_ZPUSH_REPOSITORY_URL=$KOPANO_ZPUSH_REPOSITORY_URL \
     KOPANO_ZPUSH_VERSION=$KOPANO_ZPUSH_VERSION \
     LANG=en_US.UTF-8
 
@@ -37,10 +29,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint currently does not understand the extended buildkit syntax https://github.com/hadolint/hadolint/issues/347
 # hadolint ignore=DL3015
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
-    # prepare z-push installation
-    echo "deb ${KOPANO_ZPUSH_REPOSITORY_URL} /" > /etc/apt/sources.list.d/zpush.list && \
-    # this is the same key as for the rest of the Kopano stack, making a separate download anyways as this may not be the case in the future 
-    curl -s -S -L -o - "${KOPANO_ZPUSH_REPOSITORY_URL}/Release.key" | apt-key add - && \
+    --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=kopano_repo_helper \
+    --mount=type=bind,target=/etc/apt/sources.list.d/,source=/etc/apt/sources.list.d/,from=kopano_repo_helper \
     # install
     set -x && \
     # TODO set IGNORE_FIXSTATES_ON_UPGRADE https://jira.z-hub.io/browse/ZP-1164

@@ -61,4 +61,5 @@ function dl_and_package_community {
 	cd "$component"
 	apt-ftparchive packages . | gzip -9c > Packages.gz
 	cd ".."
+	echo "Downloaded and packaged component $component."
 }
