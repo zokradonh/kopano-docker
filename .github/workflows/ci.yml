@@ -53,13 +53,14 @@ jobs:
           ./gh_output_dockertags.sh core
           ./gh_output_dockertags.sh webapp
           ./gh_output_dockertags.sh kapps
+          ./gh_output_dockertags.sh kdav
           ./gh_output_dockertags.sh meet
           ./gh_output_dockertags.sh zpush
       - name: Prepare Kopano APT Packages Cache 
         uses: actions/cache@v2
         with:
           path: /tmp/.kopano-repo-helper-cache
-          key: ${{ runner.os }}-kopano-${{ steps.kopano_versions.outputs.core_version }}-${{ steps.kopano_versions.outputs.webapp_version }}-${{ steps.kopano_versions.outputs.zpush_version }}-${{ steps.kopano_versions.outputs.meet_version }}-${{ steps.kopano_versions.outputs.kdav_version }}
+          key: ${{ runner.os }}-kopano-${{ steps.kopano_versions.outputs.core_version }}-${{ steps.kopano_versions.outputs.webapp_version }}-${{ steps.kopano_versions.outputs.zpush_version }}-${{ steps.kopano_versions.outputs.meet_version }}-${{ steps.kopano_versions.outputs.kapps_version }}-${{ steps.kopano_versions.outputs.kdav_version }}
       - name: Download Kopano APT Packages
         uses: docker/build-push-action@v2
         with:
