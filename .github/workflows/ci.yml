@@ -40,12 +40,13 @@ jobs:
       #    tests/test.exp
       #    ./version.sh
       #    commander test tests/commander.yaml
-      - name: Prepare Kopano APT Packages
-        uses: docker/build-push-action@v2
-        with:
-          push: false
-          tags: kopano_repo_helper
-          context: repo
+      # - name: Cache Kopano Docker layers
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-
       - name: Extract Version information
         id: kopano_versions
         run: |
@@ -54,6 +55,23 @@ jobs:
           ./gh_output_dockertags.sh kapps
           ./gh_output_dockertags.sh meet
           ./gh_output_dockertags.sh zpush
+      - name: Prepare Kopano APT Packages Cache 
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.kopano-repo-helper-cache
+          key: ${{ runner.os }}-kopano-${{ steps.kopano_versions.outputs.core_version }}-${{ steps.kopano_versions.outputs.webapp_version }}-${{ steps.kopano_versions.outputs.zpush_version }}-${{ steps.kopano_versions.outputs.meet_version }}-${{ steps.kopano_versions.outputs.kdav_version }}
+      - name: Download Kopano APT Packages
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          tags: kopano_repo_helper
+          context: repo
+          cache-from: type=local,src=/tmp/.kopano-repo-helper-cache
+          cache-to: type=local,dest=/tmp/.kopano-repo-helper-cache-new,mode=max
+      - name: Cleanup Kopano APT Packages Cache (Workaround)
+        run: |
+          rm -rf /tmp/.kopano-repo-helper-cache
+          mv /tmp/.kopano-repo-helper-cache-new /tmp/.kopano-repo-helper-cache
       - uses: ./.github/actions/build-component
         with:
           push: false
