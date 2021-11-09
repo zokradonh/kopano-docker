@@ -73,10 +73,20 @@ jobs:
         run: |
           rm -rf /tmp/.kopano-repo-helper-cache
           mv /tmp/.kopano-repo-helper-cache-new /tmp/.kopano-repo-helper-cache
-      - uses: ./.github/actions/build-component
+      - uses: docker/build-push-action@v2
         with:
           push: false
-          component: base
+          context: base
+          cache-from: type=local,src=/tmp/.kopano-repo-helper-cache
+          build-args: |
+            ADDITIONAL_KOPANO_PACKAGES=
+            ADDITIONAL_KOPANO_WEBAPP_PLUGINS=
+            KOPANO_UID=999
+            KOPANO_GID=999
+      # - uses: ./.github/actions/build-component
+      #   with:
+      #     push: false
+      #     component: base
       - uses: ./.github/actions/build-component
         with:
           push: false
