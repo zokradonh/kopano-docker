@@ -24,8 +24,8 @@ LABEL maintainer=az@zok.xyz \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
-    --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=kopano_repo_helper \
-    --mount=type=bind,target=/etc/apt/sources.list.d/,source=/etc/apt/sources.list.d/,from=kopano_repo_helper \
+    --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=zokradonh/kopano_repo_helper \
+    --mount=type=bind,target=/etc/apt/sources.list.d/,source=/etc/apt/sources.list.d/,from=zokradonh/kopano_repo_helper \
     # install
     apt-get update && \
     # TODO mime-support could be remove once its an official dependency of kopano-kwebd

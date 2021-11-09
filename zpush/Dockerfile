@@ -29,8 +29,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint currently does not understand the extended buildkit syntax https://github.com/hadolint/hadolint/issues/347
 # hadolint ignore=DL3015
 RUN --mount=type=secret,id=repocred,target=/etc/apt/auth.conf.d/kopano.conf \
-    --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=kopano_repo_helper \
-    --mount=type=bind,target=/etc/apt/sources.list.d/,source=/etc/apt/sources.list.d/,from=kopano_repo_helper \
+    --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=zokradonh/kopano_repo_helper \
+    --mount=type=bind,target=/etc/apt/sources.list.d/,source=/etc/apt/sources.list.d/,from=zokradonh/kopano_repo_helper \
     # install
     set -x && \
     # TODO set IGNORE_FIXSTATES_ON_UPGRADE https://jira.z-hub.io/browse/ZP-1164

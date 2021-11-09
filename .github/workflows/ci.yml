@@ -64,7 +64,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: false
-          tags: kopano_repo_helper
+          tags: zokradonh/kopano_repo_helper
           context: repo
           cache-from: type=local,src=/tmp/.kopano-repo-helper-cache
           cache-to: type=local,dest=/tmp/.kopano-repo-helper-cache-new,mode=max

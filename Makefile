@@ -62,7 +62,7 @@ build-repo:
 		--build-arg KOPANO_WEBAPP_SMIME_REPOSITORY_URL=$(KOPANO_WEBAPP_SMIME_REPOSITORY_URL) \
 		--build-arg KOPANO_ZPUSH_REPOSITORY_URL=$(KOPANO_ZPUSH_REPOSITORY_URL) \
 		--build-arg DOWNLOAD_COMMUNITY_PACKAGES=$(DOWNLOAD_COMMUNITY_PACKAGES) \
-		-t kopano_repo_helper repo/
+		-t zokradonh/kopano_repo_helper repo/
 
 .PHONY: build
 build: component ?= base

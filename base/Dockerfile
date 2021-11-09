@@ -59,7 +59,7 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 # get common utilities
 COPY kcconf.py defaultconfigs/ /kopano/
 # add apt key for later use
-RUN --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=kopano_repo_helper \
+RUN --mount=type=bind,target=/kopano/repo,source=/kopano/repo,from=zokradonh/kopano_repo_helper \
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /kopano/repo/Release.key
 
 # TODO: replace by org.opencontainers.image.* and set by GitHub Action instead of Dockerfile LABEL-instruction. Only set labels that might be useful in local builds
