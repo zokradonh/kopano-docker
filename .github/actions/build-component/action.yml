@@ -37,9 +37,9 @@ runs:
         # - service version (may be given to Dockerfile)
         context: ${{ inputs.component }}
         build-args: |
-		      ADDITIONAL_KOPANO_PACKAGES=
-		      ADDITIONAL_KOPANO_WEBAPP_PLUGINS=
-		      KOPANO_UID=999
-		      KOPANO_GID=999
+          ADDITIONAL_KOPANO_PACKAGES=
+          ADDITIONAL_KOPANO_WEBAPP_PLUGINS=
+          KOPANO_UID=999
+          KOPANO_GID=999
         secret-files:
           
