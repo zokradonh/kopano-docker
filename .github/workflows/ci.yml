@@ -73,7 +73,9 @@ jobs:
           context: repo
       - name: Cache Kopano APT Packages
         if: steps.apt-cache.outputs.cache-hit != 'true'
-        run: docker save -o /tmp/.kopano-repo-helper-cache/kopano_repo_helper.tar zokradonh/kopano_repo_helper
+        run: |
+          mkdir -p /tmp/.kopano-repo-helper-cache/
+          docker save -o /tmp/.kopano-repo-helper-cache/kopano_repo_helper.tar zokradonh/kopano_repo_helper
       - name: Use Kopano APT Packages from cache
         if: steps.apt-cache.outputs.cache-hit == 'true'
         run: docker load /tmp/.kopano-repo-helper-cache/kopano_repo_helper.tar
