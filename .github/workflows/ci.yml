@@ -71,6 +71,12 @@ jobs:
           push: false
           tags: zokradonh/kopano_repo_helper
           context: repo
+        # We need this custom cache implementation here. buildx driver `docker-container` supports all
+        # kinds of caching mechanisms but it is always trying to pull images from a registry during build.
+        # It is never loading from local `docker images` that we use for our `kopano_repo_helper`.
+        # Therefore, we use buildx driver `docker` which mimics plain old docker with full `docker images` support
+        # but it lacks a lot of caching options. Since there is no plan to build for different platforms 
+        # we can stick with driver `docker`.
       - name: Cache Kopano APT Packages
         if: steps.apt-cache.outputs.cache-hit != 'true'
         run: |
@@ -79,21 +85,31 @@ jobs:
       - name: Use Kopano APT Packages from cache
         if: steps.apt-cache.outputs.cache-hit == 'true'
         run: docker load /tmp/.kopano-repo-helper-cache/kopano_repo_helper.tar
-      - uses: ./.github/actions/build-component
+      # - name: Prepare Docker Layer Cache # TODO cache by old registry image (with BUILDKIT_INLINE_CACHE) or `docker save`
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: /tmp/.layer-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: ${{ runner.os }}-buildx- # also allow old caches. Docker decides if the old cache is of any use.
+      - name: Build base
+        uses: ./.github/actions/build-component
         with:
           push: false
           component: base
-      - uses: ./.github/actions/build-component
+      - name: Build core
+        uses: ./.github/actions/build-component
         with:
           push: false
           component: core
           tags: ${{ steps.kopano-versions.outputs.core_version_tags }}
-      - uses: ./.github/actions/build-component
+      - name: Build webapp
+        uses: ./.github/actions/build-component
         with:
           push: false
           component: webapp
           tags: ${{ steps.kopano-versions.outputs.webapp_version_tags }}
-      - uses: ./.github/actions/build-component
+      - name: Build zpush
+        uses: ./.github/actions/build-component
         with:
           push: false
           component: zpush

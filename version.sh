@@ -8,6 +8,10 @@ if ! command -v jq > /dev/null; then
 	exit 1
 fi
 
+function conform_to_docker {
+	echo $1 | tr -c '[:alnum:]._\n\r-' '-'
+}
+
 function finish {
 	if [ -e "$tmpfile" ]; then
 		rm "$tmpfile"
@@ -42,7 +46,8 @@ core)
 	KOPANO_CORE_REPOSITORY_URL=${KOPANO_CORE_REPOSITORY_URL:-""}
 	if [[ $KOPANO_CORE_REPOSITORY_URL == http* ]]; then
 		version=$(curl --netrc-file ./apt_auth.conf --netrc-optional -m 1 -s -S -L "$KOPANO_CORE_REPOSITORY_URL"/Packages | grep -A2 "Package: kopano-server-packages")
-		echo "${version##* }"
+		version=$(conform_to_docker $version)
+		echo $(conform_to_docker ${version##* })
 		exit
 	fi
 	;;
@@ -50,7 +55,8 @@ webapp)
 	KOPANO_WEBAPP_REPOSITORY_URL=${KOPANO_WEBAPP_REPOSITORY_URL:-""}
 	if [[ $KOPANO_WEBAPP_REPOSITORY_URL == http* ]]; then
 		version=$(curl --netrc-file ./apt_auth.conf --netrc-optional -m 1 -s -S -L "$KOPANO_WEBAPP_REPOSITORY_URL"/Packages | grep -m1 -A1 "Package: kopano-webapp")
-		echo "${version##* }"
+		version=$(conform_to_docker $version)
+		echo $(conform_to_docker ${version##* })
 		exit
 	fi
 	;;
@@ -58,7 +64,7 @@ zpush)
 	KOPANO_ZPUSH_REPOSITORY_URL=${KOPANO_ZPUSH_REPOSITORY_URL:-"https://download.kopano.io/zhub/z-push:/final/Debian_10/"}
 	if [[ $KOPANO_ZPUSH_REPOSITORY_URL == http* ]]; then
 		version=$(curl -m 1 -s -S -L "$KOPANO_ZPUSH_REPOSITORY_URL"/Packages | grep -m2 -A2 "Package: z-push-kopano")
-		echo "${version##* }"
+		echo $(conform_to_docker ${version##* })
 		exit
 	fi
 	;;
@@ -66,7 +72,7 @@ meet)
 	KOPANO_MEET_REPOSITORY_URL=${KOPANO_MEET_REPOSITORY_URL:-""}
 	if [[ $KOPANO_MEET_REPOSITORY_URL == http* ]]; then
 		version=$(curl --netrc-file ./apt_auth.conf --netrc-optional -m 1 -s -S -L "$KOPANO_MEET_REPOSITORY_URL"/Packages | grep -A2 "Package: kopano-meet-packages")
-		echo "${version##* }"
+		echo $(conform_to_docker ${version##* })
 		exit
 	fi
 	;;
@@ -86,5 +92,7 @@ if [ ${#versiontemp} -lt 2 ]; then
 	echo "Malformed version received"
 	exit 1
 fi	
+
+currentVersion=$(conform_to_docker $currentVersion)
 
 echo "$currentVersion"
