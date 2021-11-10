@@ -50,7 +50,7 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-buildx-
       - name: Extract Version information
-        id: kopano_versions
+        id: kopano-versions
         run: |
           ./gh_output_dockertags.sh core
           ./gh_output_dockertags.sh webapp
@@ -59,23 +59,24 @@ jobs:
           ./gh_output_dockertags.sh meet
           ./gh_output_dockertags.sh zpush
       - name: Prepare Kopano APT Packages Cache 
+        id: apt-cache
         uses: actions/cache@v2
         with:
           path: /tmp/.kopano-repo-helper-cache
-          key: ${{ runner.os }}-kopano-${{ steps.kopano_versions.outputs.core_version }}-${{ steps.kopano_versions.outputs.webapp_version }}-${{ steps.kopano_versions.outputs.zpush_version }}-${{ steps.kopano_versions.outputs.meet_version }}-${{ steps.kopano_versions.outputs.kapps_version }}-${{ steps.kopano_versions.outputs.kdav_version }}
+          key: ${{ runner.os }}-kopano-${{ steps.kopano-versions.outputs.core_version }}-${{ steps.kopano-versions.outputs.webapp_version }}-${{ steps.kopano-versions.outputs.zpush_version }}-${{ steps.kopano-versions.outputs.meet_version }}-${{ steps.kopano-versions.outputs.kapps_version }}-${{ steps.kopano-versions.outputs.kdav_version }}
       - name: Download Kopano APT Packages
+        if: steps.apt-cache.outputs.cache-hit != 'true'
         uses: docker/build-push-action@v2
         with:
-          load: true
           push: false
           tags: zokradonh/kopano_repo_helper
           context: repo
-          cache-from: type=local,src=/tmp/.kopano-repo-helper-cache
-          cache-to: type=local,dest=/tmp/.kopano-repo-helper-cache-new,mode=max
-      - name: Cleanup Kopano APT Packages Cache (Workaround)
-        run: |
-          rm -rf /tmp/.kopano-repo-helper-cache
-          mv /tmp/.kopano-repo-helper-cache-new /tmp/.kopano-repo-helper-cache
+      - name: Cache Kopano APT Packages
+        if: steps.apt-cache.outputs.cache-hit != 'true'
+        run: docker save -o /tmp/.kopano-repo-helper-cache/kopano_repo_helper.tar zokradonh/kopano_repo_helper
+      - name: Use Kopano APT Packages from cache
+        if: steps.apt-cache.outputs.cache-hit == 'true'
+        run: docker load /tmp/.kopano-repo-helper-cache/kopano_repo_helper.tar
       - uses: ./.github/actions/build-component
         with:
           push: false
@@ -84,17 +85,17 @@ jobs:
         with:
           push: false
           component: core
-          tags: ${{ steps.kopano_versions.outputs.core_version_tags }}
+          tags: ${{ steps.kopano-versions.outputs.core_version_tags }}
       - uses: ./.github/actions/build-component
         with:
           push: false
           component: webapp
-          tags: ${{ steps.kopano_versions.outputs.webapp_version_tags }}
+          tags: ${{ steps.kopano-versions.outputs.webapp_version_tags }}
       - uses: ./.github/actions/build-component
         with:
           push: false
           component: zpush
-          tags: ${{ steps.kopano_versions.outputs.zpush_version_tags }}
+          tags: ${{ steps.kopano-versions.outputs.zpush_version_tags }}
       # - name: Test
       #   run: |
       #     echo "KCCONF_SERVER_SURVEYCLIENT_INTERVAL=0" >> kopano_server.env

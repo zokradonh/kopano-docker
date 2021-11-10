@@ -36,7 +36,6 @@ runs:
         # - VCS-REF
         # - service version (may be given to Dockerfile)
         context: ${{ inputs.component }}
-        cache-from: type=local,src=/tmp/.kopano-repo-helper-cache
         build-args: |
           ADDITIONAL_KOPANO_PACKAGES=
           ADDITIONAL_KOPANO_WEBAPP_PLUGINS=
