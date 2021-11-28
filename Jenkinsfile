@@ -6,60 +6,37 @@ pipeline {
 
   }
   stages {
-    stage('Test') {
+    stage('Setup') {
       steps {
         sh 'printenv | sort'
+        sh 'git config --global user.email "ecw@kleinhain.de"'
+        sh 'git config --global user.name "Enrico Walther"'
       }
     }
 
-    stage('Base') {
+    stage('Build') {
       steps {
         sh 'make build-base'
-        sh 'make publish-base'
-      }
-    }
-
-    stage('SSL') {
-      steps {
         sh 'make build-ssl'
-        sh 'make publish-ssl'
-      }
-    }
-		
-    stage('Core') {
-      steps {
         sh 'make build-core'
-        sh 'make publish-core'
-      }
-    }
-
-    stage('Scheduler') {
-      steps {
         sh 'make build-scheduler'
-        sh 'make publish-scheduler'
-      }
-    }
-
-    stage('WepApp') {
-      steps {
         sh 'make build-webapp'
-        sh 'make publish-webapp'
-      }
-    }
-
-    stage('Web') {
-      steps {
         sh 'make build-web'
-        sh 'make publish-web'
+        sh 'make build-zpush'
       }
     }
 
-    stage('Z-Push') {
+    stage('Publish') {
       steps {
-        sh 'make build-zpush'
+		
+        sh 'make publish-base'
+        sh 'make publish-ssl'
+        sh 'make publish-core'
+        sh 'make publish-scheduler'
+        sh 'make publish-webapp'
+        sh 'make publish-web'
         sh 'make publish-zpush'
       }
     }
-
   }
 }
