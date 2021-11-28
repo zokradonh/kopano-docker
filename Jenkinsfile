@@ -15,6 +15,7 @@ pipeline {
     stage('Base') {
       steps {
         sh 'make build-base'
+        sh 'make publish-base'
       }
     }
 
