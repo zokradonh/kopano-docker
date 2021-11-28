@@ -6,7 +6,7 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
-docker_repo := zokradonh
+docker_repo := ecw74
 
 base_download_version := $(shell ./version.sh core)
 core_download_version := $(shell ./version.sh core)
