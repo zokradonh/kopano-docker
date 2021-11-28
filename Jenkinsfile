@@ -22,6 +22,7 @@ pipeline {
     stage('Core') {
       steps {
         sh 'make build-core'
+        sh 'make publish-core'
       }
     }
 
