@@ -12,9 +12,15 @@ pipeline {
       }
     }
 
-    stage('Build') {
+    stage('Base') {
       steps {
         sh 'make build-base'
+      }
+    }
+
+    stage('Core') {
+      steps {
+        sh 'make build-core'
       }
     }
 
