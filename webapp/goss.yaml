@@ -14,7 +14,6 @@ file:
   /var/lib/kopano-webapp/tmp:
     exists: true
     mode: "0755"
-    size: 4096
     owner: www-data
     group: www-data
     filetype: directory
