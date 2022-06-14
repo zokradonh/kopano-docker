@@ -28,7 +28,7 @@ services:
     env_file:
       - kopano_ssl.env
     volumes:
-      - kopanossl/:/kopano/ssl
+      - kopanossl:/kopano/ssl
     tmpfs:
       - /kopano/easypki/
 
@@ -84,9 +84,9 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanodata/:/kopano/data
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kopanodata:/kopano/data
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     tmpfs:
       - /tmp/
 
@@ -100,9 +100,9 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
-      - kopanowebapp/:/var/lib/kopano-webapp/
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
+      - kopanowebapp:/var/lib/kopano-webapp/
     environment:
       - ADDITIONAL_KOPANO_WEBAPP_PLUGINS=${ADDITIONAL_KOPANO_WEBAPP_PLUGINS}
       - KCCONF_WEBAPP_OIDC_CLIENT_ID=webapp
@@ -132,9 +132,9 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
-      - zpushstates/:/var/lib/z-push/
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
+      - zpushstates:/var/lib/z-push/
     environment:
       - TZ=${TZ}
       # Shared folders automatically assigned to all users in the format: [{"name":"<folder name>","id":"<kopano folder id>","type":"<type>","flags":"<flags>"},...]
@@ -161,8 +161,8 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanograpi/:/var/lib/kopano-grapi
-      - kopanosocket/:/run/kopano
+      - kopanograpi:/var/lib/kopano-grapi
+      - kopanosocket:/run/kopano
     environment:
       - KCCONF_GRAPI_ENABLE_EXPERIMENTAL_ENDPOINTS=no # needs to be set to yes for grapi versions prior to 10.3 to use calendar
       - KCCONF_GRAPI_INSECURE=${INSECURE}
@@ -187,9 +187,9 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanodata/:/kopano/data
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kopanodata:/kopano/data
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     environment:
       - DEFAULT_PLUGIN_PUBS_SECRET_KEY_FILE=/kopano/ssl/kapid-pubs-secret.key
       - KCCONF_KAPID_INSECURE=${INSECURE}
@@ -240,9 +240,9 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kdavstates/:/var/lib/kopano/kdav
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kdavstates:/var/lib/kopano/kdav
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     environment:
       - TZ=${TZ}
     networks:
@@ -263,8 +263,8 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     environment:
       - KCCONF_AUTORESPOND_SENDDB=/tmp/autorespond.db
       - KCCONF_DAGENT_AUTORESPONDER=/usr/local/bin/kopano-autorespond
@@ -292,8 +292,8 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     environment:
       - KCCONF_SPOOLER_LOG_LEVEL=3
       - KCCONF_SPOOLER_LOG_TIMESTAMP=0
@@ -318,8 +318,8 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     environment:
       - KCCONF_GATEWAY_IMAP_LISTEN=0.0.0.0:143
       - KCCONF_GATEWAY_LOG_LEVEL=3
@@ -343,8 +343,8 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     environment:
       - KCCONF_ICAL_ICAL_LISTEN=0.0.0.0:8080
       - KCCONF_ICAL_LOG_LEVEL=3
@@ -369,8 +369,8 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     environment:
       - SERVICE_TO_START=monitor
       - KCCONF_MONITOR_LOG_LEVEL=3
@@ -393,9 +393,9 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanodata/:/kopano/data
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kopanodata:/kopano/data
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     environment:
       - SERVICE_TO_START=search
       - KCCONF_SEARCH_LOG_LEVEL=3
@@ -420,8 +420,8 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanosocket/:/run/kopano
-      - kopanossl/:/kopano/ssl
+      - kopanosocket:/run/kopano
+      - kopanossl:/kopano/ssl
     environment:
       - allow_client_guests=yes
       - allow_dynamic_client_registration=yes
@@ -462,7 +462,7 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanossl/:/kopano/ssl
+      - kopanossl:/kopano/ssl
     networks:
       - web-net
     tmpfs:
