@@ -24,7 +24,7 @@ services:
     volumes:
       - /etc/machine-id:/etc/machine-id
       - /etc/machine-id:/var/lib/dbus/machine-id
-      - kopanossl/:/kopano/ssl
+      - kopanossl:/kopano/ssl
     ports:
       - 65435:65535/udp
     tmpfs:

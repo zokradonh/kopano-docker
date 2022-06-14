@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     container_name: ${COMPOSE_PROJECT_NAME}_db
     volumes:
-      - mysql/:/var/lib/mysql
+      - mysql:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
